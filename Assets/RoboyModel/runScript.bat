@@ -1,0 +1,1 @@
+start "" "G:\Blender\blender.exe" -P "H:\Documents\UnityProjects\VIVE Test\Assets\RoboyModel\meshDownloadScript.py" hip,thigh_left,shank_left,foot_left,thigh_right,shank_right,foot_right,torso,head,oberarm_left,unterarm_left,oberarm_right,unterarm_right
