@@ -2,7 +2,10 @@
 # Created by https://www.gitignore.io/api/visualstudio,unity
 
 ### Unity ###
-/[Ll]ibrary/
+/[Ll]ibrary/FailedAssetImports.txt
+/[Ll]ibrary/cache/
+/[Ll]ibrary/previews/
+/[Ll]ibrary/ScriptAssemblies
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
