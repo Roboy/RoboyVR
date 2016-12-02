@@ -53,7 +53,17 @@ cd ~/ros_ws/src
 git clone https://github.com/Roboy/roboy-ros-control --recursive
 ```
 
-3) Source the setup.bash
+3) Get additional dependencies
+
+```
+#!bash
+cd roboy-ros-control
+git submodule update --init --recursive
+cd src/flexrayusbinterface
+sudo dpkg -i lib/libftd2xx_1.1.12_amd64.deb
+```
+
+4) Source the setup.bash
 
 ```
 source /opt/ros/kinetic/setup.bash
@@ -61,14 +71,14 @@ cd ~/ros_ws
 catkin_make
 ```
 
-4) OPTIONAL: add this to your bash script (otherwise you have to type this commands in every new terminal window)
+5) OPTIONAL: add this to your bash script (otherwise you have to type this commands in every new terminal window)
 
 ```
 echo 'source /opt/ros/kinetic/setup.bash' >> ~/.bashrc
 echo 'source ~/ros_ws/src/roboy-ros-control/devel/setup.bash' >> ~/.bashrc
 ```
 
-5) Create symlinks for gazebo to your roboy models
+6) Create symlinks for gazebo to your roboy models
 
 ```
 #!bash
@@ -77,7 +87,7 @@ mkdir -p ~/.gazebo/models
 ln -s /ros_ws/src/roboy-ros-control/src/roboy_models/legs_with_upper_body ~/.gazebo/models/
 ```
 
-6) Install rosbridge
+7) Install rosbridge
 
 ```
 #!bash
