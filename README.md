@@ -13,7 +13,7 @@ This tutorial will help you setup roboyVR.
 * 4 cores
 * 6 GB of RAM
 * 128 MB of VRAM
-* 30 GB HDD space
+* 30 GB HDD space (via Expert mode)
 
 4) Set network settings to Bridged-Adapter or Host-Only
 
