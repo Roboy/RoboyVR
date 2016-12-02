@@ -3,7 +3,7 @@
 
 **How it works:**  
 Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
-regarding roboy's movement are then sent through a ROSbridge(g.e. messages) towards Unity.  
+regarding roboy's movement are then sent through a ROSbridge(e.g. messages) towards Unity.  
 In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
 With the help of a VR-Headset you can watch roboy move around in a virtual space.
 
