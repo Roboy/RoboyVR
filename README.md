@@ -14,7 +14,7 @@ This tutorial will help you setup roboyVR.
 * 128 MB of VRAM
 * 30 GB HDD space
 
-4) Set network settings to network-bridge or host-only
+4) Set network settings to Bridged-Adapter or Host-Only
 
 ## Part 1.2: Install ROS & Roboy on Ubuntu
 
