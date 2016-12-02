@@ -9,8 +9,9 @@ This tutorial will help you setup roboyVR.
 2) Download Ubuntu 16.04 (64bit) https://www.ubuntu.com/download/desktop
 
 3) Mount the .iso and setup Virtualbox with the following settings (if available):
-* 6 GB of RAM
+
 * 4 cores
+* 6 GB of RAM
 * 128 MB of VRAM
 * 30 GB HDD space
 
