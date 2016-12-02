@@ -362,7 +362,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v00 of the rotation matrix values with the correponding name as string
-        JSONArray v00Array = msg["v00"].AsArray;
+        JSONArray v00Array = msg["m00"].AsArray;
         _v00Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v00Array.Count; i++)
@@ -372,7 +372,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v01 of the rotation matrix values with the correponding name as string
-        JSONArray v01Array = msg["v01"].AsArray;
+        JSONArray v01Array = msg["m01"].AsArray;
         _v01Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v01Array.Count; i++)
@@ -382,7 +382,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v02 of the rotation matrix values with the correponding name as string
-        JSONArray v02Array = msg["v02"].AsArray;
+        JSONArray v02Array = msg["m02"].AsArray;
         _v02Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v02Array.Count; i++)
@@ -392,7 +392,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v03 of the rotation matrix values with the correponding name as string
-        JSONArray v03Array = msg["v03"].AsArray;
+        JSONArray v03Array = msg["m03"].AsArray;
         _v03Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v03Array.Count; i++)
@@ -402,7 +402,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v10 of the rotation matrix values with the correponding name as string
-        JSONArray v10Array = msg["v10"].AsArray;
+        JSONArray v10Array = msg["m10"].AsArray;
         _v10Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v10Array.Count; i++)
@@ -412,7 +412,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v11 of the rotation matrix values with the correponding name as string
-        JSONArray v11Array = msg["v11"].AsArray;
+        JSONArray v11Array = msg["m11"].AsArray;
         _v11Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v11Array.Count; i++)
@@ -422,7 +422,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v12 of the rotation matrix values with the correponding name as string
-        JSONArray v12Array = msg["v12"].AsArray;
+        JSONArray v12Array = msg["m12"].AsArray;
         _v12Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v12Array.Count; i++)
@@ -431,7 +431,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v12Dic.Add(meshName, v12Array[i].AsFloat);
         }
         //Parse v13 of the rotation matrix values with the correponding name as string
-        JSONArray v13Array = msg["v13"].AsArray;
+        JSONArray v13Array = msg["m13"].AsArray;
         _v13Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v13Array.Count; i++)
@@ -441,7 +441,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
         }
 
         //Parse v20 of the rotation matrix values with the correponding name as string
-        JSONArray v20Array = msg["v20"].AsArray;
+        JSONArray v20Array = msg["m20"].AsArray;
         _v20Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v20Array.Count; i++)
@@ -450,7 +450,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v20Dic.Add(meshName, v20Array[i].AsFloat);
         }
         //Parse v21 of the rotation matrix values with the correponding name as string
-        JSONArray v21Array = msg["v21"].AsArray;
+        JSONArray v21Array = msg["m21"].AsArray;
         _v21Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v21Array.Count; i++)
@@ -459,7 +459,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v21Dic.Add(meshName, v21Array[i].AsFloat);
         }
         //Parse v22 of the rotation matrix values with the correponding name as string
-        JSONArray v22Array = msg["v22"].AsArray;
+        JSONArray v22Array = msg["m22"].AsArray;
         _v22Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v22Array.Count; i++)
@@ -468,7 +468,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v22Dic.Add(meshName, v22Array[i].AsFloat);
         }
         //Parse v23 of the rotation matrix values with the correponding name as string
-        JSONArray v23Array = msg["v23"].AsArray;
+        JSONArray v23Array = msg["m23"].AsArray;
         _v23Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v23Array.Count; i++)
@@ -477,7 +477,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v23Dic.Add(meshName, v23Array[i].AsFloat);
         }
         //Parse v30 of the rotation matrix values with the correponding name as string
-        JSONArray v30Array = msg["v30"].AsArray;
+        JSONArray v30Array = msg["m30"].AsArray;
         _v30Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v30Array.Count; i++)
@@ -486,7 +486,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v30Dic.Add(meshName, v30Array[i].AsFloat);
         }
         //Parse v31 of the rotation matrix values with the correponding name as string
-        JSONArray v31Array = msg["v31"].AsArray;
+        JSONArray v31Array = msg["m31"].AsArray;
         _v31Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v31Array.Count; i++)
@@ -495,7 +495,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v31Dic.Add(meshName, v31Array[i].AsFloat);
         }
         //Parse v32 of the rotation matrix values with the correponding name as string
-        JSONArray v32Array = msg["v32"].AsArray;
+        JSONArray v32Array = msg["m32"].AsArray;
         _v32Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v32Array.Count; i++)
@@ -504,7 +504,7 @@ public class RoboyPoseMsg : ROSBridgeMsg
             _v32Dic.Add(meshName, v32Array[i].AsFloat);
         }
         //Parse v33 of the rotation matrix values with the correponding name as string
-        JSONArray v33Array = msg["v33"].AsArray;
+        JSONArray v33Array = msg["m33"].AsArray;
         _v33Dic = new Dictionary<string, float>();
 
         for (int i = 0; i < v33Array.Count; i++)

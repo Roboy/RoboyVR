@@ -14,6 +14,8 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     public GameObject[] RoboyParts;
 
+    public float TEST_ROTATION;
+
     #endregion //PUBLIC_MEMBER_VARIABLES
 
     #region PRIVATE_MEMBER_VARIABLES
@@ -45,13 +47,20 @@ public class RoboyManager : Singleton<RoboyManager> {
                 continue;
             m_RoboyParts.Add(g.name, g);
         }
+
+        Vector3 iPart = Vector3.right * Mathf.Sin(Mathf.Deg2Rad * TEST_ROTATION * 0.5f);
+        float rPart = Mathf.Cos(TEST_ROTATION * Mathf.Deg2Rad * 0.5f);
+        Quaternion myRot = new Quaternion(iPart.x, iPart.y, iPart.z, rPart);
+
+        //m_RoboyParts["torso"].transform.position = myRot * m_RoboyParts["torso"].transform.position;
+        m_RoboyParts["torso"].transform.rotation *= myRot;
     }
 
     void Update()
     {
         m_Ros.Render();
 
-        if(Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
             m_Ros.CallService("/roboy/reset_world", "");
     }
 
@@ -104,181 +113,49 @@ public class RoboyManager : Singleton<RoboyManager> {
         {
             string index = roboyPart.Key;
 
-            Vector3 position = new Vector3(yPositionsDictionary[index] * -1f, zPositionsDictionary[index], xPositionsDictionary[index]);
+            //Vector3 position = new Vector3(yPositionsDictionary[index] * -1f, zPositionsDictionary[index], xPositionsDictionary[index]);
+            Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
             Vector3 eulerAngles = new Vector3(Mathf.Rad2Deg * rollRotationsDictionary[index], Mathf.Rad2Deg * yawRotationsDictionary[index] * -1f + 90f, Mathf.Rad2Deg * pitchRotationsDictionary[index]);
 
+            Quaternion roboyQ = new Quaternion(qxRotationsDictionary[index], qyRotationsDictionary[index], qzRotationsDictionary[index], qwRotationsDictionary[index]);
 
-            Matrix4x4 m = new Matrix4x4
-            {
-                m00 = v00Dictionary[index],
-                m01 = v01Dictionary[index],
-                m02 = v02Dictionary[index],
-                m03 = v03Dictionary[index],
-                m10 = v10Dictionary[index],
-                m11 = v11Dictionary[index],
-                m12 = v12Dictionary[index],
-                m13 = v13Dictionary[index],
-                m20 = v20Dictionary[index],
-                m21 = v21Dictionary[index],
-                m22 = v22Dictionary[index],
-                m23 = v23Dictionary[index],
-                m30 = v30Dictionary[index],
-                m31 = v31Dictionary[index],
-                m32 = v32Dictionary[index],
-                m33 = v33Dictionary[index]
-            };
+            //Quaternion rotX = Quaternion.AngleAxis(90f, Vector3.right);
+            //Quaternion rotY = Quaternion.AngleAxis(90f, Vector3.up);
 
-            Quaternion tempQ = GetRotationFromMatrix(m);
+            Quaternion rotX = Quaternion.AngleAxis(-90f, Vector3.right);
+            Quaternion rotY = Quaternion.AngleAxis(90f, Vector3.up);
 
-            Vector3 euler = tempQ.eulerAngles;
+            //Vector3 pos = new Vector3(x, y, z);
 
-            float gamma = euler.y;
-            float beta = euler.z;
-            float alpha = euler.x;
+            originPosition = rotY * rotX * originPosition;
+            //pos = rotY * pos;
 
-            float tempPitch = alpha*-1 + Mathf.PI/2f;
-            alpha = beta;
-            beta = tempPitch;
+            originPosition.z *= -1f;
 
-            Matrix4x4 a = new Matrix4x4
-            {
-                m00 = Mathf.Cos(alpha) * Mathf.Cos(beta),
-                m01 = Mathf.Cos(alpha) * Mathf.Sin(beta) * Mathf.Sin(gamma) - Mathf.Sin(alpha)* Mathf.Cos(gamma),
-                m02 = Mathf.Cos(alpha)* Mathf.Sin(beta) * Mathf.Cos(gamma) + Mathf.Sin(alpha) * Mathf.Sin(gamma),
-                m10 = Mathf.Sin(alpha) * Mathf.Cos(beta),
-                m11 = Mathf.Sin(alpha) * Mathf.Sin(beta) * Mathf.Sin(gamma) + Mathf.Cos(alpha)* Mathf.Cos(gamma),
-                m12 = Mathf.Sin(alpha)* Mathf.Sin(beta) * Mathf.Cos(gamma) - Mathf.Cos(alpha) * Mathf.Sin(gamma),
-                m20 = -Mathf.Sin(beta),
-                m21 = Mathf.Cos(beta) * Mathf.Sin(gamma),
-                m22 = Mathf.Cos(beta) * Mathf.Cos(gamma),
-                m03 = 0,
-                m13 = 0,
-                m23 = 0,
-                m30 = 0,
-                m31 = 0,
-                m32 = 0,
-                m33 = 1
-            };
+            Quaternion q2 = new Quaternion(-roboyQ.x, -roboyQ.y, -roboyQ.z, roboyQ.w);
+
+            Quaternion qX2 = Quaternion.AngleAxis(90f, Vector3.right);
+
+            roboyQ = rotY * qX2 * q2;
 
 
-            Matrix4x4 mNew = Matrix4x4.Inverse(m);
+            //roboyQ *= rotX * rotY;
 
-            Quaternion qTemp2 = QuaternionFromMatrix(m);
+            //Quaternion final2Q = new Quaternion(-roboyQ.x, -roboyQ.z, -roboyQ.y, roboyQ.w);
 
-            Quaternion rotX = Quaternion.AngleAxis(-90, Vector3.forward);
-            Quaternion rotZ = Quaternion.AngleAxis(90f, Vector3.up);
-            Quaternion rotY = Quaternion.AngleAxis(-90f, Vector3.right);
+            //Quaternion positionQ = new Quaternion(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index], 0);
+            //positionQ *= rotX;
 
-            qTemp2 = rotZ*rotX*qTemp2;
+            //Quaternion position2Q = new Quaternion(-positionQ.x, -positionQ.z, -positionQ.y, positionQ.w);
 
-            Quaternion qTemp3 = Quaternion.Inverse(qTemp2);
+            //originPosition = rotX * originPosition;
 
-            //Quaternion qTemp = GetRotationFromMatrix(m);
-            //qTemp *= Quaternion.Euler(-90,0,0);
+            roboyPart.Value.transform.localPosition = originPosition;
+            roboyPart.Value.transform.rotation = roboyQ;
 
-            //m = MatrixFromQuaternion(qTemp);
-              
-            //Matrix4x4 mNew = new Matrix4x4();;
-
-            //SEE http://stackoverflow.com/questions/1263072/changing-a-matrix-from-right-handed-to-left-handed-coordinate-system
-
-            //ry => rz
-            //mNew.m01 = -m.m02;
-            ////rz => ry
-            //mNew.m02 = m.m01;
-            ////ux => lx
-            //mNew.m10 = m.m20;
-            ////uy => lz
-            //mNew.m11 = -m.m22;
-            ////uz => ly
-            //mNew.m12 = m.m21;
-            ////lx => ux
-            //mNew.m20 = m.m10;
-            ////ly => uz
-            //mNew.m21 = -m.m12;
-            ////lz => uy
-            //mNew.m22 = m.m11;
-            //py => pz
-            //mNew.m31 = m.m32;
-            //pz => py
-            //mNew.m32 = m.m31;
-
-            ////rx => uy
-            //mNew.m00 = -m.m12;
-            ////ry => ux
-            //mNew.m01 = m.m10;
-            ////rz => uz
-            //mNew.m02 = m.m11;
-
-            ////ux => lx
-            //mNew.m10 = -m.m22;
-            ////uy => lz
-            //mNew.m11 = m.m20;
-            ////uz => ly
-            //mNew.m12 = m.m21;
-
-            ////lx => -rz
-            //mNew.m20 = -m.m02;
-            ////ly => -ry
-            //mNew.m21 = m.m00;
-            ////lz => -rx
-            //mNew.m22 = -m.m01;
-
-            //mNew.m33 = 1;
+            continue;
 
 
-            Quaternion q = GetRotationFromMatrix(a);
-
-
-            
-            //q *= Quaternion.Euler(90f, 0, 0);
-            //Matrix4x4 n = MatrixFromQuaternion(q);
-
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    for (int j = 0; j < 4; j++)
-            //    {
-            //        if (Math.Abs(m[i, j] - n[i, j]) > 0.0005)
-            //        {
-            //            Debug.Log("Error @"+i+","+j+" :"+ (m[i, j] - n[i, j]));
-            //        }
-
-            //    }
-            //}
-            roboyPart.Value.transform.localPosition = position;
-            roboyPart.Value.transform.rotation = qTemp2;
-
-            ////Quaternion qNew = QuaternionFromMatrix(MatrixFromQuaternion(q));
-            //Quaternion qNew = GetRotationFromMatrix(MatrixFromQuaternion(q));
-
-            //if (Math.Abs(qNew.x - q.x) > 0.0005)
-            //{
-            //    Debug.Log("error x: " + (qNew.x - q.x));
-            //}
-            //if (Math.Abs(qNew.y - q.y) > 0.0005)
-            //{
-            //    Debug.Log("error y: " + (qNew.y - q.y));
-            //}
-            //if (Math.Abs(qNew.z - q.z) > 0.0005)
-            //{
-            //    Debug.Log("error z: " + (qNew.z - q.z));
-            //}
-            //if (Math.Abs(qNew.w - q.w) > 0.0005)
-            //{
-            //    Debug.Log("error w: " + (qNew.w - q.w));
-            //}
-            //Debug.Log(string.Format("XDifference: {0}, YDiff: {1}, ZDiff: {2}, WDiff: {3}",qNew.x - q.x, qNew.y - q.y, qNew.z - q.z, qNew.w - q.w));
-
-            //roboyPart.Value.transform.eulerAngles = eulerAngles;
-            //if (index.Equals("torso"))
-            //{
-            //    for (int i = 0; i < 4; i++)
-            //        for (int j = 0; j < 4; j++)
-            //            Debug.Log("M@ " + i + "," + j + ": " + m[i, j]);
-
-            //    Debug.Log("ROLL : " + rollRotationsDictionary[index] + " PITCH : " + pitchRotationsDictionary[index] + " YAW : " + yawRotationsDictionary[index]);
-            //}
-            //Debug.Log();
         }
 
     }

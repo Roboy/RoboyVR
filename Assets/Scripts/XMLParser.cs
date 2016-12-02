@@ -51,14 +51,38 @@ public class XMLParser : MonoBehaviour
         //Y => Z
         //Z => X
 
-        transform.position = new Vector3(-y, z, x);
+        Quaternion rotX = Quaternion.AngleAxis(-90f, Vector3.right);
+        Quaternion rotY = Quaternion.AngleAxis(90f, Vector3.up);
+
+        Vector3 pos = new Vector3(x, y, z);
+
+        pos = rotY * rotX * pos;
+        //pos = rotY * pos;
+
+        pos.z *= -1f;
+
+        transform.position = pos;
 
         //ROTATION
         //alpha => alpha
         //beta => gamma * -1 + 90°
         //gamma => beta
 
-        transform.eulerAngles = new Vector3(Mathf.Rad2Deg * alpha, Mathf.Rad2Deg * gamma * -1f + 90f, Mathf.Rad2Deg * beta);
+        Quaternion q = Quaternion.Euler(new Vector3(alpha, beta, gamma));
+
+        
+
+        //q = rotY * rotX * q;
+
+        //Quaternion q2 = new Quaternion(-q.x, -q.y, -q.z, q.w);
+
+        Quaternion qX2 = Quaternion.AngleAxis(90f, Vector3.right);
+
+        q = rotY * qX2 * q;
+
+        transform.rotation = q;
+
+        //transform.eulerAngles = new Vector3(Mathf.Rad2Deg * alpha, Mathf.Rad2Deg * gamma * -1f + 90f, Mathf.Rad2Deg * beta);
     }
     #endregion //PRIVATE_METHODS
 }

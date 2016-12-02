@@ -6236,77 +6236,11 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 596f5c2a51b681845a002c905c6561b7, type: 3}
-  m_RootGameObject: {fileID: 1423372143}
   m_IsPrefabParent: 0
---- !u!1 &1423372143
+--- !u!1 &1423372143 stripped
 GameObject:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 596f5c2a51b681845a002c905c6561b7, type: 3}
   m_PrefabInternal: {fileID: 1423372142}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1423372146}
-  - 33: {fileID: 1423372145}
-  - 23: {fileID: 1423372144}
-  - 114: {fileID: 1423372147}
-  m_Layer: 0
-  m_Name: head
-  m_TagString: RoboyPart
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &1423372144
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: 596f5c2a51b681845a002c905c6561b7,
-    type: 3}
-  m_PrefabInternal: {fileID: 1423372142}
-  m_GameObject: {fileID: 1423372143}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 2100000, guid: 2652b17ba91abc643bb8d94b872314e0, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!33 &1423372145
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 596f5c2a51b681845a002c905c6561b7,
-    type: 3}
-  m_PrefabInternal: {fileID: 1423372142}
-  m_GameObject: {fileID: 1423372143}
-  m_Mesh: {fileID: 4300000, guid: 596f5c2a51b681845a002c905c6561b7, type: 3}
---- !u!4 &1423372146
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 596f5c2a51b681845a002c905c6561b7, type: 3}
-  m_PrefabInternal: {fileID: 1423372142}
-  m_GameObject: {fileID: 1423372143}
-  m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 13
 --- !u!114 &1423372147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9769,7 +9703,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2099690724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9781,7 +9715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19263f03ce700e84e87693ab46b8c152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VM_IP: 10.27.101.139
+  VM_IP: 10.27.101.138
   RoboyParts:
   - {fileID: 592456579}
   - {fileID: 1749613614}
@@ -9796,6 +9730,7 @@ MonoBehaviour:
   - {fileID: 314771915}
   - {fileID: 666057710}
   - {fileID: 994788979}
+  TEST_ROTATION: 20
 --- !u!4 &2099690725
 Transform:
   m_ObjectHideFlags: 0
