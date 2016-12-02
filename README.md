@@ -84,7 +84,7 @@ ln -s /ros_ws/src/roboy-ros-control/src/roboy_models/legs_with_upper_body ~/.gaz
 sudo apt install ros-kinetic-rosbridge-suite
 ```
 
-7) Run rosbridge and roboySimulation
+### Part 1.3: Run rosbridge and roboySimulation
 
 ```
 #!bash
