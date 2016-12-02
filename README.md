@@ -75,7 +75,7 @@ catkin_make
 
 ```
 echo 'source /opt/ros/kinetic/setup.bash' >> ~/.bashrc
-echo 'source ~/ros_ws/src/roboy-ros-control/devel/setup.bash' >> ~/.bashrc
+echo 'source ~/ros_ws/devel/setup.bash' >> ~/.bashrc
 ```
 
 6) Create symlinks for gazebo to your roboy models
@@ -84,7 +84,7 @@ echo 'source ~/ros_ws/src/roboy-ros-control/devel/setup.bash' >> ~/.bashrc
 #!bash
 cd ~
 mkdir -p ~/.gazebo/models
-ln -s /ros_ws/src/roboy-ros-control/src/roboy_models/legs_with_upper_body ~/.gazebo/models/
+ln -s ~/ros_ws/src/roboy-ros-control/src/roboy_models/legs_with_upper_body ~/.gazebo/models/
 ```
 
 7) Install rosbridge
