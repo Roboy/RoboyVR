@@ -1,8 +1,16 @@
-# Setup roboyVR
+#roboyVR™
 
-This tutorial will help you setup roboyVR.
 
-## Part 1.1: Setup Virtualbox with Ubuntu
+**How it works:**  
+Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
+regarding roboy's movement are then sent through a ROSbridge(g.e. messages) towards Unity.  
+In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
+With the help of a VR-Headset you can watch roboy move around in a virtual space.
+
+## Setup
+This tutorial will help you setup roboyVR with all necessities it comes with.  
+
+### Part 1.1: Setup Virtualbox with Ubuntu
 
 1) Download and install Virtualbox for your OS https://www.virtualbox.org/
 
@@ -10,14 +18,15 @@ This tutorial will help you setup roboyVR.
 
 3) Mount the .iso and setup Virtualbox with the following settings (if available):
 
-* 4 cores
-* 6 GB of RAM
-* 128 MB of VRAM
-* 30 GB HDD space (via Expert mode)
+* 4 cores (Settings->System->Processor)
+* 6 GB of RAM (Settings->System->Motherboard)
+* 128 MB of VRAM (Settings->Display->Screen)
+* 30 GB HDD space (Settings->Storage)
 
-4) Set network settings to Bridged-Adapter or Host-Only
+4) Set network settings to Bridged-Adapter or Host-Only Adapter  
 
-## Part 1.2: Install ROS & Roboy on Ubuntu
+
+### Part 1.2: Install ROS & Roboy on Ubuntu
 
 1) Open Terminal and install the following packages
 
