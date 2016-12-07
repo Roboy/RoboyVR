@@ -20,6 +20,16 @@ public class XMLParser : MonoBehaviour
     {
         getInitParameters();
     }
+
+    void OnApplicationQuit()
+    {
+        Quaternion curRot = transform.rotation;
+
+        curRot = unityRotationToGazebo(curRot);
+
+        //Debug.Log(string.Format("Name: {0}, X: {1}, Y: {2}, Z: {3}, W: {4}", gameObject.name, curRot.x, curRot.y, curRot.z, curRot.w));
+    }
+
     #endregion //MONOBEHAVIOR_METHODS
 
     #region PUBLIC_METHODS
@@ -44,6 +54,7 @@ public class XMLParser : MonoBehaviour
         float beta = float.Parse(poseString[4]);
         float gamma = float.Parse(poseString[5]);
 
+
         //Gazebo to Unity coordinate system
 
         //POSITION
@@ -53,15 +64,15 @@ public class XMLParser : MonoBehaviour
 
         Quaternion rotX = Quaternion.AngleAxis(-90f, Vector3.right);
         Quaternion rotY = Quaternion.AngleAxis(90f, Vector3.up);
+        Quaternion rotZ = Quaternion.AngleAxis(-180f, Vector3.right);
 
         Vector3 pos = new Vector3(x, y, z);
 
         pos = rotY * rotX * pos;
-        //pos = rotY * pos;
 
         pos.z *= -1f;
 
-        transform.position = pos;
+        transform.localPosition = pos;
 
         //ROTATION
         //alpha => alpha
@@ -70,19 +81,38 @@ public class XMLParser : MonoBehaviour
 
         Quaternion q = Quaternion.Euler(new Vector3(alpha, beta, gamma));
 
-        
 
-        //q = rotY * rotX * q;
+        //if (gameObject.name.Equals("thigh_left"))
+        //{
+        //    float qx = float.Parse(poseString[3]);
+        //    float qy = float.Parse(poseString[4]);
+        //    float qz = float.Parse(poseString[5]);
+        //    float qw = float.Parse(poseString[6]);
 
-        //Quaternion q2 = new Quaternion(-q.x, -q.y, -q.z, q.w);
+        //    Quaternion rot = new Quaternion(qx, qy, qz, qw);
 
-        Quaternion qX2 = Quaternion.AngleAxis(90f, Vector3.right);
+        //    transform.localRotation = gazeboRotationToUnity(rot);
+        //    return;
+        //}
 
-        q = rotY * qX2 * q;
-
-        transform.rotation = q;
-
-        //transform.eulerAngles = new Vector3(Mathf.Rad2Deg * alpha, Mathf.Rad2Deg * gamma * -1f + 90f, Mathf.Rad2Deg * beta);
+        transform.localRotation = gazeboRotationToUnity(q);
     }
+
+    Quaternion gazeboRotationToUnity(Quaternion gazeboRot)
+    {
+        Quaternion rotX = Quaternion.AngleAxis(90f, Vector3.right);
+        Quaternion rotY = Quaternion.AngleAxis(90f, Vector3.up);
+
+        return rotY*rotX*gazeboRot;
+    }
+
+    Quaternion unityRotationToGazebo(Quaternion unityRot)
+    {
+        Quaternion rotX = Quaternion.AngleAxis(-90f, Vector3.right);
+        Quaternion rotY = Quaternion.AngleAxis(-90f, Vector3.up);
+
+        return rotX*rotY*unityRot;
+    }
+
     #endregion //PRIVATE_METHODS
 }
