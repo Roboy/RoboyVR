@@ -57,6 +57,7 @@ namespace VRTK
     /// </example>
     public sealed class VRTK_AdaptiveQuality : MonoBehaviour
     {
+#if (UNITY_5_4_OR_NEWER)
         #region Public fields
 
         [Tooltip("Toggles whether the render quality is dynamically adjusted to maintain VR framerate.\n\n"
@@ -329,7 +330,7 @@ namespace VRTK
             UpdateMSAALevel();
         }
 
-#endregion
+        #endregion
 
         private void HandleCommandLineArguments()
         {
@@ -418,7 +419,7 @@ namespace VRTK
             }
         }
 
-#region Render scale methods
+        #region Render scale methods
 
         private void UpdateRenderScaleLevels()
         {
@@ -605,9 +606,9 @@ namespace VRTK
             }
         }
 
-#endregion
+        #endregion
 
-#region Debug visualization methods
+        #region Debug visualization methods
 
         private void CreateOrDestroyDebugVisualization()
         {
@@ -676,9 +677,9 @@ namespace VRTK
             debugVisualizationQuadMaterial.SetInt(ShaderPropertyIDs.LastFrameIsInBudget, lastFrameIsInBudget);
         }
 
-#endregion
+        #endregion
 
-#region Private helper classes
+        #region Private helper classes
 
         private static class CommandLineArguments
         {
@@ -704,6 +705,7 @@ namespace VRTK
             public static readonly int LastFrameIsInBudget = Shader.PropertyToID("_LastFrameIsInBudget");
         }
 
-#endregion
+        #endregion
+#endif
     }
 }

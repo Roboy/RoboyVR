@@ -8,6 +8,7 @@ namespace VRTK
     [CustomEditor(typeof(VRTK_AdaptiveQuality))]
     public class VRTK_AdaptiveQualityEditor : Editor
     {
+#if (UNITY_5_4_OR_NEWER)
         private const string NoSteamVR_CameraFoundHelpBoxText =
           "This script needs to be added to a `GameObject` that has a `SteamVR_Camera` attached to it.";
         private const string DontDisableHelpBoxText =
@@ -126,5 +127,6 @@ namespace VRTK
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(headerAttribute.header, EditorStyles.boldLabel);
         }
+#endif
     }
 }

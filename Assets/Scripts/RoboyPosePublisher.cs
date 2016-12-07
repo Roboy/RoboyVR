@@ -15,16 +15,16 @@ public class RoboyPosePublisher : ROSBridgePublisher {
 
     public new static string GetMessageTopic()
     {
-        return "/roboy/pose";
-
         //return "/roboy/id";
+
+        return "visualization_marker";
     }
 
     public new static string GetMessageType()
     {
-        return "common_utilities/Pose";
-
         //return "std_msgs/Int32";
+
+        return "visualization_msgs/Marker";
     }
 
     public static string ToYAMLString(RoboyPoseMsg msg)
