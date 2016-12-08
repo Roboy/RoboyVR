@@ -122,3 +122,18 @@ You can reset the simulation with **R** but you can also change the key in *Robo
 In the vive scene you can see roboy with the HTC Vive in VR. You can select each roboy part individually with the controller through a raycast. In the **Hierarchy** window you can see the *SelectorTool* attached to the right controller. This object has a line renderer component attached to it so you can see where you are pointing. Currently you can select a roboy part with the trigger on the back of the controller. (https://cloud.githubusercontent.com/assets/10234845/21025739/da714120-bd89-11e6-93ee-45949cf7dfc8.png)
 
 Each roboy part has a *Selectable Object* script attached to it. You can choose two materials for visual feedback. (https://cloud.githubusercontent.com/assets/10234845/21025739/da714120-bd89-11e6-93ee-45949cf7dfc8.png)
+
+### Update roboy models ###
+
+In /roboyVR/Assets/RoboyModel/OriginModels there is a script **meshDownloadScript.py**. It downloads roboy models from https://github.com/Roboy/roboy_models/tree/master/legs_with_upper_body/cad. You need blender and python for this to work. You can use the template **runScript** bat file for Windows. 
+
+The format:
+```
+start "" "pathToBlender/blender.exe" -P "pathToScript\meshDownloadScript.py" **meshes name seperated by ',' without whitespace and file format**
+```
+
+Example:
+
+```
+start "" "C:\Programs\Blender\blender.exe" -P "C:\Documents\roboyVR\Assets\RoboyModel\OriginModels\meshDownloadScript.py" hip,torso,thigh_left,head
+```
