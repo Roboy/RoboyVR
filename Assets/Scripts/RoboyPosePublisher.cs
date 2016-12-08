@@ -17,17 +17,17 @@ public class RoboyPosePublisher : ROSBridgePublisher {
     {
         //return "/roboy/id";
 
-        return "visualization_marker";
+        return "/roboy/pose_test";
     }
 
     public new static string GetMessageType()
     {
         //return "std_msgs/Int32";
 
-        return "visualization_msgs/Marker";
+        return "geometry_msgs/Pose";
     }
 
-    public static string ToYAMLString(RoboyPoseMsg msg)
+    public static string ToYAMLString(ROSBridgeLib.geometry_msgs.PoseMsg msg)
     {
         return msg.ToYAMLString();
     }
