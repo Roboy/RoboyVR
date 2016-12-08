@@ -101,3 +101,10 @@ sudo apt install ros-kinetic-rosbridge-suite
 roslaunch rosbridge_server rosbridge_websocket.launch
 rosrun roboy_simulation VRRoboy
 ```
+### Part 2.1 Install Unity3D
+
+1) Download Unity3D (last working version with this Project 5.4.3 : https://unity3d.com/de/get-unity/download/archive)
+
+2) Install Unity3D. Make sure to choose also standalone build. Visual studio is recommonded to use with Unity3D, as it is free and more user friendly than MonoDevelop.
+
+3) Open the project in Unity. Unity works in **Scenes**.  
