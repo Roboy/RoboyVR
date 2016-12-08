@@ -39,6 +39,7 @@ sudo apt-get update
 sudo apt install libcmaes
 sudo apt-get install ros-kinetic-desktop-full
 sudo apt install ros-kinetic-controller-interface ros-kinetic-controller-manager ros-kinetic-gazebo-ros-control ros-kinetic-ros-controllers
+sudo apt install ros-kinetic-ecl-geometry
 sudo apt install libncurses-dev
 sudo apt-get install catkin
 sudo apt-get install git
