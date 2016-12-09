@@ -102,7 +102,7 @@ sudo apt install ros-kinetic-rosbridge-suite
 roslaunch rosbridge_server rosbridge_websocket.launch
 rosrun roboy_simulation VRRoboy
 ```
-### Part 2.1 Install Unity3D
+### Part 2.1: Install Unity3D
 
 1) Download Unity  
 (latest working version with roboyVR is 5.4.3: https://unity3d.com/de/get-unity/download/archive)
@@ -116,7 +116,7 @@ MonoDevelop (standard option).
 Download or clone this github repository to your pc on open it in Unity via **Open Project**. Unity is organized in **Scenes**. In order to watch the simulation in Unity which is running on the VM (in gazebo), open the **SimulationScene**.  
 ![Scene overview](https://cloud.githubusercontent.com/assets/10234845/21025492/f72657fc-bd88-11e6-912e-877ba72d782e.png "Scene overview") 
 
-### Part 2.2 SimulationScene ###
+### Part 2.2: SimulationScene ###
 
 In the SimulationScene you can observe the simulation from the VM within Unity. To do that you need to communicate the IP adress of your VM towards **RoboyManager**. The IP information is quickly found in Ubuntu by clicking on the two arrows pointing in opposite directions, right next to the system time. Afterwards a drop down menu will open, click on connection information. Remember the IP and paste it in the respective field in Unity.  
 ![IP address](https://cloud.githubusercontent.com/assets/10234845/21025737/da6cda5e-bd89-11e6-8755-af5fbf4a748b.png "IP address")  
@@ -132,7 +132,7 @@ You can reset the simulation with the **R** key, you can also change the key in 
 * Add walking plugin (Panels->Add New Panel->WalkingPlugin)
 * Turn slow motion on (within the walking plugin, it is a toggle button) 
 
-### Part 2.3 ViveScene ###
+### Part 2.3: ViveScene ###
 
 In the ViveScene you can view roboy with the HTC Vive™ in virtual reality. You can select each roboy part individually with the controller through a raycast. In the **Hierarchy** window you can see the *SelectorTool* attached to the right controller. This object has a line renderer component attached to it so know where you are pointing the device at. Currently you can select a roboy part with the trigger on the back of the controller. Each roboy part has a *Selectable Object* script attached to it. You can choose from two materials for visual feedback.  
 ![Materials selection](https://cloud.githubusercontent.com/assets/10234845/21025739/da714120-bd89-11e6-93ee-45949cf7dfc8.png "Materials selection")
