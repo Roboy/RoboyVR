@@ -134,8 +134,9 @@ You can reset the simulation with the **R** key, you can also change the key in 
 
 ### Part 2.3: ViveScene ###
 
-In the ViveScene you can view roboy with the HTC Vive™ in virtual reality. You can select each roboy part individually with the controller through a raycast. In the **Hierarchy** window you can see the *SelectorTool* attached to the right controller. This object has a line renderer component attached to it so know where you are pointing the device at. Currently you can select a roboy part with the trigger on the back of the controller. Each roboy part has a *Selectable Object* script attached to it. You can choose from two materials for visual feedback.  
-![Materials selection](https://cloud.githubusercontent.com/assets/10234845/21025739/da714120-bd89-11e6-93ee-45949cf7dfc8.png "Materials selection")
+In the ViveScene you can view roboy with the HTC Vive™ in virtual reality. You can select each roboy part individually with the controller through a raycast. In the **Hierarchy** window you can see the *SelectorTool* attached to the right controller.  
+![Selector Tool](https://cloud.githubusercontent.com/assets/10234845/21025739/da714120-bd89-11e6-93ee-45949cf7dfc8.png "Selector Tool")This object has a line renderer component attached to it so know where you are pointing the device at. Currently you can select a roboy part with the trigger on the back of the controller. Each roboy part has a *Selectable Object* script attached to it. You can choose from two materials for visual feedback.  
+![Materials selection](https://cloud.githubusercontent.com/assets/10234845/21025738/da6c4c06-bd89-11e6-883c-db8d20462f42.png "Materials selection")
 
 ### Update roboy models ###
 
