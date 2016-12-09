@@ -1,15 +1,18 @@
-5.4.3f1:2.2.0.0
+5.4.3f1:2.8.0.0
 StandaloneWindows64
-G:/Unity 5.4.3 64bit/Editor/Data/Managed/UnityEngine.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll
-G:/Unity 5.4.3 64bit/Editor/Data/Managed/UnityEditor.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/nunit.framework.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/UnityEditor.EditorTestsRunner.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll
-G:/Unity 5.4.3 64bit/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll
-G:/Unity 5.4.3 64bit/Editor/Data/Managed/UnityEditor.Graphs.dll
-G:/Unity 5.4.3 64bit/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll
+D:/UnityEngine/Editor/Data/Managed/UnityEngine.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll
+D:/UnityEngine/Editor/Data/Managed/UnityEditor.dll
+D:/UnityEngine/Editor/Data\Managed/Mono.Cecil.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/nunit.framework.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/UnityEditor.EditorTestsRunner.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll
+D:/UnityEngine/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll
+D:/UnityEngine/Editor/Data/Managed/UnityEditor.Graphs.dll
+D:/UnityEngine/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+D:/UnityEngine/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.Metro.Extensions.dll
+D:/UnityEngine/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll
 C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/2015/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll
