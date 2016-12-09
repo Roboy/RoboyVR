@@ -4547,6 +4547,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1678453925}
   - 136: {fileID: 1678453926}
+  - 114: {fileID: 1678453927}
   m_Layer: 0
   m_Name: unterarm_left
   m_TagString: RoboyPart
@@ -4561,10 +4562,10 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1678453924}
-  m_LocalRotation: {x: 0.51334226, y: -0.14117025, z: 0.09379972, w: 0.84128016}
-  m_LocalPosition: {x: -0.19912614, y: 0.21999682, z: 0.0770642}
+  m_LocalRotation: {x: 0.60273474, y: -0.06752318, z: 0.05608171, w: 0.79309916}
+  m_LocalPosition: {x: -0.1878, y: 0.2656, z: 0.1574}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 62.9, y: -18.06, z: 1.6209869}
+  m_LocalEulerAnglesHint: {x: 74.5, y: -8.5, z: 1.6209869}
   m_Children:
   - {fileID: 1871627345}
   m_Father: {fileID: 517671059}
@@ -4583,6 +4584,18 @@ CapsuleCollider:
   m_Height: 0.28
   m_Direction: 1
   m_Center: {x: 0, y: 0.15, z: 0.03}
+--- !u!114 &1678453927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1678453924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b39775fbfbb35434cb823c483f47dfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 200
 --- !u!1 &1681407350
 GameObject:
   m_ObjectHideFlags: 0
@@ -4710,10 +4723,10 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1715701817}
-  m_LocalRotation: {x: 0.7173273, y: 0.010482206, z: -0.012287034, w: 0.69654924}
+  m_LocalRotation: {x: 0.56519866, y: 0.021846281, z: 0.0000488814, w: 0.8246656}
   m_LocalPosition: {x: -0.2079312, y: 0.43764925, z: 0.03406534}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 68.78, y: 5.721985, z: 3.9249878}
   m_Children:
   - {fileID: 1623070811}
   m_Father: {fileID: 517671059}
