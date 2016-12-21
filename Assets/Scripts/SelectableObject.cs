@@ -35,6 +35,21 @@ public class SelectableObject : MonoBehaviour
         m_DefaultMaterial = m_Renderers[0].material;
     }
 
+    void OnMouseDown()
+    {
+        SetStateSelected();
+    }
+
+    void OnMouseEnter()
+    {
+        SetStateTargeted();
+    }
+
+    void OnMouseExit()
+    {
+        SetStateDefault();
+    }
+
     #endregion //MONOBEHAVIOR_METHODS
 
     #region PUBLIC_METHODS
@@ -44,10 +59,12 @@ public class SelectableObject : MonoBehaviour
         if (m_CurrentState == State.TARGETED)
         {
             changeState(State.SELECTED);
+            SelectorManager.Instance.AddSelectedObject(this);
         }
         else if (m_CurrentState == State.SELECTED)
         {
             changeState(State.TARGETED);
+            SelectorManager.Instance.RemoveSelectedObject(this);
         }
     }
 

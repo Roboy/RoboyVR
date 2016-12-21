@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - RoboyPart
+  - TeleportIgnore
+  - Roboy
+  - RoboyUI
   layers:
   - Default
   - TransparentFX
