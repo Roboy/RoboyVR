@@ -35,20 +35,20 @@ public class SelectableObject : MonoBehaviour
         m_DefaultMaterial = m_Renderers[0].material;
     }
 
-    void OnMouseDown()
-    {
-        SetStateSelected();
-    }
+    //void OnMouseDown()
+    //{
+    //    SetStateSelected();
+    //}
 
-    void OnMouseEnter()
-    {
-        SetStateTargeted();
-    }
+    //void OnMouseEnter()
+    //{
+    //    SetStateTargeted();
+    //}
 
-    void OnMouseExit()
-    {
-        SetStateDefault();
-    }
+    //void OnMouseExit()
+    //{
+    //    SetStateDefault();
+    //}
 
     #endregion //MONOBEHAVIOR_METHODS
 

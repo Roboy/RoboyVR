@@ -40,15 +40,10 @@ public class SelectorManager : Singleton<SelectorManager>
             m_UI_Elements.Add(g.name, g);
             g.GetComponent<Image>().enabled = false;
             g.GetComponentInChildren<Text>().enabled = false;
-            
+            g.GetComponentInChildren<Text>().text = g.name;
         }
 
         m_UI_Line_Material = Resources.Load("mat_UI_Line", typeof(Material)) as Material;
-    }
-
-    void Update()
-    {
-        updateRays();
     }
 
     public void AddSelectedObject(SelectableObject obj)
@@ -59,18 +54,6 @@ public class SelectorManager : Singleton<SelectorManager>
         m_UI_Elements[obj.name].GetComponent<Image>().enabled = true;
         m_UI_Elements[obj.name].GetComponentInChildren<Text>().enabled = true;
 
-        Vector3 ui_pos = m_UI_Elements[obj.name].transform.position;
-        ui_pos.z = Camera.main.nearClipPlane;
-
-        Vector3 lrEndPosition = Camera.main.ScreenToWorldPoint(ui_pos);
-
-        LineRenderer lr = obj.gameObject.AddComponent<LineRenderer>();
-        lr.numPositions = 2;
-        lr.startWidth = 0.005f;
-        lr.SetPositions(new Vector3[] { obj.transform.position, lrEndPosition });
-        lr.material = m_UI_Line_Material;
-
-
     }
 
     public void RemoveSelectedObject(SelectableObject obj)
@@ -80,17 +63,5 @@ public class SelectorManager : Singleton<SelectorManager>
 
         m_UI_Elements[obj.name].GetComponent<Image>().enabled = false;
         m_UI_Elements[obj.name].GetComponentInChildren<Text>().enabled = false;
-
-        Destroy(obj.GetComponent<LineRenderer>());
-    }
-
-    private void updateRays()
-    {
-        foreach (SelectableObject obj in m_SelectedParts)
-        {
-            LineRenderer lr = obj.GetComponent<LineRenderer>();
-
-            lr.SetPosition(0, obj.transform.position);
-        }
     }
 }
