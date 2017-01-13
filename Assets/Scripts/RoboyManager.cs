@@ -46,6 +46,7 @@ public class RoboyManager : Singleton<RoboyManager> {
                 continue;
             m_RoboyParts.Add(t.name, t);
         }
+
     }
 
     void Update()
@@ -130,6 +131,38 @@ public class RoboyManager : Singleton<RoboyManager> {
     #endregion //PUBLIC_METHODS
 
     #region PRIVATE_METHODS
+
+    void drawTendons()
+    {
+        Dictionary<int, List<Vector3>> tendonsDictionary = new Dictionary<int, List<Vector3>>();
+        int tendonsCount = 5;
+        int tendonsLength = UnityEngine.Random.Range(2, 10);
+
+        for (int i = 0; i < tendonsCount; i++)
+        {
+            List<Vector3> lv = new List<Vector3>();
+            for (int j = 0; j < tendonsLength; j++)
+            {
+                Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f));
+                lv.Add(position);
+            }
+            tendonsDictionary.Add(i, lv);
+            tendonsLength = UnityEngine.Random.Range(2, 10);
+        }
+
+        foreach (KeyValuePair<int, List<Vector3>> t in tendonsDictionary)
+        {
+            //Get number of points for linerenderer
+            int points = t.Value.Count;
+
+            GameObject g = new GameObject();
+            g.AddComponent<LineRenderer>();
+            LineRenderer lr = g.GetComponent<LineRenderer>();
+            lr.numPositions = points - 1;
+            lr.SetPositions(t.Value.ToArray());
+            lr.startWidth = lr.endWidth = 0.1f;
+        }
+    }
 
     #endregion //PRIVATE_METHODS
 }
