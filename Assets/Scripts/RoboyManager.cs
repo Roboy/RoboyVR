@@ -14,6 +14,8 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     public Transform Roboy;
 
+    public Dictionary<string, Transform> RoboyParts { get { return m_RoboyParts; } }
+
     #endregion //PUBLIC_MEMBER_VARIABLES
 
     #region PRIVATE_MEMBER_VARIABLES
@@ -29,20 +31,20 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     void Start()
     {
-        if (string.IsNullOrEmpty(VM_IP))
-            return;
+        //if (string.IsNullOrEmpty(VM_IP))
+        //    return;
 
-        m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
+        //m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
 
-        m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
-        m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
-        m_Ros.AddPublisher(typeof(RoboyPosePublisher));
+        //m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
+        //m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
+        //m_Ros.AddPublisher(typeof(RoboyPosePublisher));
 
-        m_Ros.Connect();
+        //m_Ros.Connect();
 
         foreach (Transform t in Roboy)
         {
-            if(t == null | !t.CompareTag("RoboyPart"))
+            if (t == null | !t.CompareTag("RoboyPart"))
                 continue;
             m_RoboyParts.Add(t.name, t);
         }
@@ -51,10 +53,10 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     void Update()
     {
-        m_Ros.Render();
+        //m_Ros.Render();
 
-        if (Input.GetKeyDown(KeyCode.R))
-            m_Ros.CallService("/roboy/reset_world", "");
+        //if (Input.GetKeyDown(KeyCode.R))
+        //    m_Ros.CallService("/roboy/reset_world", "");
     }
 
     void OnApplicationQuit()

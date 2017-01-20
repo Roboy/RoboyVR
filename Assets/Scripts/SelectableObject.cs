@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class SelectableObject : MonoBehaviour
 {
@@ -76,8 +75,11 @@ public class SelectableObject : MonoBehaviour
         }
     }
 
-    public void SetStateDefault()
+    public void SetStateDefault(bool forceMode = false)
     {
+        if (forceMode)
+            changeState(State.DEFAULT);
+
         if (m_CurrentState == State.TARGETED)
         {
             changeState(State.DEFAULT);
@@ -98,18 +100,22 @@ public class SelectableObject : MonoBehaviour
                 {
                     mRenderer.material = m_DefaultMaterial;
                 }
+                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().enabled = false;
                 break;
             case State.TARGETED:
                 foreach (var mRenderer in m_Renderers)
                 {
                     mRenderer.material = TargetedMaterial;
                 }
+                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().enabled = true;
+                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().effectColor = TargetedMaterial.color;
                 break;
             case State.SELECTED:
                 foreach (var mRenderer in m_Renderers)
                 {
                     mRenderer.material = SelectedMaterial;
                 }
+                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().effectColor = SelectedMaterial.color;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

@@ -9,6 +9,8 @@ public class SelectorManager : Singleton<SelectorManager>
 
     public RectTransform Canvas;
 
+    public Dictionary<string, GameObject> UI_Elements { get { return m_UI_Elements; } }
+
     private Transform m_Roboy;
 
     private List<SelectableObject> m_RoboyParts = new List<SelectableObject>();
@@ -38,8 +40,17 @@ public class SelectorManager : Singleton<SelectorManager>
         foreach (GameObject g in tempUI_Elements)
         {
             m_UI_Elements.Add(g.name, g);
-            g.GetComponent<Image>().enabled = false;
-            g.GetComponentInChildren<Text>().enabled = false;
+
+            Outline outline;
+
+            if (g.GetComponent<Outline>() == null)
+                g.AddComponent<Outline>();
+            outline = g.GetComponent<Outline>();
+
+            outline.enabled = false;
+            outline.effectColor = Color.red;
+            outline.effectDistance = new Vector2(0.2f, -0.2f);
+
             g.GetComponentInChildren<Text>().text = g.name;
         }
 
@@ -48,12 +59,17 @@ public class SelectorManager : Singleton<SelectorManager>
 
     public void AddSelectedObject(SelectableObject obj)
     {
-        if(!m_SelectedParts.Contains(obj))
-            m_SelectedParts.Add(obj);
-        
-        m_UI_Elements[obj.name].GetComponent<Image>().enabled = true;
-        m_UI_Elements[obj.name].GetComponentInChildren<Text>().enabled = true;
+        if (m_SelectedParts.Count >= 3)
+        {
+            SelectableObject tmp = m_SelectedParts[0];
+            tmp.SetStateDefault(true);
+            m_SelectedParts.RemoveAt(0);         
+        }
 
+        if (!m_SelectedParts.Contains(obj))
+            m_SelectedParts.Add(obj);
+
+        // m_UI_Elements[obj.name].GetComponent<Outline>().enabled = true;
     }
 
     public void RemoveSelectedObject(SelectableObject obj)
@@ -61,7 +77,6 @@ public class SelectorManager : Singleton<SelectorManager>
         if (m_SelectedParts.Contains(obj))
             m_SelectedParts.Remove(obj);
 
-        m_UI_Elements[obj.name].GetComponent<Image>().enabled = false;
-        m_UI_Elements[obj.name].GetComponentInChildren<Text>().enabled = false;
+        //m_UI_Elements[obj.name].GetComponent<Outline>().enabled = false;
     }
 }

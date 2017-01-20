@@ -106,7 +106,7 @@ public class TestTendons : MonoBehaviour
             
             int index = points/2;
 
-            Debug.Log(points);
+            //Debug.Log(points);
 
             Vector3 arrowPos = t.Value[index];
 
