@@ -1,12 +1,10 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using Valve.VR;
+﻿using UnityEngine; 
 
 [RequireComponent(typeof(LineRenderer))]
 public class SelectorTool : MonoBehaviour {
 
-    public SteamVR_Controller.Device SteamController { get { return m_SteamVRDevice; }  }
+    public SteamVR_Controller.Device Controller { get { return m_SteamVRDevice; }  }
+    public SteamVR_TrackedController ControllerEventListener { get { return m_SteamVRTrackedController; } }
 
     private LineRenderer m_LineRenderer;
     private SelectableObject m_LastSelectedObject;
@@ -15,6 +13,7 @@ public class SelectorTool : MonoBehaviour {
     // Update is called once per frame
     private SteamVR_Controller.Device m_SteamVRDevice;
     private SteamVR_TrackedObject m_SteamVRController;
+    private SteamVR_TrackedController m_SteamVRTrackedController;
     
 
     void Start()
@@ -26,6 +25,8 @@ public class SelectorTool : MonoBehaviour {
         // Find the controller and initialize the values to default
         m_SteamVRDevice = SteamVR_Controller.Input((int)m_SteamVRController.index);
         m_SteamVRDevice.Update();
+
+        m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
     }
 
     public void GetRayFromController()

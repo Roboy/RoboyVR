@@ -24,7 +24,7 @@ public class InputManager : Singleton<InputManager> {
     
     void Start()
     {
-
+        StartCoroutine(InitControllers());
     }
 
     void Update()
@@ -32,88 +32,56 @@ public class InputManager : Singleton<InputManager> {
         if (m_SelectorTool.gameObject.activeInHierarchy)
         {
             m_SelectorTool.GetRayFromController();
-            GetTouchpadInputs();
         }
     }
 
-    void GetTouchpadInputs()
+    IEnumerator InitControllers()
     {
-        if (m_SelectorTool == null)
-            return;
+        while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
+            yield return Time.fixedDeltaTime;
 
-        string result = GetTouchpadInput(m_SelectorTool.SteamController);
-
-        switch (result)
-        {
-            case "Right":
-                SelectorTool_TouchpadStatus = TouchpadStatus.Right;
-                break;
-            case "Left":
-                SelectorTool_TouchpadStatus = TouchpadStatus.Left;
-                break;
-            case "Top":
-                SelectorTool_TouchpadStatus = TouchpadStatus.Top;
-                break;
-            case "Bottom":
-                SelectorTool_TouchpadStatus = TouchpadStatus.Bottom;
-                break;
-            case "None":
-                SelectorTool_TouchpadStatus = TouchpadStatus.None;
-                break;
-        }
-
-        if (m_GUIController == null)
-            return;
-
-        result = GetTouchpadInput(m_GUIController.SteamController);
-
-        switch (result)
-        {
-            case "Right":
-                GUIController_TouchpadStatus = TouchpadStatus.Right;
-                break;
-            case "Left":
-                GUIController_TouchpadStatus = TouchpadStatus.Left;
-                break;
-            case "Top":
-                GUIController_TouchpadStatus = TouchpadStatus.Top;
-                break;
-            case "Bottom":
-                GUIController_TouchpadStatus = TouchpadStatus.Bottom;
-                break;
-            case "None":
-                GUIController_TouchpadStatus = TouchpadStatus.None;
-                break;
-        }
-
+        m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
+        m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
     }
 
-    public string GetTouchpadInput(SteamVR_Controller.Device controller)
+
+    public void GetTouchpadInput(object sender, ClickedEventArgs e)
     {
-        Vector2 touchPadPos = controller.GetAxis();
-        string result = "None";
+        Vector2 touchPadPos = new Vector2(e.padX, e.padY);
+
+        TouchpadStatus result = TouchpadStatus.None;
 
         //Debug.Log("X: " + touchPadPos.x + " Y: " + touchPadPos.y);
 
         if (Mathf.Abs(touchPadPos.x) < 0.4f && Mathf.Abs(touchPadPos.y) < 0.4f)
-            return "None";
+            return;
 
         if (Mathf.Abs(touchPadPos.x) > Mathf.Abs(touchPadPos.y))
         {
             if (touchPadPos.x > 0)
-                result = "Right";
+                result = TouchpadStatus.Right;
             else
-                result = "Left";
+                result = TouchpadStatus.Left;
         }
         else
         {
             if (touchPadPos.y > 0)
-                result = "Top";
+                result = TouchpadStatus.Top;
             else
-                result = "Bottom";
+                result = TouchpadStatus.Bottom;
         }
 
-        return result;
-
+        if (e.controllerIndex.Equals(m_SelectorTool.Controller.index))
+        {
+            Debug.Log("Select : " + result);
+            SelectorTool_TouchpadStatus = result;
+        }        
+        else if (e.controllerIndex.Equals(m_GUIController.Controller.index))
+        {
+            Debug.Log("GUI : " + result);           
+            GUIController_TouchpadStatus = result;
+            m_GUIController.ChangePanel();
+        }
+            
     }
 }

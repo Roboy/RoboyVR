@@ -11,7 +11,7 @@ TagManager:
   - TeleportIgnore
   - Roboy
   - SelectorTool
-  - FUCK
+  - UIPanel
   layers:
   - Default
   - TransparentFX
