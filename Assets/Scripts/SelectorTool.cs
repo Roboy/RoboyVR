@@ -1,4 +1,5 @@
-﻿using UnityEngine; 
+﻿using System.Collections;
+using UnityEngine; 
 
 [RequireComponent(typeof(LineRenderer))]
 public class SelectorTool : MonoBehaviour {
@@ -27,18 +28,23 @@ public class SelectorTool : MonoBehaviour {
         m_SteamVRDevice.Update();
 
         m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
+
+          
+    }
+
+    void Update()
+    {
+        
     }
 
     public void GetRayFromController()
     {
         RaycastHit hit;
-
         m_LineRenderer.SetPosition(0, transform.position);
 
         if (Physics.Raycast(transform.position, transform.forward, out hit, m_RayDistance))
         {
             m_LineRenderer.SetPosition(1, hit.point);
-
             SelectableObject hittedObject;
 
             if (hit.transform.tag.Equals("RoboyUI"))
@@ -57,15 +63,20 @@ public class SelectorTool : MonoBehaviour {
                             m_LastSelectedObject.SetStateDefault();
 
                         m_LastSelectedObject = hittedObject;
+                        StartCoroutine(vibrateController());
+
                     }
-
-
-                    hittedObject.SetStateTargeted();
+                    else
+                    {
+                        hittedObject.SetStateTargeted();
+                    }
+                    
 
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
                         hittedObject.SetStateSelected();
-                    }
+                        SteamVR_Controller.Input((int)m_SteamVRController.index).TriggerHapticPulse(500);
+                    }   
 
                 }
         }
@@ -77,6 +88,21 @@ public class SelectorTool : MonoBehaviour {
                 m_LastSelectedObject.SetStateDefault();
 
             m_LastSelectedObject = null;
+        }
+    }
+
+    private IEnumerator vibrateController()
+    {
+        float duration = 0.25f;
+        float currDuration = 0f;
+        float vibrationStrength = 250f;
+
+        while (currDuration < duration)
+        {
+            float sinValue = Mathf.Sin(currDuration / duration * Mathf.PI) * vibrationStrength;
+            SteamVR_Controller.Input((int)m_SteamVRController.index).TriggerHapticPulse((ushort)sinValue);
+            currDuration += Time.fixedDeltaTime;
+            yield return Time.fixedDeltaTime;
         }
     }
 }

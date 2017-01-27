@@ -33,6 +33,8 @@ public class InputManager : Singleton<InputManager> {
         {
             m_SelectorTool.GetRayFromController();
         }
+
+       
     }
 
     IEnumerator InitControllers()
@@ -80,7 +82,7 @@ public class InputManager : Singleton<InputManager> {
         {
             Debug.Log("GUI : " + result);           
             GUIController_TouchpadStatus = result;
-            m_GUIController.ChangePanel();
+            StartCoroutine(m_GUIController.ChangePanel());
         }
             
     }

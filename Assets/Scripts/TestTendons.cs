@@ -1,11 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
+using Random = UnityEngine.Random;
 
 public class TestTendons : MonoBehaviour
 {
-
+    public int ValuesSize = 30;
+    public float MaximumX = 10f;
+    public float MaximumY = 2f;
     [SerializeField] private GameObject Arrow;
     private GameObject arrowCopy;
 
@@ -13,59 +18,57 @@ public class TestTendons : MonoBehaviour
     private float m_Timer = 0.05f;
     private float m_currentTime = 0f;
     private LineRenderer Oscillator;
+    private Vector3 m_LastPosition = Vector3.zero;
+    private List<Vector3> lr_List = new List<Vector3>();
+    private List<float> volt_values = new List<float>();
+    private float minValue;
+    private float maxValue;
+    private float stepSize = 1;
+
     //TESTEND
 	
         // Use this for initialization
 	void Start ()
 	{
-	    drawTendons();
-        GameObject OscillatorGO = new GameObject();
-        Oscillator = OscillatorGO.AddComponent<LineRenderer>();
-        Oscillator.numPositions = 30;
-        Oscillator.startWidth = Oscillator.endWidth = 0.1f;
+	    //drawTendons();
 
-        List<Vector3> lv = new List<Vector3>();
-
-        for (int i = 0; i < Oscillator.numPositions; i++)
-        {
-            Vector3 pos = new Vector3(i, Random.Range(1f, 10f), -5);
-            lv.Add(pos);
-        }
-
-        Oscillator.SetPositions(lv.ToArray());
-    }
+	    
+	    MaximumX = GetComponent<RectTransform>().rect.width * transform.parent.localScale.x;
+	    MaximumY = GetComponent<RectTransform>().rect.height * transform.parent.localScale.y;
+        initializeVoltPath();
+        Debug.Log(MaximumX + "---" + MaximumY);
+	    // Oscillator.SetPositions(lv.ToArray());
+	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-        float scale = Random.Range(1f, 2f);
+        //float scale = Random.Range(1f, 2f);
 
-        arrowCopy.transform.localScale = new Vector3(arrowCopy.transform.localScale.x, scale, arrowCopy.transform.localScale.z);
+        //arrowCopy.transform.localScale = new Vector3(arrowCopy.transform.localScale.x, scale, arrowCopy.transform.localScale.z);
 
-        Material mat = arrowCopy.GetComponent<Renderer>().material;
-        if (scale < 1.5f)
-            mat.color = Color.Lerp(Color.green, Color.yellow, scale - 0.5f);
-        else if (scale > 1.5)
-            mat.color = Color.Lerp(Color.yellow, Color.red, scale - 1.5f);
+        //Material mat = arrowCopy.GetComponent<Renderer>().material;
+        //if (scale < 1.5f)
+        //    mat.color = Color.Lerp(Color.green, Color.yellow, scale - 0.5f);
+        //else if (scale > 1.5)
+        //    mat.color = Color.Lerp(Color.yellow, Color.red, scale - 1.5f);
 
-        Color col = mat.color;
+        //Color col = mat.color;
 
-        if (col.r > col.g && col.r > col.b)
-            col.r = 1f;
-        else if (col.g > col.r && col.g > col.b)
-            col.g = 1f;
-        else if (col.b > col.g && col.b > col.r)
-            col.b = 1f;
+        //if (col.r > col.g && col.r > col.b)
+        //    col.r = 1f;
+        //else if (col.g > col.r && col.g > col.b)
+        //    col.g = 1f;
+        //else if (col.b > col.g && col.b > col.r)
+        //    col.b = 1f;
 
-        mat.color = col;
+        //mat.color = col;
 
-	    if (m_currentTime > m_Timer)
-	    {
-            updateForcePath();
-	        m_currentTime = 0f;
-	    }
-        else
-	        m_currentTime += Time.deltaTime;
+
+            updateVoltPath();
+
+
+	    m_LastPosition = transform.position;
 	}
 
     void drawTendons()
@@ -137,34 +140,176 @@ public class TestTendons : MonoBehaviour
 
     void drawForcePath()
     {
-        float currentForce = arrowCopy.transform.localScale.y;
+        GameObject OscillatorGO = new GameObject();
+        Oscillator = OscillatorGO.AddComponent<LineRenderer>();
+        Oscillator.numPositions = 30;
+        Oscillator.startWidth = Oscillator.endWidth = 0.1f;
 
         GameObject g = new GameObject();
         LineRenderer lr = g.AddComponent<LineRenderer>();
         lr.numPositions = 30;
         lr.startWidth = lr.endWidth = 0.1f;
 
-        List<Vector3> lv = new List<Vector3>();
-
         for (int i = 0; i < lr.numPositions; i++)
         {
-            Vector3 pos = new Vector3(i, Random.Range(1f,10f), -5);
-            lv.Add(pos);
+            Vector3 pos = new Vector3(i, Mathf.Sin(i), 0f);
+            pos += transform.position - (transform.position - m_LastPosition);
+            pos = transform.rotation * pos;
+            lr_List.Add(pos);
         }
 
-        lr.SetPositions(lv.ToArray());
+        lr.SetPositions(lr_List.ToArray());
     }
 
     void updateForcePath()
     {
-        List<Vector3> lv = new List<Vector3>();
-
-        for (int i = 0; i < Oscillator.numPositions; i++)
+        for (int i = 0; i < lr_List.Count; i++)
         {
-            Vector3 pos = new Vector3(i, Random.Range(1f, 10f), -5);
-            lv.Add(pos);
+            if (i == lr_List.Count - 1)
+            {
+                lr_List.Insert(0, lr_List[lr_List.Count-1]);
+                lr_List.RemoveAt(lr_List.Count - 1);
+            }
+            else
+            {
+                Vector3 newPos = lr_List[i];
+                Vector3 nextPos = lr_List[i + 1];
+                newPos += transform.position - (transform.position - m_LastPosition);
+                newPos = transform.rotation * newPos;
+                nextPos += transform.position - (transform.position - m_LastPosition);
+                nextPos = transform.rotation * nextPos;
+                lr_List[i] = new Vector3(nextPos.x, newPos.y, newPos.z);
+            }   
+        }
+        Oscillator.SetPositions(lr_List.ToArray());
+    }
+
+    void initializeValues()
+    {
+        for (int i = 0; i < ValuesSize; i++)
+        {
+            volt_values.Add(Random.Range(0f,10f));
+        }
+    }
+
+    void initializeVoltPath()
+    {
+        GameObject OscillatorGO = new GameObject();
+        Oscillator = OscillatorGO.AddComponent<LineRenderer>();
+        Oscillator.numPositions = ValuesSize;
+        Oscillator.startWidth = Oscillator.endWidth = 0.01f;
+
+        initializeValues();
+
+        stepSize = MaximumX/(float) ValuesSize;
+
+        minValue = findSmallestElement(volt_values);
+        maxValue = findBiggestElement(volt_values);
+
+        for (int i = 0; i < ValuesSize; i++)
+        {
+            Vector3 pos = new Vector3(i * stepSize, scaleValues(minValue, maxValue, volt_values[i]), 0);
+            pos = transform.rotation*pos;
+            pos += transform.position;
+            lr_List.Add(pos);
         }
 
-        Oscillator.SetPositions(lv.ToArray());
+        Oscillator.SetPositions(lr_List.ToArray());
+
+    }
+
+    void updateValues()
+    {
+        ShiftRight(volt_values, 1);
+        float newValue = Random.Range(0, 10f);
+
+        if (newValue > maxValue)
+            maxValue = newValue;
+        else if (newValue < minValue)
+            minValue = newValue;
+
+        volt_values[0] = newValue;
+    }
+
+    void updateVoltPath()
+    {
+        lr_List.Clear();
+
+        updateValues();
+        for (int i = 0; i < ValuesSize; i++)
+        {
+            Vector3 pos = new Vector3(i * stepSize, scaleValues(minValue, maxValue, volt_values[i]), 0);
+            pos = transform.rotation * pos;
+            pos += transform.position;
+            lr_List.Add(pos);
+        }
+
+        Oscillator.SetPositions(lr_List.ToArray());
+    }
+
+    float findSmallestElement(List<float> list )
+    {
+        if (list == null)
+        {
+            throw new ArgumentNullException("self");
+        }
+
+        if (list.Count == 0)
+        {
+            throw new ArgumentException("List is empty.", "self");
+        }
+
+        float minima = list[0];
+        foreach (float f in list)
+        {
+            if (f < minima)
+            {
+                minima = f;
+            }
+        }
+
+        return minima;
+    }
+
+    float findBiggestElement(List<float> list)
+    {
+        if (list == null)
+        {
+            throw new ArgumentNullException("self");
+        }
+
+        if (list.Count == 0)
+        {
+            throw new ArgumentException("List is empty.", "self");
+        }
+
+        float maxima = list[0];
+        foreach (float f in list)
+        {
+            if (f > maxima)
+            {
+                maxima = f;
+            }
+        }
+
+        return maxima;
+    }
+
+    float scaleValues(float min, float max, float value)
+    {
+        return (value - min)*MaximumY/(max - min);
+    }
+
+    public static void ShiftRight<T>(List<T> lst, int shifts)
+    {
+        for (int i = lst.Count - shifts - 1; i >= 0; i--)
+        {
+            lst[i + shifts] = lst[i];
+        }
+
+        for (int i = 0; i < shifts; i++)
+        {
+            lst[i] = default(T);
+        }
     }
 }

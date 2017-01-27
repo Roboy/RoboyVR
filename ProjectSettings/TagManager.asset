@@ -12,6 +12,9 @@ TagManager:
   - Roboy
   - SelectorTool
   - UIPanel
+  - FadeInPanel
+  - FadeOutPanel
+  - FadeStandardPanel
   layers:
   - Default
   - TransparentFX
