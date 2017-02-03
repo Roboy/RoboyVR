@@ -40,7 +40,7 @@ public class TestOsci : MonoBehaviour
     void addValue()
     {
         float newValue = Random.Range(0, 100);
-        TestTendons.ShiftRight(values, 1);
+        ExtensionMethods.ShiftRight(values, 1);
 
         values[0] = newValue;
     }
@@ -48,14 +48,14 @@ public class TestOsci : MonoBehaviour
     void addValueOver9000()
     {
         float newValue = 9001;
-        TestTendons.ShiftRight(values, 1);
+        ExtensionMethods.ShiftRight(values, 1);
 
         values[0] = newValue;
     }
     void addValueUnder9000()
     {
         float newValue = -9001;
-        TestTendons.ShiftRight(values, 1);
+        ExtensionMethods.ShiftRight(values, 1);
 
         values[0] = newValue;
     }

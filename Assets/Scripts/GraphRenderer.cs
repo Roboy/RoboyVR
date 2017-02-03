@@ -10,7 +10,11 @@ public class GraphRenderer : MonoBehaviour
     // Color for the graph
     public Material GraphMaterial;
 
-    // Offset
+    // Offset values
+    public float BorderLeft;
+    public float BorderRight;
+    public float BorderTop;
+    public float BorderBottom;
 
     // LineRenderer to render the graph
     private LineRenderer m_OscillatorLineRenderer;
@@ -84,8 +88,8 @@ public class GraphRenderer : MonoBehaviour
             m_RectTransform = GetComponent<RectTransform>();
 
             // Get the maximum scaled width and height
-            m_MaximumWidth = m_RectTransform.rect.width * transform.lossyScale.x;
-            m_MaximumHeight = m_RectTransform.rect.height * transform.lossyScale.y;
+            m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight) * transform.lossyScale.x;
+            m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop) * transform.lossyScale.y;
             
             // Number of points of the graph
             m_NumPoints = numPoints;
@@ -294,7 +298,7 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     Vector3 getGraphPositionAtIndex(int index)
     {
-        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), 0);
+        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), -0.025f);
         pos = transform.rotation * pos;
         pos += transform.position;
         pos -= m_RectTransform.pivot.x * m_MaximumWidth * transform.right;
@@ -302,27 +306,5 @@ public class GraphRenderer : MonoBehaviour
         return pos;
     }
 
-    public static void ShiftRight<T>(List<T> lst, int shifts)
-    {
-        if (lst == null)
-        {
-            Debug.Log("List is null");
-            return;
-        }
-        if (lst.Count == 0)
-        {
-            Debug.Log("List is empty!");
-            return;
-        }
-        
-        for (int i = lst.Count - shifts - 1; i >= 0; i--)
-        {
-            lst[i + shifts] = lst[i];
-        }
-
-        for (int i = 0; i < shifts; i++)
-        {
-            lst[i] = default(T);
-        }
-    }
+    
 }
