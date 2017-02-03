@@ -73,12 +73,12 @@ public class SteamVR_TestTrackedCamera : MonoBehaviour
 		target.localScale = new Vector3(1, 1.0f / aspect, 1);
 
 		// Apply the pose that this frame was recorded at.
-		if (source.hasTracking)
-		{
-			var t = source.transform;
-			target.localPosition = t.pos;
-			target.localRotation = t.rot;
-		}
+		//if (source.hasTracking)
+		//{
+		//	var t = source.transform;
+		//	target.localPosition = t.pos;
+		//	target.localRotation = t.rot;
+		//}
 	}
 }
 

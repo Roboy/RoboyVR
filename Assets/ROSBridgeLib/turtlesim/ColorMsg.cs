@@ -31,7 +31,7 @@ namespace ROSBridgeLib {
 			}
 			
 			public static string GetMessageType() {
-				return "turtlesim/Color";
+				return "turtlesim/GraphMaterial";
 			}
 			
 			public int GetR() {
@@ -47,7 +47,7 @@ namespace ROSBridgeLib {
 			}
 			
 			public override string ToString() {
-				return "turtlesim/Color [r=" + _r + ",  g=" + _g + ", b=" + _b + "]";
+				return "turtlesim/GraphMaterial [r=" + _r + ",  g=" + _g + ", b=" + _b + "]";
 			}
 			
 			public override string ToYAMLString() {

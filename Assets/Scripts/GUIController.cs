@@ -147,4 +147,9 @@ public class GUIController : MonoBehaviour {
         m_CurrentPanelIndex = nextPanelIndex;
     }
 
+    //private IEnumerator showDetailedPanels()
+    //{
+
+    //}
+
 }

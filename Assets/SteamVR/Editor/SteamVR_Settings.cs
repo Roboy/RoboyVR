@@ -29,7 +29,7 @@ public class SteamVR_Settings : EditorWindow
 #if (UNITY_5_4 || UNITY_5_3 || UNITY_5_2 || UNITY_5_1 || UNITY_5_0)
 	const string renderingPath = "Rendering Path";
 #endif
-	const string colorSpace = "Color Space";
+	const string colorSpace = "GraphMaterial Space";
 	const string gpuSkinning = "GPU Skinning";
 #if false // skyboxes are currently broken
 	const string singlePassStereoRendering = "Single-Pass Stereo Rendering";
