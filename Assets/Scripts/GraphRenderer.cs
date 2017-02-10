@@ -51,7 +51,7 @@ public class GraphRenderer : MonoBehaviour
     private float m_BorderTopStatic;
     private float m_BorderBottomStatic;
 
-    // We set the static offset variables to the inital values in Awake and mark the offsets as initialized
+    // We set the static offset variables to the initial values in Awake and mark the offsets as initialized
     private bool m_BorderInitialized;
 
     // LineRenderer to render the graph
@@ -450,6 +450,8 @@ public class GraphRenderer : MonoBehaviour
         m_TextForCurrentValue.name = "Current Value";
         m_TextForCurrentValue.transform.parent = transform;
         m_TextForCurrentValue.transform.localScale = transform.localScale;
+        m_TextForCurrentValue.transform.localPosition = Vector3.zero;
+        m_TextForCurrentValue.transform.localRotation = Quaternion.identity;
 
         m_TextForCurrentValue.AddComponent<Text>();
     }

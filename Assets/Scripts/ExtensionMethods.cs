@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExtensionMethods : MonoBehaviour {
+public static class ExtensionMethods {
 
     public static void ShiftRight<T>(List<T> lst, int shifts)
     {
@@ -26,5 +26,19 @@ public class ExtensionMethods : MonoBehaviour {
         {
             lst[i] = default(T);
         }
+    }
+
+    public static T GetComponentInChildWithTag<T>(this GameObject parent, string tag) where T : Component
+    {
+        Transform t = parent.transform;
+        foreach (Transform tr in t)
+        {
+            if (tr.tag == tag)
+            {
+                return tr.GetComponent<T>();
+            }
+        }
+
+        return null;
     }
 }

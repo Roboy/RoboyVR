@@ -26,6 +26,5 @@ public class GraphRendererEditor : Editor
         this.DrawDefaultInspector();
 
         ExposeProperties.Expose(m_fields);
-
     }
 }

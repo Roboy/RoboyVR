@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class InputManager : Singleton<InputManager> {
 
+    public GUIController GUI_Controller {
+        get { return m_GUIController; }
+    }
+
     [SerializeField]
     private SelectorTool m_SelectorTool;
 
@@ -44,16 +48,21 @@ public class InputManager : Singleton<InputManager> {
 
         m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
         m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
+
+        m_GUIController.ControllerEventListener.Gripped += GetSideButtons;
     }
 
+    public void GetSideButtons(object sender, ClickedEventArgs e)
+    {
+        ModeManager.Instance.ChangeViewMode();
+    }
 
     public void GetTouchpadInput(object sender, ClickedEventArgs e)
     {
+
         Vector2 touchPadPos = new Vector2(e.padX, e.padY);
 
         TouchpadStatus result = TouchpadStatus.None;
-
-        //Debug.Log("X: " + touchPadPos.x + " Y: " + touchPadPos.y);
 
         if (Mathf.Abs(touchPadPos.x) < 0.4f && Mathf.Abs(touchPadPos.y) < 0.4f)
             return;
@@ -75,14 +84,12 @@ public class InputManager : Singleton<InputManager> {
 
         if (e.controllerIndex.Equals(m_SelectorTool.Controller.index))
         {
-            Debug.Log("Select : " + result);
             SelectorTool_TouchpadStatus = result;
         }        
         else if (e.controllerIndex.Equals(m_GUIController.Controller.index))
-        {
-            Debug.Log("GUI : " + result);           
+        {         
             GUIController_TouchpadStatus = result;
-            StartCoroutine(m_GUIController.ChangePanel());
+            m_GUIController.ChangePanel();
         }
             
     }

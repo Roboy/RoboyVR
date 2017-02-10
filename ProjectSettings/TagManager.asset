@@ -15,6 +15,7 @@ TagManager:
   - FadeInPanel
   - FadeOutPanel
   - FadeStandardPanel
+  - FadePanelStruct
   layers:
   - Default
   - TransparentFX

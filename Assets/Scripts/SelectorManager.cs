@@ -10,6 +10,11 @@ public class SelectorManager : Singleton<SelectorManager>
     public RectTransform Canvas;
 
     public Dictionary<string, GameObject> UI_Elements { get { return m_UI_Elements; } }
+    public List<SelectableObject> SelectedParts { get { return m_SelectedParts; } }
+    public int MaximumSelectableObjects {
+        get { return m_CurrentMaximumSelectedObjects; }
+        set { m_CurrentMaximumSelectedObjects = (int)Mathf.Clamp(value, 0f, m_MaximumSelectableObjects); }
+    }
 
     private Transform m_Roboy;
 
@@ -17,12 +22,20 @@ public class SelectorManager : Singleton<SelectorManager>
 
     private List<SelectableObject> m_SelectedParts = new List<SelectableObject>();
 
+    private int m_MaximumSelectableObjects = 3;
+
+    private int m_CurrentMaximumSelectedObjects = 3;
+
     private Dictionary<string, GameObject> m_UI_Elements = new Dictionary<string, GameObject>();
+
+
 
     private Material m_UI_Line_Material;
 
     void Awake()
     {
+        m_CurrentMaximumSelectedObjects = m_MaximumSelectableObjects;
+
         m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform;
 
         if (m_Roboy == null)
@@ -59,7 +72,7 @@ public class SelectorManager : Singleton<SelectorManager>
 
     public void AddSelectedObject(SelectableObject obj)
     {
-        if (m_SelectedParts.Count >= 3)
+        if (m_SelectedParts.Count >= m_CurrentMaximumSelectedObjects)
         {
             SelectableObject tmp = m_SelectedParts[0];
             tmp.SetStateDefault(true);
@@ -78,5 +91,14 @@ public class SelectorManager : Singleton<SelectorManager>
             m_SelectedParts.Remove(obj);
 
         //m_UI_Elements[obj.name].GetComponent<Outline>().enabled = false;
+    }
+
+    public void ResetSelectedObjects()
+    {
+        foreach (SelectableObject obj in m_SelectedParts)
+        {
+            obj.SetStateDefault(true);
+        }
+        m_SelectedParts.Clear();
     }
 }

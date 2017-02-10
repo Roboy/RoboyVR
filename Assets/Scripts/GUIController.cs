@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using VRTK.Examples.Utilities;
 
@@ -21,6 +23,15 @@ public class GUIController : MonoBehaviour {
     private Transform m_FadeInPanel;
     private Transform m_FadeOutPanel;
     private Transform m_FadeStandardPanel;
+
+    private struct FadePanelStruct
+    {
+        public Transform FadeInPanel;
+        public Transform FadeOutPanel;
+        public Transform FadeStandardPanel;
+    }
+
+    private Dictionary<string, FadePanelStruct> m_FadePanels = new Dictionary<string, FadePanelStruct>();
 
     void Start () {
         m_SteamVRController = GetComponentInParent<SteamVR_TrackedObject>();
@@ -57,11 +68,40 @@ public class GUIController : MonoBehaviour {
                 }
             }
         }
+
+        List<Transform> allFadePanels =
+            gameObject.GetComponentsInChildren<Transform>().Where(panel => panel.tag.Equals("FadePanelStruct")).ToList();
+
+        foreach (var fadePanel in allFadePanels)
+        {
+            Transform fadeInPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeInPanel");
+            Transform fadeOutPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeOutPanel");
+            Transform fadeStandardPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel");
+
+            FadePanelStruct fadePanelStruct;
+            fadePanelStruct.FadeInPanel = fadeInPanel;
+            fadePanelStruct.FadeOutPanel = fadeOutPanel;
+            fadePanelStruct.FadeStandardPanel = fadeStandardPanel;
+
+            m_FadePanels.Add(fadeInPanel.parent.name, fadePanelStruct);
+
+            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeInPanel").gameObject.SetActive(false);
+            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeOutPanel").gameObject.SetActive(false);
+            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel").gameObject.SetActive(false);
+        }
+
+        Debug.Log(m_FadePanels.Count);
+
         m_CurrentPanelIndex = 0;
         m_UIPanels[m_CurrentPanelIndex].gameObject.SetActive(true);
     }
 
-    public IEnumerator ChangePanel()
+    public void ChangePanel()
+    {
+        StartCoroutine(changePanelCoroutine());
+    }
+
+    private IEnumerator changePanelCoroutine()
     {
         if (InputManager.Instance.GUIController_TouchpadStatus == InputManager.TouchpadStatus.Right)
         {
@@ -72,6 +112,11 @@ public class GUIController : MonoBehaviour {
             yield return StartCoroutine(changePanelLeft(ChangeDuration));
         }
         yield return null;
+    }
+
+    public IEnumerator ExpandPanel()
+    {
+        yield return StartCoroutine(expandPanelCoroutine());
     }
 
     private IEnumerator changePanelRight(float duration)
@@ -151,5 +196,75 @@ public class GUIController : MonoBehaviour {
     //{
 
     //}
+
+    private IEnumerator expandPanelCoroutine()
+    {
+        // Imagine code for shrink middle panel
+
+        // UGLY CODE UGLY CODE CIC SUCKS DICKS
+
+        int panelsSelected = SelectorManager.Instance.SelectedParts.Count;
+
+        if (ModeManager.Instance.CurrentViewmode == ModeManager.Viewmode.Comparison &&
+            ModeManager.Instance.CurrentPanelmode == ModeManager.Panelmode.Selection)
+        {
+            if (panelsSelected == 1)
+            {
+                GameObject topPanel = new GameObject("TopPanel");
+                topPanel.transform.parent = transform;
+                topPanel.transform.position = m_FadePanels["Top"].FadeStandardPanel.position;
+                topPanel.transform.rotation = m_FadePanels["Top"].FadeStandardPanel.rotation;
+                topPanel.transform.localScale = Vector3.zero;
+                UIPanel uiComp = topPanel.AddComponent<UIPanel>();
+                uiComp.Alignment = UIPanel.Side.Top;
+            }
+            else if (panelsSelected == 2)
+            {
+                GameObject leftPanel = new GameObject("LeftPanel");
+                leftPanel.transform.parent = transform;
+                leftPanel.transform.position = m_FadePanels["Left"].FadeStandardPanel.position;
+                leftPanel.transform.rotation = m_FadePanels["Left"].FadeStandardPanel.rotation;
+                leftPanel.transform.localScale = Vector3.zero;
+                UIPanel uiCompL = leftPanel.AddComponent<UIPanel>();
+                uiCompL.Alignment = UIPanel.Side.Left;
+
+                GameObject rightPanel = new GameObject("RightPanel");
+                rightPanel.transform.parent = transform;
+                rightPanel.transform.position = m_FadePanels["Right"].FadeStandardPanel.position;
+                rightPanel.transform.rotation = m_FadePanels["Right"].FadeStandardPanel.rotation;
+                rightPanel.transform.localScale = Vector3.zero;
+                UIPanel uiCompR = rightPanel.AddComponent<UIPanel>();
+                uiCompR.Alignment = UIPanel.Side.Right;
+            }
+            else if (panelsSelected == 3)
+            {
+                GameObject topPanel = new GameObject("TopPanel");
+                topPanel.transform.parent = transform;
+                topPanel.transform.position = m_FadePanels["Top"].FadeStandardPanel.position;
+                topPanel.transform.rotation = m_FadePanels["Top"].FadeStandardPanel.rotation;
+                topPanel.transform.localScale = Vector3.zero;
+                UIPanel uiComp = topPanel.AddComponent<UIPanel>();
+                uiComp.Alignment = UIPanel.Side.Top;
+
+                GameObject leftPanel = new GameObject("LeftPanel");
+                leftPanel.transform.parent = transform;
+                leftPanel.transform.position = m_FadePanels["Left"].FadeStandardPanel.position;
+                leftPanel.transform.rotation = m_FadePanels["Left"].FadeStandardPanel.rotation;
+                leftPanel.transform.localScale = Vector3.zero;
+                UIPanel uiCompL = leftPanel.AddComponent<UIPanel>();
+                uiCompL.Alignment = UIPanel.Side.Left;
+
+                GameObject rightPanel = new GameObject("RightPanel");
+                rightPanel.transform.parent = transform;
+                rightPanel.transform.position = m_FadePanels["Right"].FadeStandardPanel.position;
+                rightPanel.transform.rotation = m_FadePanels["Right"].FadeStandardPanel.rotation;
+                rightPanel.transform.localScale = Vector3.zero;
+                UIPanel uiCompR = rightPanel.AddComponent<UIPanel>();
+                uiCompR.Alignment = UIPanel.Side.Right;
+            }
+        }
+        yield return null;
+    }
+
 
 }

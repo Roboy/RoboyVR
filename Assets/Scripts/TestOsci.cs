@@ -22,7 +22,7 @@ public class TestOsci : MonoBehaviour
 	// Update is called once per frame
 	void Update () {
         if(Input.GetKeyDown(KeyCode.I))
-            g.Initialize(values, 10, 5f);
+            g.Initialize(values, 10, 0f);
         if (Input.GetKeyDown(KeyCode.P))
             g.Play();
         if(Input.GetKeyDown(KeyCode.U))
