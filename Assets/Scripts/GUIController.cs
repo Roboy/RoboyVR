@@ -90,8 +90,6 @@ public class GUIController : MonoBehaviour {
             fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel").gameObject.SetActive(false);
         }
 
-        Debug.Log(m_FadePanels.Count);
-
         m_CurrentPanelIndex = 0;
         m_UIPanels[m_CurrentPanelIndex].gameObject.SetActive(true);
     }
