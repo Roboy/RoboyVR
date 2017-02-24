@@ -18,12 +18,17 @@ public class ModeManager : Singleton<ModeManager> {
     /// </summary>
     public enum Panelmode
     {
-        Selection,
         Motorforce,
         MotorVoltage,
         MotorCurrent,
         EnergyConsumption,
         TendonForces
+    }
+
+    public enum GUIMode
+    {
+        Selection,
+        GUIPanels
     }
 
     /// <summary>
@@ -42,6 +47,14 @@ public class ModeManager : Singleton<ModeManager> {
     }
 
     /// <summary>
+    /// Current GUI mode, READ ONLY
+    /// </summary>
+    public GUIMode CurrentGUIMode
+    {
+        get { return m_CurrentGUIMode; }
+    }
+
+    /// <summary>
     /// Private variable for current view mode
     /// </summary>
     private Viewmode m_CurrentViewmode = Viewmode.Comparison;
@@ -49,7 +62,12 @@ public class ModeManager : Singleton<ModeManager> {
     /// <summary>
     /// Private variable for current panel mode
     /// </summary>
-    private Panelmode m_CurrentPanelmode = Panelmode.Selection;
+    private Panelmode m_CurrentPanelmode = Panelmode.Motorforce;
+
+    /// <summary>
+    /// Private variable for current GUI mode
+    /// </summary>
+    private GUIMode m_CurrentGUIMode = GUIMode.Selection;
 
     /// <summary>
     /// Changes between single and comparison view
@@ -70,6 +88,18 @@ public class ModeManager : Singleton<ModeManager> {
         }  
     }
 
+    public void ChangeGUIMode()
+    {
+        if (m_CurrentGUIMode == GUIMode.Selection)
+        {
+            m_CurrentGUIMode = GUIMode.GUIPanels;
+        }
+        else if (m_CurrentGUIMode == GUIMode.GUIPanels)
+        {
+            m_CurrentGUIMode = GUIMode.Selection;
+        }
+    }
+
     /// <summary>
     /// DONT USE THIS ONLY TEST
     /// </summary>
@@ -77,4 +107,5 @@ public class ModeManager : Singleton<ModeManager> {
     {
         m_CurrentPanelmode++;
     }
+
 }

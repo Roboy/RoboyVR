@@ -89,7 +89,7 @@ public class InputManager : Singleton<InputManager> {
         else if (e.controllerIndex.Equals(m_GUIController.Controller.index))
         {         
             GUIController_TouchpadStatus = result;
-            m_GUIController.ChangePanel();
+            m_GUIController.CheckTouchPad(result);
         }
             
     }

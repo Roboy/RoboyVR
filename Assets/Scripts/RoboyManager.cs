@@ -14,7 +14,7 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     public Transform Roboy;
 
-    public Dictionary<string, Transform> RoboyParts { get { return m_RoboyParts; } }
+    public Dictionary<string, RoboyPart> RoboyParts { get { return m_RoboyParts; } }
 
     #endregion //PUBLIC_MEMBER_VARIABLES
 
@@ -23,7 +23,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     private ROSBridgeWebSocketConnection m_Ros = null;
     private RoboyPoseMsg m_RoboyPoseMessage;
 
-    private Dictionary<string, Transform> m_RoboyParts = new Dictionary<string, Transform>();
+    private Dictionary<string, RoboyPart> m_RoboyParts = new Dictionary<string, RoboyPart>();
 
     #endregion //PRIVATE_MEMBER_VARIABLES
 
@@ -46,9 +46,10 @@ public class RoboyManager : Singleton<RoboyManager> {
         {
             if (t == null | !t.CompareTag("RoboyPart"))
                 continue;
-            m_RoboyParts.Add(t.name, t);
+            m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
         }
 
+        InitializeRoboyParts();
     }
 
     void Update()
@@ -68,6 +69,15 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     #region PUBLIC_METHODS
 
+    public void InitializeRoboyParts()
+    {
+        foreach (var roboyPart in m_RoboyParts)
+        {
+            int motorCount = UnityEngine.Random.Range(1, 8);
+            roboyPart.Value.Initialize(motorCount);
+        }
+    }
+
     public void ReceiveMessage(RoboyPoseMsg msg)
     {
         Debug.Log("Received message");
@@ -83,16 +93,14 @@ public class RoboyManager : Singleton<RoboyManager> {
         Dictionary<string, float> qzRotationsDictionary = m_RoboyPoseMessage.QzDic;
         Dictionary<string, float> qwRotationsDictionary = m_RoboyPoseMessage.QwDic;
 
-        foreach (KeyValuePair<string, Transform> roboyPart in m_RoboyParts)
+        foreach (KeyValuePair<string, RoboyPart> roboyPart in m_RoboyParts)
         {
             string index = roboyPart.Key;
             Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
             Quaternion originRotation = new Quaternion(qxRotationsDictionary[index], qyRotationsDictionary[index], qzRotationsDictionary[index], qwRotationsDictionary[index]);
 
-            roboyPart.Value.localPosition = gazeboPositionToUnity(originPosition);
-            roboyPart.Value.localRotation = gazeboRotationToUnity(originRotation);
-
-
+            roboyPart.Value.transform.localPosition = gazeboPositionToUnity(originPosition);
+            roboyPart.Value.transform.localRotation = gazeboRotationToUnity(originRotation);
         }
 
     }

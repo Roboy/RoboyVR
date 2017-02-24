@@ -13,7 +13,9 @@ public class RoboyPart : MonoBehaviour
     [HideInInspector]
     public List<Category> Categories = new List<Category>();
 
-    void Initialize(int count)
+    [HideInInspector] public int MotorCount;
+
+    public void Initialize(int count)
     {
         var enumList = Enum.GetValues(typeof(ModeManager.Panelmode));
 
@@ -21,6 +23,8 @@ public class RoboyPart : MonoBehaviour
         {
             Categories.Add(new Category((ModeManager.Panelmode)enumElem, count));
         }
+
+        MotorCount = count;
     }
 }
 
