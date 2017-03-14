@@ -32,11 +32,6 @@ public class SelectorTool : MonoBehaviour {
           
     }
 
-    void Update()
-    {
-        
-    }
-
     public void GetRayFromController()
     {
         RaycastHit hit;
@@ -46,6 +41,10 @@ public class SelectorTool : MonoBehaviour {
         {
             m_LineRenderer.SetPosition(1, hit.point);
             SelectableObject hittedObject;
+
+            // CHANGE THIS IN FUTURE ONLY TEST
+            if (ModeManager.Instance.CurrentGUIMode != ModeManager.GUIMode.Selection)
+                return;
 
             if (hit.transform.tag.Equals("RoboyUI"))
             {

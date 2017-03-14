@@ -12,43 +12,26 @@ public class UIPanelPanelMode : MonoBehaviour
 
     public ModeManager.Panelmode PanelMode;
 
-    //public Text PageText;
-
-    //public int CurrentPage;
-
     public CanvasGroup CanvasGroup;
 
-    public void CreatePages(int count)
+    public void CreatePages(int motorCount, int pagesCount)
     {
-        if (count < 1)
+        if (pagesCount < 1)
         {
             Debug.Log("Pages count cannot be smaller than 1!");
             return;
-        } 
+        }
 
-        for (int i = 0; i < count; i++)
+        int motorCountLeft = motorCount;
+
+        for (int i = 0; i < pagesCount; i++)
         {
             UIPanelPage panelPage = Instantiate(UIPanelPagePrefab, Vector3.zero, Quaternion.identity);
             panelPage.transform.SetParent(transform, false);
+            panelPage.CreateGraphRenderers(motorCountLeft);
             PanelPages.Add(panelPage);
             panelPage.gameObject.SetActive(false);
+            motorCountLeft = motorCountLeft - 4;
         }
-
-        //PanelPages[0].gameObject.SetActive(true);
-        //CurrentPage = 1;
-        //PageText.text = CurrentPage + "/" + PanelPages.Count;
     }
-
-    //public void ChangePage()
-    //{
-    //    if (PanelPages.Count > 1)
-    //    {
-    //        int nextPage = (CurrentPage + 1) % PanelPages.Count;
-    //        PanelPages[CurrentPage].gameObject.SetActive(false);
-    //        PanelPages[nextPage].gameObject.SetActive(true);
-    //        CurrentPage = nextPage;
-
-    //        PageText.text = CurrentPage + "/" + PanelPages.Count;
-    //    }
-    //}
 }

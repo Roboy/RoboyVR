@@ -105,8 +105,8 @@ public class GUIController : MonoBehaviour {
             UIPanelRoboyPart uiPanelRoboyPart = Instantiate(UIPanelRoboyPartPrefab, Vector3.zero, Quaternion.identity);
             uiPanelRoboyPart.RoboyPart = roboyPart.Value;
 
-            int pagesCount = (roboyPart.Value.MotorCount + 3) / 4; //(motorCount + motorsPerPage - 1) / motorsPerPage
-            uiPanelRoboyPart.InitializePanelModes(pagesCount);
+            
+            uiPanelRoboyPart.InitializePanelModes(roboyPart.Value.MotorCount);
             uiPanelRoboyPart.transform.SetParent(transform, false);
             uiPanelRoboyPart.transform.localPosition = Vector3.zero;
             uiPanelRoboyPart.transform.localRotation = Quaternion.identity;
@@ -167,6 +167,9 @@ public class GUIController : MonoBehaviour {
         List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
         List<RoboyPart> selectedRoboyParts =
             selectedRoboyPartsOBJ.Select(roboyPart => roboyPart.GetComponent<RoboyPart>()).ToList();
+
+        if (selectedRoboyParts.Count == 0)
+            yield break;
 
         if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.Selection)
         {

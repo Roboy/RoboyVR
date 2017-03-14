@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c19ea9f1986cbb4091c28b60f4e2bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIPanelPagePrefab: {fileID: 114430518280854712, guid: 02c1d4969a5dbd646910d88870204095,
+  UIPanelPagePrefab: {fileID: 114598905350700204, guid: 02c1d4969a5dbd646910d88870204095,
     type: 2}
   PanelPages: []
   PanelMode: 0

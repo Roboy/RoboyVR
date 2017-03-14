@@ -276,6 +276,7 @@ public class GraphRenderer : MonoBehaviour
             // Stop updating the values
             StopCoroutine(m_UpdateValuesCoroutine);
             m_UpdateValuesCoroutine = null;
+            m_OscillatorLineRenderer.enabled = false;
             m_CurrentState = State.Paused;
         }
     }

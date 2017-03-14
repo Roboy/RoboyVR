@@ -45,6 +45,7 @@ public class Category
         for (int i = 0; i < count; i++)
         {
             Motor motor = new Motor {Name = "Motor" + i };
+            motor.Values = new List<float>(new float[30]);
             Motors.Add(motor);
         }
     }

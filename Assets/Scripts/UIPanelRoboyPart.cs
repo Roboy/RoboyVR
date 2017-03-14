@@ -24,9 +24,9 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
     private int m_CurrentPanelIndex;
 
-    public void InitializePanelModes(int count)
+    public void InitializePanelModes(int motorCount)
     {
-        if (count < 1)
+        if (motorCount < 1)
         {
             Debug.Log("Pages count cannot be smaller than 1!");
             return;
@@ -37,14 +37,16 @@ public class UIPanelRoboyPart : MonoBehaviour {
             return;
         }
 
-        PageText.text = 1 + "/" + count;
+        int pagesCount = (RoboyPart.MotorCount + 3) / 4; //(motorCount + motorsPerPage - 1) / motorsPerPage
+
+        PageText.text = 1 + "/" + pagesCount;
 
         foreach (var category in RoboyPart.Categories)
         {
             UIPanelPanelMode panelMode = Instantiate(UIPanelModePrefab, Vector3.zero, Quaternion.identity);
             panelMode.PanelMode = category.Mode;
             panelMode.transform.SetParent(transform, false);
-            panelMode.CreatePages(count);
+            panelMode.CreatePages(motorCount, pagesCount);
             UIPanelPanelModes.Add(panelMode);
 
             panelMode.gameObject.SetActive(false);
