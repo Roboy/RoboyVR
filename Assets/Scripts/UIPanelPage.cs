@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UIPanelPage : MonoBehaviour
@@ -15,7 +16,7 @@ public class UIPanelPage : MonoBehaviour
     //    transform.GetComponentsInChildren()
     //}
 
-    public void CreateGraphRenderers(int motorCountLeft)
+    public void CreateGraphRenderers(int motorCountLeft, int currentPage, ModeManager.Panelmode panelMode, RoboyPart roboyPart)
     {
         int motorsToCreate = Mathf.Min(4, motorCountLeft);
 
@@ -23,6 +24,14 @@ public class UIPanelPage : MonoBehaviour
         {
             GraphRenderer graphRenderer = Instantiate(GraphRendererPrefab, Vector3.zero, Quaternion.identity);
             graphRenderer.transform.SetParent(transform, false);
+
+            string motorIndex = "Motor" + (i + currentPage*4);
+
+            //Debug.Log(motorIndex);
+
+            graphRenderer.Initialize(roboyPart.Categories[panelMode].Motors[motorIndex].Values, 30, 0f);
+            graphRenderer.Play();
+
             GraphRenderers.Add(graphRenderer);
         }
     }

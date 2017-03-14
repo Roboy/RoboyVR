@@ -68,7 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3e932960622f744a52e2c66eca50f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GraphRendererPrefab: {fileID: 0}
+  GraphRendererPrefab: {fileID: 114634766573867422, guid: 0dcffef93ad97014bab68bf4bfc6aa36,
+    type: 2}
   GraphRenderers:
   - {fileID: 0}
   - {fileID: 0}

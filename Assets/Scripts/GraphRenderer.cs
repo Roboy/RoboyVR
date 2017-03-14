@@ -100,7 +100,7 @@ public class GraphRenderer : MonoBehaviour
 
     void OnDisable()
     {
-        Stop();
+        //Stop();
     }
 
     // In the unity editor we make sure that the values do not make up a negative area and make them read only in play mode
@@ -240,6 +240,7 @@ public class GraphRenderer : MonoBehaviour
         {
             // Create a LineRenderer component and attach it with the given parameters
             m_OscillatorLineRenderer = gameObject.AddComponent<LineRenderer>();
+
             m_OscillatorLineRenderer.useWorldSpace = false;
             m_OscillatorLineRenderer.numPositions = m_NumPoints;
             m_OscillatorLineRenderer.material = GraphMaterial;
@@ -276,7 +277,7 @@ public class GraphRenderer : MonoBehaviour
             // Stop updating the values
             StopCoroutine(m_UpdateValuesCoroutine);
             m_UpdateValuesCoroutine = null;
-            m_OscillatorLineRenderer.enabled = false;
+            //m_OscillatorLineRenderer.enabled = false;
             m_CurrentState = State.Paused;
         }
     }
@@ -296,6 +297,8 @@ public class GraphRenderer : MonoBehaviour
             m_PlayCoroutine = null;
             Destroy(m_OscillatorLineRenderer);
             m_CurrentState = State.None;
+
+            Debug.Log("Stop");
         }
     }
     /// <summary>

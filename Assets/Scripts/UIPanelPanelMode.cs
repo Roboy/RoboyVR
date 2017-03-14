@@ -14,7 +14,7 @@ public class UIPanelPanelMode : MonoBehaviour
 
     public CanvasGroup CanvasGroup;
 
-    public void CreatePages(int motorCount, int pagesCount)
+    public void CreatePages(int motorCount, int pagesCount, RoboyPart roboyPart)
     {
         if (pagesCount < 1)
         {
@@ -28,7 +28,7 @@ public class UIPanelPanelMode : MonoBehaviour
         {
             UIPanelPage panelPage = Instantiate(UIPanelPagePrefab, Vector3.zero, Quaternion.identity);
             panelPage.transform.SetParent(transform, false);
-            panelPage.CreateGraphRenderers(motorCountLeft);
+            panelPage.CreateGraphRenderers(motorCountLeft, i, PanelMode, roboyPart);
             PanelPages.Add(panelPage);
             panelPage.gameObject.SetActive(false);
             motorCountLeft = motorCountLeft - 4;

@@ -10,8 +10,9 @@ public class RoboyPart : MonoBehaviour
     public Vector3 Position;
     [HideInInspector]
     public Quaternion Rotation;
-    [HideInInspector]
-    public List<Category> Categories = new List<Category>();
+
+    [HideInInspector] public Dictionary<ModeManager.Panelmode, Category> Categories =
+        new Dictionary<ModeManager.Panelmode, Category>();
 
     [HideInInspector] public int MotorCount;
 
@@ -21,7 +22,7 @@ public class RoboyPart : MonoBehaviour
 
         foreach (var enumElem in enumList)
         {
-            Categories.Add(new Category((ModeManager.Panelmode)enumElem, count));
+            Categories.Add((ModeManager.Panelmode)enumElem, new Category((ModeManager.Panelmode)enumElem, count));
         }
 
         MotorCount = count;
@@ -32,7 +33,7 @@ public class Category
 {
     public ModeManager.Panelmode Mode;
 
-    public List<Motor> Motors = new List<Motor>();
+    public Dictionary<string, Motor> Motors = new Dictionary<string, Motor>();
 
     public Category(ModeManager.Panelmode mode, int count)
     {
@@ -44,9 +45,18 @@ public class Category
     {
         for (int i = 0; i < count; i++)
         {
-            Motor motor = new Motor {Name = "Motor" + i };
-            motor.Values = new List<float>(new float[30]);
-            Motors.Add(motor);
+            string motorName = "Motor" + i;
+            Motor motor = new Motor {Name =  motorName};
+
+            List<float> randomValues = new List<float>();
+            for (int j = 0; j < 30; j++)
+            {
+                float value = UnityEngine.Random.Range(0, 100);
+                randomValues.Add(value);
+            }
+
+            motor.Values = randomValues;
+            Motors.Add(motorName, motor);
         }
     }
 }

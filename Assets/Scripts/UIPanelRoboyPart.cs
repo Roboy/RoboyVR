@@ -41,12 +41,12 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
         PageText.text = 1 + "/" + pagesCount;
 
-        foreach (var category in RoboyPart.Categories)
+        foreach (var category in RoboyPart.Categories.Values)
         {
             UIPanelPanelMode panelMode = Instantiate(UIPanelModePrefab, Vector3.zero, Quaternion.identity);
             panelMode.PanelMode = category.Mode;
             panelMode.transform.SetParent(transform, false);
-            panelMode.CreatePages(motorCount, pagesCount);
+            panelMode.CreatePages(motorCount, pagesCount, RoboyPart);
             UIPanelPanelModes.Add(panelMode);
 
             panelMode.gameObject.SetActive(false);

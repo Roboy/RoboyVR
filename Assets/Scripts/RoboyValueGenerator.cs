@@ -14,11 +14,11 @@ public class RoboyValueGenerator : Singleton<RoboyValueGenerator>
 
         foreach (var roboyPart in m_RoboyParts)
         {
-            foreach (var category in roboyPart.Categories)
+            foreach (var category in roboyPart.Categories.Values)
             {
                 foreach (var motor in category.Motors)
                 {
-                    motor.Values = new List<float>(new float[30]);
+                    motor.Value.Values = new List<float>(new float[30]);
                 }
             }
         }
