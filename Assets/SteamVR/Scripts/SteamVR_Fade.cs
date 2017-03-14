@@ -10,12 +10,12 @@
 //			Use a duration of zero to set the start color.
 //
 // Example:	Fade down from black over one second.
-//			SteamVR_Fade.Start(GraphMaterial.black, 0);
-//			SteamVR_Fade.Start(GraphMaterial.clear, 1);
+//			SteamVR_Fade.Start(Color.black, 0);
+//			SteamVR_Fade.Start(Color.clear, 1);
 //
 // Note:	This component is provided to fade out a single camera layer's
 //			scene view.  If instead you want to fade the entire view, use:
-//			SteamVR_Fade.View(GraphMaterial.black, 1);
+//			SteamVR_Fade.View(Color.black, 1);
 //			(Does not affect the game view, however.)
 //
 //=============================================================================
@@ -47,8 +47,8 @@ public class SteamVR_Fade : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			SteamVR_Fade.View(GraphMaterial.black, 0);
-			SteamVR_Fade.View(GraphMaterial.clear, 1);
+			SteamVR_Fade.View(Color.black, 0);
+			SteamVR_Fade.View(Color.clear, 1);
 		}
 	}
 #endif

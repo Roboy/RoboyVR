@@ -43,7 +43,7 @@ public class SelectionPanel : MonoBehaviour
         StartCoroutine(enlargeCoroutine());
     }
 
-    IEnumerator shrinkCoroutine()
+    public IEnumerator shrinkCoroutine()
     {
         float startWidth = m_RectTransform.sizeDelta.x;
         float endWidth = 35f;

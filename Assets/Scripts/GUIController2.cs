@@ -74,7 +74,7 @@ public class GUIController2 : MonoBehaviour
 
             UIPanelRoboyPart uiPanelRoboyPart = Instantiate(UIPanelRoboyPartPrefab, transform.position, transform.rotation);
             uiPanelRoboyPart.RoboyPart = roboyPart.Value;
-            uiPanelRoboyPart.CreatePagesForEachMode(roboyPart.Value.MotorCount);
+            uiPanelRoboyPart.InitializePanelModes(roboyPart.Value.MotorCount);
             uiPanelRoboyPart.transform.parent = transform;
 
             m_Panels.Add(roboyPart.Value, uiPanelRoboyPart);

@@ -87,9 +87,10 @@ public class GUIController : MonoBehaviour {
                 changepanelsToNextMode();
                 break;
             case InputManager.TouchpadStatus.Top:
-                changeGUIMode();
+                StartCoroutine(changeGUIMode());
                 break;
             case InputManager.TouchpadStatus.Bottom:
+                changePageOfPanel();
                 break;
         }
 
@@ -105,7 +106,7 @@ public class GUIController : MonoBehaviour {
             uiPanelRoboyPart.RoboyPart = roboyPart.Value;
 
             int pagesCount = (roboyPart.Value.MotorCount + 3) / 4; //(motorCount + motorsPerPage - 1) / motorsPerPage
-            uiPanelRoboyPart.CreatePagesForEachMode(pagesCount);
+            uiPanelRoboyPart.InitializePanelModes(pagesCount);
             uiPanelRoboyPart.transform.SetParent(transform, false);
             uiPanelRoboyPart.transform.localPosition = Vector3.zero;
             uiPanelRoboyPart.transform.localRotation = Quaternion.identity;
@@ -113,6 +114,21 @@ public class GUIController : MonoBehaviour {
             uiPanelRoboyPart.gameObject.SetActive(false);
 
             m_RoboyPartPanelsDic.Add(roboyPart.Value, uiPanelRoboyPart);
+        }
+    }
+
+    private void changePageOfPanel()
+    {
+        if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIPanels)
+        {
+            List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
+            List<RoboyPart> selectedRoboyParts =
+                selectedRoboyPartsOBJ.Select(roboyPart => roboyPart.GetComponent<RoboyPart>()).ToList();
+
+            foreach (var roboyPart in selectedRoboyParts)
+            {
+                m_RoboyPartPanelsDic[roboyPart].ChangePage();
+            }
         }
     }
 
@@ -146,7 +162,7 @@ public class GUIController : MonoBehaviour {
         }
     }
 
-    private void changeGUIMode()
+    private IEnumerator changeGUIMode()
     {
         List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
         List<RoboyPart> selectedRoboyParts =
@@ -154,8 +170,8 @@ public class GUIController : MonoBehaviour {
 
         if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.Selection)
         {
-            m_SelectionPanel.Shrink();
-            expandPanels();
+            yield return m_SelectionPanel.shrinkCoroutine();
+            positionPanels();
 
             foreach (var roboyPart in selectedRoboyParts)
             {
@@ -170,6 +186,8 @@ public class GUIController : MonoBehaviour {
                 m_RoboyPartPanelsDic[roboyPart].FadeOut();
             }
 
+            yield return new WaitForSeconds(0.2f);
+
             m_SelectionPanel.Enlarge();
         }
         Debug.Log("changeGUIMode");
@@ -178,7 +196,7 @@ public class GUIController : MonoBehaviour {
 
 
 
-    private void expandPanels()
+    private void positionPanels()
     {
         int panelsSelected = SelectorManager.Instance.SelectedParts.Count;
 

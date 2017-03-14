@@ -12,9 +12,9 @@ public class UIPanelPanelMode : MonoBehaviour
 
     public ModeManager.Panelmode PanelMode;
 
-    public Text PageText;
+    //public Text PageText;
 
-    public int CurrentPage;
+    //public int CurrentPage;
 
     public CanvasGroup CanvasGroup;
 
@@ -34,21 +34,21 @@ public class UIPanelPanelMode : MonoBehaviour
             panelPage.gameObject.SetActive(false);
         }
 
-        PanelPages[0].gameObject.SetActive(true);
-        CurrentPage = 1;
-        PageText.text = CurrentPage + "/" + PanelPages.Count;
+        //PanelPages[0].gameObject.SetActive(true);
+        //CurrentPage = 1;
+        //PageText.text = CurrentPage + "/" + PanelPages.Count;
     }
 
-    public void ChangePage()
-    {
-        if (PanelPages.Count > 1)
-        {
-            int nextPage = (CurrentPage + 1) % PanelPages.Count;
-            PanelPages[CurrentPage].gameObject.SetActive(false);
-            PanelPages[nextPage].gameObject.SetActive(true);
-            CurrentPage = nextPage;
+    //public void ChangePage()
+    //{
+    //    if (PanelPages.Count > 1)
+    //    {
+    //        int nextPage = (CurrentPage + 1) % PanelPages.Count;
+    //        PanelPages[CurrentPage].gameObject.SetActive(false);
+    //        PanelPages[nextPage].gameObject.SetActive(true);
+    //        CurrentPage = nextPage;
 
-            PageText.text = CurrentPage + "/" + PanelPages.Count;
-        }
-    }
+    //        PageText.text = CurrentPage + "/" + PanelPages.Count;
+    //    }
+    //}
 }

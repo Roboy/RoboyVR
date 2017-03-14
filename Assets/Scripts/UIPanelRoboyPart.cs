@@ -18,9 +18,13 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
     public Text NameText;
 
+    public Text PageText;
+
+    public int CurrentPageIndex;
+
     private int m_CurrentPanelIndex;
 
-    public void CreatePagesForEachMode(int count)
+    public void InitializePanelModes(int count)
     {
         if (count < 1)
         {
@@ -32,6 +36,8 @@ public class UIPanelRoboyPart : MonoBehaviour {
             Debug.Log("Roboy part not assigned!");
             return;
         }
+
+        PageText.text = 1 + "/" + count;
 
         foreach (var category in RoboyPart.Categories)
         {
@@ -47,6 +53,19 @@ public class UIPanelRoboyPart : MonoBehaviour {
         m_CurrentPanelIndex = 0;
 
         UIPanelPanelModes[0].gameObject.SetActive(true);
+    }
+
+    public void ChangePage()
+    {
+        if (UIPanelPanelModes[m_CurrentPanelIndex].PanelPages.Count > 1)
+        {
+            int nextPage = (CurrentPageIndex + 1) % UIPanelPanelModes[m_CurrentPanelIndex].PanelPages.Count;
+            UIPanelPanelModes[m_CurrentPanelIndex].PanelPages[CurrentPageIndex].gameObject.SetActive(false);
+            UIPanelPanelModes[m_CurrentPanelIndex].PanelPages[nextPage].gameObject.SetActive(true);
+            CurrentPageIndex = nextPage;
+
+            PageText.text = CurrentPageIndex + 1 + "/" + UIPanelPanelModes[m_CurrentPanelIndex].PanelPages.Count;
+        }
     }
 
     public void ChangeToNextMode()
@@ -89,6 +108,8 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
         // Activate the next panel
         UIPanelPanelMode nextPanel = UIPanelPanelModes[nextPanelIndex];
+
+        nextPanel.PanelPages[CurrentPageIndex].gameObject.SetActive(true);
 
         nextPanel.gameObject.SetActive(true);
 
@@ -140,7 +161,8 @@ public class UIPanelRoboyPart : MonoBehaviour {
         nextPanel.transform.position =
             InputManager.Instance.GUI_Controller.UIFadePanels[Alignment].FadeStandardPanel.position;
 
-        // Deactivate the old panel
+        // Deactivate the old panel and the current page of the old panel
+        currentPanel.PanelPages[CurrentPageIndex].gameObject.SetActive(false);
         currentPanel.gameObject.SetActive(false);
         m_CurrentPanelIndex = nextPanelIndex;
 
@@ -163,6 +185,8 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
         // Activate the next panel
         UIPanelPanelMode nextPanel = UIPanelPanelModes[nextPanelIndex];
+
+        nextPanel.PanelPages[CurrentPageIndex].gameObject.SetActive(true);
 
         nextPanel.gameObject.SetActive(true);
 
@@ -214,16 +238,25 @@ public class UIPanelRoboyPart : MonoBehaviour {
         nextPanel.transform.position =
             InputManager.Instance.GUI_Controller.UIFadePanels[Alignment].FadeStandardPanel.position;
 
-        // Deactivate the old panel
+        // Deactivate the old panel and the current page of the old panel
+        currentPanel.PanelPages[CurrentPageIndex].gameObject.SetActive(false);
         currentPanel.gameObject.SetActive(false);
         m_CurrentPanelIndex = nextPanelIndex;
     }
 
     private IEnumerator fadeInCoroutine()
     {
+        // Reset index and mode
         m_CurrentPanelIndex = 0;
+        CurrentPageIndex = 0;
+        CurrentPanelmode = ModeManager.Panelmode.Motorforce;
+        PageText.text = 1 + "/" + UIPanelPanelModes[0].PanelPages.Count;
 
         UIPanelPanelMode currentPanel = UIPanelPanelModes[0];
+
+        // Activate the first panel
+        currentPanel.PanelPages[0].gameObject.SetActive(true);
+        currentPanel.gameObject.SetActive(true);
 
         // Set start position of current panel
         currentPanel.transform.position =
@@ -260,7 +293,7 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
     private IEnumerator fadeOutCoroutine()
     {
-        UIPanelPanelMode currentPanel = UIPanelPanelModes[0];
+        UIPanelPanelMode currentPanel = UIPanelPanelModes[m_CurrentPanelIndex];
 
         // Set start position of current panel
         currentPanel.transform.position =
@@ -294,8 +327,13 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
         currentPanel.transform.position = InputManager.Instance.GUI_Controller.UIFadePanels[Alignment].FadeOutPanel.position;
 
-        gameObject.SetActive(false);
+        // Deactivate the last current panel and the current page of the current mode
+        currentPanel.PanelPages[CurrentPageIndex].gameObject.SetActive(false);
+        currentPanel.gameObject.SetActive(false);
 
         m_CurrentPanelIndex = 0;
+        CurrentPageIndex = 0;
+
+        gameObject.SetActive(false);        
     }
 }

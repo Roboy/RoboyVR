@@ -510,7 +510,7 @@ namespace Valve.VR.InteractionSystem
 							floorDebugSphere.transform.position = raycastHit.point;
 							floorDebugSphere.material.color = Color.green;
 #if (UNITY_5_4)
-							floorDebugLine.SetColors( GraphMaterial.green, GraphMaterial.green );
+							floorDebugLine.SetColors( Color.green, Color.green );
 #else
 							floorDebugLine.startColor = Color.green;
 							floorDebugLine.endColor = Color.green;
@@ -524,7 +524,7 @@ namespace Valve.VR.InteractionSystem
 							floorDebugSphere.transform.position = rayEnd;
 							floorDebugSphere.material.color = Color.red;
 #if (UNITY_5_4)
-							floorDebugLine.SetColors( GraphMaterial.red, GraphMaterial.red );
+							floorDebugLine.SetColors( Color.red, Color.red );
 #else
 							floorDebugLine.startColor = Color.red;
 							floorDebugLine.endColor = Color.red;
