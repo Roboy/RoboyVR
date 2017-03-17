@@ -29,7 +29,7 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     #region MONOBEHAVIOR_METHODS
 
-    void Start()
+    void Awake()
     {
         //if (string.IsNullOrEmpty(VM_IP))
         //    return;

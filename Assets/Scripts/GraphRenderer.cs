@@ -100,7 +100,15 @@ public class GraphRenderer : MonoBehaviour
 
     void OnDisable()
     {
-        //Stop();
+        Stop();
+    }
+
+    void OnEnable()
+    {
+        if (m_CurrentState == State.Initialized)
+        {
+            Play();
+        }
     }
 
     // In the unity editor we make sure that the values do not make up a negative area and make them read only in play mode
@@ -274,6 +282,8 @@ public class GraphRenderer : MonoBehaviour
     {
         if (m_CurrentState == State.Playing)
         {
+            //Debug.Log("Pause");
+
             // Stop updating the values
             StopCoroutine(m_UpdateValuesCoroutine);
             m_UpdateValuesCoroutine = null;
@@ -296,9 +306,10 @@ public class GraphRenderer : MonoBehaviour
             m_UpdateValuesCoroutine = null;
             m_PlayCoroutine = null;
             Destroy(m_OscillatorLineRenderer);
-            m_CurrentState = State.None;
+            // m_CurrentState = State.None;
+            m_CurrentState = State.Initialized;
 
-            Debug.Log("Stop");
+            //Debug.Log("Stop");
         }
     }
     /// <summary>
@@ -309,6 +320,8 @@ public class GraphRenderer : MonoBehaviour
     {
         while (m_CurrentState == State.Playing || m_CurrentState == State.Paused)
         {
+            //Debug.Log("playCoroutine");
+
             m_Positions.Clear();
 
             // For scaling purpose
@@ -344,6 +357,8 @@ public class GraphRenderer : MonoBehaviour
     {
         while (m_CurrentState == State.Playing)
         {
+            //Debug.Log("updateValuesCoroutine");
+
             m_CurrentValues.Clear();
 
             for (int i = 0; i < m_NumPoints; i++)
