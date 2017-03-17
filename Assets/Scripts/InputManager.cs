@@ -8,8 +8,20 @@ public class InputManager : Singleton<InputManager> {
         get { return m_GUIController; }
     }
 
+    public SelectorTool Selector_Tool
+    {
+        get { return m_SelectorTool; }
+    }
+
+    public ShootingTool ShootingTool
+    {
+        get { return m_ShootingTool; }
+    }
+
     [SerializeField]
     private SelectorTool m_SelectorTool;
+
+    [SerializeField] private ShootingTool m_ShootingTool;
 
     [SerializeField]
     private GUIController m_GUIController;
@@ -49,12 +61,21 @@ public class InputManager : Singleton<InputManager> {
         m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
         m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
 
-        m_GUIController.ControllerEventListener.Gripped += GetSideButtons;
+        m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
+        
+        //CHANGE THIS
+        m_SelectorTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
+        //m_ShootingTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
     }
 
-    public void GetSideButtons(object sender, ClickedEventArgs e)
+    public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
     {
         ModeManager.Instance.ChangeViewMode();
+    }
+
+    public void ToolControllerSideButtons(object sender, ClickedEventArgs e)
+    {
+        ModeManager.Instance.ChangeToolMode();
     }
 
     public void GetTouchpadInput(object sender, ClickedEventArgs e)

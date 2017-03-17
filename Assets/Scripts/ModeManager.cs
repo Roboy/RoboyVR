@@ -32,6 +32,18 @@ public class ModeManager : Singleton<ModeManager> {
     }
 
     /// <summary>
+    /// SelectorTool: Select roboy meshes;
+    /// ShooterTool: Shoot projectiles at roboy;
+    /// TimeTool: Reverse/stop time
+    /// </summary>
+    public enum ToolMode
+    {
+        SelectorTool,
+        ShooterTool,
+        //TimeTool
+    }
+
+    /// <summary>
     /// Current view mode, READ ONLY
     /// </summary>
     public Viewmode CurrentViewmode {
@@ -55,6 +67,14 @@ public class ModeManager : Singleton<ModeManager> {
     }
 
     /// <summary>
+    /// Current Tool mode, READ ONLY
+    /// </summary>
+    public ToolMode CurrentToolMode
+    {
+        get { return m_CurrentToolMode;}
+    }
+
+    /// <summary>
     /// Private variable for current view mode
     /// </summary>
     private Viewmode m_CurrentViewmode = Viewmode.Comparison;
@@ -68,6 +88,11 @@ public class ModeManager : Singleton<ModeManager> {
     /// Private variable for current GUI mode
     /// </summary>
     private GUIMode m_CurrentGUIMode = GUIMode.Selection;
+
+    /// <summary>
+    /// Private variable for current Tool mode
+    /// </summary>
+    private ToolMode m_CurrentToolMode = ToolMode.SelectorTool;
 
     /// <summary>
     /// Changes between single and comparison view
@@ -97,6 +122,29 @@ public class ModeManager : Singleton<ModeManager> {
         else if (m_CurrentGUIMode == GUIMode.GUIPanels)
         {
             m_CurrentGUIMode = GUIMode.Selection;
+        }
+    }
+
+    public void ChangeToolMode()
+    {
+
+        if (m_CurrentToolMode == ToolMode.SelectorTool)
+        {
+            Debug.Log("toolmode to shoot");
+            InputManager.Instance.Selector_Tool.enabled = false;
+            InputManager.Instance.ShootingTool.enabled = true;
+            InputManager.Instance.Selector_Tool.gameObject.SetActive(false);
+            InputManager.Instance.ShootingTool.gameObject.SetActive(true);
+            m_CurrentToolMode = ToolMode.ShooterTool;
+        }
+        else if (m_CurrentToolMode == ToolMode.ShooterTool)
+        {
+            Debug.Log("toolmode to select");
+            InputManager.Instance.Selector_Tool.enabled = true;
+            InputManager.Instance.ShootingTool.enabled = false;
+            InputManager.Instance.Selector_Tool.gameObject.SetActive(true);
+            InputManager.Instance.ShootingTool.gameObject.SetActive(false);
+            m_CurrentToolMode = ToolMode.SelectorTool;
         }
     }
 
