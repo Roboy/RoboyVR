@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class ModeManager : Singleton<ModeManager> {
 
@@ -18,11 +19,11 @@ public class ModeManager : Singleton<ModeManager> {
     /// </summary>
     public enum Panelmode
     {
-        Motorforce,
-        MotorVoltage,
-        MotorCurrent,
-        EnergyConsumption,
-        TendonForces
+        Motor_Force,
+        Motor_Voltage,
+        Motor_Current,
+        Energy_Consumption,
+        Tendon_Forces
     }
 
     public enum GUIMode
@@ -82,7 +83,7 @@ public class ModeManager : Singleton<ModeManager> {
     /// <summary>
     /// Private variable for current panel mode
     /// </summary>
-    private Panelmode m_CurrentPanelmode = Panelmode.Motorforce;
+    private Panelmode m_CurrentPanelmode = Panelmode.Motor_Force;
 
     /// <summary>
     /// Private variable for current GUI mode
@@ -146,6 +147,28 @@ public class ModeManager : Singleton<ModeManager> {
             InputManager.Instance.ShootingTool.gameObject.SetActive(false);
             m_CurrentToolMode = ToolMode.SelectorTool;
         }
+    }
+
+    public void ChangePanelModeNext()
+    {
+        m_CurrentPanelmode =  (Panelmode)((int) (m_CurrentPanelmode+1) % Enum.GetNames(typeof(Panelmode)).Length);
+    }
+
+    public void ChangePanelModePrevious()
+    {
+        if (m_CurrentPanelmode == 0)
+        {
+            m_CurrentPanelmode = (Panelmode)(Enum.GetNames(typeof(Panelmode)).Length - 1);
+        }
+        else
+        {
+            m_CurrentPanelmode--;
+        }     
+    }
+
+    public void ResetPanelMode()
+    {
+        m_CurrentPanelmode = Panelmode.Motor_Force;
     }
 
     /// <summary>

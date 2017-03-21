@@ -9,7 +9,7 @@ public class SelectorTool : ControllerTool {
     private SelectableObject m_LastSelectedObject;
     private float m_RayDistance = 3f;
 
-    void Awake()
+    void Start()
     {
         m_LineRenderer = GetComponent<LineRenderer>();         
     }

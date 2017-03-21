@@ -144,6 +144,10 @@ public class GUIController : MonoBehaviour {
             {
                 m_RoboyPartPanelsDic[roboyPart].ChangeToNextMode();
             }
+
+            ModeManager.Instance.ChangePanelModeNext();
+
+            m_SelectionPanel.CurrentPanelMode.text = ModeManager.Instance.CurrentPanelmode.ToString().Replace("_", " ");
         }
     }
 
@@ -159,6 +163,10 @@ public class GUIController : MonoBehaviour {
             {
                 m_RoboyPartPanelsDic[roboyPart].ChangeToPreviousMode();
             }
+
+            ModeManager.Instance.ChangePanelModePrevious();
+
+            m_SelectionPanel.CurrentPanelMode.text = ModeManager.Instance.CurrentPanelmode.ToString().Replace("_", " ");
         }
     }
 
@@ -181,6 +189,12 @@ public class GUIController : MonoBehaviour {
                 m_RoboyPartPanelsDic[roboyPart].gameObject.SetActive(true);
                 m_RoboyPartPanelsDic[roboyPart].FadeIn();
             }
+
+            ModeManager.Instance.ResetPanelMode();
+
+            m_SelectionPanel.CurrentPanelMode.gameObject.SetActive(true);
+
+            m_SelectionPanel.CurrentPanelMode.text = ModeManager.Instance.CurrentPanelmode.ToString().Replace("_", " ");
         }
         else if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIPanels)
         {
@@ -190,6 +204,8 @@ public class GUIController : MonoBehaviour {
             }
 
             yield return new WaitForSeconds(0.2f);
+
+            m_SelectionPanel.CurrentPanelMode.gameObject.SetActive(false);
 
             m_SelectionPanel.Enlarge();
         }

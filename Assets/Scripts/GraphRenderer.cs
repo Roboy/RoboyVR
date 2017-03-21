@@ -37,13 +37,45 @@ public class GraphRenderer : MonoBehaviour
             }
         }
     }
+
+    public Text TextForValueName
+    {
+        get { return m_TextForValueName.GetComponent<Text>(); }
+    }
+
+    [ExposeProperty]
+    public bool ShowValueName
+    {
+        get { return m_ShowValueName; }
+        set
+        {
+            if (m_ShowValueName != value)
+            {
+                m_ShowValueName = value;
+
+                if (m_ShowValueName)
+                    createTextfieldForValueName();
+                else
+                    destroyTextfieldForValueName();
+            }
+        }
+    }
+
     [HideInInspector]
     [SerializeField]
     private bool m_ShowCurrentValue = false;
 
     [HideInInspector]
     [SerializeField]
+    private bool m_ShowValueName = false;
+
+    [HideInInspector]
+    [SerializeField]
     private GameObject m_TextForCurrentValue;
+
+    [HideInInspector]
+    [SerializeField]
+    private GameObject m_TextForValueName;
 
     // We make the border offsets read only in play mode so we need extra variables so we can reset them on change in play mode in OnValidate
     private float m_BorderLeftStatic;
@@ -252,7 +284,7 @@ public class GraphRenderer : MonoBehaviour
             m_OscillatorLineRenderer.useWorldSpace = false;
             m_OscillatorLineRenderer.numPositions = m_NumPoints;
             m_OscillatorLineRenderer.material = GraphMaterial;
-            m_OscillatorLineRenderer.startWidth = m_OscillatorLineRenderer.endWidth = 0.01f;
+            m_OscillatorLineRenderer.startWidth = m_OscillatorLineRenderer.endWidth = 0.005f;
             m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
 
             // Update graph position each frame
@@ -373,7 +405,7 @@ public class GraphRenderer : MonoBehaviour
 
             if (m_ShowCurrentValue && m_TextForCurrentValue)
             {
-                m_TextForCurrentValue.GetComponent<Text>().text = m_CurrentValues[0].ToString();
+                m_TextForCurrentValue.GetComponent<Text>().text = m_CurrentValues[0].ToString("n2");
             }
             yield return new WaitForSeconds(m_TimeStep);
         }
@@ -454,7 +486,7 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     Vector3 getGraphPositionAtIndex(int index)
     {
-        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), -5f);
+        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), -2.5f);
         pos -= m_RectTransform.pivot.x * m_MaximumWidth * Vector3.right;
         pos -= m_RectTransform.pivot.y * m_MaximumHeight * Vector3.up;
         Vector2 pivotDifference = Vector2.one * 0.5f - m_RectTransform.pivot;
@@ -479,6 +511,21 @@ public class GraphRenderer : MonoBehaviour
     {
         DestroyImmediate(m_TextForCurrentValue);
     }
+    private void createTextfieldForValueName()
+    {
+        m_TextForValueName = new GameObject();
+        m_TextForValueName.name = "Value Name";
+        m_TextForValueName.transform.parent = transform;
+        m_TextForValueName.transform.localScale = transform.localScale;
+        m_TextForValueName.transform.localPosition = Vector3.zero;
+        m_TextForValueName.transform.localRotation = Quaternion.identity;
 
+        m_TextForValueName.AddComponent<Text>();
+    }
+
+    private void destroyTextfieldForValueName()
+    {
+        DestroyImmediate(m_TextForValueName);
+    }
 
 }

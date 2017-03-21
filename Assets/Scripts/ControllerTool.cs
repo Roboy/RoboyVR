@@ -12,7 +12,7 @@ public class ControllerTool : MonoBehaviour {
     protected SteamVR_TrackedController m_SteamVRTrackedController;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         // Find Selector tool and the corresponding controller
         m_SteamVRController = GetComponentInParent<SteamVR_TrackedObject>();

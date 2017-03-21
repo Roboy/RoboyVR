@@ -18,10 +18,18 @@ public class InputManager : Singleton<InputManager> {
         get { return m_ShootingTool; }
     }
 
+    public TimeTool TimeTool
+    {
+        get { return m_TimeTool; }
+    }
+
     [SerializeField]
     private SelectorTool m_SelectorTool;
 
     [SerializeField] private ShootingTool m_ShootingTool;
+
+    [SerializeField]
+    private TimeTool m_TimeTool;
 
     [SerializeField]
     private GUIController m_GUIController;

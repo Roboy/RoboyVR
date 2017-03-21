@@ -14,7 +14,7 @@ public class UIPanelRoboyPart : MonoBehaviour {
 
     public List<UIPanelPanelMode> UIPanelPanelModes = new List<UIPanelPanelMode>();
 
-    public ModeManager.Panelmode CurrentPanelmode = ModeManager.Panelmode.Motorforce;
+    public ModeManager.Panelmode CurrentPanelmode = ModeManager.Panelmode.Motor_Force;
 
     public Text NameText;
 
@@ -251,7 +251,7 @@ public class UIPanelRoboyPart : MonoBehaviour {
         // Reset index and mode
         m_CurrentPanelIndex = 0;
         CurrentPageIndex = 0;
-        CurrentPanelmode = ModeManager.Panelmode.Motorforce;
+        CurrentPanelmode = ModeManager.Panelmode.Motor_Force;
         PageText.text = 1 + "/" + UIPanelPanelModes[0].PanelPages.Count;
 
         UIPanelPanelMode currentPanel = UIPanelPanelModes[0];

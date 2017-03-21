@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class SelectionPanel : MonoBehaviour
 {
 
+    public Text CurrentPanelMode;
+
     private RectTransform m_RectTransform;
 
     private List<CanvasGroup> m_ChildCanvasGroups = new List<CanvasGroup>();
@@ -31,11 +33,13 @@ public class SelectionPanel : MonoBehaviour
                 m_ChildBoxColliders.Add(bC);
             }
         }
+
+        CurrentPanelMode.gameObject.SetActive(false);
     }
 
     public void Shrink()
     {
-        StartCoroutine(shrinkCoroutine());
+        StartCoroutine(shrinkCoroutine());   
     }
 
     public void Enlarge()
