@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate(Vector3.forward * projectileSpeed);
+		transform.Translate(Vector3.back * projectileSpeed);
 	    if (transform.position.magnitude > 20.0f)
 	    {
             Destroy(gameObject);

@@ -14,6 +14,11 @@ public class SelectorTool : ControllerTool {
         m_LineRenderer = GetComponent<LineRenderer>();         
     }
 
+    //void Update()
+    //{
+    //    Debug.Log("SelectorToolID: " + m_SteamVRDevice.index);
+    //}
+
     public void GetRayFromController()
     {
         RaycastHit hit;
@@ -50,9 +55,6 @@ public class SelectorTool : ControllerTool {
                     {
                         hittedObject.SetStateTargeted();
                     }
-
-                    Debug.Log("SelectorToolID: " + m_SteamVRDevice.index);
-
                     if (m_SteamVRDevice.GetHairTriggerDown())
                         {
                             hittedObject.SetStateSelected();

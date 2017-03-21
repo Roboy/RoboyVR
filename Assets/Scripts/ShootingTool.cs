@@ -7,8 +7,15 @@ public class ShootingTool : ControllerTool {
     public Projectile ProjectilePrefab;
 
     public Transform SpawnPoint;
-	
-	// Update is called once per frame
+
+    private Animator m_Animator;
+
+    void Start()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
+
+    // Update is called once per frame
 	void Update () {
 
         if (m_SteamVRDevice.GetHairTriggerDown())
@@ -17,11 +24,12 @@ public class ShootingTool : ControllerTool {
             Vibrate();
         }
 
-        Debug.Log("ShootingToolID: " + m_SteamVRDevice.index);
+        //Debug.Log("ShootingToolID: " + m_SteamVRDevice.index);
     }
 
     void Shoot()
     {
         Instantiate(ProjectilePrefab, SpawnPoint.position, transform.rotation);
+        m_Animator.SetTrigger("shootTrigger");       
     }
 }

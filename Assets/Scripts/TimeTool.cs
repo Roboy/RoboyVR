@@ -9,7 +9,7 @@ public class TimeTool : ControllerTool {
 	// Update is called once per frame
 	void Update () {
         positionArrow();
-        Debug.Log("TimeToolID: " + m_SteamVRDevice.index);
+        //Debug.Log("TimeToolID: " + m_SteamVRDevice.index);
     }
 
     void positionArrow()

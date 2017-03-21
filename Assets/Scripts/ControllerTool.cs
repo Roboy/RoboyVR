@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ControllerTool : MonoBehaviour {
 
-    public SteamVR_Controller.Device Controller { get { return m_SteamVRDevice; } }
+    public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int)m_SteamVRController.index); } }
     public SteamVR_TrackedController ControllerEventListener { get { return m_SteamVRTrackedController; } }
 
     protected SteamVR_Controller.Device m_SteamVRDevice;
@@ -14,19 +14,13 @@ public class ControllerTool : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        // Find Selector tool and the corresponding controller
-        m_SteamVRController = GetComponentInParent<SteamVR_TrackedObject>();
-        // Find the controller and initialize the values to default
-        m_SteamVRDevice = SteamVR_Controller.Input((int)m_SteamVRController.index);
-        m_SteamVRDevice.Update();
-
-        m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
+        StartCoroutine(initialize());
     }
 
-    void Update()
-    {
-        m_SteamVRDevice.Update();
-    }
+    //void Update()
+    //{
+    //    m_SteamVRDevice.Update();
+    //}
 
     public void Vibrate()
     {
@@ -46,6 +40,18 @@ public class ControllerTool : MonoBehaviour {
             currDuration += Time.fixedDeltaTime;
             yield return Time.fixedDeltaTime;
         }
+    }
+
+    private IEnumerator initialize()
+    {
+        // Find Selector tool and the corresponding controller
+        m_SteamVRController = GetComponentInParent<SteamVR_TrackedObject>();
+
+        while (!m_SteamVRController.isValid)
+            yield return null;
+
+        m_SteamVRDevice = SteamVR_Controller.Input((int)m_SteamVRController.index);
+        m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
     }
 
 }
