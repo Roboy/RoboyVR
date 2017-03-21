@@ -41,7 +41,7 @@ public class ModeManager : Singleton<ModeManager> {
     {
         SelectorTool,
         ShooterTool,
-        //TimeTool
+        TimeTool
     }
 
     /// <summary>
@@ -140,11 +140,20 @@ public class ModeManager : Singleton<ModeManager> {
         }
         else if (m_CurrentToolMode == ToolMode.ShooterTool)
         {
+            Debug.Log("toolmode to time");
+            InputManager.Instance.TimeTool.enabled = true;
+            InputManager.Instance.ShootingTool.enabled = false;
+            InputManager.Instance.TimeTool.gameObject.SetActive(true);
+            InputManager.Instance.ShootingTool.gameObject.SetActive(false);
+            m_CurrentToolMode = ToolMode.TimeTool;
+        }
+        else if (m_CurrentToolMode == ToolMode.TimeTool)
+        {
             Debug.Log("toolmode to select");
             InputManager.Instance.Selector_Tool.enabled = true;
-            InputManager.Instance.ShootingTool.enabled = false;
+            InputManager.Instance.TimeTool.enabled = false;
             InputManager.Instance.Selector_Tool.gameObject.SetActive(true);
-            InputManager.Instance.ShootingTool.gameObject.SetActive(false);
+            InputManager.Instance.TimeTool.gameObject.SetActive(false);
             m_CurrentToolMode = ToolMode.SelectorTool;
         }
     }

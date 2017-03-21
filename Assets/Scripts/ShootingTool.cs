@@ -16,6 +16,8 @@ public class ShootingTool : ControllerTool {
             Shoot();
             Vibrate();
         }
+
+        Debug.Log("ShootingToolID: " + m_SteamVRDevice.index);
     }
 
     void Shoot()

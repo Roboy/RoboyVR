@@ -50,6 +50,9 @@ public class SelectorTool : ControllerTool {
                     {
                         hittedObject.SetStateTargeted();
                     }
+
+                    Debug.Log("SelectorToolID: " + m_SteamVRDevice.index);
+
                     if (m_SteamVRDevice.GetHairTriggerDown())
                         {
                             hittedObject.SetStateSelected();
