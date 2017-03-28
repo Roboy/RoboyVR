@@ -31,16 +31,16 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     void Awake()
     {
-        //if (string.IsNullOrEmpty(VM_IP))
-        //    return;
+        if (string.IsNullOrEmpty(VM_IP))
+            return;
 
-        //m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
+        m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
 
-        //m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
-        //m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
-        //m_Ros.AddPublisher(typeof(RoboyPosePublisher));
+        m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
+        m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
+        m_Ros.AddPublisher(typeof(RoboyPosePublisher));
 
-        //m_Ros.Connect();
+        m_Ros.Connect();
 
         foreach (Transform t in Roboy)
         {
@@ -54,10 +54,13 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     void Update()
     {
-        //m_Ros.Render();
+        m_Ros.Render();
 
-        //if (Input.GetKeyDown(KeyCode.R))
-        //    m_Ros.CallService("/roboy/reset_world", "");
+        if (Input.GetKeyDown(KeyCode.R))
+            m_Ros.CallService("/roboy/reset_world", "");
+
+        if (Input.GetKeyDown(KeyCode.M))
+            testExternalForce();
     }
 
     void OnApplicationQuit()
@@ -80,7 +83,7 @@ public class RoboyManager : Singleton<RoboyManager> {
 
     public void ReceiveMessage(RoboyPoseMsg msg)
     {
-        Debug.Log("Received message");
+        //Debug.Log("Received message");
 
         m_RoboyPoseMessage = msg;
 
@@ -103,6 +106,14 @@ public class RoboyManager : Singleton<RoboyManager> {
             roboyPart.Value.transform.localRotation = gazeboRotationToUnity(originRotation);
         }
 
+    }
+
+    public void ReceiveExternalForce(RoboyPart roboyPart, Vector3 position, Vector3 force, int duration)
+    {
+        ROSBridgeLib.custom_msgs.ExternalForceMsg msg = 
+            new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, unityPositionToGazebo(position), unityPositionToGazebo(force), duration);
+
+        m_Ros.Publish(RoboyPosePublisher.GetMessageTopic(), msg);
     }
 
     Quaternion gazeboRotationToUnity(Quaternion gazeboRot)
@@ -172,6 +183,20 @@ public class RoboyManager : Singleton<RoboyManager> {
             lr.SetPositions(t.Value.ToArray());
             lr.startWidth = lr.endWidth = 0.1f;
         }
+    }
+
+    void testExternalForce()
+    {
+        string linkname = "torso";
+        Vector3 position = Vector3.zero;
+        Vector3 force = (unityPositionToGazebo(Vector3.up * 100));
+        int duration = 20;
+
+        ROSBridgeLib.custom_msgs.ExternalForceMsg msg = new ROSBridgeLib.custom_msgs.ExternalForceMsg(linkname, position, force, duration);
+
+        m_Ros.Publish(RoboyPosePublisher.GetMessageTopic(), msg);
+        
+
     }
 
     #endregion //PRIVATE_METHODS

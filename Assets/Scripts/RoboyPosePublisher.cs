@@ -17,17 +17,17 @@ public class RoboyPosePublisher : ROSBridgePublisher {
     {
         //return "/roboy/id";
 
-        return "/roboy/pose_test";
+        return "/roboy/external_force";
     }
 
     public new static string GetMessageType()
     {
         //return "std_msgs/Int32";
 
-        return "geometry_msgs/Pose";
+        return "common_utilities/ExternalForce";
     }
 
-    public static string ToYAMLString(ROSBridgeLib.geometry_msgs.PoseMsg msg)
+    public static string ToYAMLString(ROSBridgeLib.custom_msgs.ExternalForceMsg msg)
     {
         return msg.ToYAMLString();
     }

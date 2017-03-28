@@ -19,4 +19,19 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
 	    }
 	}
+
+    void OnCollisionEnter(Collision collision)
+    {
+        RoboyPart roboyPart;
+        if ((roboyPart = collision.gameObject.GetComponent<RoboyPart>()) != null)
+        {          
+            Vector3 forcePosition = collision.transform.InverseTransformPoint(transform.position);
+            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 5);
+            int duration = 200;
+            RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
+
+            //Debug.Log("Hit at: " + collision.gameObject.name);
+            //Debug.Log(forceDirection);
+        }
+    }
 }

@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class SelectorManager : Singleton<SelectorManager>
 {
-
-    public RectTransform Canvas;
-
     public Dictionary<string, GameObject> UI_Elements { get { return m_UI_Elements; } }
     public List<SelectableObject> SelectedParts { get { return m_SelectedParts; } }
     public int MaximumSelectableObjects {
@@ -32,14 +29,14 @@ public class SelectorManager : Singleton<SelectorManager>
 
     private Material m_UI_Line_Material;
 
-    void Awake()
+    IEnumerator Start()
     {
         m_CurrentMaximumSelectedObjects = m_MaximumSelectableObjects;
 
         m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform;
 
         if (m_Roboy == null)
-            return;
+            yield break;
 
         foreach (Transform t in m_Roboy)
         {
@@ -48,8 +45,13 @@ public class SelectorManager : Singleton<SelectorManager>
                 m_RoboyParts.Add(obj);
         }
 
+        while (GameObject.FindGameObjectsWithTag("RoboyUI").Length == 0)
+            yield return null;
+
         GameObject[] tempUI_Elements = GameObject.FindGameObjectsWithTag("RoboyUI");
 
+        // This part does not always work! When The Left Controller is not active then the attached RoboyUI objects cannot be found as they are inactive as well
+        // => UI dictionary is empty => selectableObject cannot find UI! ------------- MAYBE FIXED!!!!----------------------
         foreach (GameObject g in tempUI_Elements)
         {
             m_UI_Elements.Add(g.name, g);
