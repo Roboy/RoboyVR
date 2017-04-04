@@ -26,11 +26,11 @@ public class Projectile : MonoBehaviour
         if ((roboyPart = collision.gameObject.GetComponent<RoboyPart>()) != null)
         {          
             Vector3 forcePosition = collision.transform.InverseTransformPoint(transform.position);
-            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 5);
+            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 1500);
             int duration = 200;
             RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
 
-            //Debug.Log("Hit at: " + collision.gameObject.name);
+            Debug.Log("Hit at: " + collision.gameObject.name);
             //Debug.Log(forceDirection);
         }
     }

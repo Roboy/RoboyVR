@@ -114,6 +114,8 @@ public class RoboyManager : Singleton<RoboyManager> {
             new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, unityPositionToGazebo(position), unityPositionToGazebo(force), duration);
 
         m_Ros.Publish(RoboyPosePublisher.GetMessageTopic(), msg);
+
+        Debug.Log(msg.ToYAMLString());
     }
 
     Quaternion gazeboRotationToUnity(Quaternion gazeboRot)
