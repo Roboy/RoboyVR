@@ -1,5 +1,6 @@
 #roboyVR™
 
+[![RoboyVR techdemo](https://img.youtube.com/vi/4lgiljctMw8/0.jpg)](https://www.youtube.com/watch?v=4lgiljctMw8)
 
 **How it works:**  
 Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
