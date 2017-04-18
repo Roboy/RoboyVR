@@ -1,0 +1,45 @@
+\href{http://roboy-sw-documentation-template.readthedocs.io/en/lite/?badge=lite}{\tt }
+
+Template for documenting software requirements and software architectures
+
+\subsection*{Getting started}
+
+\subsubsection*{Install}
+
+
+\begin{DoxyItemize}
+\item Git clone this repo into your project folder
+\item Remove the .git folder\+: {\ttfamily rm -\/rf .git}
+\item Install the dependencies\+: {\ttfamily pip install -\/r .../sw\+\_\+documentation\+\_\+template/documentation/requirements.txt}
+\item Adapt the Doxyfile in ./documentation/\+Doxyfile to\+:
+\begin{DoxyItemize}
+\item Name the project correctly\+: i.\+e. {\ttfamily P\+R\+O\+J\+E\+C\+T\+\_\+\+N\+A\+ME= \char`\"{}\+Software Documentation Template\char`\"{}}
+\item Point to the correct all of your source and include folders\+: i.\+e. {\ttfamily I\+N\+P\+UT= ../src ../include}
+\end{DoxyItemize}
+\item Adapt the conf.\+py in ./documentation/conf.py to\+:
+\begin{DoxyItemize}
+\item Name the project and author correctly\+: starting here\+: {\ttfamily project = u\textquotesingle{}Software Documentation Template\textquotesingle{}}
+\item Look through other settings such as\+:
+\begin{DoxyItemize}
+\item {\ttfamily htmlhelp\+\_\+basename}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\subsubsection*{Build}
+
+Its a sphinx project containing a doxygen setup, just run cd documentation doxygen cd .. make clean html to generate the output.
+
+Open the index.\+html file in the ./documentation/build folder
+
+\subsubsection*{Deploy}
+
+Log into the Roboy R\+E\+A\+D\+T\+H\+E\+D\+O\+CS at \href{http://readthedocs.io/}{\tt http\+://readthedocs.\+io/} and add your repo there.
+
+\subsection*{Acknowledgement}
+
+The template is based on \href{http://arc42.de/template/index.html}{\tt http\+://arc42.\+de/template/index.\+html}
+
+\subsection*{License}
+
+Its licensed as \textquotesingle{}very much resembles the Creative Commons Attribution License\textquotesingle{}\+: \href{http://arc42.de/template/licence.html}{\tt http\+://arc42.\+de/template/licence.\+html} 

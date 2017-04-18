@@ -282,7 +282,7 @@ public class GraphRenderer : MonoBehaviour
             m_OscillatorLineRenderer = gameObject.AddComponent<LineRenderer>();
 
             m_OscillatorLineRenderer.useWorldSpace = false;
-            m_OscillatorLineRenderer.numPositions = m_NumPoints;
+            m_OscillatorLineRenderer.positionCount = m_NumPoints;
             m_OscillatorLineRenderer.material = GraphMaterial;
             m_OscillatorLineRenderer.startWidth = m_OscillatorLineRenderer.endWidth = 0.005f;
             m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
