@@ -1,11 +1,15 @@
 #roboyVR™
 
+[![RoboyVR techdemo](https://raw.githubusercontent.com/sheveg/roboyVR/164b1f24ddfb1b060015f2370fcedeca5a160d78/Assets/thumbnail.png)](https://www.youtube.com/watch?v=4lgiljctMw8)
 
 **How it works:**  
 Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
 regarding roboy's movement are then sent through a ROSbridge(e.g. messages) towards Unity.  
 In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
 With the help of a VR-Headset you can watch roboy move around in a virtual space.
+
+Check out the whole large-scale documentation of roboyVR here:
+http://roboyvr.readthedocs.io/en/latest/
 
 ## Setup
 This tutorial will help you setup roboyVR with all necessities it comes with.  
