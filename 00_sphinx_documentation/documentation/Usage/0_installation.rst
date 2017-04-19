@@ -103,4 +103,9 @@ Part 3: Unity Setup
   - Clone this github repository (master branch) to your system: https://github.com/sheveg/roboyVR.git
   - Command: git clone -b master https://github.com/sheveg/roboyVR.git
 
+Part 4: Blender & Python
+------------------------
 
+- Install the latest version of `Blender <https://www.blender.org/download/>`_
+
+- Install the latest version of `Python <https://www.python.org/downloads/>`_

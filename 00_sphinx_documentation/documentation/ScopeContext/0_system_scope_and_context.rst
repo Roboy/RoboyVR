@@ -1,24 +1,17 @@
 Context
 --------
 
-.. todo::
-  Create a black box view of your software within its intendend environment.
-  Identify all
-  neighboring systems and specify all logical business data that is
-  exchanged with the system under development.
+The core of RoboyVR renders and updates roboy's pose as its receiving data from the simulation
+via ROS-messages. Additional information inside messages like current powerconsumption or motorforce
+is displayed on an interactive GUI. Apart from that the user can actively manipulate the simulation
+through various tools. On top of that the system can check for the latest roboymodel with the help of
+github and update it if necessary.
 
-  List of all (a-l-l) neighboring systems.
+.. figure:: images/uml_context.*
+  :alt: Context overview.
 
-  **Motivation.**
+  RoboyVR Experience has two neighboring systems. 
+  Roboy simulation to receive pose data and Github for model updates.
+  
+  
 
-  Understanding the information exchange with neighboring systems (i.e.
-  all input flows and all output flows).
-
-
-.. _context_within_environment:
-.. figure:: images/uml_system_context.*
-  :alt: Bulding blocks overview
-
-  UML System Context
-
-  **UML-type context diagram** - shows the birds eye view of the system (black box) described by this architecture within the ecosystem it is to be placed in. Shows orbit level interfaces on the user interaction and component scope.

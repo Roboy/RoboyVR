@@ -73,6 +73,10 @@ the research by yourself.
 - StackOverflow is a forum where you can search for answers regarding your coding problems: http://stackoverflow.com/
 - UnityAnswers, similar to StackOverflow but only for Unity specific questions. The community is not as active and most questions
   are really basic, so bear that in mind: http://answers.unity3d.com/
+- As we use ROS and our own custom messages, it is important to understand how ROS works and how ROS messages are built: http://wiki.ros.org/
+
+If you have any further questions about the project, feel free to contact us via email: roboyvr@gmail.com
+
 .. _requirements_overview:
 
 Contents:
