@@ -8,7 +8,7 @@ regarding roboy's movement are then sent through a ROSbridge(e.g. messages) towa
 In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
 With the help of a VR-Headset you can watch roboy move around in a virtual space.
 
-Check out the whole large-scale documentation of roboyVR here::
+Check out the whole large-scale documentation of roboyVR here:
 http://roboyvr.readthedocs.io/en/latest/
 
 ## Setup
