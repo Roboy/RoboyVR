@@ -26,10 +26,28 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// The IP address of the VM or the machine where the simulation is running
     /// </summary>
     public string VM_IP = "";
+    
     /// <summary>
-    /// Transform of roboy with all roboy parts as child objects
+    /// Public variable so that all classes can access the roboy object.
     /// </summary>
-    public Transform Roboy;
+    public Transform Roboy
+    {
+        get
+        {
+            if (m_Roboy != null)
+                return m_Roboy;
+
+            m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform;
+            if (m_Roboy != null)
+                return m_Roboy;
+            else
+            {
+                Debug.LogWarning("Roboy could not be found! Returning null!");
+                return null;
+            }
+        }
+    }
+
     /// <summary>
     /// Public variable for the dictionary with all roboyparts, used to adjust pose and motor values
     /// </summary>
@@ -44,6 +62,12 @@ public class RoboyManager : Singleton<RoboyManager> {
     #endregion //PUBLIC_MEMBER_VARIABLES
 
     #region PRIVATE_MEMBER_VARIABLES
+
+    /// <summary>
+    /// Transform of roboy with all roboy parts as child objects
+    /// </summary>
+    [SerializeField]
+    private Transform m_Roboy;
     /// <summary>
     /// ROSBridge websocket
     /// </summary>
@@ -52,6 +76,11 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// Pose message of roboy in our build in class
     /// </summary>
     private RoboyPoseMsg m_RoboyPoseMessage;
+
+    /// <summary>
+    /// Variable to check if the ROS connection is working!
+    /// </summary>
+    private bool m_ROSInitialized = false;
 
     /// <summary>
     /// Dictionary with all roboyparts, used to adjust pose and motor values
@@ -73,18 +102,25 @@ public class RoboyManager : Singleton<RoboyManager> {
 
         m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
 
-        m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
-        m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
-        m_Ros.AddPublisher(typeof(RoboyPosePublisher));
-
-        m_Ros.Connect();
-
-        foreach (Transform t in Roboy)
+        // DOES NOT WORK! m_Ros is never null if you call the Constructor, WAIT TILL SIMON IMPLEMENTS UDP BROADCAST WITH ROS CONFIGURATION, GET THE IP ADDRESS FROM THE BROADCAST
+        if (m_Ros != null)
         {
-            if (t == null | !t.CompareTag("RoboyPart"))
-                continue;
-            m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
+            m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
+            m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
+            m_Ros.AddPublisher(typeof(RoboyPosePublisher));
+            m_Ros.Connect();
+            m_ROSInitialized = true;
+
+            Debug.Log("ROS successfully initialized!");
         }
+        else
+        {
+            Debug.LogWarning("ROS could not be initialized!");
+        }
+
+        getRoboy();
+
+        getRoboyParts();
 
         InitializeRoboyParts();
     }
@@ -94,10 +130,13 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// </summary>
     void Update()
     {
-        m_Ros.Render();
+        if (m_ROSInitialized)
+        {
+            m_Ros.Render();
 
-        if (Input.GetKeyDown(KeyCode.R))
-            m_Ros.CallService("/roboy/reset_world", "");
+            if (Input.GetKeyDown(KeyCode.R))
+                ResetSimulation();
+        }
     }
 
     /// <summary>
@@ -105,7 +144,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// </summary>
     void OnApplicationQuit()
     {
-        if (m_Ros != null)
+        if (!m_ROSInitialized)
             m_Ros.Disconnect();
     }
     #endregion //MONOBEHAVIOR_METHODS
@@ -151,7 +190,18 @@ public class RoboyManager : Singleton<RoboyManager> {
 
         m_Ros.Publish(RoboyPosePublisher.GetMessageTopic(), msg);
 
-        Debug.Log(msg.ToYAMLString());
+        //Debug.Log(msg.ToYAMLString());
+    }
+
+    public void ResetSimulation()
+    {
+        if (!m_ROSInitialized)
+        {
+            Debug.LogWarning("Cannot reset simulation as ROS is not running!");
+            return;
+        }
+     
+        m_Ros.CallService("/roboy/reset_world", "");
     }
 
     #region Convert function from gazebo to unity and vice versa.
@@ -275,6 +325,32 @@ public class RoboyManager : Singleton<RoboyManager> {
             roboyPart.Value.transform.localRotation = gazeboRotationToUnity(originRotation);
         }
     }
+
+    void getRoboy()
+    {
+        if ((m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform) == null)
+        {
+            Debug.LogWarning("Roboy could not be found!");
+            return;
+        }
+    }
+
+    void getRoboyParts() {
+
+        if (m_Roboy == null)
+        {
+            getRoboy();
+        }
+
+        foreach (Transform t in m_Roboy)
+        {
+            if (t == null | !t.CompareTag("RoboyPart"))
+                continue;
+            m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
+        }
+    }
+
+
 
     #endregion //PRIVATE_METHODS
 }

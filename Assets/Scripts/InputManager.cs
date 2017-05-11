@@ -132,7 +132,7 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="e"></param>
     public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
     {
-        ModeManager.Instance.ChangeViewMode();
+        RoboyManager.Instance.ResetSimulation();
     }
 
     /// <summary>

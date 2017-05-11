@@ -14,7 +14,7 @@ public class TimeTool : ControllerTool {
 
     void positionArrow()
     {
-        Vector2 touchPos = m_SteamVRDevice.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);
+        Vector2 touchPos = Controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);
 
         float scaleProduct = Vector3.Dot(Vector3.up, touchPos);
         float lengthProduct = touchPos.magnitude;

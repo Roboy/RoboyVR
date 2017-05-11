@@ -14,17 +14,17 @@ using VRTK.Examples.Utilities;
 /// - <b>NOTICE: Right now GUIController is not inheriting from ControllerTool as we implemented this script at the beginning of the project.
 /// This will be changed soon, so be aware that this documentation could be out of date!</b>
 /// </summary>
-public class GUIController : MonoBehaviour {
+public class GUIController : ControllerTool {
 
-    /// <summary>
-    /// Public variable for outside classes to track input.
-    /// </summary>
-    public SteamVR_Controller.Device Controller { get { return m_SteamVRDevice; } }
+    ///// <summary>
+    ///// Public variable for outside classes to track input.
+    ///// </summary>
+    //public SteamVR_Controller.Device Controller { get { return m_SteamVRDevice; } }
 
-    /// <summary>
-    /// Public variable for outside classes to track controller events.
-    /// </summary>
-    public SteamVR_TrackedController ControllerEventListener { get { return m_SteamVRTrackedController; } }
+    ///// <summary>
+    ///// Public variable for outside classes to track controller events.
+    ///// </summary>
+    //public SteamVR_TrackedController ControllerEventListener { get { return m_SteamVRTrackedController; } }
 
     /// <summary>
     /// Property which holds a dictionary to store a reference to the standard position of panels in panel mode.
@@ -33,20 +33,20 @@ public class GUIController : MonoBehaviour {
         get { return m_UIFadePanels; }
     }
 
-    /// <summary>
-    /// Private variable to track controller input.
-    /// </summary>
-    private SteamVR_Controller.Device m_SteamVRDevice;
+    ///// <summary>
+    ///// Private variable to track controller input.
+    ///// </summary>
+    //private SteamVR_Controller.Device m_SteamVRDevice;
 
-    /// <summary>
-    /// Private variable to track controller identity.
-    /// </summary>
-    private SteamVR_TrackedObject m_SteamVRController;
+    ///// <summary>
+    ///// Private variable to track controller identity.
+    ///// </summary>
+    //private SteamVR_TrackedObject m_SteamVRController;
 
-    /// <summary>
-    /// Private variable to track controller events.
-    /// </summary>
-    private SteamVR_TrackedController m_SteamVRTrackedController;
+    ///// <summary>
+    ///// Private variable to track controller events.
+    ///// </summary>
+    //private SteamVR_TrackedController m_SteamVRTrackedController;
 
     /// <summary>
     /// Dictionary to store a reference to all UI Panels which are created at the start of the scene.

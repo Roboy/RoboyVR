@@ -9,7 +9,7 @@ In Unity roboy is rendered and constantly updated concerning positions, rotation
 With the help of a VR-Headset you can watch roboy move around in a virtual space.
 
 Check out the whole large-scale documentation of roboyVR here:
-https://readthedocs.org/projects/roboyvr-experience/
+http://roboyvr.readthedocs.io/en/latest/
 
 ## Setup
 This tutorial will help you setup roboyVR with all necessities it comes with.  

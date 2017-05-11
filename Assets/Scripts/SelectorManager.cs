@@ -27,6 +27,11 @@ public class SelectorManager : Singleton<SelectorManager>
     }
 
     /// <summary>
+    /// TEMPORARY VARIABLE TO CHECK HOW MANY UI ELEMENTS ARE INITIALIZED
+    /// </summary>
+    public int RoboyUIElementsCount = 13;
+
+    /// <summary>
     /// Transform of roboy model.
     /// </summary>
     private Transform m_Roboy;
@@ -70,7 +75,7 @@ public class SelectorManager : Singleton<SelectorManager>
         m_CurrentMaximumSelectedObjects = m_MaximumSelectableObjects;
 
         // Find roboy
-        m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform;
+        m_Roboy = RoboyManager.Instance.Roboy;
 
         // If you dont find roboy, quit
         if (m_Roboy == null)
@@ -84,8 +89,8 @@ public class SelectorManager : Singleton<SelectorManager>
                 m_RoboyParts.Add(obj);
         }
 
-        // Wait until you find all UI elements
-        while (GameObject.FindGameObjectsWithTag("RoboyUI").Length == 0)
+        // Wait until you find all UI elements /// CHANGE THIS IN FUTURE TO CHECK FROM A SINGLETON? INSTANCE OR DATA STRUCTURE
+        while (GameObject.FindGameObjectsWithTag("RoboyUI").Length < RoboyUIElementsCount)
             yield return null;
 
         GameObject[] tempUI_Elements = GameObject.FindGameObjectsWithTag("RoboyUI");
