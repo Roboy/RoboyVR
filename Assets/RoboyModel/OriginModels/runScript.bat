@@ -1,1 +1,1 @@
-start "" "pathToBlender/blender.exe" -P "pathToScript\meshDownloadScript.py" <meshes you want to update WITHOUT .STL or .fbx and without whitespace: torso,hip,thigh_left,oberarm_right>
+start "" "pathToBlender/blender.exe" -P "pathToScript\meshDownloadScript.py" "gitPathToMeshes\" <meshes you want to update WITHOUT .STL or .fbx and without whitespace: torso,hip,thigh_left,oberarm_right OR you can update all meshes by putting "" as last parameter>

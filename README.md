@@ -144,18 +144,22 @@ In the ViveScene you can view roboy with the HTC Vive™ in virtual reality. You
 
 ### Update roboy models ###
 
-In /roboyVR/Assets/RoboyModel/OriginModels there is a script **meshDownloadScript.py**. When executed, it downloads roboy models from this location:  
-https://github.com/Roboy/roboy_models/tree/master/legs_with_upper_body/cad.  
+In /roboyVR/Assets/RoboyModel/OriginModels there is a script **meshDownloadScript.py**. When executed, it downloads roboy models from a given location. It's important to use a path to the "raw" models, NOT a path with "tree" in it.  
+ 
 
 After the download process is complete the models will be converted by blender so that they work fine with unity (.fbx format). Obviously you need blender and python installed on your system so that the script can do it's work. You can use the template **runScript** bat file for Windows. 
 
 The format:
 ```
-start "" "pathToBlender/blender.exe" -P "pathToScript\meshDownloadScript.py" **meshes name seperated by ',' without whitespace and file format**
+start "" "pathToBlender/blender.exe" -P "pathToScript\meshDownloadScript.py" "gitPathToMeshes\" **meshes you want to update WITHOUT .STL or .fbx and without whitespace: torso,hip,thigh_left,oberarm_right OR you can update all meshes by putting "" as last parameter**
 ```
 
 Example:
 
 ```
-start "" "C:\Programs\Blender\blender.exe" -P "C:\Documents\roboyVR\Assets\RoboyModel\OriginModels\meshDownloadScript.py" hip,torso,thigh_left,head
+start "" "C:\Programs\Blender\blender.exe" -P "C:\Documents\roboyVR\Assets\RoboyModel\OriginModels\meshDownloadScript.py" "https://github.com/Roboy/roboy_models/raw/master/legs_with_upper_body/cad" hip,torso,thigh_left,head
+```
+
+```
+start "" "C:\Programs\Blender\blender.exe" -P "C:\Documents\roboyVR\Assets\RoboyModel\OriginModels\meshDownloadScript.py" "https://github.com/Roboy/roboy_models/raw/master/PaBiRoboy/meshes" ""
 ```

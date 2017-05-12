@@ -28,28 +28,35 @@ def get_override(area_type, region_type):
 
 
 #we expect the array to be of format <name>
-arguments = sys.argv[3].split(',')
+arguments = sys.argv[4].split(',')
 stl_arguments = []
 
 for argument in arguments:
 	stl_arguments.append(argument + ".STL")
+	
+
+
 
 #Define location to download STls from
-dir_ip_addr = 'https://github.com/Roboy/roboy_models/raw/master/legs_with_upper_body/cad/'
-urlpath = urllib.request.urlopen('https://github.com/Roboy/roboy_models/tree/master/legs_with_upper_body/cad/')
+dir_ip_addr = sys.argv[3]
+urlpath = urllib.request.urlopen(sys.argv[3])
 string = urlpath.read().decode('utf-8')
 
 #Search url for all STL names
-pattern = re.compile('[a-z]+_?[a-z]*.STL')
+pattern = re.compile('[a-z]+_?[a-z]*[0-9]*.STL')
 filelist = pattern.findall(string)
 filelist = list(set(filelist))
 
 export_list = []
 
-#compare arguments with list of directory in github
-for filename in filelist:
-	if filename in stl_arguments:
-		export_list.append(filename)
+if sys.argv[4] == "":
+# if  stl_arguments[0] == "all.STL":
+	export_list = filelist
+else:
+	#compare arguments with list of directory in github
+	for filename in filelist:	
+		if filename in stl_arguments:
+			export_list.append(filename)
 
 print("Meshes to be updated: ", export_list)
 
