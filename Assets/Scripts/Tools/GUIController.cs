@@ -16,37 +16,12 @@ using VRTK.Examples.Utilities;
 /// </summary>
 public class GUIController : ControllerTool {
 
-    ///// <summary>
-    ///// Public variable for outside classes to track input.
-    ///// </summary>
-    //public SteamVR_Controller.Device Controller { get { return m_SteamVRDevice; } }
-
-    ///// <summary>
-    ///// Public variable for outside classes to track controller events.
-    ///// </summary>
-    //public SteamVR_TrackedController ControllerEventListener { get { return m_SteamVRTrackedController; } }
-
     /// <summary>
     /// Property which holds a dictionary to store a reference to the standard position of panels in panel mode.
     /// </summary>
     public Dictionary<UIPanelAlignment, FadePanelStruct> UIFadePanels {
         get { return m_UIFadePanels; }
     }
-
-    ///// <summary>
-    ///// Private variable to track controller input.
-    ///// </summary>
-    //private SteamVR_Controller.Device m_SteamVRDevice;
-
-    ///// <summary>
-    ///// Private variable to track controller identity.
-    ///// </summary>
-    //private SteamVR_TrackedObject m_SteamVRController;
-
-    ///// <summary>
-    ///// Private variable to track controller events.
-    ///// </summary>
-    //private SteamVR_TrackedController m_SteamVRTrackedController;
 
     /// <summary>
     /// Dictionary to store a reference to all UI Panels which are created at the start of the scene.
@@ -93,42 +68,15 @@ public class GUIController : ControllerTool {
     /// Initializes the controller variables.
     /// Intializes the UI Panels and creates them for every roboy part for every panel mode.
     /// </summary>
-    void Start () {
-        m_SteamVRController = GetComponentInParent<SteamVR_TrackedObject>();
-        // Find the controller and initialize the values to default
-        m_SteamVRDevice = SteamVR_Controller.Input((int)m_SteamVRController.index);
-        m_SteamVRDevice.Update();
-
-        m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
-
-        // Find all template panels for fading
-        List<Transform> allFadePanels =
-            gameObject.GetComponentsInChildren<Transform>().Where(panel => panel.tag.Equals("FadePanelStruct")).ToList();
-
-        // Initialize the fade panels
-        foreach (var fadePanel in allFadePanels)
-        {
-            Transform fadeInPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeInPanel");
-            Transform fadeOutPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeOutPanel");
-            Transform fadeStandardPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel");
-
-            FadePanelStruct fadePanelStruct;
-            fadePanelStruct.FadeInPanel = fadeInPanel;
-            fadePanelStruct.FadeOutPanel = fadeOutPanel;
-            fadePanelStruct.FadeStandardPanel = fadeStandardPanel;
-
-            m_UIFadePanels.Add(fadeInPanel.parent.GetComponent<FadePanelTemplate>().Alignment, fadePanelStruct);
-
-            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeInPanel").gameObject.SetActive(false);
-            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeOutPanel").gameObject.SetActive(false);
-            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel").gameObject.SetActive(false);
-        }
-
+    void Start ()
+    {
         // get the selection panel
         m_SelectionPanel = GetComponentInChildren<SelectionPanel>();
 
+        initializeFadePanels();
+
         // initialize the UI panels
-        InitializePanels();
+        initializePanels();
     }
 
     /// <summary>
@@ -159,9 +107,38 @@ public class GUIController : ControllerTool {
     }
 
     /// <summary>
+    /// Initializes all fade panels which are used for the animation of the different modes.
+    /// </summary>
+    private void initializeFadePanels()
+    {
+        // Find all template panels for fading
+        List<Transform> allFadePanels =
+            gameObject.GetComponentsInChildren<Transform>().Where(panel => panel.tag.Equals("FadePanelStruct")).ToList();
+
+        // Initialize the fade panels
+        foreach (var fadePanel in allFadePanels)
+        {
+            Transform fadeInPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeInPanel");
+            Transform fadeOutPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeOutPanel");
+            Transform fadeStandardPanel = fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel");
+
+            FadePanelStruct fadePanelStruct;
+            fadePanelStruct.FadeInPanel = fadeInPanel;
+            fadePanelStruct.FadeOutPanel = fadeOutPanel;
+            fadePanelStruct.FadeStandardPanel = fadeStandardPanel;
+
+            m_UIFadePanels.Add(fadeInPanel.parent.GetComponent<FadePanelTemplate>().Alignment, fadePanelStruct);
+
+            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeInPanel").gameObject.SetActive(false);
+            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeOutPanel").gameObject.SetActive(false);
+            fadePanel.gameObject.GetComponentInChildWithTag<Transform>("FadeStandardPanel").gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
     /// Initialize the position of all panels and set their corresponding roboy part reference.
     /// </summary>
-    public void InitializePanels()
+    private void initializePanels()
     {
         foreach (var roboyPart in RoboyManager.Instance.RoboyParts)
         {

@@ -62,6 +62,11 @@ public class InputManager : Singleton<InputManager> {
     private GUIController m_GUIController;
 
     /// <summary>
+    /// Controllers initialized or not.
+    /// </summary>
+    private bool m_Initialized = false;
+
+    /// <summary>
     /// Touchpad status of the controller where selector tool is attached to.
     /// </summary>
     public TouchpadStatus SelectorTool_TouchpadStatus { get; private set; }
@@ -81,21 +86,17 @@ public class InputManager : Singleton<InputManager> {
         Top,
         Bottom,
         None
-    }
-    
-    /// <summary>
-    /// Initialize all tools.
-    /// </summary>
-    void Start()
-    {
-        StartCoroutine(InitControllers());
-    }
+    } 
 
     /// <summary>
     /// Calls the ray cast from the selector tool if it is active.
     /// </summary>
     void Update()
     {
+        if (!m_Initialized)
+        {
+            return;
+        }
         if (m_SelectorTool.gameObject.activeInHierarchy)
         {
             m_SelectorTool.GetRayFromController();
@@ -103,26 +104,12 @@ public class InputManager : Singleton<InputManager> {
     }
 
     /// <summary>
-    /// Initializes all controllers and tools.
+    /// Initialize all tools.
     /// </summary>
-    /// <returns></returns>
-    IEnumerator InitControllers()
+    public void Initialize(List<ControllerTool> toolList)
     {
-        m_SelectorTool.gameObject.SetActive(true);
-        m_ShootingTool.gameObject.SetActive(false);
-        m_TimeTool.gameObject.SetActive(false);
-
-        while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
-            yield return Time.fixedDeltaTime;
-
-        m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
-        m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
-
-        m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
-        
-        //CHANGE THIS
-        m_SelectorTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
-        //m_ShootingTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
+        setTools(toolList);
+        StartCoroutine(initControllersCoroutine());
     }
 
     /// <summary>
@@ -185,5 +172,57 @@ public class InputManager : Singleton<InputManager> {
             m_GUIController.CheckTouchPad(result);
         }
             
+    }
+
+    /// <summary>
+    /// Set all tools depending on their type to the respective variable.
+    /// </summary>
+    /// <param name="toolList"></param>
+    private void setTools(List<ControllerTool> toolList)
+    {
+        foreach (ControllerTool tool in toolList)
+        {
+            if (tool is GUIController)
+            {
+                m_GUIController = (GUIController)tool;
+            }
+            else if (tool is SelectorTool)
+            {
+                m_SelectorTool = (SelectorTool)tool;
+            }
+            else if (tool is ShootingTool)
+            {
+                m_ShootingTool = (ShootingTool)tool;
+            }
+            else if (tool is TimeTool)
+            {
+                m_TimeTool = (TimeTool)tool;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Initializes all controllers and tools.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator initControllersCoroutine()
+    {
+        m_SelectorTool.gameObject.SetActive(true);
+        m_ShootingTool.gameObject.SetActive(false);
+        m_TimeTool.gameObject.SetActive(false);
+
+        while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
+            yield return Time.fixedDeltaTime;
+
+        m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
+        m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
+
+        m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
+
+        //CHANGE THIS
+        m_SelectorTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
+        //m_ShootingTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
+
+        m_Initialized = true;
     }
 }

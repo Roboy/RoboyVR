@@ -62,11 +62,6 @@ public class SelectorManager : Singleton<SelectorManager>
     private Dictionary<string, GameObject> m_UI_Elements = new Dictionary<string, GameObject>();
 
     /// <summary>
-    /// I am not sure what this is. Will be deleted soon.
-    /// </summary>
-    private Material m_UI_Line_Material;
-
-    /// <summary>
     /// Initializes all variables.
     /// </summary>
     /// <returns></returns>
@@ -90,33 +85,18 @@ public class SelectorManager : Singleton<SelectorManager>
         }
 
         // Wait until you find all UI elements /// CHANGE THIS IN FUTURE TO CHECK FROM A SINGLETON? INSTANCE OR DATA STRUCTURE
-        while (GameObject.FindGameObjectsWithTag("RoboyUI").Length < RoboyUIElementsCount)
+        while (GameObject.FindGameObjectsWithTag("RoboyUI").Length != RoboyUIElementsCount)
             yield return null;
 
-        GameObject[] tempUI_Elements = GameObject.FindGameObjectsWithTag("RoboyUI");
+        GameObject[] UI_Elements = GameObject.FindGameObjectsWithTag("RoboyUI");
 
         // This part does not always work! When The Left Controller is not active then the attached RoboyUI objects cannot be found as they are inactive as well
         // => UI dictionary is empty => selectableObject cannot find UI! ------------- MAYBE FIXED!!!!----------------------
         // Add an Outline component to all UI elements if they dont have one
-        foreach (GameObject g in tempUI_Elements)
+        foreach (GameObject g in UI_Elements)
         {
             m_UI_Elements.Add(g.name, g);
-
-            Outline outline;
-
-            if (g.GetComponent<Outline>() == null)
-                g.AddComponent<Outline>();
-            outline = g.GetComponent<Outline>();
-
-            outline.enabled = false;
-            outline.effectColor = Color.red;
-            outline.effectDistance = new Vector2(0.2f, -0.2f);
-
-            g.GetComponentInChildren<Text>().text = g.name;
         }
-
-        // DONT KNOW WHAT THIS IS DELETE MAYBE
-        m_UI_Line_Material = Resources.Load("mat_UI_Line", typeof(Material)) as Material;
     }
 
     /// <summary>

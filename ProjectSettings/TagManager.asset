@@ -16,6 +16,7 @@ TagManager:
   - FadeOutPanel
   - FadeStandardPanel
   - FadePanelStruct
+  - GUIController
   layers:
   - Default
   - TransparentFX

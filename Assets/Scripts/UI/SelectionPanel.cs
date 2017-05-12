@@ -56,6 +56,11 @@ public class SelectionPanel : MonoBehaviour
         CurrentPanelModeText.gameObject.SetActive(false);
     }
 
+    private void Start()
+    {
+        initializeUI();
+    }
+
     /// <summary>
     /// Starts a coroutine to shrink the selection panel.
     /// </summary>
@@ -163,5 +168,25 @@ public class SelectionPanel : MonoBehaviour
         {
             bC.enabled = true;
         }       
+    }
+
+    private void initializeUI()
+    {
+        // This part does not always work! When The Left Controller is not active then the attached RoboyUI objects cannot be found as they are inactive as well
+        // => UI dictionary is empty => selectableObject cannot find UI! ------------- MAYBE FIXED!!!!----------------------
+        // Add an Outline component to all UI elements if they dont have one
+        foreach (GameObject g in SelectorManager.Instance.UI_Elements.Values)
+        {
+            Outline outline;
+
+            if (g.GetComponent<Outline>() == null)
+                g.AddComponent<Outline>();
+            outline = g.GetComponent<Outline>();
+
+            outline.enabled = false;
+            outline.effectDistance = new Vector2(0.2f, -0.2f);
+
+            g.GetComponentInChildren<Text>().text = g.name;
+        }
     }
 }
