@@ -2,10 +2,7 @@
 # Created by https://www.gitignore.io/api/visualstudio,unity
 
 ### Unity ###
-/[Ll]ibrary/FailedAssetImports.txt
-/[Ll]ibrary/cache/
-/[Ll]ibrary/previews/
-/[Ll]ibrary/ScriptAssemblies
+/[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
@@ -89,7 +86,7 @@ artifacts/
 *_p.c
 *_i.h
 *.ilk
-*.meta
+# *.meta DONT IGNORE THIS CAUSE UNITY NEEDS META FILES WHEN LIBRARY IS IGNORED
 *.obj
 *.pch
 *.pdb
