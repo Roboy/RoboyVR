@@ -1,0 +1,1 @@
+start "" "C:\Program Files\Blender\blender.exe" -P "meshDownloadScript.py" "https://github.com/Roboy/roboy_models/raw/master/PaBiRoboy/meshes/" ""

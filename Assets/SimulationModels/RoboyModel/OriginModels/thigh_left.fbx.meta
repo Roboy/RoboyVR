@@ -1,0 +1,164 @@
+fileFormatVersion: 2
+guid: 3355986ba5694b642ad905c8e2d35fba
+timeCreated: 1479680085
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: thigh left_MeshPart0
+    100002: thigh left_MeshPart1
+    100004: thigh left_MeshPart10
+    100006: thigh left_MeshPart11
+    100008: thigh left_MeshPart12
+    100010: thigh left_MeshPart13
+    100012: thigh left_MeshPart14
+    100014: thigh left_MeshPart15
+    100016: thigh left_MeshPart16
+    100018: thigh left_MeshPart2
+    100020: thigh left_MeshPart3
+    100022: thigh left_MeshPart4
+    100024: thigh left_MeshPart5
+    100026: thigh left_MeshPart6
+    100028: thigh left_MeshPart7
+    100030: thigh left_MeshPart8
+    100032: thigh left_MeshPart9
+    100034: //RootNode
+    400000: thigh left_MeshPart0
+    400002: thigh left_MeshPart1
+    400004: thigh left_MeshPart10
+    400006: thigh left_MeshPart11
+    400008: thigh left_MeshPart12
+    400010: thigh left_MeshPart13
+    400012: thigh left_MeshPart14
+    400014: thigh left_MeshPart15
+    400016: thigh left_MeshPart16
+    400018: thigh left_MeshPart2
+    400020: thigh left_MeshPart3
+    400022: thigh left_MeshPart4
+    400024: thigh left_MeshPart5
+    400026: thigh left_MeshPart6
+    400028: thigh left_MeshPart7
+    400030: thigh left_MeshPart8
+    400032: thigh left_MeshPart9
+    400034: //RootNode
+    2300000: thigh left_MeshPart0
+    2300002: thigh left_MeshPart1
+    2300004: thigh left_MeshPart10
+    2300006: thigh left_MeshPart11
+    2300008: thigh left_MeshPart12
+    2300010: thigh left_MeshPart13
+    2300012: thigh left_MeshPart14
+    2300014: thigh left_MeshPart15
+    2300016: thigh left_MeshPart16
+    2300018: thigh left_MeshPart2
+    2300020: thigh left_MeshPart3
+    2300022: thigh left_MeshPart4
+    2300024: thigh left_MeshPart5
+    2300026: thigh left_MeshPart6
+    2300028: thigh left_MeshPart7
+    2300030: thigh left_MeshPart8
+    2300032: thigh left_MeshPart9
+    3300000: thigh left_MeshPart0
+    3300002: thigh left_MeshPart1
+    3300004: thigh left_MeshPart10
+    3300006: thigh left_MeshPart11
+    3300008: thigh left_MeshPart12
+    3300010: thigh left_MeshPart13
+    3300012: thigh left_MeshPart14
+    3300014: thigh left_MeshPart15
+    3300016: thigh left_MeshPart16
+    3300018: thigh left_MeshPart2
+    3300020: thigh left_MeshPart3
+    3300022: thigh left_MeshPart4
+    3300024: thigh left_MeshPart5
+    3300026: thigh left_MeshPart6
+    3300028: thigh left_MeshPart7
+    3300030: thigh left_MeshPart8
+    3300032: thigh left_MeshPart9
+    4300000: thigh left_MeshPart0
+    4300002: thigh left_MeshPart1
+    4300004: thigh left_MeshPart2
+    4300006: thigh left_MeshPart3
+    4300008: thigh left_MeshPart4
+    4300010: thigh left_MeshPart5
+    4300012: thigh left_MeshPart6
+    4300014: thigh left_MeshPart7
+    4300016: thigh left_MeshPart8
+    4300018: thigh left_MeshPart9
+    4300020: thigh left_MeshPart10
+    4300022: thigh left_MeshPart11
+    4300024: thigh left_MeshPart12
+    4300026: thigh left_MeshPart13
+    4300028: thigh left_MeshPart14
+    4300030: thigh left_MeshPart15
+    4300032: thigh left_MeshPart16
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 100
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -58,7 +58,7 @@ public class SelectionPanel : MonoBehaviour
 
     private void Start()
     {
-        initializeUI();
+        StartCoroutine(initializeUI());
     }
 
     /// <summary>
@@ -170,11 +170,13 @@ public class SelectionPanel : MonoBehaviour
         }       
     }
 
-    private void initializeUI()
+    private IEnumerator initializeUI()
     {
         // This part does not always work! When The Left Controller is not active then the attached RoboyUI objects cannot be found as they are inactive as well
         // => UI dictionary is empty => selectableObject cannot find UI! ------------- MAYBE FIXED!!!!----------------------
         // Add an Outline component to all UI elements if they dont have one
+        while (SelectorManager.Instance.UI_Elements.Values.Count != SelectorManager.Instance.RoboyUIElementsCount)
+            yield return null;
         foreach (GameObject g in SelectorManager.Instance.UI_Elements.Values)
         {
             Outline outline;

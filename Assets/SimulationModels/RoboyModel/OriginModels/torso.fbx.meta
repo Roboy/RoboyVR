@@ -1,0 +1,149 @@
+fileFormatVersion: 2
+guid: fc4e6963914d2d349a000e799a2e533e
+timeCreated: 1479680325
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: torso_MeshPart0
+    100004: torso_MeshPart1
+    100006: torso_MeshPart10
+    100008: torso_MeshPart11
+    100010: torso_MeshPart12
+    100012: torso_MeshPart13
+    100014: torso_MeshPart2
+    100016: torso_MeshPart3
+    100018: torso_MeshPart4
+    100020: torso_MeshPart5
+    100022: torso_MeshPart6
+    100024: torso_MeshPart7
+    100026: torso_MeshPart8
+    100028: torso_MeshPart9
+    400000: //RootNode
+    400002: torso_MeshPart0
+    400004: torso_MeshPart1
+    400006: torso_MeshPart10
+    400008: torso_MeshPart11
+    400010: torso_MeshPart12
+    400012: torso_MeshPart13
+    400014: torso_MeshPart2
+    400016: torso_MeshPart3
+    400018: torso_MeshPart4
+    400020: torso_MeshPart5
+    400022: torso_MeshPart6
+    400024: torso_MeshPart7
+    400026: torso_MeshPart8
+    400028: torso_MeshPart9
+    2300000: torso_MeshPart0
+    2300002: torso_MeshPart1
+    2300004: torso_MeshPart10
+    2300006: torso_MeshPart11
+    2300008: torso_MeshPart12
+    2300010: torso_MeshPart13
+    2300012: torso_MeshPart2
+    2300014: torso_MeshPart3
+    2300016: torso_MeshPart4
+    2300018: torso_MeshPart5
+    2300020: torso_MeshPart6
+    2300022: torso_MeshPart7
+    2300024: torso_MeshPart8
+    2300026: torso_MeshPart9
+    3300000: torso_MeshPart0
+    3300002: torso_MeshPart1
+    3300004: torso_MeshPart10
+    3300006: torso_MeshPart11
+    3300008: torso_MeshPart12
+    3300010: torso_MeshPart13
+    3300012: torso_MeshPart2
+    3300014: torso_MeshPart3
+    3300016: torso_MeshPart4
+    3300018: torso_MeshPart5
+    3300020: torso_MeshPart6
+    3300022: torso_MeshPart7
+    3300024: torso_MeshPart8
+    3300026: torso_MeshPart9
+    4300000: torso_MeshPart0
+    4300002: torso_MeshPart1
+    4300004: torso_MeshPart2
+    4300006: torso_MeshPart3
+    4300008: torso_MeshPart4
+    4300010: torso_MeshPart5
+    4300012: torso_MeshPart6
+    4300014: torso_MeshPart7
+    4300016: torso_MeshPart8
+    4300018: torso_MeshPart9
+    4300020: torso_MeshPart10
+    4300022: torso_MeshPart11
+    4300024: torso_MeshPart12
+    4300026: torso_MeshPart13
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 100
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
