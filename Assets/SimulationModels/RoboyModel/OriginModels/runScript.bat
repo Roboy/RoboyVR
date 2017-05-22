@@ -1,1 +1,1 @@
-start "" "pathToBlender/blender.exe" -P "pathToScript\meshDownloadScript.py" "gitPathToMeshes\" <meshes you want to update WITHOUT .STL or .fbx and without whitespace: torso,hip,thigh_left,oberarm_right OR you can update all meshes by putting "" as last parameter>
+start "" "C:\Program Files\Blender\blender.exe" -P "meshDownloadScript.py" "https://github.com/Roboy/roboy_models/raw/master/legs_with_upper_body/cad/" hip

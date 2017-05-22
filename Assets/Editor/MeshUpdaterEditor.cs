@@ -10,10 +10,19 @@ class MeshUpdaterEditor : Editor
     {
         DrawDefaultInspector();
         //GUILayout.TextField("text");
+        if (GUILayout.Button("Scan"))
+        {
+            MeshUpdater meshUpdate = (MeshUpdater)target;
+            //MeshUpdater a = new MeshUpdater();
+            // \"\" = ""
+            meshUpdate.RunCMD("python \""+ meshUpdate.pathToScanScript+"\" \""+meshUpdate.pathToModels +"\"");
+        }
         if (GUILayout.Button("Run"))
         {
-            MeshUpdater a = new MeshUpdater();
-            a.MeshUpdate(a.pathToScript, a.pathToBlender+a.pathToMeshes);
+            MeshUpdater meshUpdate = (MeshUpdater)target;
+            //MeshUpdater a = new MeshUpdater();
+            // \"\" = ""
+            meshUpdate.RunCMD("start \"\" \""+ meshUpdate.pathToBlender + "\" -P \""+ meshUpdate.pathToScript + "\" \""+ meshUpdate.pathToMeshes+ "\" \"\"");
         }
             
     }

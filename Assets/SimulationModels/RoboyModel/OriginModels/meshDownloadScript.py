@@ -63,6 +63,7 @@ print("Meshes to be updated: ", export_list)
 #Download all STLs located at GitHub
 for filename in export_list:
 	print("Downloading: ", filename)
+	print("Test2: " + filename)
 	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
 	localfile = open(filename,'wb')
 	localfile.write(remotefile.read())
