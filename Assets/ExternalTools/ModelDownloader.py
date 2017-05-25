@@ -26,9 +26,12 @@ def get_override(area_type, region_type):
     raise RuntimeError("Wasn't able to find", region_type," in area ", area_type,
                     "\n Make sure it's open while executing script.")
 
-
+#pathToRoboyModels = r"D:\RoboyVR\Assets\SimulationModels\Test\OriginModels"
+pathToProjectModels = sys.argv[4]
+					
+	
 #we expect the array to be of format <name>
-arguments = sys.argv[4].split(',')
+arguments = sys.argv[5].split(',')
 stl_arguments = []
 
 for argument in arguments:
@@ -49,8 +52,7 @@ filelist = list(set(filelist))
 
 export_list = []
 
-if sys.argv[4] == "":
-# if  stl_arguments[0] == "all.STL":
+if sys.argv[5] == "":
 	export_list = filelist
 else:
 	#compare arguments with list of directory in github
@@ -63,9 +65,8 @@ print("Meshes to be updated: ", export_list)
 #Download all STLs located at GitHub
 for filename in export_list:
 	print("Downloading: ", filename)
-	print("Test2: " + filename)
 	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
-	localfile = open(filename,'wb')
+	localfile = open(pathToProjectModels + "\\" + filename,'wb')
 	localfile.write(remotefile.read())
 	localfile.close()
 	remotefile.close()
@@ -75,7 +76,7 @@ for filename in export_list:
 for filename in export_list:
 #Import STL
 	print("Importing " + filename)
-	bpy.ops.import_mesh.stl(filepath = "./" + filename)
+	bpy.ops.import_mesh.stl(filepath = pathToProjectModels + "\\" + filename)
 	ob = bpy.context.object
 	#Rotate Mesh
 	ob.rotation_euler = (pi/2, 0, 0)
@@ -93,10 +94,11 @@ for filename in export_list:
 	#Export FBX
 	name_fbx = "./" + filename.split('.')[0]
 	print("Exporting " + name_fbx)
-	bpy.ops.export_scene.fbx(filepath = name_fbx + '.fbx')
-
+	bpy.ops.export_scene.fbx(filepath = pathToProjectModels + "\\" + name_fbx + '.fbx')
+	
 	#Delete current object
 	bpy.ops.object.delete()
-	os.remove(filename)
+	filepath = pathToProjectModels + "\\" + filename
+	os.remove(filepath)
 
 sys.exit("EXIT")
