@@ -1,7 +1,0 @@
-Roboy;https://github.com/Roboy/roboy_models/tree/master/Roboy
-PaBiRoboy;https://github.com/Roboy/roboy_models/tree/master/PaBiRoboy
-plate_with_muscle;https://github.com/Roboy/roboy_models/tree/master/plate_with_muscle
-arm;https://github.com/Roboy/roboy_models/tree/master/arm
-Roboy_simplified;https://github.com/Roboy/roboy_models/tree/master/Roboy_simplified
-legs_with_muscles_simplified;https://github.com/Roboy/roboy_models/tree/master/legs_with_muscles_simplified
-legs_with_upper_body;https://github.com/Roboy/roboy_models/tree/master/legs_with_upper_body
