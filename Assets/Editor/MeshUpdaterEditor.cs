@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 /// <summary>
 /// Custom editor script to be able to call functions from MeshUpdater at edit time through buttons.
@@ -15,7 +16,7 @@ class MeshUpdaterEditor : Editor
         MeshUpdater meshUpdater = (MeshUpdater)target;
 
         // Show the blender path if it is set
-        if (meshUpdater.PathToBlenderSet)
+        if (meshUpdater.CurrentState >= MeshUpdater.State.BlenderPathSet )
         {
             GUI.enabled = false;
             EditorGUILayout.TextField("Blender Path: ", meshUpdater.PathToBlender);
@@ -40,13 +41,25 @@ class MeshUpdaterEditor : Editor
         }
 
         // Do not show Scan and Update button if blender path is not set
-        if (!meshUpdater.PathToBlenderSet)
+        if (meshUpdater.CurrentState < MeshUpdater.State.BlenderPathSet)
             return;
 
         if (GUILayout.Button("Scan"))
         {
             meshUpdater.Scan();
         }
+
+        // stop here if meshupdater did not scan yet
+        if (meshUpdater.CurrentState < MeshUpdater.State.Scanned)
+            return;
+
+        var keys = new List<string>(meshUpdater.ModelChoiceDictionary.Keys);
+        // show checkboxes for each model entry and update their values
+        foreach (string modelEntryKey in keys)
+        {
+            meshUpdater.ModelChoiceDictionary[modelEntryKey] = EditorGUILayout.Toggle(modelEntryKey, meshUpdater.ModelChoiceDictionary[modelEntryKey]);
+        }
+
         if (GUILayout.Button("Update"))
         {
             meshUpdater.UpdateModels();
