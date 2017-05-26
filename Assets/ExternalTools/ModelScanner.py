@@ -36,7 +36,7 @@ titleListFinal = contentPattern.findall(str(titleList).strip('[]'))
 dirLinkListFinal = contentPattern.findall(str(dirLinkList).strip('[]'))
 
 # create a text file
-localfile = open("D:\\RoboyVR\\Assets\\tempModelURLs.txt" ,'w')
+localfile = open("Assets//tempModelURLs.txt" ,'w')
 
 # write to file
 for i in range(0, len(titleListFinal)):
