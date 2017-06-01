@@ -1,0 +1,1 @@
+start "" "C:/Program Files/Blender Foundation/Blender/blender.exe" -P "D:/RoboyVR/Assets/ExternalTools/ModelDownloader.py" "https://github.com/Roboy/roboy_models/raw/master/makeHuman_avatar/makeHuman/" "D:/RoboyVR/Assets/SimulationModels/makeHuman" ""

@@ -45,20 +45,60 @@ dir_ip_addr = sys.argv[3]
 urlpath = urllib.request.urlopen(sys.argv[3])
 string = urlpath.read().decode('utf-8')
 
-#Search url for all STL names
-pattern = re.compile('[a-z]+_?[a-z]*[0-9]*.STL')
-filelist = pattern.findall(string)
-filelist = list(set(filelist))
+# Search url for all possible links
+pattern = re.compile('class="js-navigation-open" id=".*" title=".*"')
+linkList = pattern.findall(string)
+linkList = list(set(linkList))
+directoryList = list()
 
+
+for link in linkList:
+	if "." in link:
+		directoryList.append(link)
+
+print("Found " ,len(directoryList), " directories")
+
+# search for titles
+titlePattern = re.compile('title=".*?"')
+
+# find all title patterns
+titleList = titlePattern.findall(str(directoryList).strip('[]'))
+
+
+# get the content without "title=**"
+contentPattern = re.compile('".*?"')
+titleListFinal = contentPattern.findall(str(titleList).strip('[]'))
+
+filelist = list()
+
+# remove quotation marks
+for i in range (0, len(titleListFinal)):
+	filelist.append(re.sub('"', '', titleListFinal[i]));
+
+# remove entries which are neither .dae or .STL
+for file in filelist:
+	if (".dae" not in file)	and (".STL" not in file):
+		filelist.remove(file)
+		
+print(str(filelist).strip('[]'))
+
+#############################################################
 export_list = []
+tempArr = list()
+
+for file in filelist:
+	tempArr.append(re.sub(' ', '%20', file))
+
+print(str(tempArr).strip('[]'))
 
 if sys.argv[5] == "":
-	export_list = filelist
+	export_list = filelist	
 else:
 	#compare arguments with list of directory in github
-	for filename in filelist:	
+	for filename in tempArr:	
 		if filename in stl_arguments:
 			export_list.append(filename)
+
 
 print("Meshes to be updated: ", export_list)
 
@@ -66,7 +106,9 @@ print("Meshes to be updated: ", export_list)
 for filename in export_list:
 	print("Downloading: ", filename)
 	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
-	localfile = open(pathToProjectModels + "\\" + filename,'wb')
+	if not os.path.exists(pathToProjectModels):
+		os.makedirs(pathToProjectModels)
+	localfile = open(pathToProjectModels + "/" + filename,'wb')
 	localfile.write(remotefile.read())
 	localfile.close()
 	remotefile.close()
@@ -74,9 +116,15 @@ for filename in export_list:
 #Start progress of conversion
 
 for filename in export_list:
-#Import STL
+#Import STL or dae
 	print("Importing " + filename)
-	bpy.ops.import_mesh.stl(filepath = pathToProjectModels + "\\" + filename)
+	
+	if ".dae" in filename: 
+ 		bpy.ops.wm.collada_import(filepath = pathToProjectModels + "\\" + filename)
+		
+	if ".stl" in filename:
+		bpy.ops.import_mesh.stl(filepath = pathToProjectModels + "\\" + filename)
+		
 	ob = bpy.context.object
 	#Rotate Mesh
 	ob.rotation_euler = (pi/2, 0, 0)

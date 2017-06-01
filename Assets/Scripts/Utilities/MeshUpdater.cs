@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 [ExecuteInEditMode]
 public class MeshUpdater : MonoBehaviour {
 
@@ -107,7 +107,7 @@ public class MeshUpdater : MonoBehaviour {
             Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
             return;
         }
-        // get file content of format title:url
+        // get file content of format title;url
         string[] scanContent = File.ReadAllLines(pathToScanFile);
         Dictionary<string, string> tempURLDic = new Dictionary<string, string>();
         foreach (var line in scanContent)
@@ -129,8 +129,11 @@ public class MeshUpdater : MonoBehaviour {
             tempURLDic.Add(titleURL[0], titleURL[1]);
         }
         // clear all old links and add the new links
+        //Debug.Log("before clear: " + m_URLDictionary.Count);
         m_URLDictionary.Clear();
+        //Debug.Log("after clear: " + m_URLDictionary.Count);
         m_URLDictionary = tempURLDic;
+        ModelChoiceDictionary.Clear();
         foreach (var urlDicEntry in m_URLDictionary)
         {
             ModelChoiceDictionary.Add(urlDicEntry.Key, false);
@@ -141,12 +144,45 @@ public class MeshUpdater : MonoBehaviour {
     public void UpdateModels()
     {
         //var processInfo = new ProcessStartInfo("cmd.exe", "/C" + "start \"\" \"" + m_PathToBlender + "\" -P \"" + m_PathToDownloadScript + "\" \"" + pathToMeshes + "\" \"" + m_pathToProjectModels + "\" \"\"");
-        UnityEngine.Debug.Log("Run not implemented yet!");
+        //UnityEngine.Debug.Log("Run not implemented yet!");
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
         {
-            Debug.Log(m_URLDictionary[urlEntry.Key]);
+            string[] scanArguments = { "python", m_PathToScanScript, m_URLDictionary[urlEntry.Key] };
+            CommandlineUtility.RunCommandLine(scanArguments);
+            //Debug.Log(m_URLDictionary[urlEntry.Key]);
+
+            string pathToScanFile = m_ProjectFolder + @"/tempModelURLs.txt";
+            if (!File.Exists(pathToScanFile))
+            {
+                Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+                return;
+            }
+            // get file content of format title:url
+            string[] scanContent = File.ReadAllLines(pathToScanFile);
+
+            foreach (var line in scanContent)
+            {
+                string[] titleURL = line.Split(';');
+                // check if there is exactly one ";" meaning only two elements
+                if (titleURL.Length != 2)
+                {
+                    Debug.Log("In line:\n" + line + "\nthe format does not match title;URL");
+                    continue;
+                }
+                // ignore link if it is not in the github repo
+                if (!titleURL[1].Contains(Github_Repository))
+                {
+                    Debug.Log("Link does not have the github repository!");
+                    continue;
+                }
+
+                var regex = new Regex(Regex.Escape("tree"));
+                titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
+                string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key, "" };
+                CommandlineUtility.RunCommandLine(updateArguments);
+            }
         }
     }
 

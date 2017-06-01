@@ -53,6 +53,7 @@ class MeshUpdaterEditor : Editor
         if (meshUpdater.CurrentState < MeshUpdater.State.Scanned)
             return;
 
+        //!!THIS WON'T RESET WHEN DICTIONARY CLEARS!!
         var keys = new List<string>(meshUpdater.ModelChoiceDictionary.Keys);
         // show checkboxes for each model entry and update their values
         foreach (string modelEntryKey in keys)
