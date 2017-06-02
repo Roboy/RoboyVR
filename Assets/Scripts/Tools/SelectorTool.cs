@@ -1,5 +1,6 @@
 ﻿using System.Collections;
-using UnityEngine; 
+using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// SelectorTool provides a functionality to select parts of roboy on the mesh itself or through the GUI.
@@ -49,12 +50,25 @@ public class SelectorTool : ControllerTool {
             // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
             if (ModeManager.Instance.CurrentGUIMode != ModeManager.GUIMode.Selection)
                 return;
-            
+
+          
             // if the ray hits an UI component then retrieve the roboy part from RoboyManager
             if (hit.transform.tag.Equals("RoboyUI"))
             {
                 hittedObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
             }
+            else if (hit.collider.tag.Equals("UIButton"))
+            {
+                hittedObject = null;
+                Button b_pressed = hit.collider.GetComponent<Button>();
+                if (m_SteamVRDevice.GetHairTriggerDown())
+                {
+                    b_pressed.onClick.Invoke();
+                    Debug.Log(b_pressed + " was pressed!");
+                    //Vibrate();
+                }
+            
+        }
             // otherwise get it directly from the object
             else
             {

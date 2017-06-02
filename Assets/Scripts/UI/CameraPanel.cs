@@ -6,9 +6,13 @@ using UnityEngine.UI;
 public class CameraPanel : MonoBehaviour {
 
     /// <summary>
-    /// Image which size that is to be modified, wrapped in a RectTransform..
+    /// Image which size that is to be modified, wrapped in a RectTransform.
     /// </summary>
     public RectTransform Rt;
+
+    /// <summary>
+    /// Slider to change the size of the RectTransform.
+    /// </summary>
     public Slider Sl;
 
     [SerializeField]

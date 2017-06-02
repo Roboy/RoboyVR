@@ -17,6 +17,7 @@ TagManager:
   - FadeStandardPanel
   - FadePanelStruct
   - GUIController
+  - UIButton
   layers:
   - Default
   - TransparentFX
