@@ -7,6 +7,16 @@ rosrun image_view image_view image:=roboy/camera/image_raw
 //Useful for monitoring
 rosrun rqt_gui rqt_gui
 
+//Performance improvements with collision shape replacement
+<collision name="link_sample">
+	<geometry>
+		<cylinder>
+			<radius>.1</radius>
+			<length>.05</length>
+		</cylinder>
+	</geometry>
+</collision>
+
 
 //Insert in head link
 <sensor type="camera" name="camera1">
