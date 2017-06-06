@@ -177,7 +177,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     }
 
     /// <summary>
-    /// Sends a message to the simualation to apply an external force on a certain position.
+    /// Sends a message to the simulation to apply an external force at a certain position.
     /// </summary>
     /// <param name="roboyPart">The roboypart where the force should be applied.</param>
     /// <param name="position">The relative position of the force to the roboypart.</param>
