@@ -57,3 +57,6 @@ rosrun rqt_gui rqt_gui
 		<distortionT2>0.0</distortionT2>
 	      </plugin>
 	    </sensor>
+	    
+//Neat slides for ROS
+https://tams.informatik.uni-hamburg.de/lehre/2016ws/seminar/ir/doc/slides/DanialBagheri-ROS_and_Unity.pdf
