@@ -102,7 +102,7 @@ public class RoboyManager : Singleton<RoboyManager> {
 
         m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
 
-        // DOES NOT WORK! m_Ros is never null if you call the Constructor, WAIT TILL SIMON IMPLEMENTS UDP BROADCAST WITH ROS CONFIGURATION, GET THE IP ADDRESS FROM THE BROADCAST
+        // DOES NOT WORK! m_Ros is never null if you call the Constructor, WAIT UNTILL SIMON IMPLEMENTS UDP BROADCAST WITH ROS CONFIGURATION, GET THE IP ADDRESS FROM THE BROADCAST.
         if (m_Ros != null)
         {
             m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));

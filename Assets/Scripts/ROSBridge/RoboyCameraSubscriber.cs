@@ -2,6 +2,7 @@
 using ROSBridgeLib;
 using SimpleJSON;
 using UnityEngine;
+using ROSBridgeLib.sensor_msgs;
 
 public class RoboyCameraSubscriber : ROSBridgeSubscriber
 {
@@ -21,25 +22,24 @@ public class RoboyCameraSubscriber : ROSBridgeSubscriber
     {
         return "/roboy/camera/image_raw";
 
-        //return "/roboy/id";
     }
 
     public new static string GetMessageType()
     {
         return "sensor_msgs/Image";
 
-        //return "std_msgs/Int32";
     }
 
     public new static ROSBridgeMsg ParseMessage(JSONNode msg)
     {
-        return new RoboyPoseMsg(msg);
+        //ImageMsg from sensor messages lib
+        return new ImageMsg(msg);
     }
 
     public new static void CallBack(ROSBridgeMsg msg)
     {
-        //RoboyPoseMsg pose = (RoboyPoseMsg)msg;
-        //RoboyManager.Instance.ReceiveMessage(pose);
+        ImageMsg image = (ImageMsg)msg;
+        BeRoboyManager.Instance.ReceiveMessage(image);
 
     }
 

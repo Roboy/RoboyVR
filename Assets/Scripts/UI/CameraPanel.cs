@@ -36,6 +36,16 @@ public class CameraPanel : MonoBehaviour {
 
     }
 
+    public CameraPanel(RectTransform rect, Slider slider)
+    {
+        Rt = rect;
+        Sl = slider;
+        m_AspectRatio = Rt.rect.width / Rt.rect.height;
+        m_Scale = 1.0f;
+        m_Width_Ref = Rt.rect.width;
+    }
+
+
     private void ValueChangeCheck()
     {
         float widthTmp = Rt.rect.width;
