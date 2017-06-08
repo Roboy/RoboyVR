@@ -27,7 +27,7 @@ def get_override(area_type, region_type):
                     "\n Make sure it's open while executing script.")
 
 #pathToRoboyModels = r"D:\RoboyVR\Assets\SimulationModels\Test\OriginModels"
-pathToProjectModels = sys.argv[4]
+pathToProjectModels = sys.argv[4] + "/OriginModels"
 					
 	
 #we expect the array to be of format <name>
@@ -75,9 +75,12 @@ filelist = list()
 for i in range (0, len(titleListFinal)):
 	filelist.append(re.sub('"', '', titleListFinal[i]));
 
+print(str(filelist).strip('[]'))
+	
 # remove entries which are neither .dae or .STL
 for file in filelist:
-	if (".dae" not in file)	and (".STL" not in file):
+	if (".dae" not in file)	and (".STL" not in file) and (".stl" not in file):
+		print("removing: "+file)
 		filelist.remove(file)
 		
 print(str(filelist).strip('[]'))
@@ -92,7 +95,7 @@ for file in filelist:
 print(str(tempArr).strip('[]'))
 
 if sys.argv[5] == "":
-	export_list = filelist	
+	export_list = tempArr	
 else:
 	#compare arguments with list of directory in github
 	for filename in tempArr:	
@@ -104,7 +107,7 @@ print("Meshes to be updated: ", export_list)
 
 #Download all STLs located at GitHub
 for filename in export_list:
-	print("Downloading: ", filename)
+	print("Downloading: " + filename + " from " + dir_ip_addr + filename)
 	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
 	if not os.path.exists(pathToProjectModels):
 		os.makedirs(pathToProjectModels)
@@ -122,9 +125,10 @@ for filename in export_list:
 	if ".dae" in filename: 
  		bpy.ops.wm.collada_import(filepath = pathToProjectModels + "\\" + filename)
 		
-	if ".stl" in filename:
+	if (".STL" in filename) or (".stl" in filename):
+		print("Found STL: "+ filename)
 		bpy.ops.import_mesh.stl(filepath = pathToProjectModels + "\\" + filename)
-		
+	
 	ob = bpy.context.object
 	#Rotate Mesh
 	ob.rotation_euler = (pi/2, 0, 0)

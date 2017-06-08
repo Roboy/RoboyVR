@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor;
+
 [ExecuteInEditMode]
 public class MeshUpdater : MonoBehaviour {
 
@@ -147,6 +149,7 @@ public class MeshUpdater : MonoBehaviour {
         //UnityEngine.Debug.Log("Run not implemented yet!");
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
+        string pathToOriginModels = "";
         foreach (var urlEntry in tempURLList)
         {
             string[] scanArguments = { "python", m_PathToScanScript, m_URLDictionary[urlEntry.Key] };
@@ -178,12 +181,51 @@ public class MeshUpdater : MonoBehaviour {
                     continue;
                 }
 
+                pathToOriginModels = m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key;
+
+                //replace "tree" with "raw" in URL
                 var regex = new Regex(Regex.Escape("tree"));
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
-                string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key, "" };
+                string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", pathToOriginModels, "" };
                 CommandlineUtility.RunCommandLine(updateArguments);
             }
+            GameObject modelParent = new GameObject(urlEntry.Key);
+            List<string> meshList = new List<string>();
+            if (pathToOriginModels != "")
+            {
+                meshList = DirSearch(pathToOriginModels + "/OriginModels");
+            }
+            Debug.Log(meshList.Count);
+            foreach (string name in meshList)
+            {
+                Mesh mesh = (Mesh)AssetDatabase.LoadAssetAtPath(pathToOriginModels + "/OriginModels/" + name, typeof(Mesh));
+                //AssetDatabase.CreateAsset(mesh, pathToOriginModels + "/OriginModels/"+name);
+                //AssetDatabase.SaveAssets();
+                //AssetDatabase.Refresh();
+                GameObject meshGO = new GameObject(name);
+                meshGO.AddComponent<MeshRenderer>();
+                meshGO.AddComponent<MeshFilter>();
+                meshGO.GetComponent<MeshFilter>().mesh = mesh;
+                meshGO.transform.parent = modelParent.transform;
+            }
+        }  
+    }
+
+    private List<string> DirSearch(string sDir)
+    {
+        List<string> files = new List<string>();
+        {
+            foreach (string f in Directory.GetFiles(sDir))
+            {   
+                // GANZER PATH
+                files.Add(f);
+            }
+            //foreach (string d in Directory.GetDirectories(sDir))
+            //{
+            //    files.AddRange(DirSearch(d));
+            //}
         }
+        return files;
     }
 
     /// <summary>
