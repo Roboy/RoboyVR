@@ -61,10 +61,17 @@ class MeshUpdaterEditor : Editor
             meshUpdater.ModelChoiceDictionary[modelEntryKey] = EditorGUILayout.Toggle(modelEntryKey, meshUpdater.ModelChoiceDictionary[modelEntryKey]);
         }
 
-        if (GUILayout.Button("Update"))
+        if (GUILayout.Button("Download"))
         {
             meshUpdater.UpdateModels();
         }
-            
+        if (meshUpdater.CurrentState < MeshUpdater.State.Downloaded)
+            return;
+
+        if (GUILayout.Button("Create Prefab"))
+        {
+            meshUpdater.CreatePrefab();
+        }
+
     }
 }

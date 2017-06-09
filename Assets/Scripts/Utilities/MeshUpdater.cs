@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -16,7 +17,8 @@ public class MeshUpdater : MonoBehaviour {
         None = 0,
         Initialized = 1,
         BlenderPathSet = 2,
-        Scanned = 3
+        Scanned = 3,
+        Downloaded = 4
     }
 
     public string Github_Repository = @"https://github.com/Roboy/roboy_models/";
@@ -76,6 +78,11 @@ public class MeshUpdater : MonoBehaviour {
     /// Stores all model "Titles + URLs"
     /// </summary>
     private Dictionary<string, string> m_URLDictionary = new Dictionary<string, string>();
+
+    /// <summary>
+    /// Temp ModelName 
+    /// </summary>
+    private List<string> m_ModelNames = new List<string>();
 
     // Use this for initialization
     void Awake () {
@@ -149,7 +156,6 @@ public class MeshUpdater : MonoBehaviour {
         //UnityEngine.Debug.Log("Run not implemented yet!");
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
-        string pathToOriginModels = "";
         foreach (var urlEntry in tempURLList)
         {
             string[] scanArguments = { "python", m_PathToScanScript, m_URLDictionary[urlEntry.Key] };
@@ -181,34 +187,65 @@ public class MeshUpdater : MonoBehaviour {
                     continue;
                 }
 
-                pathToOriginModels = m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key;
+                
 
                 //replace "tree" with "raw" in URL
                 var regex = new Regex(Regex.Escape("tree"));
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
                 string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", pathToOriginModels, "" };
                 CommandlineUtility.RunCommandLine(updateArguments);
+                m_ModelNames.Add(urlEntry.Key);
             }
-            GameObject modelParent = new GameObject(urlEntry.Key);
+            m_CurrentState = State.Downloaded;
+        }  
+    }
+
+    public void CreatePrefab() {
+        foreach (string modelName in m_ModelNames)
+        {
+            string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/" + modelName;
+            GameObject modelParent = new GameObject(modelName);
             List<string> meshList = new List<string>();
             if (pathToOriginModels != "")
             {
                 meshList = DirSearch(pathToOriginModels + "/OriginModels");
             }
-            Debug.Log(meshList.Count);
+
             foreach (string name in meshList)
             {
-                Mesh mesh = (Mesh)AssetDatabase.LoadAssetAtPath(pathToOriginModels + "/OriginModels/" + name, typeof(Mesh));
-                //AssetDatabase.CreateAsset(mesh, pathToOriginModels + "/OriginModels/"+name);
-                //AssetDatabase.SaveAssets();
-                //AssetDatabase.Refresh();
-                GameObject meshGO = new GameObject(name);
-                meshGO.AddComponent<MeshRenderer>();
-                meshGO.AddComponent<MeshFilter>();
-                meshGO.GetComponent<MeshFilter>().mesh = mesh;
-                meshGO.transform.parent = modelParent.transform;
+                GameObject meshPrefab = null;
+                string path = "Assets/SimulationModels/" + modelName + "/OriginModels/" + name;
+                StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
+                if (meshPrefab == null)
+                {
+                    Debug.Log("Could not import model!");
+                    continue;
+                }
+
+                GameObject meshCopy = Instantiate(meshPrefab);
+                meshCopy.transform.parent = modelParent.transform;
             }
-        }  
+        }
+    }
+
+    private IEnumerator importModelCoroutine(string path, System.Action<GameObject> callback)
+    {
+        // create a counter to limit the tries
+        int modelImportCounter = 0;
+        GameObject meshPrefab = null;
+        // try to import the model 100 times
+        while (modelImportCounter < 100)
+        {
+            meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(path, typeof(Object));
+            modelImportCounter++;
+            // if prefab is loaded then set the prefab to the given gameobject at the coroutine call
+            if (meshPrefab != null)
+            {
+                if (callback != null) callback(meshPrefab);
+                break;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     private List<string> DirSearch(string sDir)
@@ -217,8 +254,10 @@ public class MeshUpdater : MonoBehaviour {
         {
             foreach (string f in Directory.GetFiles(sDir))
             {   
+
                 // GANZER PATH
-                files.Add(f);
+                if(Path.GetExtension(f) == ".fbx")
+                    files.Add(Path.GetFileName(f));
             }
             //foreach (string d in Directory.GetDirectories(sDir))
             //{
