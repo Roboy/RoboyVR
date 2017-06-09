@@ -18,22 +18,21 @@ namespace ROSBridgeLib
     {
         public class ImageMsg : ROSBridgeMsg
         {
-            private string _format;
+            
             private byte[] _data;
             private HeaderMsg _header;
 
 
             public ImageMsg(JSONNode msg)
             {
-                _format = msg["format"];
+                
                 _header = new HeaderMsg(msg["header"]);
-                _data = System.Convert.FromBase64String(msg["data"]);
+                _data = System.Convert.FromBase64String(msg[4]);
             }
 
-            public ImageMsg(HeaderMsg header, string format, byte[] data)
+            public ImageMsg(HeaderMsg header, byte[] data)
             {
-                _header = header;
-                _format = format;
+                _header = header;               
                 _data = data;
             }
 
@@ -49,12 +48,12 @@ namespace ROSBridgeLib
 
             public override string ToString()
             {
-                return "Image [format=" + _format + ",  size=" + _data.Length + ", Header " + _header.ToString() + "]";
+                return "Image [size=" + _data.Length + ", Header " + _header.ToString() + "]";
             }
 
             public override string ToYAMLString()
             {
-                return "{\"format\" : " + "\"" + _format + "\", \"data\" : \"" + System.Convert.ToBase64String(_data) + "\", \"header\" : " + _header.ToYAMLString() + "}";
+                return "{\"data\" : \"" + System.Convert.ToBase64String(_data) + "\", \"header\" : " + _header.ToYAMLString() + "}";
             }
         }
     }

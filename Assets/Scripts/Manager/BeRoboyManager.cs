@@ -5,6 +5,7 @@ using UnityEngine.VR;
 using ROSBridgeLib;
 using ROSBridgeLib.sensor_msgs;
 using UnityEngine.UI;
+using System.IO;
 
 
 
@@ -16,8 +17,16 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// The IP address of the machine where the simulation is running.
     /// </summary>
     public string IP = "";
+
+    /// <summary>
+    /// Set whether head movement should be tracked or not.
+    /// </summary>
+    public bool TrackingEnabled = false;
+
+    public Image SimulationCameraFeed;
     #endregion PUBLIC_MEMBER_VARIABLES
 
+    
 
     #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
@@ -93,7 +102,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         }
 
         //Initialize the texture
-        m_Tex = new Texture2D(2, 2);
+        m_Tex = new Texture2D(640, 480);
 
     }
 
@@ -123,6 +132,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         //If the camera is found, move and rotate Roboy accordingly.
         else
         {
+            if(TrackingEnabled)
             TranslateRoboy();
         }
 
@@ -139,7 +149,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     void OnApplicationQuit()
     {
-        if (!m_ROSInitialized)
+        if (m_ROSInitialized)
             m_Ros.Disconnect();
     }
     #endregion //MONOBEHAVIOR_METHODS
@@ -167,18 +177,69 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     private void RefreshImage(ImageMsg image)
     {
         //Get the image as an array from the message.
-        byte[] image_temp = image.GetImage();
+        byte[] image_temp = flipBytes(image.GetImage(), 640);
+        //Debug.Log(image_temp);
+        Color[] colorArray = new Color[image_temp.Length/3];
+        for (int i = 0; i < image_temp.Length; i+=3)
+        {
+            Color color = new Color(image_temp[i] / (float)255, image_temp[i + 1] / (float)255,
+                image_temp[i + 2] / (float)255, 1f);
+            colorArray[i / 3] = color;
+        }
+        System.Array.Reverse(colorArray);
 
         // Load data into the texture.
-        m_Tex.LoadImage(image_temp);
-
+        m_Tex.SetPixels(colorArray);
+        saveTextureToFile(m_Tex);
         // Assign texture to renderer's material.
-        GetComponent<Renderer>().material.mainTexture = m_Tex;
-
+        //SimulationCameraFeed.GetComponent<Renderer>().material.mainTexture = m_Tex;
         //Should replace the images by setting it via overrideSprite using the Texture
-        m_Pan.GetComponent<Image>().overrideSprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.0f);
-
+        m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);
+        
     }
+
+    /// <summary>
+    /// TEST FUNCTION TO SAVE TEXTURE TO ASSETS FOLDER
+    /// </summary>
+    /// <param name="tex"></param>
+    private void saveTextureToFile(Texture2D tex)
+    {
+        string filename = "dick.png";
+        byte[] bytes = tex.EncodeToPNG();
+        var filestream = File.Open(Application.dataPath + "/" + filename, FileMode.Create);
+        var binarywriter = new BinaryWriter(filestream);
+        binarywriter.Write(bytes);
+        filestream.Close();
+    }
+
+    /// <summary>
+    /// DOES NOT WORK KINDA
+    /// </summary>
+    /// <param name="bytes"></param>
+    /// <param name="width"></param>
+    /// <returns></returns>
+    private byte[] flipBytes(byte[] bytes, int width)
+    {
+        BitArray bits = new BitArray(bytes);
+        BitArray flippedBits = new BitArray(bits);
+
+        for (int i = 0; i < bits.Length; i += 640)
+        {
+            for (int j = 0, k = width - 1; j < width; ++j, --k)
+            {
+                flippedBits[i + j] = bits[i + k];
+            }
+        }
+        byte[] flippedBytes = new byte[bytes.Length];
+        flippedBits.CopyTo(flippedBytes, 0);
+        return flippedBytes;
+    }
+
+    //private void OnGUI()
+    //{
+    //    GUI.DrawTexture(new Rect(10, 10, 300, 300), m_Tex, ScaleMode.ScaleToFit, true, 10.0F);
+
+    //}
 
     /// <summary>
     /// Turn Roboy with the movement of the HMD.
