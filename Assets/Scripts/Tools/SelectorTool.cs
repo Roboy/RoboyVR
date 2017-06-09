@@ -6,13 +6,14 @@ using UnityEngine.UI;
 /// SelectorTool provides a functionality to select parts of roboy on the mesh itself or through the GUI.
 /// </summary>
 [RequireComponent(typeof(LineRenderer))]
-public class SelectorTool : ControllerTool {
+public class SelectorTool : ControllerTool
+{
 
     /// <summary>
     /// LineRenderer to draw the laser for selection.
     /// </summary>
     private LineRenderer m_LineRenderer;
-    
+
     /// <summary>
     /// Variable to track the last selected object for comparison.
     /// </summary>
@@ -23,12 +24,14 @@ public class SelectorTool : ControllerTool {
     /// </summary>
     private float m_RayDistance = 3f;
 
+    private bool m_Is_released = false;
+
     /// <summary>
     /// Initializes the lineRenderer component.
     /// </summary>
     void Start()
     {
-        m_LineRenderer = GetComponent<LineRenderer>();         
+        m_LineRenderer = GetComponent<LineRenderer>();
     }
 
     /// <summary>
@@ -51,7 +54,7 @@ public class SelectorTool : ControllerTool {
             if (ModeManager.Instance.CurrentGUIMode != ModeManager.GUIMode.Selection)
                 return;
 
-          
+
             // if the ray hits an UI component then retrieve the roboy part from RoboyManager
             if (hit.transform.tag.Equals("RoboyUI"))
             {
@@ -67,13 +70,28 @@ public class SelectorTool : ControllerTool {
                     Debug.Log(b_pressed + " was pressed!");
                     //Vibrate();
                 }
-            
-        }
-            // otherwise get it directly from the object
-            else
-            {
-                hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
-            }
+
+                else if (hit.collider.tag.Equals("UISlider"))
+                {
+                    hittedObject = null;
+                    Slider slid = hit.collider.GetComponent<Slider>();
+
+                    
+                        while (m_SteamVRDevice.GetHairTrigger())
+                        {
+                            float w = slid.GetComponent<RectTransform>().rect.width;
+                            float x = hit.collider.transform.localPosition.x;
+                            slid.value = x / w;
+                            Debug.Log(slid + " is sliding!");
+                            //Vibrate();                            
+                        }
+
+                }
+                // otherwise get it directly from the object
+                else
+                {
+                    hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
+                }
                 if (hittedObject)
                 {
                     // if the ray hits something different than last frame, then reset the last roboy part
@@ -93,23 +111,26 @@ public class SelectorTool : ControllerTool {
                     }
                     // and select it if the user presses the trigger
                     if (m_SteamVRDevice.GetHairTriggerDown())
-                        {
-                            hittedObject.SetStateSelected();
-                            //Vibrate();
-                        }   
+                    {
+                        hittedObject.SetStateSelected();
+                        //Vibrate();
                     }
-        }
-        // if the ray does not hit anything, then just reset the last roboy part and cast it until maximum distance is reached
-        else
-        {
-            m_LineRenderer.SetPosition(1, transform.position + transform.forward * m_RayDistance);
+                }
+            }
+            // if the ray does not hit anything, then just reset the last roboy part and cast it until maximum distance is reached
+            else
+            {
+                m_LineRenderer.SetPosition(1, transform.position + transform.forward * m_RayDistance);
 
-            if (m_LastSelectedObject != null)
-                m_LastSelectedObject.SetStateDefault();
+                if (m_LastSelectedObject != null)
+                    m_LastSelectedObject.SetStateDefault();
 
-            m_LastSelectedObject = null;
+                m_LastSelectedObject = null;
+            }
         }
+
+
+
+
     }
-
-    
 }
