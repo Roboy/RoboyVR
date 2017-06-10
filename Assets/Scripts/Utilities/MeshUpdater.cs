@@ -193,9 +193,11 @@ public class MeshUpdater : MonoBehaviour {
                 //replace "tree" with "raw" in URL
                 var regex = new Regex(Regex.Escape("tree"));
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
-                string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", pathToOriginModels, "" };
+                string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key, "" };
                 CommandlineUtility.RunCommandLine(updateArguments);
-                m_ModelNames.Add(urlEntry.Key);
+                if (!m_ModelNames.Contains(urlEntry.Key)) {
+                    m_ModelNames.Add(urlEntry.Key);                               
+                }
             }
             m_CurrentState = State.Downloaded;
         }  
@@ -227,6 +229,7 @@ public class MeshUpdater : MonoBehaviour {
                 meshCopy.transform.parent = modelParent.transform;
             }
         }
+        m_ModelNames.Clear();
     }
 
     private IEnumerator importModelCoroutine(string path, System.Action<GameObject> callback)
