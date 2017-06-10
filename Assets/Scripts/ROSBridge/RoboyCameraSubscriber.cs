@@ -40,6 +40,7 @@ public class RoboyCameraSubscriber : ROSBridgeSubscriber
     {
         ImageMsg image = (ImageMsg)msg;
         BeRoboyManager.Instance.ReceiveMessage(image);
+        
 
     }
 

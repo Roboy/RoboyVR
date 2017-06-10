@@ -152,6 +152,7 @@ public class MeshUpdater : MonoBehaviour {
 
     public void UpdateModels()
     {
+        string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/";
         //var processInfo = new ProcessStartInfo("cmd.exe", "/C" + "start \"\" \"" + m_PathToBlender + "\" -P \"" + m_PathToDownloadScript + "\" \"" + pathToMeshes + "\" \"" + m_pathToProjectModels + "\" \"\"");
         //UnityEngine.Debug.Log("Run not implemented yet!");
         // get a list of all entries which the user wants to update

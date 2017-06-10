@@ -104,6 +104,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         //Initialize the texture
         m_Tex = new Texture2D(640, 480);
 
+        
+
     }
 
 

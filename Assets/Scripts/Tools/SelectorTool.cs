@@ -70,28 +70,34 @@ public class SelectorTool : ControllerTool
                     Debug.Log(b_pressed + " was pressed!");
                     //Vibrate();
                 }
+            }
 
-                else if (hit.collider.tag.Equals("UISlider"))
+            else if (hit.collider.tag.Equals("UISlider"))
+            {
+                hittedObject = null;
+                Slider slid = hit.collider.GetComponent<Slider>();
+                               
+                //If the trigger is pressed(even gently), the slider fills up, the value increases until it reaches it's maximum.
+                if (m_SteamVRDevice.GetHairTrigger())
                 {
-                    hittedObject = null;
-                    Slider slid = hit.collider.GetComponent<Slider>();
-
-                    
-                        while (m_SteamVRDevice.GetHairTrigger())
-                        {
-                            float w = slid.GetComponent<RectTransform>().rect.width;
-                            float x = hit.collider.transform.localPosition.x;
-                            slid.value = x / w;
-                            Debug.Log(slid + " is sliding!");
-                            //Vibrate();                            
-                        }
+                    if (slid.value < slid.maxValue)
+                    { slid.value += 0.01f; }
 
                 }
-                // otherwise get it directly from the object
+                //If the trigger is not touched at all, the slider drains down, the value decreases until it reaches it's minimum.
                 else
                 {
-                    hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
+                    if(slid.value > slid.minValue)
+                    { slid.value -= 0.01f;}
                 }
+
+               
+            }
+            // otherwise get it directly from the object
+            else
+            {
+                hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
+            }
                 if (hittedObject)
                 {
                     // if the ray hits something different than last frame, then reset the last roboy part
@@ -133,4 +139,4 @@ public class SelectorTool : ControllerTool
 
 
     }
-}
+

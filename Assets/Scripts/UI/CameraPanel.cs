@@ -17,7 +17,7 @@ public class CameraPanel : MonoBehaviour {
 
     [SerializeField]
     private float m_AspectRatio;
-    private float m_Scale = 1.0f;
+    private float m_Scale = 0.5f;
     private float m_Width_Ref;
 
 
@@ -41,7 +41,7 @@ public class CameraPanel : MonoBehaviour {
         Rt = rect;
         Sl = slider;
         m_AspectRatio = Rt.rect.width / Rt.rect.height;
-        m_Scale = 1.0f;
+        m_Scale = 0.5f;
         m_Width_Ref = Rt.rect.width;
     }
 
@@ -52,19 +52,22 @@ public class CameraPanel : MonoBehaviour {
         float heightTmp = Rt.rect.height;
         float scaleDiff = 0.0f;
 
+        Rt.sizeDelta = new Vector2(m_Width_Ref * (Sl.value + 0.5f), m_Width_Ref * (Sl.value + 0.5f) / m_AspectRatio);
 
-        if (m_Scale < Sl.value)
-        {
-            scaleDiff = Sl.value - m_Scale;
-            Rt.sizeDelta = new Vector2(m_Width_Ref + widthTmp*scaleDiff, (m_Width_Ref + widthTmp * scaleDiff) / m_AspectRatio );
+
+        //if (m_Scale < Sl.value)
+        //{
+        //    scaleDiff = Sl.value - m_Scale;
+        //    Rt.sizeDelta = new Vector2(m_Width_Ref + widthTmp*scaleDiff, (m_Width_Ref + widthTmp * scaleDiff) / m_AspectRatio );
+        
             
-        }
-        if (m_Scale > Sl.value)
-        {
-            scaleDiff = m_Scale - Sl.value;
-            Rt.sizeDelta = new Vector2(m_Width_Ref - widthTmp * scaleDiff, (m_Width_Ref - widthTmp * scaleDiff) / m_AspectRatio);
+        //}
+        //if (m_Scale > Sl.value)
+        //{
+        //    scaleDiff = m_Scale - Sl.value;
+        //    Rt.sizeDelta = new Vector2(m_Width_Ref - widthTmp * scaleDiff, (m_Width_Ref - widthTmp * scaleDiff) / m_AspectRatio);
             
-        }
+        //}
 
     }
 }
