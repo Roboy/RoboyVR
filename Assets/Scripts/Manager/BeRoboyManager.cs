@@ -192,11 +192,18 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
         // Load data into the texture.
         m_Tex.SetPixels(colorArray);
+	// Store the texture in temporary png.
         saveTextureToFile(m_Tex);
-        // Assign texture to renderer's material.
-        //SimulationCameraFeed.GetComponent<Renderer>().material.mainTexture = m_Tex;
+        // Load the texture from a temporary png.
+	Texture2D t = loadTextureFromFile("temp.png");
+	Rect rec = new Rect(0, 0, t.width, t.height);
+        Sprite spriteToUse = Sprite.Create(t, rec, new Vector2(0.5f, 0.5f), 100);
+        //Finding the image to be replaced by the simulation feed.
+        GameObject Img = GameObject.FindGameObjectWithTag("SimImg");
+        Img.GetComponent<Image>().sprite = spriteToUse;
+	
         //Should replace the images by setting it via overrideSprite using the Texture
-        m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);
+        //m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);
         
     }
 
@@ -206,13 +213,30 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <param name="tex"></param>
     private void saveTextureToFile(Texture2D tex)
     {
-        string filename = "dick.png";
+        string filename = "temp.png";
         byte[] bytes = tex.EncodeToPNG();
         var filestream = File.Open(Application.dataPath + "/" + filename, FileMode.Create);
         var binarywriter = new BinaryWriter(filestream);
         binarywriter.Write(bytes);
         filestream.Close();
     }
+	
+    /// <summary>
+    /// TEST FUNCTION TO LOAD TEXTURE FROM ASSETS FOLDER
+    /// </summary>
+    /// <param name="filename"></param>
+    private Texture2D loadTextureFromFile(string filename)
+    {
+        Texture2D tex = null;
+        byte[] fileData;
+        string filePath = Application.dataPath + "/" + filename;
+
+        fileData = File.ReadAllBytes(filePath);
+        tex = new Texture2D(2, 2);
+        tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+        return tex;
+    }
+	
 
     /// <summary>
     /// DOES NOT WORK KINDA
