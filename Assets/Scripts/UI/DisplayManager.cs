@@ -39,22 +39,23 @@ public class DisplayManager : MonoBehaviour
         g.transform.parent = transform;
         Canvas c = g.AddComponent<Canvas>();
         c.targetDisplay =0;
-        c.transform.position = Vector3.zero;
         c.renderMode = RenderMode.ScreenSpaceOverlay;
         CanvasScaler cs = g.AddComponent<CanvasScaler>();
         cs.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
         cs.scaleFactor = 1;
-        cs.referencePixelsPerUnit = 100;
+        cs.referencePixelsPerUnit = 1000;
         GraphicRaycaster rc = g.AddComponent<GraphicRaycaster>();
         rc.ignoreReversedGraphics = true;
         g.transform.localScale = new Vector3(1, 1, 1);
         g.transform.localPosition = Vector3.zero;
         GameObject g2 = new GameObject();
+
         Text t = g2.AddComponent<Text>(); /*Text message displaying information about screens*/
         g2.transform.SetParent(g.transform, false);
+        t.rectTransform.localPosition = Vector3.zero;
         t.horizontalOverflow = HorizontalWrapMode.Overflow;
         t.verticalOverflow = VerticalWrapMode.Overflow;
-        t.alignment = TextAnchor.MiddleLeft;
+        t.alignment = TextAnchor.MiddleCenter;
         Font f = (Font) Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
         t.font = f;
         t.fontSize = 30;

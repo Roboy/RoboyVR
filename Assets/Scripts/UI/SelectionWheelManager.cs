@@ -49,7 +49,6 @@ public class SelectionWheelManager : MonoBehaviour
         {
             if (canvas)
             {
-
                 Debug.Log("Disabling...");
                 canvas.GetComponent<Canvas>().enabled = false;
                 visible = false;
