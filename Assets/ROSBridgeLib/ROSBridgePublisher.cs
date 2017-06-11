@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using SimpleJSON;
+﻿using UnityEngine;
 
 /**
  * This defines a publisher. There had better be a corresponding subscriber somewhere. This is really
@@ -15,7 +14,7 @@ using SimpleJSON;
  */
 
 namespace ROSBridgeLib {
-	public class ROSBridgePublisher {
+	public class ROSBridgePublisher : MonoBehaviour{
 		
 		public static string GetMessageTopic() {
 			return null;

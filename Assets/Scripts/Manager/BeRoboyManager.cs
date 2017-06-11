@@ -73,7 +73,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
     #endregion PRIVATE_MEMBER_VARIABLES
 
-    #region //MONOBEHAVIOR_METHODS
+    #region MONOBEHAVIOR_METHODS
 
     /// <summary>
     /// Initialize ROSBridge.

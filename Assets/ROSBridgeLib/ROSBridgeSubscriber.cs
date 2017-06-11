@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using SimpleJSON;
 
 /**
@@ -19,7 +19,7 @@ using SimpleJSON;
  */
 
 namespace ROSBridgeLib {
-	public class ROSBridgeSubscriber {
+	public class ROSBridgeSubscriber : MonoBehaviour{
 
 		public static string GetMessageTopic() {
 			return null;

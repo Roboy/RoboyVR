@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using ROSBridgeLib;
+using ROSBridgeLib.custom_msgs;
 
 /// <summary>
 /// Roboymanager has different tasks:
@@ -19,13 +20,7 @@ using ROSBridgeLib;
 /// </summary>
 public class RoboyManager : Singleton<RoboyManager> {
 
-
     #region PUBLIC_MEMBER_VARIABLES
-
-    /// <summary>
-    /// The IP address of the VM or the machine where the simulation is running
-    /// </summary>
-    public string VM_IP = "";
     
     /// <summary>
     /// Public variable so that all classes can access the roboy object.
@@ -68,19 +63,11 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// </summary>
     [SerializeField]
     private Transform m_Roboy;
-    /// <summary>
-    /// ROSBridge websocket
-    /// </summary>
-    private ROSBridgeWebSocketConnection m_Ros = null;
+
     /// <summary>
     /// Pose message of roboy in our build in class
     /// </summary>
     private RoboyPoseMsg m_RoboyPoseMessage;
-
-    /// <summary>
-    /// Variable to check if the ROS connection is working!
-    /// </summary>
-    private bool m_ROSInitialized = false;
 
     /// <summary>
     /// Dictionary with all roboyparts, used to adjust pose and motor values
@@ -97,27 +84,6 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// </summary>
     void Awake()
     {
-        if (string.IsNullOrEmpty(VM_IP))
-            return;
-
-        m_Ros = new ROSBridgeWebSocketConnection("ws://" + VM_IP, 9090);
-
-        // DOES NOT WORK! m_Ros is never null if you call the Constructor, WAIT UNTILL SIMON IMPLEMENTS UDP BROADCAST WITH ROS CONFIGURATION, GET THE IP ADDRESS FROM THE BROADCAST.
-        if (m_Ros != null)
-        {
-            m_Ros.AddSubscriber(typeof(RoboyPoseSubscriber));
-            m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
-            m_Ros.AddPublisher(typeof(RoboyPosePublisher));
-            m_Ros.Connect();
-            m_ROSInitialized = true;
-
-            Debug.Log("ROS successfully initialized!");
-        }
-        else
-        {
-            Debug.LogWarning("ROS could not be initialized!");
-        }
-
         getRoboy();
 
         getRoboyParts();
@@ -130,23 +96,10 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// </summary>
     void Update()
     {
-        if (m_ROSInitialized)
-        {
-            m_Ros.Render();
-
-            if (Input.GetKeyDown(KeyCode.R))
-                ResetSimulation();
-        }
+        if (Input.GetKeyDown(KeyCode.R))
+            ResetSimulation();
     }
 
-    /// <summary>
-    /// Disconnect from the simulation when Unity is not running.
-    /// </summary>
-    void OnApplicationQuit()
-    {
-        if (!m_ROSInitialized)
-            m_Ros.Disconnect();
-    }
     #endregion //MONOBEHAVIOR_METHODS
 
     #region PUBLIC_METHODS
@@ -186,79 +139,18 @@ public class RoboyManager : Singleton<RoboyManager> {
     public void ReceiveExternalForce(RoboyPart roboyPart, Vector3 position, Vector3 force, int duration)
     {
         ROSBridgeLib.custom_msgs.ExternalForceMsg msg = 
-            new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, unityPositionToGazebo(position), unityPositionToGazebo(force), duration);
+            new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, GazeboUtility.UnityPositionToGazebo(position), GazeboUtility.UnityPositionToGazebo(force), duration);
 
-        m_Ros.Publish(RoboyPosePublisher.GetMessageTopic(), msg);
+        ROSBridge.Instance.ROS.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
 
         //Debug.Log(msg.ToYAMLString());
     }
 
     public void ResetSimulation()
-    {
-        if (!m_ROSInitialized)
-        {
-            Debug.LogWarning("Cannot reset simulation as ROS is not running!");
-            return;
-        }
-     
-        m_Ros.CallService("/roboy/reset_world", "");
+    {     
+        ROSBridge.Instance.ROS.CallService("/roboy/reset_world", "");
     }
 
-    #region Convert function from gazebo to unity and vice versa.
-    /// <summary>
-    /// Converts a quaternion in gazebo coordinate frame to unity coordinate frame.
-    /// </summary>
-    /// <param name="gazeboRot">Quaternion in gazebo coordinate frame.</param>
-    /// <returns>Quaternion in unity coordinate frame.</returns>
-    Quaternion gazeboRotationToUnity(Quaternion gazeboRot)
-    {
-        Quaternion rotX = Quaternion.AngleAxis(180f, Vector3.right);
-        Quaternion rotZ = Quaternion.AngleAxis(180f, Vector3.forward);
-
-        Quaternion tempRot = new Quaternion(-gazeboRot.x, -gazeboRot.z, -gazeboRot.y, gazeboRot.w);
-
-        Quaternion finalRot = tempRot*rotZ*rotX;
-
-        return finalRot;
-    }
-
-    /// <summary>
-    /// Converts a vector in gazebo coordinate frame to unity coordinate frame.
-    /// </summary>
-    /// <param name="gazeboPos">Vector in gazebo coordinate frame.</param>
-    /// <returns>Vector in unity coordinate frame.</returns>
-    Vector3 gazeboPositionToUnity(Vector3 gazeboPos)
-    {
-        return new Vector3(gazeboPos.x, gazeboPos.z, gazeboPos.y);
-    }
-
-    /// <summary>
-    /// Converts a vector in unity coordinate frame to gazebo coordinate frame.
-    /// </summary>
-    /// <param name="unityPos">Vector in unity coordinate frame.</param>
-    /// <returns>Vector in gazebo coordinate frame.</returns>
-    Vector3 unityPositionToGazebo(Vector3 unityPos)
-    {
-        return new Vector3(unityPos.x, unityPos.z, unityPos.y);
-    }
-
-    /// <summary>
-    /// Converts a quaternion in unity coordinate frame to gazebo coordinate frame.
-    /// </summary>
-    /// <param name="unityRot">Quaternion in unity coordinate frame.</param>
-    /// <returns>Quaternion in gazebo coordinate frame.</returns>
-    Quaternion unityRotationToGazebo(Quaternion unityRot)
-    {
-        Quaternion rotX = Quaternion.AngleAxis(180f, Vector3.right);
-        Quaternion rotZ = Quaternion.AngleAxis(180f, Vector3.forward);
-
-        Quaternion tempRot = unityRot*rotX*rotZ;
-
-        Quaternion finalRot = new Quaternion(-tempRot.x, -tempRot.z, -tempRot.y, tempRot.w);
-
-        return finalRot;
-    }
-    #endregion
     #endregion //PUBLIC_METHODS
 
     #region PRIVATE_METHODS
@@ -321,11 +213,14 @@ public class RoboyManager : Singleton<RoboyManager> {
             Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
             Quaternion originRotation = new Quaternion(qxRotationsDictionary[index], qyRotationsDictionary[index], qzRotationsDictionary[index], qwRotationsDictionary[index]);
 
-            roboyPart.Value.transform.localPosition = gazeboPositionToUnity(originPosition);
-            roboyPart.Value.transform.localRotation = gazeboRotationToUnity(originRotation);
+            roboyPart.Value.transform.localPosition = GazeboUtility.GazeboPositionToUnity(originPosition);
+            roboyPart.Value.transform.localRotation = GazeboUtility.GazeboRotationToUnity(originRotation);
         }
     }
 
+    /// <summary>
+    /// Searches for roboy via the "Roboy" tag.
+    /// </summary>
     void getRoboy()
     {
         if ((m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform) == null)
@@ -335,6 +230,9 @@ public class RoboyManager : Singleton<RoboyManager> {
         }
     }
 
+    /// <summary>
+    /// Searches for roboy and all roboy parts.
+    /// </summary>
     void getRoboyParts() {
 
         if (m_Roboy == null)
@@ -349,8 +247,5 @@ public class RoboyManager : Singleton<RoboyManager> {
             m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
         }
     }
-
-
-
     #endregion //PRIVATE_METHODS
 }

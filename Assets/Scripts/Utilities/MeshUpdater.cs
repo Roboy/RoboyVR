@@ -228,8 +228,8 @@ public class MeshUpdater : MonoBehaviour {
                 GameObject meshCopy = Instantiate(meshPrefab);
                 meshCopy.transform.parent = modelParent.transform;
             }
-            Object prefab = EditorUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
-            EditorUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
+            Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
+            PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
         }
         m_ModelNames.Clear();
     }
