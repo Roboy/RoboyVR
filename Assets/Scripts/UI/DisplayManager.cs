@@ -23,8 +23,8 @@ public class DisplayManager : MonoBehaviour
         // Display.displays[0] is the primary, default display and is always ON.
         // Check if additional displays are available and activate each.
         if (Display.displays.Length > 1 && (cam2!=null)) { 
-            //TODO: windowed mode supposed to work under windows... might blow up under Linux / OSX !!
-            Display.displays[1].Activate(400, 400, 60);
+            //should be fullscreen mode for second screen....?
+            Display.displays[1].Activate();
             cam2.GetComponent<Camera>().targetDisplay = 1;
         }
     }

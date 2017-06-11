@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class SelectionWheelManager : MonoBehaviour
 {
     private bool visible = false; /* Is selection wheel visible */
-    private bool stillVisible = false; /* before disabling wheel:was it moved again? Should it still be visible*/
+    private bool disabling = false; /* before disabling wheel:was it moved again? Should it still be disabled?*/
     private double curSpin = 0; /* rotational speed, changed and updated over time*/
     private float curAngle = 0;/* current angle around z axis (local)*/
     private int elems; /* number of text elems in selection wheel*/
@@ -43,11 +43,14 @@ public class SelectionWheelManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator DisableCanvas()
     {
+        Debug.Log("disable gunction called...");
         yield return new WaitForSeconds(0.5f);
-        if (!stillVisible)
+        if (disabling) //if disable still desired (whilst waiting further user input might have changed that)
         {
             if (canvas)
             {
+
+                Debug.Log("Disabling...");
                 canvas.GetComponent<Canvas>().enabled = false;
                 visible = false;
             }
@@ -68,6 +71,7 @@ public class SelectionWheelManager : MonoBehaviour
         }
         selected = tmp;
         Debug.Log("selection: " + selected);
+        VRUILogic.GetInstance().SelectedModeChanged(selected);
         Text[] texts = GetComponentsInChildren<Text>();
         for (int i = 0; i < texts.Length; i++)
         {
@@ -103,10 +107,8 @@ public class SelectionWheelManager : MonoBehaviour
             Transform transform = (Transform)children[i];
             if (transform.gameObject != gameObject) //ignore this elem
             {
-                Debug.Log(children[i].name);
                 // define point on outer circle called offset,start from 0 as 12 o'clock on the circle
                 Vector2 offset = Quaternion.Euler(0, 0, 360 / elems * (i - 1)) * radius; 
-                Debug.Log(offset);
                 //move elem to that position on circle
                 transform.Translate(offset.x, offset.y, 0);
             }
@@ -134,13 +136,15 @@ public class SelectionWheelManager : MonoBehaviour
         if (curSpin > -threshold && curSpin < threshold && value == 0)
         {
             curSpin = 0;
-            stillVisible = false;
-            StartCoroutine(DisableCanvas());
+            if (visible  && !disabling) //prevent from calling multiple disable canvases if we're already disabling
+            {
+                StartCoroutine(DisableCanvas());
+                disabling = true;
+            }
         }
-        Debug.Log(value);
         if (value != 0)
         {
-            stillVisible = true;
+            disabling = false; //if change occured whilst waiting for disable, do not disable
             if (!visible) EnableCanvas();
         }
         curAngle = transform.rotation.eulerAngles.z;
