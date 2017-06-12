@@ -13,10 +13,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
 
     #region PUBLIC_MEMBER_VARIABLES
-    /// <summary>
-    /// The IP address of the machine where the simulation is running.
-    /// </summary>
-    public string IP = "";
 
     /// <summary>
     /// Set whether head movement should be tracked or not.
@@ -29,20 +25,11 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     
 
     #region PRIVATE_MEMBER_VARIABLES
-    /// <summary>
-    /// ROSBridge websocket.
-    /// </summary>
-    private ROSBridgeWebSocketConnection m_Ros = null;
 
     /// <summary>
     /// Image message, from simulation e.g. 
     /// </summary>
     private ImageMsg m_ImageMessage;
-
-    /// <summary>
-    /// Variable to check if the ROS connection is working!
-    /// </summary>
-    private bool m_ROSInitialized = false;
 
     /// <summary>
     /// The HMD main camera.
@@ -71,43 +58,22 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private float m_current_Angle = 0.0f;
 
-    private Image m_Img;
+    /// <summary>
+    /// Image component to display the simulated image from Gazebo stream
+    /// </summary>
+    private Image m_SimulatedImg;
 
     #endregion PRIVATE_MEMBER_VARIABLES
 
     #region MONOBEHAVIOR_METHODS
 
     /// <summary>
-    /// Initialize ROSBridge.
+    /// Initialize texture
     /// </summary>
     void Awake()
     {
-        if (string.IsNullOrEmpty(IP))
-            return;
-
-        m_Ros = new ROSBridgeWebSocketConnection("ws://" + IP, 9090);
-
-        // DOES NOT WORK! m_Ros is never null if you call the Constructor, WAIT UNTILL SIMON IMPLEMENTS UDP BROADCAST WITH ROS CONFIGURATION, GET THE IP ADDRESS FROM THE BROADCAST.
-        if (m_Ros != null)
-        {
-            m_Ros.AddSubscriber(typeof(RoboyCameraSubscriber));
-            //m_Ros.AddServiceResponse(typeof(RoboyServiceResponse));
-            //m_Ros.AddPublisher(typeof(RoboyPosePublisher));
-            m_Ros.Connect();
-            m_ROSInitialized = true;
-
-            Debug.Log("ROS successfully initialized!");
-        }
-        else
-        {
-            Debug.LogWarning("ROS could not be initialized!");
-        }
-
         //Initialize the texture
         m_Tex = new Texture2D(640, 480);
-
-        
-
     }
 
 
@@ -122,40 +88,23 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         {
             Debug.Log("No Camera found!");
         }
-        m_Img = GameObject.FindGameObjectWithTag("SimImg").GetComponent<Image>();
-        m_Img.gameObject.SetActive(false);
+        m_SimulatedImg = GameObject.FindGameObjectWithTag("SimImg").GetComponent<Image>();
+        m_SimulatedImg.gameObject.SetActive(false);
     }
 	
-	// Update is called once per frame
 	void Update () {
 
-        //Looking for the HMD camera in scene.
+        // Looking for the HMD camera in scene.
         if (!m_CamInitialized)
         {
             TryInitializeCamera();
         }
-        //If the camera is found, move and rotate Roboy accordingly.
+        // If the camera is found, move and rotate Roboy accordingly.
         else
         {
             if(TrackingEnabled)
             TranslateRoboy();
         }
-
-        //Get new (Image)messages.
-        if (m_ROSInitialized)
-        {
-            m_Ros.Render();
-        }
-
-    }
-
-    /// <summary>
-    /// Disconnect from the simulation when Unity is not running.
-    /// </summary>
-    void OnApplicationQuit()
-    {
-        if (m_ROSInitialized)
-            m_Ros.Disconnect();
     }
     #endregion //MONOBEHAVIOR_METHODS
 
@@ -183,7 +132,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     {
         //Get the image as an array from the message.
         byte[] image_temp = image.GetImage();
-        //Debug.Log(image_temp);
+
         Color[] colorArray = new Color[image_temp.Length / 3];
         for (int i = 0; i < image_temp.Length; i += 3)
         {
@@ -191,19 +140,17 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
                 image_temp[i + 2] / (float)255, 1f);
             colorArray[i / 3] = color;
         }
-        //Debug.Log(colorArray[55]);
-        Texture2D tex = new Texture2D(640, 480);
-        tex.SetPixels(colorArray);
+
         // Load data into the texture.
         m_Tex.SetPixels(colorArray);
         // Store the texture in temporary png.
-        saveTextureToFile(tex);
+        saveTextureToFile(m_Tex);
         // Load the texture from a temporary png.
         Texture2D t = loadTextureFromFile("temp.png");
         Rect rec = new Rect(0, 0, t.width, t.height);
         Sprite spriteToUse = Sprite.Create(t, rec, new Vector2(0.5f, 0.5f), 100);
         //Finding the image to be replaced by the simulation feed.
-        m_Img.sprite = spriteToUse;
+        m_SimulatedImg.sprite = spriteToUse;
 
         //Should replace the images by setting it via overrideSprite using the Texture
         //m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);
@@ -239,36 +186,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
         return tex;
     }
-	
-
-    /// <summary>
-    /// DOES NOT WORK KINDA
-    /// </summary>
-    /// <param name="bytes"></param>
-    /// <param name="width"></param>
-    /// <returns></returns>
-    private byte[] flipBytes(byte[] bytes, int width)
-    {
-        BitArray bits = new BitArray(bytes);
-        BitArray flippedBits = new BitArray(bits);
-
-        for (int i = 0; i < bits.Length; i += 640)
-        {
-            for (int j = 0, k = width - 1; j < width; ++j, --k)
-            {
-                flippedBits[i + j] = bits[i + k];
-            }
-        }
-        byte[] flippedBytes = new byte[bytes.Length];
-        flippedBits.CopyTo(flippedBytes, 0);
-        return flippedBytes;
-    }
-
-    //private void OnGUI()
-    //{
-    //    GUI.DrawTexture(new Rect(10, 10, 300, 300), m_Tex, ScaleMode.ScaleToFit, true, 10.0F);
-
-    //}
 
     /// <summary>
     /// Turn Roboy with the movement of the HMD.
