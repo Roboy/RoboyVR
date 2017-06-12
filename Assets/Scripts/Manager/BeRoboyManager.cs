@@ -191,11 +191,13 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
                 image_temp[i + 2] / (float)255, 1f);
             colorArray[i / 3] = color;
         }
-
+        //Debug.Log(colorArray[55]);
+        Texture2D tex = new Texture2D(640, 480);
+        tex.SetPixels(colorArray);
         // Load data into the texture.
         m_Tex.SetPixels(colorArray);
         // Store the texture in temporary png.
-        saveTextureToFile(m_Tex);
+        saveTextureToFile(tex);
         // Load the texture from a temporary png.
         Texture2D t = loadTextureFromFile("temp.png");
         Rect rec = new Rect(0, 0, t.width, t.height);

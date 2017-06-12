@@ -172,6 +172,8 @@ public class MeshUpdater : MonoBehaviour {
             // get file content of format title:url
             string[] scanContent = File.ReadAllLines(pathToScanFile);
 
+            File.Delete(pathToScanFile);
+
             foreach (var line in scanContent)
             {
                 string[] titleURL = line.Split(';');
