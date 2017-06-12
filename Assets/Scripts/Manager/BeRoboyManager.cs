@@ -71,6 +71,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private float m_current_Angle = 0.0f;
 
+    private Image m_Img;
+
     #endregion PRIVATE_MEMBER_VARIABLES
 
     #region MONOBEHAVIOR_METHODS
@@ -120,7 +122,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         {
             Debug.Log("No Camera found!");
         }
-
+        m_Img = GameObject.FindGameObjectWithTag("SimImg").GetComponent<Image>();
+        m_Img.gameObject.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -179,32 +182,30 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     private void RefreshImage(ImageMsg image)
     {
         //Get the image as an array from the message.
-        byte[] image_temp = flipBytes(image.GetImage(), 640);
+        byte[] image_temp = image.GetImage();
         //Debug.Log(image_temp);
-        Color[] colorArray = new Color[image_temp.Length/3];
-        for (int i = 0; i < image_temp.Length; i+=3)
+        Color[] colorArray = new Color[image_temp.Length / 3];
+        for (int i = 0; i < image_temp.Length; i += 3)
         {
             Color color = new Color(image_temp[i] / (float)255, image_temp[i + 1] / (float)255,
                 image_temp[i + 2] / (float)255, 1f);
             colorArray[i / 3] = color;
         }
-        System.Array.Reverse(colorArray);
 
         // Load data into the texture.
         m_Tex.SetPixels(colorArray);
-	// Store the texture in temporary png.
+        // Store the texture in temporary png.
         saveTextureToFile(m_Tex);
         // Load the texture from a temporary png.
-	Texture2D t = loadTextureFromFile("temp.png");
-	Rect rec = new Rect(0, 0, t.width, t.height);
+        Texture2D t = loadTextureFromFile("temp.png");
+        Rect rec = new Rect(0, 0, t.width, t.height);
         Sprite spriteToUse = Sprite.Create(t, rec, new Vector2(0.5f, 0.5f), 100);
         //Finding the image to be replaced by the simulation feed.
-        GameObject Img = GameObject.FindGameObjectWithTag("SimImg");
-        Img.GetComponent<Image>().sprite = spriteToUse;
-	
+        m_Img.sprite = spriteToUse;
+
         //Should replace the images by setting it via overrideSprite using the Texture
         //m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);
-        
+
     }
 
     /// <summary>
@@ -215,7 +216,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     {
         string filename = "temp.png";
         byte[] bytes = tex.EncodeToPNG();
-        var filestream = File.Open(Application.dataPath + "/" + filename, FileMode.Create);
+        var filestream = File.Open(Application.dataPath + "/" + filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
         var binarywriter = new BinaryWriter(filestream);
         binarywriter.Write(bytes);
         filestream.Close();

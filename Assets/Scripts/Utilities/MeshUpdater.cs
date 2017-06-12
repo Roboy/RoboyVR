@@ -230,6 +230,7 @@ public class MeshUpdater : MonoBehaviour {
             }
             Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
             PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
+            DestroyImmediate(modelParent);
         }
         m_ModelNames.Clear();
     }

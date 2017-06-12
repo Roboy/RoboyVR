@@ -19,6 +19,7 @@ TagManager:
   - GUIController
   - UIButton
   - UISlider
+  - SimImg
   layers:
   - Default
   - TransparentFX
