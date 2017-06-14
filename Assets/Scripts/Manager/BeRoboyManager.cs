@@ -20,6 +20,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     public bool TrackingEnabled = false;
 
     public Image SimulationCameraFeed;
+
+    public RenderTexture RenderTest;
+
     #endregion PUBLIC_MEMBER_VARIABLES
 
     
@@ -62,6 +65,12 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// Image component to display the simulated image from Gazebo stream
     /// </summary>
     private Image m_SimulatedImg;
+
+
+    /// <summary>
+    /// Resolution determines array size e.g. 1280*720
+    /// </summary>
+    private Color[] colorArray = new Color[1280*720];
 
     #endregion PRIVATE_MEMBER_VARIABLES
 
@@ -132,25 +141,33 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     {
         //Get the image as an array from the message.
         byte[] image_temp = image.GetImage();
+        Debug.Log(image_temp.Length);
 
-        Color[] colorArray = new Color[image_temp.Length / 3];
+        //Color[] colorArray = new Color[image_temp.Length / 3];
+        int j = 0;
         for (int i = 0; i < image_temp.Length; i += 3)
         {
-            Color color = new Color(image_temp[i] / (float)255, image_temp[i + 1] / (float)255,
-                image_temp[i + 2] / (float)255, 1f);
-            colorArray[i / 3] = color;
+            colorArray[j].b = image_temp[i] / (float)255;
+            colorArray[j].g = image_temp[i + 1] / (float)255;
+            colorArray[j].r = image_temp[i + 2] / (float)255;
+
+            colorArray[j].a = 1f;
+            j++;
         }
 
         // Load data into the texture.
         m_Tex.SetPixels(colorArray);
+        m_Tex.Apply();
+
+        Graphics.Blit(m_Tex, RenderTest);
         // Store the texture in temporary png.
-        saveTextureToFile(m_Tex);
-        // Load the texture from a temporary png.
-        Texture2D t = loadTextureFromFile("temp.png");
-        Rect rec = new Rect(0, 0, t.width, t.height);
-        Sprite spriteToUse = Sprite.Create(t, rec, new Vector2(0.5f, 0.5f), 100);
-        //Finding the image to be replaced by the simulation feed.
-        m_SimulatedImg.sprite = spriteToUse;
+        //saveTextureToFile(m_Tex);
+        //// Load the texture from a temporary png.
+        //Texture2D t = loadTextureFromFile("temp.png");
+        //Rect rec = new Rect(0, 0, t.width, t.height);
+        //Sprite spriteToUse = Sprite.Create(t, rec, new Vector2(0.5f, 0.5f), 100);
+        ////Finding the image to be replaced by the simulation feed.
+        //m_SimulatedImg.sprite = spriteToUse;
 
         //Should replace the images by setting it via overrideSprite using the Texture
         //m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);

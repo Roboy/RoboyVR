@@ -20,6 +20,7 @@ TagManager:
   - UIButton
   - UISlider
   - SimImg
+  - ZedImg
   layers:
   - Default
   - TransparentFX

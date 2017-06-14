@@ -9,7 +9,8 @@ namespace ROSBridgeLib
 
         public new static string GetMessageTopic()
         {
-            return "/roboy/camera/image_raw";
+            //return "/roboy/camera/image_raw";
+            return "/zed/rgb/image_raw_color";
 
         }
 
