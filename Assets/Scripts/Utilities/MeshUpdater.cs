@@ -195,8 +195,10 @@ public class MeshUpdater : MonoBehaviour {
                 //replace "tree" with "raw" in URL
                 var regex = new Regex(Regex.Escape("tree"));
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
+                //start modeldownloader.py
                 string[] updateArguments = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key, "" };
                 CommandlineUtility.RunCommandLine(updateArguments);
+
                 if (!m_ModelNames.Contains(urlEntry.Key)) {
                     m_ModelNames.Add(urlEntry.Key);                               
                 }
@@ -207,8 +209,9 @@ public class MeshUpdater : MonoBehaviour {
 
     public void CreatePrefab() {
         foreach (string modelName in m_ModelNames)
-        {
+        {   
             string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/" + modelName;
+            //Create GameObject where everything will be attached
             GameObject modelParent = new GameObject(modelName);
             List<string> meshList = new List<string>();
             if (pathToOriginModels != "")
@@ -220,6 +223,7 @@ public class MeshUpdater : MonoBehaviour {
             {
                 GameObject meshPrefab = null;
                 string path = "Assets/SimulationModels/" + modelName + "/OriginModels/" + name;
+                // import Mesh
                 StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
                 if (meshPrefab == null)
                 {
@@ -228,10 +232,13 @@ public class MeshUpdater : MonoBehaviour {
                 }
 
                 GameObject meshCopy = Instantiate(meshPrefab);
+                // Attach Model with mesh to parent GO
                 meshCopy.transform.parent = modelParent.transform;
             }
+            //Create Prefab of existing GO
             Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
             PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
+            //Destroy GO after prefab is created
             DestroyImmediate(modelParent);
         }
         m_ModelNames.Clear();
