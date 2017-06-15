@@ -21,6 +21,7 @@ TagManager:
   - UISlider
   - SimImg
   - ZedImg
+  - HtcImg
   layers:
   - Default
   - TransparentFX
