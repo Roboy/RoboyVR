@@ -4,7 +4,7 @@ using UnityEngine;
 using ROSBridgeLib;
 
 /// <summary>
-/// Handles the ROSBridge connection. Adds all ROS components of each ROSObject in the scene. You need one object of this in each scene where you have ROS actors.
+/// Handles the ROSBridge connection. Adds all ROS components of each ROSObject in the scene.
 /// </summary>
 public class ROSBridge : Singleton<ROSBridge> {
 
