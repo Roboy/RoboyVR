@@ -21,6 +21,9 @@ public class MeshUpdater : MonoBehaviour {
         Downloaded = 4
     }
 
+    /// <summary>
+    /// Github repository of the roboy models.
+    /// </summary>
     public string Github_Repository = @"https://github.com/Roboy/roboy_models/";
 
     /// <summary>
@@ -102,7 +105,7 @@ public class MeshUpdater : MonoBehaviour {
     }
 
     /// <summary>
-    /// Calls the python scan script through a commandline.
+    /// Scans the repository for the roboy models and stores them in a dictionary.
     /// </summary>
     public void Scan()
     {
@@ -150,6 +153,9 @@ public class MeshUpdater : MonoBehaviour {
         m_CurrentState = State.Scanned;
     }
 
+    /// <summary>
+    /// Downloads the models from the scan dictionary which were selected by the user.
+    /// </summary>
     public void UpdateModels()
     {
         string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/";
@@ -207,6 +213,9 @@ public class MeshUpdater : MonoBehaviour {
         }  
     }
 
+    /// <summary>
+    /// Creates prefabs for every model which were downloaded. 
+    /// </summary>
     public void CreatePrefab() {
         foreach (string modelName in m_ModelNames)
         {   
@@ -216,7 +225,7 @@ public class MeshUpdater : MonoBehaviour {
             List<string> meshList = new List<string>();
             if (pathToOriginModels != "")
             {
-                meshList = DirSearch(pathToOriginModels + "/OriginModels");
+                meshList = getFilePathsFBX(pathToOriginModels + "/OriginModels");
             }
 
             foreach (string name in meshList)
@@ -244,6 +253,12 @@ public class MeshUpdater : MonoBehaviour {
         m_ModelNames.Clear();
     }
 
+    /// <summary>
+    /// Tries to import the model in the given path. Does not work like intended cause of reasons.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="callback"></param>
+    /// <returns></returns>
     private IEnumerator importModelCoroutine(string path, System.Action<GameObject> callback)
     {
         // create a counter to limit the tries
@@ -264,21 +279,20 @@ public class MeshUpdater : MonoBehaviour {
         }
     }
 
-    private List<string> DirSearch(string sDir)
+    /// <summary>
+    /// Returns fbx file paths in the given directory.
+    /// </summary>
+    /// <param name="sDir">The directory you want to search.</param>
+    /// <returns>List of all fbx file paths.</returns>
+    private List<string> getFilePathsFBX(string sDir)
     {
         List<string> files = new List<string>();
         {
             foreach (string f in Directory.GetFiles(sDir))
             {   
-
-                // GANZER PATH
                 if(Path.GetExtension(f) == ".fbx")
                     files.Add(Path.GetFileName(f));
             }
-            //foreach (string d in Directory.GetDirectories(sDir))
-            //{
-            //    files.AddRange(DirSearch(d));
-            //}
         }
         return files;
     }

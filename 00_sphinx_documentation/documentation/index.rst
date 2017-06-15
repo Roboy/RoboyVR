@@ -82,13 +82,39 @@ If you have any further questions about the project, feel free to contact us via
 Contents:
 ---------
 
-.. _usage:
+.. _Usage:
 .. toctree::
   :maxdepth: 1
   :glob:
   :caption: Usage and Installation
 
   Usage/*
+  
+.. _ModelUpdate:
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: Automatic Model Update Pipeline
+  
+  ModelUpdate/*
+  
+.. _BeRoboy:
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: Be Roboy
+  
+  BeRoboy/*
+  
+.. _Pabi:
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: PaBiVR
+  
+  Pabi/*
+  
+  
 
 .. _ScopeContext:
 .. toctree::
@@ -98,13 +124,13 @@ Contents:
 
   ScopeContext/*
 
-.. _development:
+.. _Development:
 .. toctree::
   :maxdepth: 1
   :glob:
   :caption: Development
 
-  development/*
+  Development/*
 
 .. toctree::
    :maxdepth: 1

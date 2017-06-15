@@ -4,18 +4,12 @@ using ROSBridgeLib;
 using ROSBridgeLib.custom_msgs;
 
 /// <summary>
-/// Roboymanager has different tasks:
+/// Roboymanager has the task to adjust roboys state depending on the ROS messages.
+/// In summary it does the following:
 ///
-/// <b>- Run ROS:</b>
-///     -# Connect to the simulation.
-///     -# Add subscriber to the pose.
-///     -# Add publisher for external force.
-///     -# Add service response for world reset.
-///
-/// <b>- Receive and send ROS messages:</b>
-///     -# receive pose msg to adjust roboy pose.
-///     -# subscribe to external force event and send msg to simulation.
-///     -# send service call for world reset.
+///     -# receive pose messages to adjust roboy pose.
+///     -# subscribe to the external force event and forward the message to the simulation.
+///     -# send a service call for a world reset.
 ///     -# FUTURE: receive motor msg and forward it to the according motors.
 /// </summary>
 public class RoboyManager : Singleton<RoboyManager> {
