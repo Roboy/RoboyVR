@@ -32,7 +32,7 @@ This tutorial will help you setup roboyVR with all necessities it comes with.
 
 ### Part 1.2: Install ROS & Roboy on Ubuntu
 
-Go to the main Roboy repository and follow the instructions of the ![ReadMe](https://github.com/Roboy/Roboy/blob/master/README.md)
+Go to the main Roboy repository and follow the instructions of the [ReadMe](https://github.com/Roboy/Roboy/blob/master/README.md)
 
 ### Part 1.3: Run rosbridge and roboySimulation
 
