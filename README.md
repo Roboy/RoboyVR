@@ -38,6 +38,7 @@ Go to the main Roboy repository and follow the instructions of the [ReadMe](http
 
 ```
 #!bash
+source /path-to-roboy-ros-control/devel/setup.bash
 roslaunch rosbridge_server rosbridge_websocket.launch
 rosrun roboy_simulation VRRoboy
 ```
@@ -52,7 +53,7 @@ Visual studio is recommended to use with Unity3D, as it is free and more user fr
 MonoDevelop (standard option).
 
 3) Open the project in Unity  
-Download or clone this github repository (master branch) to your system on open it in Unity via **Open Project** (git clone -b master https://github.com/sheveg/roboyVR.git). Unity is organized in **Scenes**. In order to watch the simulation in Unity which is running on the VM (in gazebo), open the **SimulationScene**.  
+Download or clone this github repository (master branch) to your system on open it in Unity via **Open Project** (git clone -b WS16/17 https://github.com/sheveg/roboyVR.git). Unity is organized in **Scenes**. In order to watch the simulation in Unity which is running on the VM (in gazebo), open the **SimulationScene**.  
 ![Scene overview](https://cloud.githubusercontent.com/assets/10234845/21025492/f72657fc-bd88-11e6-912e-877ba72d782e.png "Scene overview") 
 
 ### Part 2.2: SimulationScene ###
