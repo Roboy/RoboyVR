@@ -9,14 +9,14 @@ On top of that the user can actively interact with roboy with the Shooting Tool.
 an external force in the simulation and displays the result in real time in the VR environment.
 In the future it will be possible to control time, so to rewind the simulation and save/ load them on runtime.
 
-**At first you choose which tools go where**
+**At first you choose which tools go where.**
 
 .. figure:: images/controller_selection_1.*
    :alt: Controller Selection
    
    Press any of the controller to set it respectively.
    
-**To tired to walk? Just teleport1**
+**To tired to walk? Just teleport!**
 
 .. figure:: images/teleporting.*
    :alt: Teleport to a position of your liking.
