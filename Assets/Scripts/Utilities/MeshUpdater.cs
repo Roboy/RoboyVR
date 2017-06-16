@@ -141,11 +141,11 @@ public class MeshUpdater : MonoBehaviour {
             tempURLDic.Add(titleURL[0], titleURL[1]);
         }
         // clear all old links and add the new links
-        //Debug.Log("before clear: " + m_URLDictionary.Count);
         m_URLDictionary.Clear();
-        //Debug.Log("after clear: " + m_URLDictionary.Count);
         m_URLDictionary = tempURLDic;
         ModelChoiceDictionary.Clear();
+
+        //this will be used to select the models to download
         foreach (var urlDicEntry in m_URLDictionary)
         {
             ModelChoiceDictionary.Add(urlDicEntry.Key, false);

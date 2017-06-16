@@ -17,7 +17,8 @@ class MeshUpdaterEditor : Editor
 
         // Show the blender path if it is set
         if (meshUpdater.CurrentState >= MeshUpdater.State.BlenderPathSet )
-        {
+        {   
+            //Disable GUI so it can't be edited in UnityEditor
             GUI.enabled = false;
             EditorGUILayout.TextField("Blender Path: ", meshUpdater.PathToBlender);
             GUI.enabled = true;
@@ -40,7 +41,7 @@ class MeshUpdaterEditor : Editor
             }
         }
 
-        // Do not show Scan and Update button if blender path is not set
+        // Do not show Scan, Download and Create Prefab button if blender path is not set
         if (meshUpdater.CurrentState < MeshUpdater.State.BlenderPathSet)
             return;
 
@@ -53,7 +54,7 @@ class MeshUpdaterEditor : Editor
         if (meshUpdater.CurrentState < MeshUpdater.State.Scanned)
             return;
 
-        //!!THIS WON'T RESET WHEN DICTIONARY CLEARS!!
+        // ? THIS WON'T RESET WHEN DICTIONARY CLEARS ?
         var keys = new List<string>(meshUpdater.ModelChoiceDictionary.Keys);
         // show checkboxes for each model entry and update their values
         foreach (string modelEntryKey in keys)
@@ -61,13 +62,17 @@ class MeshUpdaterEditor : Editor
             meshUpdater.ModelChoiceDictionary[modelEntryKey] = EditorGUILayout.Toggle(modelEntryKey, meshUpdater.ModelChoiceDictionary[modelEntryKey]);
         }
 
+        // downloads models and converts them to .fbx (models will also be imported into unity)
         if (GUILayout.Button("Download"))
         {
             meshUpdater.UpdateModels();
         }
+
+        // don't show "Create Prefab" before models are imported
         if (meshUpdater.CurrentState < MeshUpdater.State.Downloaded)
             return;
 
+        // create prefab
         if (GUILayout.Button("Create Prefab"))
         {
             meshUpdater.CreatePrefab();
