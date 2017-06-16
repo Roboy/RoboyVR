@@ -1,9 +1,9 @@
-Intro
-========
+Introduction
+============
 
-.. figure:: images/be_roboy_selection_menu.*
+.. figure:: images/beroboy_poster.*
    :align: center
-   :alt: View Selection Menu
+   :alt: BeRoboy™
          
    The unity scene contains a 3D menu from which the user can select different views.
    

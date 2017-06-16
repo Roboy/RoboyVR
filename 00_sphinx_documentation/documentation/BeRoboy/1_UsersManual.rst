@@ -24,6 +24,11 @@ Starting Unity
 1. Start the unity project inside the git repo you cloned to your hard drive.
 2. Inside unity select the RoboyVR scene.
 3. In the ROSBridge (located in the hierarchy) type in the correct IP of your Ubuntu machine.
+
+.. figure:: documentation/images/rosbridge.*
+    :align: center
+    :alt: ROS Bridge
+
 4. Start the scene.
 5. SteamVR should also start, if this throws errors (like "SteamVR unresponsive, not working, etc."), simply restart it.
 6. When the scene properly starts, you can choose which controller should hold which tools.
