@@ -33,6 +33,7 @@ Starting Unity
 5. SteamVR should also start, if this throws errors (like "SteamVR unresponsive, not working, etc."), simply restart it.
 
 .. figure:: images/steamvr_error.*
+	:target: https://www.youtube.com/watch?v=qf6hLhrHtqg
     :align: center
     :alt: SteamVR Error
 

@@ -67,7 +67,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'roboyVR'
-copyright = u'2017, Joana Pecholt, Daniel Lorencic, Egor Shevdin, Michael Friedl based on Template by Dr. Peter'
+copyright = u'2017, Joana Pecholt, Michael Friedl, Daniel Lorencic, Egor Shevdin based on Template by Dr. Peter'
 author = u'Daniel Lorencic, Egor Shevdin, based on Template by Dr. Peter'
 
 # The version info for the project you're documenting, acts as replacement for
