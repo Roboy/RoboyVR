@@ -122,7 +122,6 @@ Contents:
   
   StateVisualization/*
   
-  
 
 .. _ScopeContext:
 .. toctree::
