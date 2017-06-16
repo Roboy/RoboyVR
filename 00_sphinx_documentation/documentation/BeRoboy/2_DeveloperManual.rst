@@ -20,7 +20,7 @@ commended to attach this sensor to a position close to the models head because y
 POV to maximize the POV experience. To implement such a thing, just open the model.sdf of the
 specific model you want to have in the simulation and add the following section.
 
-.. code:: xml
+.. code-block:: xml
   <sensor type="camera" name="camera1">
 	      <update_rate>25.0</update_rate>
 	      <camera name="head">
@@ -63,7 +63,7 @@ specific model you want to have in the simulation and add the following section.
 The pose determines where the camera will be looking at and which perspective it will be publishing messages from.
 In order to publish images the camera sensor needs a plugin attached to it, in this case its a standard plugin-in,
 the ros camera from the gazebo library. The width and height tag determine the resolution of the published images,
-the update rates is crucial to how many images are sent in one second (25 mean, 25 updates per second).
+the update rates is crucial to how many images are sent in one second (25 means, 25 updates per second).
 
 Unity Scene
 -----------
