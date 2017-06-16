@@ -85,6 +85,7 @@ public class ShootingTool : ControllerTool {
     void animateTrigger()
     {
         float triggerValue = m_SteamVRDevice.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis1).x;
+        
 
         Trigger.localPosition = m_InitTriggerPosition + triggerValue * (TriggerBack.localPosition - m_InitTriggerPosition); 
     }

@@ -36,7 +36,7 @@ Click "Scan" and wait until UnityEditor shows you every model in the Github_Repo
 Part 5: Downloading
 -------------------
 
-Select the models you want save as prefab and press "Download".
+Select the models you want save as prefab and press "Download". You can select more than one model.
 This may take a while, since the downloaded models will also automatically be imported into Unity.
 
 
