@@ -39,7 +39,7 @@ tically loads the world (with all the surrounding objects) and the version of ro
                 <view_controller>orbit</view_controller>
             </camera>
         </gui>
-</world>
+	</world>
 
 
 **Example for the launch file:**
@@ -55,7 +55,7 @@ tically loads the world (with all the surrounding objects) and the version of ro
 	<arg name="headless" value="false"/>
     	<arg name="debug" value="false"/>
     </include>
-</launch>
+	</launch>
 
 
 Model Configuration
@@ -106,7 +106,7 @@ specific model you want to have in the simulation and add the following section.
 		<distortionT1>0.0</distortionT1>
 		<distortionT2>0.0</distortionT2>
 	      </plugin>
-</sensor>
+	</sensor>
 
 The pose determines where the camera will be looking at and which perspective it will be publishing messages from.
 In order to publish images the camera sensor needs a plugin attached to it, in this case its a standard plugin-in,
