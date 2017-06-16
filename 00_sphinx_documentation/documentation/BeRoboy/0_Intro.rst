@@ -1,4 +1,4 @@
-BeRoboy™
+Intro
 ========
 
 .. figure:: images/be_roboy_selection_menu.*
@@ -9,8 +9,8 @@ BeRoboy™
    
    
 
-What is it?
------------
+**What is it?**
+
 BeRoboy™ is taking the RoboyVR experience to the next level. With the help of seamless full body tracking
 the user can send commands to Roboy, take control over Roboy and become THE Roboy. BeRoboy™ puts the user
 in the driver seat and provides a fully immersive experience like never before. With BeRoboy™ you can
@@ -20,8 +20,8 @@ all of that and a lot more!
 
 
 
-How does it work?
------------------
+**How does it work?**
+
 BeRoboy™ is utilizing the full capabilities of HTC's Vive headset and lighthouse tracking to accurately
 capture the user's pose. This data is then converted to determine the positions and rotations Roboy needs
 to adopt. Corresponding commands are then send in a format that Roboy understands and which he is able to
