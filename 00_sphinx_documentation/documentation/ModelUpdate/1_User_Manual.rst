@@ -2,6 +2,12 @@ User's Manual
 =============
 
 
+.. figure:: images/UnityScene.*
+   :target: https://www.youtube.com/watch?v=nNV-3x-7Jho
+   :align: center
+   :alt: View Selection Menu
+
+
 Part 1: Getting started
 -----------------------
 
