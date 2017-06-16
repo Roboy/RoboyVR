@@ -28,8 +28,8 @@ Part 2: Simulation Setup
 
 Follow the setup instructions on the main `Roboy repository <https://github.com/Roboy/Roboy>`_.
 
-|*Note: the setup.sh of gazebo is in /usr/share/gazebo-7/setup.sh and not in ../gazebo-7.0/..*
-|*Note: Export the gazebo paths AFTER the catkin_make because the devel directory is just created at this command.*
+| *Note: the setup.sh of gazebo is in /usr/share/gazebo-7/setup.sh and not in ../gazebo-7.0/..*
+| *Note: Export the gazebo paths AFTER the catkin_make because the devel directory is just created at this command.*
 
 There may also occur an error that says that you need to install the OpenPowerlink stack library. In that case
 follow the instructions on the `OpenPowerlink Homepage <http://openpowerlink.sourceforge.net/doc/2.2/2.2.0/d1/dde/page_build_stack.html>`_.
