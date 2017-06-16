@@ -54,7 +54,7 @@ this will call meshUpdater.CreatePrefab() (`Part 4: Create Prefab`_).
 Part 2: Scanning
 ----------------
 
-MehsUpdater.Scan():
+meshUpdater.Scan():
 First of all the scan function creates a local array scanArguments, filling it with {"python", m_PathToScanScript, Github_Repository}
 This is used to RunCommandLine(scanArguments), which starts ModelScanner.py.
 
