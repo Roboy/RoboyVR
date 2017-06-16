@@ -25,14 +25,24 @@ Starting Unity
 2. Inside unity select the RoboyVR scene.
 3. In the ROSBridge (located in the hierarchy) type in the correct IP of your Ubuntu machine.
 
-.. figure:: ../rosbridge.*
+.. figure:: images/rosbridge.*
     :align: center
     :alt: ROS Bridge
 
 4. Start the scene.
 5. SteamVR should also start, if this throws errors (like "SteamVR unresponsive, not working, etc."), simply restart it.
 6. When the scene properly starts, you can choose which controller should hold which tools.
+
+.. figure:: images/controller_selection_2.*
+    :align: center
+    :alt: Controller Selection
+
 7. After the controller assignment, you can switch between various view modes via a selection menu in the scene.
+
+.. figure:: images/view_selection_pointing.*
+    :align: center
+    :alt: ROS Bridge
+
 8. Enjoy your stay!
 
 
