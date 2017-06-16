@@ -1,38 +1,65 @@
 Developer's Manual
-=============
+==================
 
-**Setup Ubuntu side**
+*Note: We assume that you already have gone through the User's Manual to not repeat ourselves.*
 
-As you already installed gazebo and the roboy project like described in the installation part you need only to start the *.launch* file.
+Gazebo Plugin
+-------------
 
-1. Source the setup.bash
-
-.. code:: bash
-
-  source /path-to-roboy-ros-control/devel.setup.bash
-
-2. Start the launch file which starts Gazebo with the PaBi legs and a PaBiDanceSimulator ROS node
+The main part on the Gazebos site is the plugin *ForceJointPlugin*. The location is:
 
 .. code:: bash
 
-  roslaunch roboy_simulation pabi_world.launch
+  path-to-roboy-ros-control/src/roboy_simulation/src/ForceJointPlugin.cpp
 
-**Troubleshooting**
+The plugin does the following. 
 
-This commands should be sufficient but it can happen that gazebo has problems loading the PaBi Model into the world or starting the gazebo server.
+1) It loads the model into Gazebo
+2) It starts a topic with type Float32 as message type for every revolute joint of the PaBi model
+3) It subscribes to the created topics
+4) It creates a publisher which publishes the pose of PaBi so we can subscribe to the topic on the Unity side
+5) It makes PaBi stationary so he does not fall down when the legs are not touching the ground
 
-1. Kill the gazebo server and restart it.
-
-.. code:: bash
-
-  killall gzserver
-  killall gzclient
-
-2. Export the gazebo paths to the model
+The topic names have a special structure:
 
 .. code:: bash
 
-  source /usr/share/gazebo-7/setup.sh
-  export GAZEBO_MODEL_PATH=/path/to/roboy-ros-control/src/roboy_models:$GAZEBO_MODEL_PATH
+  /roboy/pabi_angle/<joint_name>
 
-3. If nothing helps than write an email to roboyvr@gmail.com. We will glady help you to experience the RoboyVR-Experience.
+Meaning at the current state of the model there are four topics with Float32 message type:
+
+.. code:: bash
+
+  /roboy/pabi_angle/hip_1
+  /roboy/pabi_angle/hip_2
+  /roboy/pabi_angle/knee_1
+  /roboy/pabi_angle/knee_2
+
+The pose is published with message type *roboy_communication_simulation::Pose* the topic:
+
+.. code:: bash
+  /roboy/pabi_pose
+
+If you want PaBi to be able to fall down change the *OnUpdate* method in the plugin.
+
+The main functions of the plugin are:
+
+1) Load: It loads the model into gazebo and creates the joint subscribers and the pose publisher.
+2) OnRosMsg: Is called every time the plugin receives a joint message. It updates the joint angles value list and publishes the new state.
+3) publishPose: Publishes the pose of PaBi.
+4) OnUpdate: Is called every gazebo update frame. Therefore we have to zero out the forces of PaBi and update the joint angles of the
+actual model.
+
+*Note: Change the following line in OnUpdate if you want PaBi to be able to fall down:
+
+.. code:: bash
+
+  model->SetWorldPose(initPose);
+
+PaBiDanceSimulatorNode
+----------------------
+
+
+
+
+
