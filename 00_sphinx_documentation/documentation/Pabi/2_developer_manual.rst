@@ -1,4 +1,4 @@
-User's Manual
+Developer's Manual
 =============
 
 **Setup Ubuntu side**
@@ -16,14 +16,6 @@ As you already installed gazebo and the roboy project like described in the inst
 .. code:: bash
 
   roslaunch roboy_simulation pabi_world.launch
-
-**Setup Unity side**
-
-You should have the RoboyVR project already cloned on your local machine. Therefore you only need to start Unity and open the PaBiViveScene.
-There should be a ROSBridge object in the hierarchy. Select this object and enter the IP Adress of the machine on which the simulation is running.
-As soon as you start the scene SteamVR should open if that is not already the case. Then you have to follow the instructions on the screen to setup your Vive controllers. Afterwards you can watch PaBi showing his best dance moves and interact with him via a GUI and different tools.
-
-*Note* Shooting PaBi with the nerf gun does not have any consequences and serves as a alleviation of stress
 
 **Troubleshooting**
 
