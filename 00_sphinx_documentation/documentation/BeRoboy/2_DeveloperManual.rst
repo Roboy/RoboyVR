@@ -20,7 +20,7 @@ commended to attach this sensor to a position close to the models head because y
 POV to maximize the POV experience. To implement such a thing, just open the model.sdf of the
 specific model you want to have in the simulation and add the following section.
 
-.. code-block:: xml
+
   <sensor type="camera" name="camera1">
 	      <update_rate>25.0</update_rate>
 	      <camera name="head">
