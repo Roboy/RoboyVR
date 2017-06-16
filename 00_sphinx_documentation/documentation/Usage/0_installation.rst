@@ -109,3 +109,5 @@ Part 4: Blender & Python
 - Install the latest version of `Blender <https://www.blender.org/download/>`_
 
 - Install the latest version of `Python <https://www.python.org/downloads/>`_
+
+- After installation, add the Python executable directories to the environment variable PATH in order to run Python.

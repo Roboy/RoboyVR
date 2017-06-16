@@ -2,11 +2,9 @@ Intro
 ========
 
 .. figure:: images/be_roboy_selection_menu.*
-   :target: http://google.de
    :align: center
    :alt: View Selection Menu
-   
-      
+         
    The unity scene contains a 3D menu from which the user can select different views.
    
    
@@ -32,7 +30,7 @@ link with the gazebo Roboy or the real one, BeRoboy™ provides video/ camera st
 environment. This serves the purpose to give the user feedback in what way his actions affect the connected
 version of Roboy.
 
-bla`http://google.de <https://www.youtube.com/results?search_query=roboyvr>`_
+
 
 
 
