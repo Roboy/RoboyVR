@@ -55,19 +55,23 @@ View Scenarios
 --------------
 You can choose between the following four view scenarios, each of them offering different things to explore!
 
+**I. Gazebo Simulation**
+
 .. figure:: images/beroboy_simulation.*
    :align: center
    :alt: Simulation view
          
    Take control over the simulation Roboy and see what he does in gazebo.
 
-
+**II. Real Roboy (ZED)**
+ 
 .. figure:: images/beroboy_zed.*
    :align: center
    :alt: ZED view
          
    Look through the eyes of the real Roboy and control him in real life.
 
+**III. Observing Gentleman**
    
 .. figure:: images/beroboy_observer.*
    :align: center
@@ -75,7 +79,8 @@ You can choose between the following four view scenarios, each of them offering 
          
    Sit back, relax, take a look at Roboy from a safe distance and watch him do some stuff.
    
-	
+**IV. VR Roboy**
+   
 .. figure:: images/beroboy_vr.*
    :align: center
    :alt: VR view
