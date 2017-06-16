@@ -38,23 +38,26 @@ After setting the blender directory, the state is changed to BlenderPathSet.
 This state shows the blender path as a string. Here the is GUI disabled so it can't be edited in UnityEditor.
 
 
-Also the state now shows a button called "Scan". This button calls meshUpdater.Scan() (Part 2).
+Also the state now shows a button called "Scan". This button calls meshUpdater.Scan() (`Part 2: Scanning`_).
 When meshUpdater.Scan() finishes, the state will be changed to "Scanned".
 
 
 In the new state, you can see which models were found by the scanning script and can select,
 which of these you want to download by checking off the corresponding boxes.
-The "Download" button then calls meshUpdater.UpdateModels() (Part 3), in which the state is set to "Downloaded".
+The "Download" button then calls meshUpdater.UpdateModels() (`Part 3: Downloading`_), in which the state is set to "Downloaded".
 
 
 After everything downloaded is imported in Unity, and state is set to "Downloaded", you can click the button "Create Prefab",
-this will call meshUpdater.CreatePrefab() (Part 4).
+this will call meshUpdater.CreatePrefab() (`Part 4: Create Prefab`_).
 
 
 Part 2: Scanning
 ----------------
 
-MehsUpdater.Scan()
+MehsUpdater.Scan():
+First of all the scan function creates a local array scanArguments, filling it with {"python", m_PathToScanScript, Github_Repository}
+This is used to RunCommandLine(scanArguments), which starts ModelScanner.py.
+
 ModelScanner.py
 
 Part 3: Downloading

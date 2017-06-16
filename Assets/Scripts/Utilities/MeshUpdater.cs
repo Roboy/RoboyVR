@@ -121,6 +121,9 @@ public class MeshUpdater : MonoBehaviour {
         }
         // get file content of format title;url
         string[] scanContent = File.ReadAllLines(pathToScanFile);
+
+        File.Delete(pathToScanFile);
+
         Dictionary<string, string> tempURLDic = new Dictionary<string, string>();
         foreach (var line in scanContent)
         {
