@@ -1,5 +1,4 @@
 User's Manual
-
 =============
 
 **Setup Ubuntu side**
