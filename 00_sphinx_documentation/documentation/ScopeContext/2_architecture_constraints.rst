@@ -23,8 +23,8 @@ Architecture Constraints
   :align: right
 
   "ROSBridge", "It connects the simulation on Ubuntu with Unity on Windows."
-  "Vuforia", "This interface connects the HTC Vive with Unity."
   "steamVR", "We use this interface to use the API of the HTC Vive."
+  "ZED", "This interface connects the ZED (Roboy's Eyes) with Unity."
 
 .. csv-table:: Operating System Constraints
   :header: "Constraint Name", "Description"
