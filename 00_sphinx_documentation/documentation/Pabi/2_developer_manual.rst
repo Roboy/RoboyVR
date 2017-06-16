@@ -51,7 +51,7 @@ The main functions of the plugin are:
 4) OnUpdate: Is called every gazebo update frame. Therefore we have to zero out the forces of PaBi and update the joint angles of the
 actual model.
 
-*Note: Change the following line in OnUpdate if you want PaBi to be able to fall down:
+Change the following line in OnUpdate if you want PaBi to be able to fall down:
 
 .. code:: bash
 
