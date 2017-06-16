@@ -34,7 +34,6 @@ Starting Unity
 
 
 .. figure:: images/steamvr_error.*
-	:target: https://www.youtube.com/watch?v=qf6hLhrHtqg
     :align: center
     :alt: SteamVR Error
 
