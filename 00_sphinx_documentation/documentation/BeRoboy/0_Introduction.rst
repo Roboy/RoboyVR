@@ -5,7 +5,7 @@ Introduction
    :align: center
    :alt: BeRoboy™
          
-   The unity scene contains a 3D menu from which the user can select different views.
+   BeRoboy™ is the next thing in the world of virtual reality robots.
    
    
 

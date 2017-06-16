@@ -25,7 +25,7 @@ Starting Unity
 2. Inside unity select the RoboyVR scene.
 3. In the ROSBridge (located in the hierarchy) type in the correct IP of your Ubuntu machine.
 
-.. figure:: documentation/images/rosbridge.*
+.. figure:: rosbridge.*
     :align: center
     :alt: ROS Bridge
 
