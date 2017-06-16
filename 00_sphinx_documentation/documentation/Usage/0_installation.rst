@@ -2,7 +2,7 @@ Installation
 =============
 
 Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
-regarding roboy's movement are then sent through a ROSbridge(e.g. messages) towards Unity.  
+regarding roboy's movement are then sent through a ROSBridge(e.g. messages) towards Unity.  
 In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
 With the help of a VR-Headset you can watch roboy move around in a virtual space.
 
@@ -26,73 +26,19 @@ Part 1: Setup Virtualbox with Ubuntu
 Part 2: Simulation Setup
 -------------------------------------------
 
-1. Open Terminal and install the following packages
+Follow the setup instructions on the main `Roboy repository <https://github.com/Roboy/Roboy>`_
+*Note: the setup.sh of gazebo is in /usr/share/gazebo-7/setup.sh and not in ../gazebo-7.0/..*
+*Note: Export the gazebo paths AFTER the catkin_make because the devel directory is just created at this command*
 
-.. code:: bash
-
-  sudo add-apt-repository -y ppa:letrend/libcmaes
-  sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-  sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 0xB01FA116
-  sudo apt-get update
-  sudo apt install libcmaes
-  sudo apt-get install ros-kinetic-desktop-full
-  sudo apt install ros-kinetic-controller-interface ros-kinetic-controller-manager ros-kinetic-gazebo-ros-control ros-kinetic-ros-controllers
-  sudo apt install ros-kinetic-ecl-geometry
-  sudo apt install libncurses-dev
-  sudo apt-get install catkin
-  sudo apt-get install git
-
-2. Clone the git repository into a ros working space
-
-.. code:: bash
-
-  mkdir -p ~/ros_ws/src
-  cd ~/ros_ws/src
-  git clone https://github.com/Roboy/roboy-ros-control --recursive
-
-3. Get additional dependencies
-
-.. code:: bash
-
-  cd roboy-ros-control
-  git submodule update --init --recursive
-  cd src/flexrayusbinterface
-  sudo dpkg -i lib/libftd2xx_1.1.12_amd64.deb
-
-4. Source the setup.bash
-
-.. code:: bash
-
-  source /opt/ros/kinetic/setup.bash
-  cd ~/ros_ws
-  catkin_make
-
-5. OPTIONAL: add this to your bash script (otherwise you have to type this commands in every new terminal window)
-
-.. code:: bash
-
-  echo 'source /opt/ros/kinetic/setup.bash' >> ~/.bashrc
-  echo 'source ~/ros_ws/devel/setup.bash' >> ~/.bashrc
-
-6. Create symlinks for gazebo to your roboy models
-
-.. code:: bash
-
-  cd ~
-  mkdir -p ~/.gazebo/models
-  ln -s ~/ros_ws/src/roboy-ros-control/src/roboy_models/legs_with_upper_body ~/.gazebo/models/
-
-7. Install rosbridge
-
-.. code:: bash
-
-  sudo apt install ros-kinetic-rosbridge-suite
+There may also occur an error that says that you need to install the OpenPowerlink stack library. In that case
+follow the instructions on the `OpenPowerlink Homepage <http://openpowerlink.sourceforge.net/doc/2.2/2.2.0/d1/dde/page_build_stack.html>`_
+The OpenPowerlink folder lies in the *roboy_powerlink* folder.
   
 Part 3: Unity Setup
 -----------------------
 
 1. Download Unity
-  - (latest working version with roboyVR is 5.6.0: https://unity3d.com/de/get-unity/download/archive)
+  - (latest working version with roboyVR is 5.6.1: https://unity3d.com/de/get-unity/download/archive)
 
 2. Install Unity
   - During the install process make sure to check also the standalone build option.  
