@@ -21,7 +21,7 @@ a fully automated model and world loading script
 Part 1: GUI elements
 --------------------
 
-MeshUpdaterEditor.cs:
+MeshUpdaterEditor.cs: 
 Custom editor script to be able to call functions from meshUpdater at edit time through buttons.
 This is the GUI you use when updating a model. The GUI has different states, so the user can't skip necessary steps.
 
