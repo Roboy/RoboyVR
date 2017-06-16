@@ -60,7 +60,55 @@ actual model.
 PaBiDanceSimulatorNode
 ----------------------
 
-wrwrwer
+This ROS node creates four publishers for the joints of PaBi. In the Main loop it publishes new joint angles.
+To make the movement smooth the published joint angles are changed gradually in small steps from -90° to 0° and back.
+Therefore we have two functions. One to start the animation:
 
+.. code:: c++
 
+  void PaBiDanceSimulator::startDanceAnimation()
+  {
+      while(ros::ok())
+      {
+	  if(adjustPoseGradually(true))
+	      adjustPoseGradually(false);
+      }
+  }
+
+And another to adjust the pose:
+
+.. code:: c++
+
+  bool PaBiDanceSimulator::adjustPoseGradually(bool goUp)
+  {
+      float stepSize = 1;
+      int sleeptime = 10000;
+      // adjusts the joint angles to -90° in 90 * stepSize * 0.01 seconds
+      if(goUp)
+      {
+          float currentAngle = 0;
+          while(currentAngle > -90)
+          {
+              publishAngles(currentAngle);
+              usleep(sleeptime);
+              currentAngle -= stepSize;
+          }
+      }
+      else
+      {
+          float currentAngle = -90;
+          while(currentAngle < 0)
+          {
+              publishAngles(currentAngle);
+              usleep(sleeptime);
+              currentAngle += stepSize;
+          }
+      }
+      return true;
+  }
+
+Unity Scene
+-----------
+
+In Unity we have the ROSBridge which connects to the ROSBridge on the simulation side. On the PaBi legs we have a ROSObject attached
 
