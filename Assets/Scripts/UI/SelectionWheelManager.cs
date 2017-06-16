@@ -4,17 +4,43 @@ using UnityEngine.UI;
 
 public class SelectionWheelManager : MonoBehaviour
 {
-    private bool visible = false; /* Is selection wheel visible */
-    private bool disabling = false; /* before disabling wheel:was it moved again? Should it still be disabled?*/
-    private double curSpin = 0; /* rotational speed, changed and updated over time*/
-    private float curAngle = 0;/* current angle around z axis (local)*/
-    private int elems; /* number of text elems in selection wheel*/
-    private int selected = -1; /* which text elem is selected*/
-    public float speed; /* factor to multiply curSpin with, allows manual settings*/
-    public float threshold; /* Spin below that point set 0*/
-    public int selectIndex = 1; /* Specify where selected item should be positioned (clockwise, number of elem on circle)*/
-    public Canvas canvas; /* canvas with selection wheel, en- and disabled depending on wheel */
-    
+    /// <summary>
+    ///  Is selection wheel visible
+    /// </summary>
+    private bool visible = false;
+    /// <summary>
+    /// before disabling wheel:was it moved again? Should it still be disabled?
+    /// </summary>
+    private bool disabling = false;
+    /// <summary>
+    /// Radius of this object to rotate text on circle around centre
+    /// </summary>
+    private float radius;
+    /// <summary>
+    /// Overall angle of rotation around z axis, needed for selection.
+    /// </summary>
+    private float curAngle = 0;
+    /// <summary>
+    /// number of text elems in selection wheel
+    /// </summary>
+    private int elems;
+    /// <summary>
+    /// currently selected text elem by index.
+    /// </summary>
+    private int selected = -1;
+    /// <summary>
+    /// Index of controller to use for selection wheel (0/1)
+    /// </summary>
+    public int controllerIndex = 0;
+    /// <summary>
+    /// Specify where selected item should be positioned (clockwise, index in range of number of elem on circle)
+    /// </summary>
+    public int selectIndex = 1;
+    /// <summary>
+    /// canvas with selection wheel, en- and disabled depending on wheel 
+    /// </summary>
+    public Canvas canvas;
+
     #region helpers
     /// <summary>
     /// x mod y in a function, as normal % just returns remainder and does not work for negative values.
@@ -22,7 +48,7 @@ public class SelectionWheelManager : MonoBehaviour
     /// <param name="x">first operand</param>
     /// <param name="y">second operand</param>
     /// <returns></returns>
-    int Mod(int x, int y)
+    private int Mod(int x, int y)
     {
         return (x % y + y) % y;
     }
@@ -30,7 +56,7 @@ public class SelectionWheelManager : MonoBehaviour
     /// <summary>
     /// Enables canvas containing wheel to be displayed
     /// </summary>
-    void EnableCanvas()
+    private void EnableCanvas()
     {
         if (canvas) { 
             canvas.GetComponent<Canvas>().enabled = true;
@@ -41,10 +67,11 @@ public class SelectionWheelManager : MonoBehaviour
     /// Coroutine to wait shortly (0.5s) and disable canvas if user did not give new input meanwhile.
     /// </summary>
     /// <returns></returns>
-    IEnumerator DisableCanvas()
+    private IEnumerator DisableCanvas()
     {
         Debug.Log("disable gunction called...");
         yield return new WaitForSeconds(0.5f);
+        
         if (disabling) //if disable still desired (whilst waiting further user input might have changed that)
         {
             if (canvas)
@@ -59,18 +86,18 @@ public class SelectionWheelManager : MonoBehaviour
     /// <summary>
     /// Detects the currently selected item fom the selection wheel using the current angle and highlights it.
     /// </summary>
-    void HighlightSelection()
+    private void HighlightSelection()
     {
         int step = (360 / elems);
-        int tmp = elems - (int)(curAngle) / step - 1;// map selection from 0 - (elems -1)
-        tmp = Mod((tmp - selectIndex), elems); // select the desired item clockwise
+        int tmp = elems -(int)(curAngle + step/2) / step -1;// map selection from 0 - (elems -1)
+        tmp = Mod((tmp + selectIndex), elems); // select the desired item clockwise
         if (tmp == selected)
         {
             return;
         }
         selected = tmp;
         Debug.Log("selection: " + selected);
-        VRUILogic.GetInstance().SelectedModeChanged(selected);
+        VRUILogic.Instance.SelectedModeChanged(selected);
         Text[] texts = GetComponentsInChildren<Text>();
         for (int i = 0; i < texts.Length; i++)
         {
@@ -87,35 +114,118 @@ public class SelectionWheelManager : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// returns a Vector two which is rotated by a degrees around the z axis
+    /// </summary>
+    /// <param name="a">anlge in range of 0 - 360°</param>
+    /// <returns>rotated vector in unit size</returns>
+    private Vector2 AngleToVector(float a)
+    {
+        a = Mathf.PI * a / 180;
+        return new Vector2(Mathf.Cos(a) , Mathf.Sin(a));
+    }
+
+    /// <summary>
+    /// returns current angle given the vector
+    /// </summary>
+    /// <param name="v">vector</param>
+    /// <returns>angle in degrees</returns>
+    private float VectorToAngle(Vector2 v)
+    {
+        if(v.x == 0)
+        {
+            if (v.y > 0) {
+                return 90;
+            }
+            else
+            {
+                return 270;
+            }
+        }
+        float temp = Mathf.Atan(v.y / v.x) * 180 / Mathf.PI;
+        if(v.x <0)
+        {
+            return 180 + temp;
+        }
+        // TODOOOOOO
+        if(temp < 0)
+        {
+            return temp + 360;
+        }
+        return temp;
+    }
+
+
+    /// <summary>
+    /// Returns the angle within 0-360°
+    /// </summary>
+    /// <param name="a"></param>
+    /// <returns></returns>
+    private float AdjustAngle(float a)
+    {
+        if (a > 360)
+        {
+            a -= 360;
+        }
+        if (a < 0)
+        {
+            a += 360;
+        }
+        return a; 
+    }
+
+
+    private bool TurningClockwise(Vector2 prev, Vector2 cur)
+    {
+        if ((cur.x - prev.x) < 0) // if going towards the left
+        {
+            if (cur.y > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        if (cur.y > 0)
+        {
+            return true;
+        }
+        return false;
+    }
     #endregion
+
 
     /// <summary>
     /// Initialize Wheel: Place each child (text) elem evenly on wheel. 
     /// </summary>
     void Start()
     {
-        Vector2 radius;
-        RectTransform t = GetComponent<RectTransform>();
-        radius.x = t.rect.x * t.localScale.y; //assume square as base
-        radius.y = 0;
-        Component[] children = gameObject.GetComponentsInChildren(typeof(RectTransform));
+        Component[] children;
+        curAngle = 0;
+        radius = GetComponent<RectTransform>().rect.width; //assuming width and height identical 
+        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
         elems = children.Length - 1; //ignore this elem
         if (selectIndex > elems) selectIndex = selectIndex % elems; //stay within boundaries, not necessarily needed though
         for (int i = 0; i < children.Length; i++)
         {
-            Transform transform = (Transform)children[i];
-            if (transform.gameObject != gameObject) //ignore this elem
+            RectTransform t = (RectTransform)children[i];
+            if (t.gameObject != gameObject) //ignore this elem
             {
                 // define point on outer circle called offset,start from 0 as 12 o'clock on the circle
-                Vector2 offset = Quaternion.Euler(0, 0, 360 / elems * (i - 1)) * radius; 
+          
+                Vector2 offset = AngleToVector(360/(elems) * (i-1));
+                offset *= radius; //apply length
                 //move elem to that position on circle
-                transform.Translate(offset.x, offset.y, 0);
+                Debug.Log("offset unit size: " + offset);
+                t.localPosition = new Vector3(offset.x, offset.y, 0);
             }
         }
         //counter turn elem to keep text straight
         if (canvas)
         {
-            canvas.GetComponent<Canvas>().enabled = false;
+            //canvas.GetComponent<Canvas>().enabled = false;
             visible = false;
         }
         HighlightSelection();
@@ -130,9 +240,16 @@ public class SelectionWheelManager : MonoBehaviour
         // update the current spin with the mouse wheel
         double friction;
         Component[] children;
-        float value = Input.GetAxis("Mouse ScrollWheel");
+        Vector3 newPos;
+        bool touched = VRUILogic.Instance.getTouchedInfo(controllerIndex);
+        Vector2 curPos = VRUILogic.Instance.getTouchPosition(controllerIndex);
+        /* If later spin desired
+        float value = Vector2.Distance(curPos,prevPos);
+        if (!TurningClockwise(prevPos, curPos)) value *= -1;
         curSpin += value * speed * Time.deltaTime;
-        if (curSpin > -threshold && curSpin < threshold && value == 0)
+        
+        //Visibility settings
+        if (curSpin > -threshold && curSpin < threshold && !touched) //if too slow
         {
             curSpin = 0;
             if (visible  && !disabling) //prevent from calling multiple disable canvases if we're already disabling
@@ -140,25 +257,33 @@ public class SelectionWheelManager : MonoBehaviour
                 StartCoroutine(DisableCanvas());
                 disabling = true;
             }
-        }
-        if (value != 0)
+        }*/
+        if (touched) //if input found
         {
             disabling = false; //if change occured whilst waiting for disable, do not disable
             if (!visible) EnableCanvas();
+            curAngle = VectorToAngle(curPos);
+            Debug.Log("Cur ANgle: " + curAngle);
         }
-        curAngle = transform.rotation.eulerAngles.z;
-        friction = curSpin * Time.deltaTime;
-        curSpin -= (float)friction;
-        // finally, do the actual rotation
-        transform.Rotate(Vector3.back * (float)curSpin, Space.World);
-        //counter rotate children
+        else //only spin if no touch anymore
+        {
+            DisableCanvas();
+            /*calculation part
+            friction = curSpin * Time.deltaTime;
+            curSpin -= (float)friction;
+            curAngle = AdjustAngle(curAngle + (float)curSpin);*/
+        }
+
+        //rotate children (each text)
         children = gameObject.GetComponentsInChildren(typeof(RectTransform));
         for (int i = 0; i < children.Length; i++)
         {
             Transform transform = (Transform)children[i];
             if (transform.gameObject != gameObject)
             {
-                transform.Rotate(Vector3.back * (float)(-curSpin), Space.Self);
+                float childangle = AdjustAngle(curAngle + (360 / elems)*i);
+                newPos = radius * AngleToVector(childangle); //adjust position using new point on circle
+                children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
             }
         }
         HighlightSelection();

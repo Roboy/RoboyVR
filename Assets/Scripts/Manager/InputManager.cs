@@ -100,7 +100,13 @@ public class InputManager : Singleton<InputManager> {
         if (m_SelectorTool.gameObject.activeInHierarchy)
         {
             m_SelectorTool.GetRayFromController();
+           
         }
+        ulong mask =  (ulong) Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
+        VRUILogic.Instance.SetTouchData(0, m_SelectorTool.Controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad));
+        VRUILogic.Instance.SetTouchData(1, m_GUIController.Controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad));
+        VRUILogic.Instance.SetTouched(0, m_SelectorTool.Controller.GetTouch(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad));
+        VRUILogic.Instance.SetTouched(1, m_GUIController.Controller.GetTouch(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad));
     }
 
     /// <summary>
