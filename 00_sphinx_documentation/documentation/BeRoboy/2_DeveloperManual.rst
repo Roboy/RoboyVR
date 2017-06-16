@@ -9,7 +9,48 @@ So follow me if you want to bring the BeRoboy™ development forth.
 
 Gazebo Simulation
 -----------------
-bla
+For the gazebo part you need to create a launch .world file. When this file is launched it automa-
+tically loads the world (with all the surrounding objects) and the version of roboy you have chosen.
+
+**Example for a world (camera.world):**
+
+<world name="default">
+
+        <!-- A ground plane -->
+        <include>
+            <uri>model://ground_plane</uri>
+        </include>
+	<!--PabiRoboy -->
+	<include>
+	    <uri>model://legs_with_upper_body</uri>
+	</include>
+	<!--Sun -->
+        <include>
+	    <uri>model://sun</uri>
+	</include>
+
+
+        <!-- Focus camera on tall pendulum -->
+        <gui fullscreen='0'>
+            <camera name='user_camera'>
+                <pose>4.927360 -4.376610 3.740080 0.000000 0.275643 2.356190</pose>
+                <view_controller>orbit</view_controller>
+            </camera>
+        </gui>
+</world>
+
+**Example for the launch file:**
+
+<launch>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+	<arg name="world_name" value="$(find roboy_simulation)/worlds/camera.world"/>
+	<arg name="paused" value="false"/>
+	<arg name="use_sim_time" value="true"/>
+	<arg name="gui" value="true"/>
+	<arg name="headless" value="false"/>
+    	<arg name="debug" value="false"/>
+    </include>
+</launch>
 
 Model Configuration
 -------------------
@@ -21,11 +62,11 @@ POV to maximize the POV experience. To implement such a thing, just open the mod
 specific model you want to have in the simulation and add the following section.
 
 
-  <sensor type="camera" name="camera1">
-	      <update_rate>25.0</update_rate>
+<sensor type="camera" name="camera">
+	      <update_rate>1.0</update_rate>
 	      <camera name="head">
 		<pose>0 1.25 0 -1.5707963267948966 -1.5707963267948966 0</pose>
-		<horizontal_fov>1.3962634</horizontal_fov>
+		<horizontal_fov>1.6962634</horizontal_fov>
 		<image>
 		  <width>640</width>
 		  <height>480</height>
@@ -47,7 +88,7 @@ specific model you want to have in the simulation and add the following section.
 	      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
 		<alwaysOn>true</alwaysOn>
 		<updateRate>0.0</updateRate>
-		<cameraName>rrbot/camera1</cameraName>
+		<cameraName>roboy/camera</cameraName>
 		<imageTopicName>image_raw</imageTopicName>
 		<cameraInfoTopicName>camera_info</cameraInfoTopicName>
 		<frameName>camera_link</frameName>
