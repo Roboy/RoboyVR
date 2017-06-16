@@ -14,7 +14,9 @@ tically loads the world (with all the surrounding objects) and the version of ro
 
 **Example for a world (camera.world):**
 
-<world name="default">
+.. code:: bash
+
+	<world name="default">
 
         <!-- A ground plane -->
         <include>
@@ -39,9 +41,12 @@ tically loads the world (with all the surrounding objects) and the version of ro
         </gui>
 </world>
 
+
 **Example for the launch file:**
 
-<launch>
+.. code:: bash
+
+	<launch>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
 	<arg name="world_name" value="$(find roboy_simulation)/worlds/camera.world"/>
 	<arg name="paused" value="false"/>
@@ -52,6 +57,7 @@ tically loads the world (with all the surrounding objects) and the version of ro
     </include>
 </launch>
 
+
 Model Configuration
 -------------------
 If you want to see a camera feed from a gazebo simulation you need to have a *camera sensor* that
@@ -61,8 +67,9 @@ commended to attach this sensor to a position close to the models head because y
 POV to maximize the POV experience. To implement such a thing, just open the model.sdf of the
 specific model you want to have in the simulation and add the following section.
 
+.. code:: bash
 
-<sensor type="camera" name="camera">
+	<sensor type="camera" name="camera">
 	      <update_rate>1.0</update_rate>
 	      <camera name="head">
 		<pose>0 1.25 0 -1.5707963267948966 -1.5707963267948966 0</pose>
