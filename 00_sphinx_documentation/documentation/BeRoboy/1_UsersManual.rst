@@ -31,6 +31,11 @@ Starting Unity
 
 4. Start the scene.
 5. SteamVR should also start, if this throws errors (like "SteamVR unresponsive, not working, etc."), simply restart it.
+
+.. figure:: images/steamvr_error.*
+    :align: center
+    :alt: SteamVR Error
+
 6. When the scene properly starts, you can choose which controller should hold which tools.
 
 .. figure:: images/controller_selection_2.*
@@ -41,9 +46,39 @@ Starting Unity
 
 .. figure:: images/view_selection_pointing.*
     :align: center
-    :alt: ROS Bridge
+    :alt: View Selection
 
 8. Enjoy your stay!
+
+
+View Scenarios
+--------------
+You can choose between the following four view scenarios, each of the offering different things to explore!
+
+.. figure:: images/beroboy_simulation.*
+    :align: center
+    :alt: Simulation view
+	
+	Take control over the simulation Roboy and see what he does in gazebo.
+
+.. figure:: images/beroboy_zed.*
+    :align: center
+    :alt: ZED view
+	
+	Look through the eyes of the real Roboy and control him in real life.
+
+.. figure:: images/beroboy_observer.*
+    :align: center
+    :alt: Observer view
+	
+	Sit back, relax, take a look at Roboy from a safe distance and watch him do some stuff.
+
+.. figure:: images/beroboy_vr.*
+    :align: center
+    :alt: VR view
+	
+	Slip into the role of the true VR Roboy, cause mayhem or look cute, you decide.
+
 
 
 Troubleshooting
