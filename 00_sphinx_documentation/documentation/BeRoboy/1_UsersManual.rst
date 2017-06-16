@@ -32,6 +32,7 @@ Starting Unity
 4. Start the scene.
 5. SteamVR should also start, if this throws errors (like "SteamVR unresponsive, not working, etc."), simply restart it.
 
+
 .. figure:: images/steamvr_error.*
 	:target: https://www.youtube.com/watch?v=qf6hLhrHtqg
     :align: center
