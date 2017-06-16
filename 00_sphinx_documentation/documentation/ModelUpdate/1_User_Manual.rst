@@ -1,4 +1,4 @@
-Model Updater
+User's Manual
 =============
 
 

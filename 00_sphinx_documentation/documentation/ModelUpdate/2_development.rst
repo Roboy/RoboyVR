@@ -1,9 +1,9 @@
-Model Updater
-=============
+Developer's Manual
+==================
 
 
-Part 0: What is it?
--------------------
+Part 0: Summary
+---------------
 
 
 .. figure:: images/ModelUpdate.*
