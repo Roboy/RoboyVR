@@ -125,6 +125,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <param name="msg">JSON msg containing roboy pose.</param>
     public void ReceiveMessage(ImageMsg image)
     {
+        //TODO: Make two functions, one for simulation receive image and the other for receive image from zed
+        //to differentiate between the incoming images.
         //Debug.Log("Received message");
         RefreshImage(image);
     }
