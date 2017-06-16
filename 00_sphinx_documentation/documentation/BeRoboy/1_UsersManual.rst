@@ -53,31 +53,34 @@ Starting Unity
 
 View Scenarios
 --------------
-You can choose between the following four view scenarios, each of the offering different things to explore!
+You can choose between the following four view scenarios, each of them offering different things to explore!
 
 .. figure:: images/beroboy_simulation.*
-    :align: center
-    :alt: Simulation view
-	
-	Take control over the simulation Roboy and see what he does in gazebo.
+   :align: center
+   :alt: Simulation view
+         
+   Take control over the simulation Roboy and see what he does in gazebo.
+
 
 .. figure:: images/beroboy_zed.*
-    :align: center
-    :alt: ZED view
-	
-	Look through the eyes of the real Roboy and control him in real life.
+   :align: center
+   :alt: ZED view
+         
+   Look through the eyes of the real Roboy and control him in real life.
 
+   
 .. figure:: images/beroboy_observer.*
-    :align: center
-    :alt: Observer view
+   :align: center
+   :alt: Observer view
+         
+   Sit back, relax, take a look at Roboy from a safe distance and watch him do some stuff.
+   
 	
-	Sit back, relax, take a look at Roboy from a safe distance and watch him do some stuff.
-
 .. figure:: images/beroboy_vr.*
-    :align: center
-    :alt: VR view
-	
-	Slip into the role of the true VR Roboy, cause mayhem or look cute, you decide.
+   :align: center
+   :alt: VR view
+         
+   Slip into the role of the true VR Roboy, cause mayhem or look cute, you decide.
 
 
 
