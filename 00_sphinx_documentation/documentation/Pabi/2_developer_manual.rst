@@ -14,11 +14,11 @@ The main part on the Gazebos site is the plugin *ForceJointPlugin*. The location
 
 The plugin does the following. 
 
-1) It loads the model into Gazebo
-2) It starts a topic with type Float32 as message type for every revolute joint of the PaBi model
-3) It subscribes to the created topics
-4) It creates a publisher which publishes the pose of PaBi so we can subscribe to the topic on the Unity side
-5) It makes PaBi stationary so he does not fall down when the legs are not touching the ground
+1) It loads the model into Gazebo.
+2) It starts a topic with type Float32 as message type for every revolute joint of the PaBi model.
+3) It subscribes to the created topics.
+4) It creates a publisher which publishes the pose of PaBi so we can subscribe to the topic on the Unity side.
+5) It makes PaBi stationary so he does not fall down when the legs are not touching the ground.
 
 The topic names have a special structure:
 
@@ -26,7 +26,7 @@ The topic names have a special structure:
 
   /roboy/pabi_angle/<joint_name>
 
-Meaning at the current state of the model there are four topics with Float32 message type:
+At the current state of the model there are four topics with Float32 message type:
 
 .. code:: bash
 
@@ -38,6 +38,7 @@ Meaning at the current state of the model there are four topics with Float32 mes
 The pose is published with message type *roboy_communication_simulation::Pose* the topic:
 
 .. code:: bash
+
   /roboy/pabi_pose
 
 If you want PaBi to be able to fall down change the *OnUpdate* method in the plugin.
