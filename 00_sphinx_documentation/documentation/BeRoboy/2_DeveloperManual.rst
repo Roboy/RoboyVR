@@ -33,7 +33,7 @@ for example it would start it in a not paused stated ("paused" set to "false").
 
 
 **Example for a world (camera.world) file:**
-In this case the world file contains a ground plane and the legs with upper body roboy model.
+In this case the world file contains a ground plane, the legs with upper body roboy model and a light source, a sun.
 
 .. code:: bash
 
