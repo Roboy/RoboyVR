@@ -8,8 +8,9 @@ The Scene can be run in the Unity Editor. Simply double click on the UIScene, Un
 
 .. figure:: images/unity_editor.*
     :align: center
-    :alt: Unity Editor
+    :alt: Image could not be loaded
     
+    Unity Editor
     
 SteamVR
 -------
