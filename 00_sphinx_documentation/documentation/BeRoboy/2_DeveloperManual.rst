@@ -195,7 +195,7 @@ fluently switch from one view to another. This manager is responsible for the pr
 after a button on the *3D selection menu* is pressed. When a certain button is invoked by
 onClick() the state of various different game objects needs to manipulated (mostly enabling or disabling them).
 
-.. figure:: images/be_roboy_selection_menu.
+.. figure:: images/be_roboy_selection_menu.*
    :align: center
    :alt: Selection menu in 3D
          
