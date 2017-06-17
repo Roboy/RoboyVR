@@ -8,7 +8,12 @@ needs to be aware of.
 Use Case I
 ----------
 
-Sample goes here.
+.. figure:: images/usecase_view_selection.*
+   :align: center
+   :alt: Usecase view Selection
+         
+   The user first switches to the simulation view, but gets all exhausted and switches to
+   the relaxing observer view mode.
 
 Use Case II
 -----------
