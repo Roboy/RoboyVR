@@ -16,7 +16,7 @@ In the future it will be possible to control time, so to rewind the simulation a
    
    Press any of the controller to set it respectively.
    
-**To tired to walk? Just teleport!**
+**Too tired to walk? Just teleport!**
 
 .. figure:: images/teleporting.*
    :alt: Teleport to a position of your liking.

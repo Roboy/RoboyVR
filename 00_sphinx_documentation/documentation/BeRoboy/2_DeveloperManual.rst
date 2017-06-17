@@ -115,4 +115,70 @@ the update rates is crucial to how many images are sent in one second (25 means,
 
 Unity Scene
 -----------
-bli
+
+In Unity you need to establish a Rosbridge in order to be able to communicate with the various types of Roboy,
+e.g. the simulation one or the real one. Both of them are sending their camera feed as Image messages of the 
+type sensor_msgs/Image. Therefore you need also a suiting subscriber in Unity to be able to receive the messages
+correctly and parse them afterwards in the right manner.
+
+**Image message in Unity**
+
+.. code:: bash
+	namespace ROSBridgeLib
+	{
+		namespace sensor_msgs
+		{
+			public class ImageMsg : ROSBridgeMsg
+			{				
+				...
+				...
+
+				public ImageMsg(JSONNode msg){...}
+
+				public ImageMsg(HeaderMsg header, byte[] data){...}
+
+				public byte[] GetImage(){...}
+
+				public static string GetMessageType(){...}
+
+				public override string ToString(){...}
+				public override string ToYAMLString(){...}
+			}
+		}
+	}
+	
+	
+**Image Subscriber in Unity**
+
+.. code:: bash
+
+	namespace ROSBridgeLib
+	{
+		public class RoboyCameraSubscriber : ROSBridgeSubscriber
+		{		
+			public new static string GetMessageTopic()
+			{
+				return either "/roboy/camera/image_raw" "/zed/rgb/image_raw_color"
+			}
+
+			public new static string GetMessageType()
+			{
+				return "sensor_msgs/Image";
+			}
+
+			public new static ROSBridgeMsg ParseMessage(JSONNode msg)
+			{
+				//ImageMsg from sensor messages lib
+				return new ImageMsg(msg);
+			}
+
+			public new static void CallBack(ROSBridgeMsg msg)
+			{
+				ImageMsg image = (ImageMsg)msg;
+				//ReceiveMessage respectively either for the simulation or zed image
+				BeRoboyManager.Instance.ReceiveMessage(image);
+			}
+
+			
+		}
+	}
