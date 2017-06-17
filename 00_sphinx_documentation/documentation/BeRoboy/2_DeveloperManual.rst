@@ -9,10 +9,31 @@ So follow me if you want to bring the BeRoboy™ development forth.
 
 Gazebo Simulation
 -----------------
-For the gazebo part you need to create/ edit a launch .world file. When this file is launched it automa-
-tically loads the world (with all the surrounding objects) and the version of roboy you have chosen.
+For the gazebo part you need to create/ edit a launch/ world file(s). When the launch file is started it automa-
+tically loads the world (with all the surrounding objects) that has been specified and the version of roboy you have chosen.
+
+
+**Example for a launch file:**
+This launch file would load camera.world and set also some start parameters for the gazebo simulation,
+for example it would start it in a not paused stated ("paused" set to "false").
+
+.. code:: bash
+
+	<launch>
+		<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(find roboy_simulation)/worlds/camera.world"/>
+		<arg name="paused" value="false"/>
+		<arg name="use_sim_time" value="true"/>
+		<arg name="gui" value="true"/>
+		<arg name="headless" value="false"/>
+			<arg name="debug" value="false"/>
+		</include>
+	</launch>
+
+
 
 **Example for a world (camera.world) file:**
+In this case the world file contains a ground plane and the legs with upper body roboy model.
 
 .. code:: bash
 
@@ -41,21 +62,6 @@ tically loads the world (with all the surrounding objects) and the version of ro
         </gui>
 	</world>
 
-
-**Example for the launch file:**
-
-.. code:: bash
-
-	<launch>
-		<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" value="$(find roboy_simulation)/worlds/camera.world"/>
-		<arg name="paused" value="false"/>
-		<arg name="use_sim_time" value="true"/>
-		<arg name="gui" value="true"/>
-		<arg name="headless" value="false"/>
-			<arg name="debug" value="false"/>
-		</include>
-	</launch>
 
 
 Model Configuration

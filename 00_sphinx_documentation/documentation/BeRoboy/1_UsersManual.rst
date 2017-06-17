@@ -37,7 +37,7 @@ Starting Unity
     :align: center
     :alt: SteamVR Error
 
-6. When the scene properly starts, you can choose which controller should hold which tools.
+6. When the scene starts properly, you can choose which controller should hold which tools.
 
 .. figure:: ../images/controller_selection_2.*
     :align: center

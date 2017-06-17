@@ -5,7 +5,7 @@ Introduction
    :align: center
    :alt: BeRoboy™
          
-   BeRoboy™ is the next thing in the world of virtual reality robots.
+   BeRoboy™ is the next big thing in the world of virtual reality robots.
    
    
 
