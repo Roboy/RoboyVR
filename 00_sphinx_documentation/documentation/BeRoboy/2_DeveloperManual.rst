@@ -9,7 +9,7 @@ So follow me if you want to bring the BeRoboy™ development forth.
 
 Gazebo Simulation
 -----------------
-For the gazebo part you need to create a launch .world file. When this file is launched it automa-
+For the gazebo part you need to create/ edit a launch .world file. When this file is launched it automa-
 tically loads the world (with all the surrounding objects) and the version of roboy you have chosen.
 
 **Example for a world (camera.world) file:**
