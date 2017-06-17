@@ -66,7 +66,7 @@ You can choose between the following four view scenarios, each of them offering 
 
 **II. Real Roboy (ZED)**
  
-.. figure:: images/beroboy_zed.*
+.. figure:: images/beroboy_z3d.*
    :align: center
    :alt: ZED view
          
