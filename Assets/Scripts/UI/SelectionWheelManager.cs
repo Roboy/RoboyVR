@@ -104,13 +104,13 @@ public class SelectionWheelManager : MonoBehaviour
             if (selected != i)
             {
                 texts[i].fontStyle = FontStyle.Normal;
-                texts[i].color = Color.gray;
+                texts[i].color = Color.black;
 
             }
             else
             {
                 texts[i].fontStyle = FontStyle.Bold;
-                texts[i].color = Color.black;
+                texts[i].color = Color.cyan;
             }
         }
     }
