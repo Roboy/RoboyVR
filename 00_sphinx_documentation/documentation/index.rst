@@ -110,7 +110,7 @@ Contents:
 .. toctree::
   :maxdepth: 1
   :glob:
-  :caption: PaBiVR
+  :caption: PaBi VR
   
   Pabi/*
   
