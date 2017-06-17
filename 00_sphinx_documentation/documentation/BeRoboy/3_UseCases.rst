@@ -5,8 +5,8 @@ The following use cases should demonstrate how BeRoboy™ deals with certain scena
 it should show further which procedure calls are taking in the scene, that a developer
 needs to be aware of.
 
-Use Case I
-----------
+Switching between views
+-----------------------
 
 .. figure:: images/usecase_view_selection.*
    :align: center
