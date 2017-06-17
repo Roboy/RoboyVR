@@ -8,9 +8,9 @@ public class ViewSelectionManager : MonoBehaviour {
 
     public Canvas InstructionCanvas;
     public Image BackgroundImage;
-    public Image GazeboImage;
+    public RawImage GazeboImage;
     public Image HtcImage;
-    public Image ZedImage;
+    public RawImage ZedImage;
 
 
     /// <summary>
@@ -40,14 +40,12 @@ public class ViewSelectionManager : MonoBehaviour {
         TurnTrackingOn();
 
         //Turn Canvas On/Off and enable the image that should be seen.
-        InstructionCanvas.enabled = true;
-        BackgroundImage.enabled = false;
-        GazeboImage.enabled = true;
-        HtcImage.enabled = false;
-        ZedImage.enabled = false;
+        InstructionCanvas.gameObject.SetActive(true);
+        BackgroundImage.gameObject.SetActive(false);
+        GazeboImage.gameObject.SetActive(true);
+        HtcImage.gameObject.SetActive(false);
+        ZedImage.gameObject.SetActive(false);
         
-
-
     }
     
     /// <summary>
@@ -55,14 +53,17 @@ public class ViewSelectionManager : MonoBehaviour {
     /// </summary>
     public void SwitchToZEDView()
     {
+        //Turn tracking scripts On/Off
         BeRoboyManager.Instance.enabled = true;
         TurnTrackingOff();
-        InstructionCanvas.enabled = true;
-        BackgroundImage.enabled = false;
-        GazeboImage.enabled = false;
-        HtcImage.enabled = false;
-        ZedImage.enabled = true;
 
+        //Turn Canvas On/Off and enable the image that should be seen.
+        InstructionCanvas.gameObject.SetActive(true);
+        BackgroundImage.gameObject.SetActive(false);
+        GazeboImage.gameObject.SetActive(false);
+        HtcImage.gameObject.SetActive(false);
+        ZedImage.gameObject.SetActive(true);
+        
     }
     
     /// <summary>
@@ -70,10 +71,14 @@ public class ViewSelectionManager : MonoBehaviour {
     /// </summary>
     public void SwitchToObserverView()
     {
+
+        //Turn tracking scripts On/Off
         BeRoboyManager.Instance.enabled = false;
         TurnTrackingOff();
-        InstructionCanvas.enabled = false;
 
+        //Turn Canvas On/Off and enable the image that should be seen.
+        InstructionCanvas.gameObject.SetActive(false);
+        
     }
     
     /// <summary>
@@ -81,9 +86,14 @@ public class ViewSelectionManager : MonoBehaviour {
     /// </summary>
     public void SwitchToBeRoboyView()
     {
+
+        //Turn tracking scripts On/Off
         BeRoboyManager.Instance.enabled = true;
         TurnTrackingOn();
-        InstructionCanvas.enabled = false;
+
+        //Turn Canvas On/Off and enable the image that should be seen.
+        InstructionCanvas.gameObject.SetActive(false);
+
     }
     
     
