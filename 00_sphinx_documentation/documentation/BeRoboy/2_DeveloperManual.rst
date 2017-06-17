@@ -47,14 +47,14 @@ tically loads the world (with all the surrounding objects) and the version of ro
 .. code:: bash
 
 	<launch>
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-	<arg name="world_name" value="$(find roboy_simulation)/worlds/camera.world"/>
-	<arg name="paused" value="false"/>
-	<arg name="use_sim_time" value="true"/>
-	<arg name="gui" value="true"/>
-	<arg name="headless" value="false"/>
-    	<arg name="debug" value="false"/>
-    </include>
+		<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(find roboy_simulation)/worlds/camera.world"/>
+		<arg name="paused" value="false"/>
+		<arg name="use_sim_time" value="true"/>
+		<arg name="gui" value="true"/>
+		<arg name="headless" value="false"/>
+			<arg name="debug" value="false"/>
+		</include>
 	</launch>
 
 
@@ -124,6 +124,7 @@ correctly and parse them afterwards in the right manner.
 **Image message in Unity**
 
 .. code:: bash
+
 	namespace ROSBridgeLib
 	{
 		namespace sensor_msgs
