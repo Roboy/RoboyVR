@@ -12,7 +12,7 @@ Gazebo Simulation
 For the gazebo part you need to create a launch .world file. When this file is launched it automa-
 tically loads the world (with all the surrounding objects) and the version of roboy you have chosen.
 
-**Example for a world (camera.world):**
+**Example for a world (camera.world) file:**
 
 .. code:: bash
 
@@ -108,17 +108,17 @@ specific model you want to have in the simulation and add the following section.
 	      </plugin>
 	</sensor>
 
-The pose determines where the camera will be looking at and which perspective it will be publishing messages from.
+The *pose* determines where the camera will be looking at and which perspective it will be publishing messages from.
 In order to publish images the camera sensor needs a plugin attached to it, in this case its a standard plugin-in,
-the ros camera from the gazebo library. The width and height tag determine the resolution of the published images,
+the ros camera from the gazebo library. The *width* and *height* tag determine the *resolution* of the published images,
 the update rates is crucial to how many images are sent in one second (25 means, 25 updates per second).
 
 Unity Scene
 -----------
 
-In Unity you need to establish a Rosbridge in order to be able to communicate with the various types of Roboy,
-e.g. the simulation one or the real one. Both of them are sending their camera feed as Image messages of the 
-type sensor_msgs/Image. Therefore you need also a suiting subscriber in Unity to be able to receive the messages
+In Unity you need to establish a *Rosbridge* in order to be able to communicate with the various types of Roboy,
+e.g. the simulation one or the real one. Both of them are sending their camera feed as *Image messages* of the 
+type sensor_msgs/Image. Therefore you need also a suiting *subscriber* in Unity to be able to receive the messages
 correctly and parse them afterwards in the right manner.
 
 **Image message in Unity**
@@ -159,7 +159,7 @@ correctly and parse them afterwards in the right manner.
 		{		
 			public new static string GetMessageTopic()
 			{
-				return either "/roboy/camera/image_raw" "/zed/rgb/image_raw_color"
+				return either "/roboy/camera/image_raw" or "/zed/rgb/image_raw_color"
 			}
 
 			public new static string GetMessageType()
@@ -180,6 +180,23 @@ correctly and parse them afterwards in the right manner.
 				BeRoboyManager.Instance.ReceiveMessage(image);
 			}
 
-			
 		}
 	}
+	
+After getting the ros bridge connection right and being able to receive image messages
+as well as reading them correctly the camera feeds should be displayed and rendered at
+at suited position. For this purpose this unity scene uses a *canvas in camera space*.
+Attached to this canvas are various image planes (unity ui images) that can wrap up the
+received messages.
+
+
+There is also a *View Selection Manager* embedded to the BeRoboy™ scene, it is used to
+fluently switch from one view to another. This manager is responsible for the procedures
+after a button on the *3D selection menu* is pressed. When a certain button is invoked by
+onClick() the state of various different game objects needs to manipulated (mostly enabling or disabling them).
+
+.. figure:: images/be_roboy_selection_menu.
+   :align: center
+   :alt: Selection menu in 3D
+         
+   After clicking on one of the buttons, the View Selection Manager takes the necessary steps to change to the respective view.
