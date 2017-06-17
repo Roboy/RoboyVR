@@ -8,7 +8,7 @@ With the help of a VR-Headset you can watch roboy move around in a virtual space
 
 This tutorial will help you setup roboyVR with all necessities it comes with.
  
-Part 1: Setup Virtualbox with Ubuntu
+Part 1: Setup Virtualbox with Ubuntu [OPTIONAL]
 --------------------------------------
 
 1. Download and install Virtualbox for your OS https://www.virtualbox.org/
@@ -30,6 +30,7 @@ Follow the setup instructions on the main `Roboy repository <https://github.com/
 
 | *Note: the setup.sh of gazebo is in /usr/share/gazebo-7/setup.sh and not in ../gazebo-7.0/..*
 | *Note: Export the gazebo paths AFTER the catkin_make because the devel directory is just created at this command.*
+|
 
 There may also occur an error that says that you need to install the OpenPowerlink stack library. In that case
 follow the instructions on the `OpenPowerlink Homepage <http://openpowerlink.sourceforge.net/doc/2.2/2.2.0/d1/dde/page_build_stack.html>`_.
@@ -57,4 +58,4 @@ Part 4: Blender & Python
 
 - Install the latest version of `Python <https://www.python.org/downloads/>`_
 
-- After installation, add the Python executable directories to the environment variable PATH in order to run Python.
+- After installation, add the Python executable directories to the environment variable PATH in order to run Python. (Windows 10: http://www.anthonydebarros.com/2015/08/16/setting-up-python-in-windows-10/)

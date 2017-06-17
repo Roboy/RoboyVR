@@ -17,20 +17,16 @@ As you already installed gazebo and the roboy project like described in the inst
 .. code:: bash
 
   roslaunch roboy_simulation pabi_world.launch
+  
+This should be the result:
 
-Setup Unity side
-----------------
+.. figure:: images/pabi_simulation_dance.*
+	:align: center
+	:alt: PaBi Dance
 
-You should have the RoboyVR project already cloned on your local machine. Therefore you only need to start Unity and open the PaBiViveScene.
-There should be a ROSBridge object in the hierarchy. Select this object and enter the IP Adress of the machine on which the simulation is running.
-As soon as you start the scene SteamVR should open if that is not already the case. Then you have to follow the instructions on the screen to setup your Vive controllers. Afterwards you can watch PaBi showing his best dance moves and interact with him via a GUI and different tools.
+**Troubleshooting**
 
-*Note: Shooting PaBi with the nerf gun does not have any consequences and serves as a alleviation of stress*
-
-Troubleshooting
----------------
-
-This commands should be sufficient but it can happen that gazebo has problems loading the PaBi Model into the world or starting the gazebo server.
+These commands should be sufficient but it can happen that gazebo has problems loading the PaBi Model into the world or starting the gazebo server.
 
 1. Kill the gazebo server and restart it.
 
@@ -47,3 +43,39 @@ This commands should be sufficient but it can happen that gazebo has problems lo
   export GAZEBO_MODEL_PATH=/path/to/roboy-ros-control/src/roboy_models:$GAZEBO_MODEL_PATH
 
 3. If nothing helps than write an email to roboyvr@gmail.com. We will glady help you to experience the RoboyVR-Experience.
+
+Setup Unity side
+----------------
+
+You should have the RoboyVR project already cloned on your local machine. Therefore you only need to start Unity and open the PaBiViveScene.
+There should be a ROSBridge object in the hierarchy. Select this object and enter the IP Adress of the machine on which the simulation is running.
+
+.. figure:: ../images/rosbridge.*
+	:align: center
+	:alt: ROSBridge
+
+As soon as you start the scene SteamVR should open if that is not already the case. Then you have to follow the instructions on the screen to setup your Vive controllers. 
+
+.. figure:: ../images/controller_selection_1.*
+    :align: center
+    :alt: Controller Selection GUI
+	
+.. figure:: ../images/controller_selection_2.*
+    :align: center
+    :alt: Controller Selection Tools
+
+Afterwards you can watch PaBi showing his best dance moves and interact with him via a GUI and different tools.
+
+.. figure:: images/pabi_selection.*
+    :align: center
+    :alt: PaBi Selection
+
+*Note: Shooting PaBi with the nerf gun does not have any consequences and serves as a alleviation of stress*
+
+**Troubleshooting**
+
+If the window of SteamVR shows any errors, then simply restart it.
+
+.. figure:: ../images/steamvr_error.*
+    :align: center
+    :alt: SteamVR Error

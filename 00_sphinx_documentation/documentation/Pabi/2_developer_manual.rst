@@ -6,13 +6,17 @@ Developer's Manual
 Gazebo Plugin
 -------------
 
-The main part on the Gazebos site is the plugin *ForceJointPlugin*. The location is:
+.. figure:: images/ForceJointPlugin_Sequence.png
+	:align: center
+	:alt: Plugin Sequence Diagram
+
+The main part on the simulation site is the plugin *ForceJointPlugin*. The location is:
 
 .. code:: bash
 
   path-to-roboy-ros-control/src/roboy_simulation/src/ForceJointPlugin.cpp
 
-The plugin does the following. 
+The plugin does the following:
 
 1) It loads the model into Gazebo.
 2) It starts a topic with type Float32 as message type for every revolute joint of the PaBi model.
@@ -26,7 +30,7 @@ The topic names have a special structure:
 
   /roboy/pabi_angle/<joint_name>
 
-At the current state of the model there are four topics with Float32 message type:
+At the current state of the model there are four topics with **Float32** message type:
 
 .. code:: bash
 
@@ -35,13 +39,11 @@ At the current state of the model there are four topics with Float32 message typ
   /roboy/pabi_angle/knee_1
   /roboy/pabi_angle/knee_2
 
-The pose is published with message type *roboy_communication_simulation::Pose* the topic:
+The pose is published with message type **roboy_communication_simulation::Pose** on the topic:
 
 .. code:: bash
 
   /roboy/pabi_pose
-
-If you want PaBi to be able to fall down change the *OnUpdate* method in the plugin.
 
 The main functions of the plugin are:
 
@@ -110,5 +112,10 @@ And another to adjust the pose:
 Unity Scene
 -----------
 
-In Unity we have the ROSBridge which connects to the ROSBridge on the simulation side. On the PaBi legs we have a ROSObject attached
+In Unity we have the ROSBridge which connects to the ROSBridge on the simulation side. On the PaBi legs we have a **ROSObject** script attached to the legs.
 
+.. figure:: ../images/ros_object.png
+
+This script is needed because the **ROSBridge** searches for every **ROSObject** in the scene and adds every **ROS Actor** (Subscriber, Publisher, Service) on this object.
+So f.e. if you want to add your own subscriber you have to write the subscriber such that it derives from *ROSBridgeSubscriber* and define on which topic you subscribe, which message type the topic has and
+what happens at a callback meaning when you receive a message.
