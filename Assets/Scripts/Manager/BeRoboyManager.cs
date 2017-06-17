@@ -198,22 +198,24 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <param name="msg">JSON msg containing the roboy pose.</param>
     private void RefreshSimImage(ImageMsg image)
     {
+        
         //Get the image as an array from the message.
         byte[] image_temp = image.GetImage();
+        
 
         int j = 0;
         for (int i = 0; i < image_temp.Length; i += 3)
         {
-            m_colorArraySim[j].b = image_temp[i] / (float)255;
+            m_colorArraySim[j].r = image_temp[i] / (float)255;
             m_colorArraySim[j].g = image_temp[i + 1] / (float)255;
-            m_colorArraySim[j].r = image_temp[i + 2] / (float)255;
+            m_colorArraySim[j].b = image_temp[i + 2] / (float)255;
 
             m_colorArraySim[j].a = 1f;
             j++;
         }
 
         // Load data into the texture.
-        m_TexSim.SetPixels(m_colorArrayZed);
+        m_TexSim.SetPixels(m_colorArraySim);
         m_TexSim.Apply();
 
         Graphics.Blit(m_TexSim, RT_Simulation);
