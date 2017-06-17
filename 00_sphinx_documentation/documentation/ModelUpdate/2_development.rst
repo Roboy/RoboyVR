@@ -42,7 +42,7 @@ Also the state now shows a button called "Scan". This button calls meshUpdater.S
 When meshUpdater.Scan() finishes, the state will be changed to "Scanned".
 
 
-In the new state, you can see which models were found by the scanning script and can select,
+In the new state, you can see a list with the models that were found by the scanning script and can select,
 which of these you want to download by checking off the corresponding boxes.
 The "Download" button then calls meshUpdater.UpdateModels() (`Part 3: Downloading`_), in which the state is set to "Downloaded".
 
@@ -58,7 +58,15 @@ meshUpdater.Scan():
 First of all the scan function creates a local array scanArguments, filling it with {"python", m_PathToScanScript, Github_Repository}
 This is used to RunCommandLine(scanArguments), which starts ModelScanner.py.
 
-ModelScanner.py
+
+ModelScanner.py scan the source code of the Github_Repository for links to subfolders by using regular expressions.
+The names and links of the subfolders (models) will be saved in a temporary file that we can read in later on.
+
+
+Now the Scan() function creates a dictionary linking model names with their links. 
+Then names are also written in a <string, bool> dictionary, which is used for the selection in the UnityEditor.
+Lastly the current state is set to "Scanned".
+
 
 Part 3: Downloading
 -------------------
@@ -69,4 +77,10 @@ ModelDownloader.py
 Part 4: Create Prefab
 ---------------------
 
-MeshUpdater.CreatePrefab()
+MeshUpdater.CreatePrefab():
+Creates a GameObject called modelParent. 
+With importModelCoroutine(string path, System.Action<GameObject> callback) a downloaded model in the model folder is loaded in a temporary GameObject meshCopy.
+The meshCopy is then attached as a child to modelParent. This happens for every model in the model folder.
+ 
+
+Afterward a empty prefab is created named modelname.prefab. The prefab's content is then replaced by modelParent. At last modelParent is deleted since we don't need it anymore. 
