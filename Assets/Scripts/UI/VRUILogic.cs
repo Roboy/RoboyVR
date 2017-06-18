@@ -1,27 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Singleton Instance that functions as the main data base and core logic.
+/// Variables can be set/requested using the methods. 
+/// </summary>
 public class VRUILogic : Singleton<VRUILogic> {
 
-    #region public database
-    public int selectedMode = 0;
+    #region PUBLIC_MEMBER_VARIABLES
     public GameObject[] mode;
 
     #endregion
 
-    #region private fields
+    #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
     /// Array containing the current finger position on the touchpad if touched
     /// </summary>
     private Vector2[] touchData;
-
+  
+    /// <summary>
+    /// This value specifies the currently selected mode
+    /// </summary>
+    private int selectedMode = 0;
+  
     /// <summary>
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
     private bool[] touchedPad;
     #endregion
 
+    #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
     /// Starts UI by disabling all except for specified modes.
     /// </summary>
@@ -40,7 +47,9 @@ public class VRUILogic : Singleton<VRUILogic> {
         touchedPad[0] = false;
         touchedPad[1] = false;
     }
+    #endregion
 
+    #region PUBLIC_METHODS
     /// <summary>
     /// Function displays mode i and disables previous mode.
     /// </summary>
@@ -64,7 +73,7 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     /// <param name="i">Index of the controller</param>
     /// <param name="newPos">Vector containing new position.</param>
-    public void SetTouchData(int i, Vector2 newPos)
+    public void SetTouchPosition(int i, Vector2 newPos)
     {
         if(i< touchData.Length && i >= 0)
         {
@@ -98,7 +107,11 @@ public class VRUILogic : Singleton<VRUILogic> {
         }
         return false;
     }
-
+    /// <summary>
+    /// returns a vector containing the position on the touchpad with index i
+    /// </summary>
+    /// <param name="i">touchpad index</param>
+    /// <returns>Current position on touchpad with max length == 1</returns>
     public Vector2 getTouchPosition(int i)
     {
         if (i < touchData.Length && i >= 0)
@@ -107,4 +120,5 @@ public class VRUILogic : Singleton<VRUILogic> {
         }
         return Vector2.zero;
     }
+    #endregion
 }

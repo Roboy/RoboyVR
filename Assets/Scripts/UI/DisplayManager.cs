@@ -9,7 +9,14 @@ using UnityEngine.UI;
 /// </summary>
 public class DisplayManager : MonoBehaviour
 {
-    public Camera cam2; /*This camera will be used for the second display*/
+    #region PUBLIC_MEMBER:_VARIABLES
+    /// <summary>
+    /// This camera will be used for the second display
+    /// </summary>
+    public Camera cam2; 
+    #endregion
+
+    #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
     /// Activates 2 Displays if multiple detected. Displays short info about display number on Main screen.
     /// </summary>
@@ -22,23 +29,28 @@ public class DisplayManager : MonoBehaviour
         StartCoroutine(DisplayFor(c, 1.5f));
         // Display.displays[0] is the primary, default display and is always ON.
         // Check if additional displays are available and activate each.
-        if (Display.displays.Length > 1 && (cam2!=null)) { 
+        if (Display.displays.Length > 1 && (cam2 != null))
+        {
             //should be fullscreen mode for second screen....?
             Display.displays[1].Activate();
-            cam2.GetComponent<Camera>().targetDisplay = 1;
+            if(cam2 != null)
+            {
+                cam2.GetComponent<Camera>().targetDisplay = 1;
+            }
         }
     }
-
+    #endregion
+    #region PRIVATE_METHODS
     /// <summary>
     /// Create Text on Canvas to be displayed in centre of screen.
     /// </summary>
     /// <returns>Canvas containing text object</returns>
-    Canvas CreateInfoScreen()
+    private Canvas CreateInfoScreen()
     {
         GameObject g = new GameObject();
         g.transform.parent = transform;
         Canvas c = g.AddComponent<Canvas>();
-        c.targetDisplay =0;
+        c.targetDisplay = 0;
         c.renderMode = RenderMode.ScreenSpaceOverlay;
         CanvasScaler cs = g.AddComponent<CanvasScaler>();
         cs.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
@@ -56,7 +68,7 @@ public class DisplayManager : MonoBehaviour
         t.horizontalOverflow = HorizontalWrapMode.Overflow;
         t.verticalOverflow = VerticalWrapMode.Overflow;
         t.alignment = TextAnchor.MiddleCenter;
-        Font f = (Font) Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+        Font f = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
         t.font = f;
         t.fontSize = 30;
         t.color = Color.black;
@@ -70,14 +82,15 @@ public class DisplayManager : MonoBehaviour
     /// <param name="c">Canvas to be displayed</param>
     /// <param name="sec">Time to display canvas</param>
     /// <returns></returns>
-    IEnumerator DisplayFor( Canvas c, float sec)
+    private IEnumerator DisplayFor(Canvas c, float sec)
     {
         if (c == null) yield return null;
         c.enabled = true;
         yield return new WaitForSeconds(sec);
         foreach (Component comp in c.GetComponentsInChildren<Component>())
         {
-            Destroy(comp.gameObject);            
+            Destroy(comp.gameObject);
         }
     }
+    #endregion
 }

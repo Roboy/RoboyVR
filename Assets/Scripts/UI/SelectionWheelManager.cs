@@ -2,8 +2,28 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Implements a selectionwheel using the child objects as options.
+/// This class is attached to a gameobject part of a canvas. It displays a selection wheel, checks for user input and updates the current selectioni saved in GameManager.
+/// </summary>
 public class SelectionWheelManager : MonoBehaviour
 {
+    #region PUBLIC_MEMBER_VARIABLES
+    /// <summary>
+    /// Index of controller to use for selection wheel (0/1)
+    /// </summary>
+    public int controllerIndex = 0;
+    /// <summary>
+    /// Specify where selected item should be positioned (clockwise, index in range of number of elem on circle)
+    /// </summary>
+    public int selectIndex = 1;
+    /// <summary>
+    /// canvas with selection wheel, en- and disabled depending on wheel 
+    /// </summary>
+    public Canvas canvas;
+    #endregion
+
+    #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
     ///  Is selection wheel visible
     /// </summary>
@@ -28,20 +48,106 @@ public class SelectionWheelManager : MonoBehaviour
     /// currently selected text elem by index.
     /// </summary>
     private int selected = -1;
-    /// <summary>
-    /// Index of controller to use for selection wheel (0/1)
-    /// </summary>
-    public int controllerIndex = 0;
-    /// <summary>
-    /// Specify where selected item should be positioned (clockwise, index in range of number of elem on circle)
-    /// </summary>
-    public int selectIndex = 1;
-    /// <summary>
-    /// canvas with selection wheel, en- and disabled depending on wheel 
-    /// </summary>
-    public Canvas canvas;
+    #endregion
 
-    #region helpers
+    #region UNITY_MONOBEHAVIOUR_METHODS
+    /// <summary>
+    /// Initialize Wheel: Place each child (text) elem evenly on wheel. 
+    /// </summary>
+    void Start()
+    {
+        Component[] children;
+        curAngle = 0;
+        radius = GetComponent<RectTransform>().rect.width; //assuming width and height identical 
+        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
+        elems = children.Length - 1; //ignore this elem
+        if (selectIndex > elems) selectIndex = selectIndex % elems; //stay within boundaries, not necessarily needed though
+        for (int i = 0; i < children.Length; i++)
+        {
+            RectTransform t = (RectTransform)children[i];
+            if (t.gameObject != gameObject) //ignore this elem
+            {
+                // define point on outer circle called offset,start from 0 as 12 o'clock on the circle
+
+                Vector2 offset = AngleToVector(360 / (elems) * (i - 1));
+                offset *= radius; //apply length
+                //move elem to that position on circle
+                Debug.Log("offset unit size: " + offset);
+                t.localPosition = new Vector3(offset.x, offset.y, 0);
+            }
+        }
+        //counter turn elem to keep text straight
+        if (canvas)
+        {
+            //canvas.GetComponent<Canvas>().enabled = false;
+            visible = false;
+        }
+        HighlightSelection();
+    }
+
+    /// <summary>
+    /// Update once per frame
+    /// </summary>
+    void Update()
+    {
+
+        // update the current spin with the mouse wheel
+        double friction;
+        Component[] children;
+        Vector3 newPos;
+        bool touched = VRUILogic.Instance.getTouchedInfo(controllerIndex);
+        Vector2 curPos = VRUILogic.Instance.getTouchPosition(controllerIndex);
+        /* If later spin desired
+        float value = Vector2.Distance(curPos,prevPos);
+        if (!TurningClockwise(prevPos, curPos)) value *= -1;
+        curSpin += value * speed * Time.deltaTime;
+        
+        //Visibility settings
+        if (curSpin > -threshold && curSpin < threshold && !touched) //if too slow
+        {
+            curSpin = 0;
+            if (visible  && !disabling) //prevent from calling multiple disable canvases if we're already disabling
+            {
+                StartCoroutine(DisableCanvas());
+                disabling = true;
+            }
+        }*/
+        if (touched) //if input found
+        {
+            disabling = false; //if change occured whilst waiting for disable, do not disable
+            if (!visible) EnableCanvas();
+            curAngle = VectorToAngle(curPos);
+            Debug.Log("Cur ANgle: " + curAngle);
+        }
+        else //only spin if no touch anymore
+        {
+            DisableCanvas();
+            /*calculation part
+            friction = curSpin * Time.deltaTime;
+            curSpin -= (float)friction;
+            curAngle = AdjustAngle(curAngle + (float)curSpin);*/
+        }
+
+        //rotate children (each text)
+        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
+        for (int i = 0; i < children.Length; i++)
+        {
+            Transform transform = (Transform)children[i];
+            if (transform.gameObject != gameObject)
+            {
+                float childangle = AdjustAngle(curAngle + (360 / elems) * i);
+                newPos = radius * AngleToVector(childangle); //adjust position using new point on circle
+                children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
+            }
+        }
+        HighlightSelection();
+    }
+    #endregion
+
+    #region PUBLIC_METHODS
+    #endregion
+
+    #region PRIVATE_METHODS
     /// <summary>
     /// x mod y in a function, as normal % just returns remainder and does not work for negative values.
     /// </summary>
@@ -195,98 +301,5 @@ public class SelectionWheelManager : MonoBehaviour
         return false;
     }
     #endregion
-
-
-    /// <summary>
-    /// Initialize Wheel: Place each child (text) elem evenly on wheel. 
-    /// </summary>
-    void Start()
-    {
-        Component[] children;
-        curAngle = 0;
-        radius = GetComponent<RectTransform>().rect.width; //assuming width and height identical 
-        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
-        elems = children.Length - 1; //ignore this elem
-        if (selectIndex > elems) selectIndex = selectIndex % elems; //stay within boundaries, not necessarily needed though
-        for (int i = 0; i < children.Length; i++)
-        {
-            RectTransform t = (RectTransform)children[i];
-            if (t.gameObject != gameObject) //ignore this elem
-            {
-                // define point on outer circle called offset,start from 0 as 12 o'clock on the circle
-          
-                Vector2 offset = AngleToVector(360/(elems) * (i-1));
-                offset *= radius; //apply length
-                //move elem to that position on circle
-                Debug.Log("offset unit size: " + offset);
-                t.localPosition = new Vector3(offset.x, offset.y, 0);
-            }
-        }
-        //counter turn elem to keep text straight
-        if (canvas)
-        {
-            //canvas.GetComponent<Canvas>().enabled = false;
-            visible = false;
-        }
-        HighlightSelection();
-    }
-
-    /// <summary>
-    /// Update once per frame
-    /// </summary>
-    void Update()
-    {
-
-        // update the current spin with the mouse wheel
-        double friction;
-        Component[] children;
-        Vector3 newPos;
-        bool touched = VRUILogic.Instance.getTouchedInfo(controllerIndex);
-        Vector2 curPos = VRUILogic.Instance.getTouchPosition(controllerIndex);
-        /* If later spin desired
-        float value = Vector2.Distance(curPos,prevPos);
-        if (!TurningClockwise(prevPos, curPos)) value *= -1;
-        curSpin += value * speed * Time.deltaTime;
-        
-        //Visibility settings
-        if (curSpin > -threshold && curSpin < threshold && !touched) //if too slow
-        {
-            curSpin = 0;
-            if (visible  && !disabling) //prevent from calling multiple disable canvases if we're already disabling
-            {
-                StartCoroutine(DisableCanvas());
-                disabling = true;
-            }
-        }*/
-        if (touched) //if input found
-        {
-            disabling = false; //if change occured whilst waiting for disable, do not disable
-            if (!visible) EnableCanvas();
-            curAngle = VectorToAngle(curPos);
-            Debug.Log("Cur ANgle: " + curAngle);
-        }
-        else //only spin if no touch anymore
-        {
-            DisableCanvas();
-            /*calculation part
-            friction = curSpin * Time.deltaTime;
-            curSpin -= (float)friction;
-            curAngle = AdjustAngle(curAngle + (float)curSpin);*/
-        }
-
-        //rotate children (each text)
-        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
-        for (int i = 0; i < children.Length; i++)
-        {
-            Transform transform = (Transform)children[i];
-            if (transform.gameObject != gameObject)
-            {
-                float childangle = AdjustAngle(curAngle + (360 / elems)*i);
-                newPos = radius * AngleToVector(childangle); //adjust position using new point on circle
-                children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
-            }
-        }
-        HighlightSelection();
-    }
 }
 
