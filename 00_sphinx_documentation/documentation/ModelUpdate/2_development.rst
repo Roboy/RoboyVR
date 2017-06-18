@@ -63,23 +63,29 @@ ModelScanner.py scan the source code of the Github_Repository for links to subfo
 The names and links of the subfolders (models) will be saved in a temporary file that we can read in later on.
 
 
-Now the Scan() function creates a dictionary linking model names with their links. 
-Then names are also written in a <string, bool> dictionary, which is used for the selection in the UnityEditor.
+Now the Scan() function creates a <string, string> dictionary. This is filled with model names and their links, which were saved in the temporary file. 
+Then names are also written in a <string, bool> ModelChoiceDictionary, which is used for the selection in the UnityEditor.
 Lastly the current state is set to "Scanned".
 
 
 Part 3: Downloading
 -------------------
 
-MeshUpdater.UpdateModels()
-ModelDownloader.py
+MeshUpdater.UpdateModels():
+For every entry in ModelChoiceDictionary that is true, the ModelScanner.py is used to get each subfolder. This is because of the way the hierarchy is currently set up in the roboy_models github repository.
+Now every link to the subfolders is given to the ModelDownloader.py, together with the m_PathToBlender and the path to where to download the models.
+
+
+ModelDownloader.py is again scanning the source code, but this time not for folders, but for files with the .dae or .stf extension.
+Then it downloads every model to the given path, by creating new files and copying the raw content of the files stored in github.
+Finally all downloaded models are imported into blender, converted to a .fbx file and exported. This is so we can use the models in Unity.
 
 Part 4: Create Prefab
 ---------------------
 
 MeshUpdater.CreatePrefab():
 Creates a GameObject called modelParent. 
-With importModelCoroutine(string path, System.Action<GameObject> callback) a downloaded model in the model folder is loaded in a temporary GameObject meshCopy.
+With importModelCoroutine(string path, System.Action<GameObject> callback) a converted .fbx model in the model folder is loaded in a temporary GameObject meshCopy.
 The meshCopy is then attached as a child to modelParent. This happens for every model in the model folder.
  
 

@@ -105,7 +105,7 @@ else:
 
 print("Meshes to be updated: ", export_list)
 
-#Download all STLs located at GitHub
+#Download all (.dae/.STL)s located at GitHub
 for filename in export_list:
 	print("Downloading: " + filename + " from " + dir_ip_addr + filename)
 	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
