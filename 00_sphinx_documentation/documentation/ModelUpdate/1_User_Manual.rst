@@ -5,7 +5,9 @@ User's Manual
 .. figure:: images/UnityScene.*
    :target: https://www.youtube.com/watch?v=nNV-3x-7Jho
    :align: center
-   :alt: View Selection Menu
+   :alt: https://www.youtube.com/watch?v=nNV-3x-7Jho
+         
+   Video showing the MeshUpdater
 
 
 Part 1: Getting started
@@ -15,7 +17,10 @@ Open the Unity project RoboyVR. Open the RoboyViveScene, and select the RoboyMan
 The RoboyManager has a script called Mesh Updater. The following instructions all are entered here.
 
 .. figure:: images/RoboyManager.*
-  :alt: Sequence Diagram
+   :align: center
+   :alt: RoboyManager GUI
+         
+   Mesh Updater GUI
 
 
 Part 2: Github Repository

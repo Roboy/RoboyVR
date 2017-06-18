@@ -7,7 +7,10 @@ Part 0: Summary
 
 
 .. figure:: images/ModelUpdate.*
-  :alt: Sequence Diagram
+   :align: center
+   :alt: Sequence Diagram
+         
+   Sequence Diagram for MeshUpdater
 
 
 
