@@ -2,8 +2,8 @@ Developer's Manual
 ==================
 
 
-Part 0: Summary
----------------
+Summary
+-------
 
 
 .. figure:: images/ModelUpdate.*
