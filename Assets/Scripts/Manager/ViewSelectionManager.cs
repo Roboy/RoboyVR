@@ -3,15 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Change name to ViewSelectionManager or so
+/// <summary>
+/// ViewSelectionManager handles the transition between various view scenarios.
+/// </summary>
 public class ViewSelectionManager : MonoBehaviour {
 
+
+    #region PUBLIC_MEMBER_VARIABLES
+
+    /// <summary>
+    /// Reference to the Canvas that is placed on the Camera plane(HMD).
+    /// </summary>
     public Canvas InstructionCanvas;
+    /// <summary>
+    /// Reference to the image where intructive text can be displayed.
+    /// </summary>
     public Image BackgroundImage;
+    /// <summary>
+    /// Reference to the image where the simulation feed can be displayed.
+    /// </summary>
     public RawImage GazeboImage;
+    /// <summary>
+    /// Reference to the image where the htc feed can be displayed.
+    /// </summary>
     public Image HtcImage;
+    /// <summary>
+    /// Reference to the image where the zed feed can be displayed.
+    /// </summary>
     public RawImage ZedImage;
 
+    #endregion PUBLIC_MEMBER_VARIABLES
+
+    #region PRIVATE_MEMBER_VARIABLES
+    #endregion PRIVATE_MEMBER_VARIABLES
+
+    #region MONOBEHAVIOR_METHODS
+    #endregion MONOBEHAVIOR_METHODS
+
+    #region PUBLIC_METHODS
 
     /// <summary>
     /// Turn head tracking for BeRoboy on.
@@ -95,6 +124,10 @@ public class ViewSelectionManager : MonoBehaviour {
         InstructionCanvas.gameObject.SetActive(false);
 
     }
-    
-    
+
+    #endregion PUBLIC_METHODS
+
+    #region PRIVATE_METHODS
+    #endregion PRIVATE_METHODS
+
 }

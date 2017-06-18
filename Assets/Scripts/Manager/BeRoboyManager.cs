@@ -25,9 +25,14 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     public bool TrackingEnabled = false;
 
-    public RenderTexture RenderTest;
-
+    /// <summary>
+    /// Reference to the render texture in which the Zed feed gets pushed into.
+    /// </summary>
     public RenderTexture RT_Zed;
+
+    /// <summary>
+    /// Reference to the render texture in which the Simulation feed gets pushed into.
+    /// </summary>
     public RenderTexture RT_Simulation;
 
     #endregion PUBLIC_MEMBER_VARIABLES
@@ -35,17 +40,12 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     
 
     #region PRIVATE_MEMBER_VARIABLES
+
     /// <summary>
     /// The HMD main camera.
     /// </summary>
     [SerializeField]
     private GameObject m_Cam;
-
-
-    /// <summary>
-    /// Texture in which the received images get drawn.
-    /// </summary>
-    private Texture2D m_Tex;
 
     /// <summary>
     /// Texture in which the received simulation images get drawn.
@@ -57,8 +57,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private Texture2D m_TexZed;
 
-
-
     /// <summary>
     /// Is the main camera initialized or not.
     /// </summary>
@@ -68,12 +66,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// Variable to determine if headset was rotated.
     /// </summary>
     private float m_current_Angle = 0.0f;
-
-
-    /// <summary>
-    /// Resolution determines array size e.g. 1280*720
-    /// </summary>
-    private Color[] colorArray = new Color[1280*720];
 
     /// <summary>
     /// Color array for the simulation image conversion.
@@ -95,7 +87,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     void Awake()
     {
         //Initialize the textures
-        m_Tex = new Texture2D(640, 480);
         m_TexSim = new Texture2D(640, 480);
         m_TexZed = new Texture2D(1280, 720);
     }
@@ -133,18 +124,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
 
     #region PUBLIC_METHODS
-    /// <summary>
-    /// Primary function to receive messages from ROSBridge. Renders the received images.
-    /// </summary>
-    /// <param name="msg">JSON msg containing roboy pose.</param>
-    public void ReceiveMessage(ImageMsg image)
-    {
-        RefreshImage(image);
-    }
-
 
     /// <summary>
-    /// Primary function to receive messages from ROSBridge. Renders the received images.
+    /// Primary function to receive image (zed) messages from ROSBridge. Renders the received images.
     /// </summary>
     /// <param name="msg">JSON msg containing roboy pose.</param>
     public void ReceiveZedMessage(ImageMsg image)
@@ -153,7 +135,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     }
 
     /// <summary>
-    /// Primary function to receive messages from ROSBridge. Renders the received images.
+    /// Primary function to receive image (simulation) messages from ROSBridge. Renders the received images.
     /// </summary>
     /// <param name="msg">JSON msg containing roboy pose.</param>
     public void ReceiveSimMessage(ImageMsg image)
@@ -221,49 +203,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         Graphics.Blit(m_TexSim, RT_Simulation);
     }
 
-    /// <summary>
-    /// Renders the received images from the simulation e.g.
-    /// </summary>
-    /// <param name="msg">JSON msg containing the roboy pose.</param>
-    private void RefreshImage(ImageMsg image)
-    {
-        //Get the image as an array from the message.
-        byte[] image_temp = image.GetImage();
-        Debug.Log(image_temp.Length);
-
-        //Color[] colorArray = new Color[image_temp.Length / 3];
-        int j = 0;
-        for (int i = 0; i < image_temp.Length; i += 3)
-        {
-            colorArray[j].b = image_temp[i] / (float)255;
-            colorArray[j].g = image_temp[i + 1] / (float)255;
-            colorArray[j].r = image_temp[i + 2] / (float)255;
-
-            colorArray[j].a = 1f;
-            j++;
-        }
-
-        // Load data into the texture.
-        m_Tex.SetPixels(colorArray);
-        m_Tex.Apply();
-
-        Graphics.Blit(m_Tex, RenderTest);
-        // Store the texture in temporary png.
-        //saveTextureToFile(m_Tex);
-        //// Load the texture from a temporary png.
-        //Texture2D t = loadTextureFromFile("temp.png");
-        //Rect rec = new Rect(0, 0, t.width, t.height);
-        //Sprite spriteToUse = Sprite.Create(t, rec, new Vector2(0.5f, 0.5f), 100);
-        ////Finding the image to be replaced by the simulation feed.
-        //m_SimulatedImg.sprite = spriteToUse;
-
-        //Should replace the images by setting it via overrideSprite using the Texture
-        //m_Pan.GetComponent<Image>().sprite = Sprite.Create(m_Tex, new Rect(0.0f, 0.0f, m_Tex.width, m_Tex.height), new Vector2(0.5f, 0.5f), 0.10f);
-
-    }
 
     /// <summary>
-    /// TEST FUNCTION TO SAVE TEXTURE TO ASSETS FOLDER
+    /// Useful to save a texture to the assets folder.
     /// </summary>
     /// <param name="tex"></param>
     private void saveTextureToFile(Texture2D tex)
@@ -275,9 +217,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         binarywriter.Write(bytes);
         filestream.Close();
     }
-	
+
     /// <summary>
-    /// TEST FUNCTION TO LOAD TEXTURE FROM ASSETS FOLDER
+    /// Useful to load a texture from the assets folder.
     /// </summary>
     /// <param name="filename"></param>
     private Texture2D loadTextureFromFile(string filename)
