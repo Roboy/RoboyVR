@@ -406,7 +406,7 @@ User selects models</panel_attributes>
       <x>420</x>
       <y>340</y>
       <w>600</w>
-      <h>270</h>
+      <h>380</h>
     </coordinates>
     <panel_attributes>foreach selected model</panel_attributes>
     <additional_attributes/>

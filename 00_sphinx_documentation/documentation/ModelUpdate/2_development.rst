@@ -10,6 +10,8 @@ Part 0: Summary
   :alt: Sequence Diagram
 
 
+
+Prototype:
 a fully automated model and world loading script
 
 1. Model loading is controlled by simple GUI elements
@@ -47,7 +49,7 @@ which of these you want to download by checking off the corresponding boxes.
 The "Download" button then calls meshUpdater.UpdateModels() (`Part 3: Downloading`_), in which the state is set to "Downloaded".
 
 
-After everything downloaded is imported in Unity, and state is set to "Downloaded", you can click the button "Create Prefab",
+After every downloaded model is imported in Unity, and state is set to "Downloaded", you can click the button "Create Prefab",
 this will call meshUpdater.CreatePrefab() (`Part 4: Create Prefab`_).
 
 
@@ -59,7 +61,7 @@ First of all the scan function creates a local array scanArguments, filling it w
 This is used to RunCommandLine(scanArguments), which starts ModelScanner.py.
 
 
-ModelScanner.py scan the source code of the Github_Repository for links to subfolders by using regular expressions.
+ModelScanner.py scans the source code of the Github_Repository for links to subfolders by using regular expressions.
 The names and links of the subfolders (models) will be saved in a temporary file that we can read in later on.
 
 
@@ -78,7 +80,7 @@ Now every link to the subfolders is given to the ModelDownloader.py, together wi
 
 ModelDownloader.py is again scanning the source code, but this time not for folders, but for files with the .dae or .stf extension.
 Then it downloads every model to the given path, by creating new files and copying the raw content of the files stored in github.
-Finally all downloaded models are imported into blender, converted to a .fbx file and exported. This is so we can use the models in Unity.
+Finally all downloaded models are imported into blender, converted to a .fbx file and exported. The original files are overridden. The conversion is necessary so we can use the models in Unity.
 
 Part 4: Create Prefab
 ---------------------
@@ -89,4 +91,4 @@ With importModelCoroutine(string path, System.Action<GameObject> callback) a con
 The meshCopy is then attached as a child to modelParent. This happens for every model in the model folder.
  
 
-Afterward a empty prefab is created named modelname.prefab. The prefab's content is then replaced by modelParent. At last modelParent is deleted since we don't need it anymore. 
+Afterwards an empty prefab is created with the name modelname.prefab. The prefab's content is then replaced by modelParent. At last modelParent is deleted since we don't need it anymore. 
