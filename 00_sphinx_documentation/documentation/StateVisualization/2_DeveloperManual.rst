@@ -6,6 +6,12 @@ General
 
 The UI design goal was to create a modular and robust UI which does not rely on continuous data input. Due to the fact, that the Virtual Reality scenes will later be merged and therefore the setup will change, it was advantageous to not create one definite UI structure already containing all the desired elements, but a modular, easy-to-adjust  base which could easily be integrated in other scenes. 
 
+**Scripts:** 
+
+**Game objects:** 
+ General game objects, which belong to the scene but not the UI, include Roboy, the background and the camera rig containing the SteamVR controllers and headset. 
+
+
 Use Case
 --------
 
@@ -16,12 +22,6 @@ The following use case depicts an example activity, where a user changes the cur
     :alt: Image could not be loaded
     
     Sequence of method calls after user touch input initialized by Unity's update function 
-
-**Scripts:** 
-
-**Game objects:** 
- General game objects, which belong to the scene but not the UI, include Roboy, the background and the camera rig containing the SteamVR controllers and headset. 
-
 
 UI  Implementation and Structure
 --------------------------------

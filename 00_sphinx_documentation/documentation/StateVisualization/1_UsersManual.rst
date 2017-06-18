@@ -15,7 +15,8 @@ The Scene can be run in the Unity Editor. Simply double click on the UIScene, Un
 SteamVR
 -------
 
-For further information on how to set up the VR headset and controllers, see TODO .
+The hardware of the computer needs to support Virtual Reality applications, additionally SteamVR needs to be installed. For further information on how to set up the VR headset and controller, follow the instructions.
+
 
 UI Features
 -----------
