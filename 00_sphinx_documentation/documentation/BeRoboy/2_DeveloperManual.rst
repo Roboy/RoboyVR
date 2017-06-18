@@ -200,9 +200,19 @@ There is also a *View Selection Manager* embedded to the BeRoboy™ scene, it is
 fluently switch from one view to another. This manager is responsible for the procedures
 after a button on the *3D selection menu* is pressed. When a certain button is invoked by
 onClick() the state of various different game objects needs to manipulated (mostly enabling or disabling them).
+A View Selection Manager always needs the desired references in order to set them, if they
+not already come preconfigured.
 
 .. figure:: images/be_roboy_selection_menu.*
    :align: center
    :alt: Selection menu in 3D
          
    After clicking on one of the buttons, the View Selection Manager takes the necessary steps to change to the respective view.
+   
+**Receiving Images Info**
+
+Depending on what images you want to receive, you need to set the size of the color arrays in the BeRoboyManager class.
+m_colorArraySample = new Color [width*height]
+
+In addition you also need to set the texture size in Awake() respectively
+m_texSample = new Texture2D(width, height)
