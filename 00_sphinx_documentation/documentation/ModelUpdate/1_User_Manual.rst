@@ -30,7 +30,7 @@ Part 3: Set Blender.exe
 
 Click on "Open Blender directory" and choose the blender.exe.
 
-i.e.: C:\Program Files\Blender Foundation\Blender\blender.exe
+i.e.: C:\\Program Files\\Blender Foundation\\Blender\\blender.exe
 
 
 Part 4: Scanning
@@ -50,6 +50,6 @@ Part 6: Create the Prefab
 -------------------------
 
 After importing the files, press "Create Prefab".
-You can now find the created prefab in Assets/SimulationModels/...
+You can now find the created prefab in Assets\/SimulationModels\/...
 
 
