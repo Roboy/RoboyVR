@@ -14,6 +14,9 @@ Part 1: Getting started
 Open the Unity project RoboyVR. Open the RoboyViveScene, and select the RoboyMananger in the hierarchy tab.
 The RoboyManager has a script called Mesh Updater. The following instructions all are entered here.
 
+.. figure:: images/RoboyManager.*
+  :alt: Sequence Diagram
+
 
 Part 2: Github Repository
 -------------------------

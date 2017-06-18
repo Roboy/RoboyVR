@@ -4,7 +4,7 @@ Introduction
 What is it?
 -----------
 
-The Model Updater is a convinient Unity Editor extension, where you can download new models or update existing ones to use in RoboyVR
+The Model Updater is a convinient Unity Editor extension, where you can download new models or update existing ones to use in RoboyVR.
 
 
 

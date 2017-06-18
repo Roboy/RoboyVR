@@ -12,10 +12,10 @@ Part 0: Summary
 
 
 Prototype:
-a fully automated model and world loading script
+a fully automated model loading script
 
 1. Model loading is controlled by simple GUI elements
-2. Models as well as worlds are listed from the roboy_models and roboy_worlds repo for user selection
+2. Models are listed from the roboy_models repo for user selection
 3. Selected models are downloaded and converted to use them in Unity 
 4. The selected model and world (.dae or .stl meshes) are automatically saved in a prefab, which can easily be loaded into the scene and here enable the known interaction: selection of model parts and motor state visualization
 
