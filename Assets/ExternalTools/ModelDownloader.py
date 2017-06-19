@@ -27,7 +27,7 @@ def get_override(area_type, region_type):
                     "\n Make sure it's open while executing script.")
 
 #pathToRoboyModels = r"D:\RoboyVR\Assets\SimulationModels\Test\OriginModels"
-pathToProjectModels = sys.argv[4] + "/OriginModels"
+pathToProjectModels = sys.argv[4]
 					
 	
 #we expect the array to be of format <name>
