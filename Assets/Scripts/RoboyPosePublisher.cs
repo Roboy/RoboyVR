@@ -24,7 +24,7 @@ public class RoboyPosePublisher : ROSBridgePublisher {
     {
         //return "std_msgs/Int32";
 
-        return "common_utilities/ExternalForce";
+        return "roboy_communication_simulation/ExternalForce";
     }
 
     public static string ToYAMLString(ROSBridgeLib.custom_msgs.ExternalForceMsg msg)

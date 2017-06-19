@@ -26,7 +26,7 @@ public class RoboyPoseSubscriber : ROSBridgeSubscriber
 
     public new static string GetMessageType()
     {
-        return "common_utilities/Pose";
+        return "roboy_communication_middleware/Pose";
 
         //return "std_msgs/Int32";
     }

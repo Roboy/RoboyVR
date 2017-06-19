@@ -111,7 +111,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 442}
   m_MaxSize: {x: 22012, y: 10021}
   vertical: 0
-  controlID: 83
+  controlID: 72
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 442}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 33
+  controlID: 73
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -180,8 +180,8 @@ MonoBehaviour:
     y: 384
     width: 1021
     height: 563
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -205,8 +205,8 @@ MonoBehaviour:
     y: 0
     width: 222
     height: 947
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -467,9 +467,9 @@ MonoBehaviour:
     height: 926
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 1c070000
+    m_SelectedIDs: 26090000
     m_LastClickedID: 0
-    m_ExpandedIDs: d6fbffff00000000
+    m_ExpandedIDs: ca8fffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -535,13 +535,13 @@ MonoBehaviour:
   m_LastFolders:
   - Assets/Scripts
   m_LastFoldersGridSize: 16
-  m_LastProjectPath: H:\Documents\GIT Projects\roboyVR
+  m_LastProjectPath: H:\Documents\GIT Projects\roboyOLD
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: a22b0000
-    m_LastClickedID: 11170
-    m_ExpandedIDs: 0000000084280000bc2b0000c42b0000362c0000c22c0000dc2c0000062d0000282d0000a42e00003a2f0000b62f0000563000003e3c000000ca9a3bffffff7f
+    m_SelectedIDs: da520000
+    m_LastClickedID: 21210
+    m_ExpandedIDs: 00000000d4510000e4520000e85200001e5300004053000052530000605300006c530000ae5300000a540000d857000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -569,7 +569,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000084280000bc2b0000c42b0000362c0000c22c0000dc2c0000062d0000282d0000a42e00003a2f0000b62f0000563000003e3c0000
+    m_ExpandedIDs: 00000000d4510000e4520000e85200001e5300004053000052530000605300006c530000ae530000d8530000e85300000a540000d8570000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -600,15 +600,15 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 762400009a240000982400001c4d000050270000c24d0000cc270000722b000076290000ae2d000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: GraphRenderer
-      m_OriginalName: GraphRenderer
+      m_Name: RoboyPosePublisher
+      m_OriginalName: RoboyPosePublisher
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 2656
+      m_UserData: 2342
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
