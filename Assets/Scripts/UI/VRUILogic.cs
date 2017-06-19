@@ -32,20 +32,25 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <summary>
     /// Starts UI by disabling all except for specified modes.
     /// </summary>
-    private void Start()
+    private void Awake()
     {
-        foreach(GameObject obj in Instance.mode)
+        if (mode != null && mode.Length > 0)
         {
-            obj.SetActive(false);
+            foreach (GameObject obj in mode)
+            {
+                obj.SetActive(false);
+            }
+            mode[selectedMode].gameObject.SetActive(true);
         }
-        Instance.mode[selectedMode].gameObject.SetActive(true);
-
+        
         touchData = new Vector2[2];
         touchData[0] = Vector2.zero;
         touchData[1] = Vector2.zero;
         touchedPad = new bool[2];
         touchedPad[0] = false;
         touchedPad[1] = false;
+
+        
     }
     #endregion
 
