@@ -76,7 +76,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// <summary>
     /// Initialize ROSBridge and roboy parts
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         getRoboy();
 
