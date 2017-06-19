@@ -20,7 +20,7 @@ rosrun rqt_gui rqt_gui
 
 //Insert in head link
 <sensor type="camera" name="camera1">
-	      <update_rate>25.0</update_rate>
+	      <update_rate>3.0</update_rate>
 	      <camera name="head">
 		<pose>0 1.25 0 -1.5707963267948966 -1.5707963267948966 0</pose>
 		<horizontal_fov>1.3962634</horizontal_fov>
