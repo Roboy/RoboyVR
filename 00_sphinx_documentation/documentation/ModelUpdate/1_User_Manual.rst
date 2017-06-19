@@ -27,10 +27,11 @@ Part 2: Github Repository
 -------------------------
 
 Enter the link of the Github Repository where the models are located, which you want to download.
-Make sure the link ends with a slash.
+Make sure the link ends with a slash. Also you can set here, which branch you want to download the models from.
 
 Default:
 Github_Repository = https://github.com/Roboy/roboy_models/
+Branch = master
 
 
 Part 3: Set Blender.exe

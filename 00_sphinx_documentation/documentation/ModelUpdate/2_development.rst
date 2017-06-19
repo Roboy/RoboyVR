@@ -78,7 +78,7 @@ Part 3: Downloading
 
 MeshUpdater.UpdateModels():
 For every entry in ModelChoiceDictionary that is true, the ModelScanner.py is used to get each subfolder. This is because of the way the hierarchy is currently set up in the roboy_models github repository.
-Now every link to the subfolders is given to the ModelDownloader.py, together with the m_PathToBlender and the path to where to download the models.
+Now every link to the subfolders is given to the ModelDownloader.py, together with the m_PathToBlender and the path to where to store the downloaded models. This is done for visual and collision models.
 
 
 ModelDownloader.py is again scanning the source code, but this time not for folders, but for files with the .dae or .stf extension.
@@ -91,7 +91,8 @@ Part 4: Create Prefab
 MeshUpdater.CreatePrefab():
 Creates a GameObject called modelParent. 
 With importModelCoroutine(string path, System.Action<GameObject> callback) a converted .fbx model in the model folder is loaded in a temporary GameObject meshCopy.
-The meshCopy is then attached as a child to modelParent. This happens for every model in the model folder.
+Now a collider, the RoboyPart script and the SelectableObject script are attached to the meshCopy. The collider attached is the mesh downloaded in collision folder with the same name as meshCopy.
+The GameObject meshCopy is then attached as a child to modelParent. This happens for every model in the model folder.
  
 
 Afterwards an empty prefab is created with the name modelname.prefab. The prefab's content is then replaced by modelParent. At last modelParent is deleted since we don't need it anymore. 
