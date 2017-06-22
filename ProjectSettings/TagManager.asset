@@ -22,6 +22,7 @@ TagManager:
   - SimImg
   - ZedImg
   - HtcImg
+  - VRUI
   layers:
   - Default
   - TransparentFX

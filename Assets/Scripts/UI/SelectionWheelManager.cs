@@ -10,6 +10,18 @@ public class SelectionWheelManager : MonoBehaviour
 {
     #region PUBLIC_MEMBER_VARIABLES
     /// <summary>
+    /// Threshold for display, if spin is below this value, DisableCanvas() will be called
+    /// </summary>
+    public float threshold = 0.1f;
+    /// <summary>
+    /// Multiplied when calculating friction, scales friction effect
+    /// </summary>
+    public float friction= 1;
+    /// <summary>
+    /// scales speed  that is applied to turn the wheel after touch input
+    /// </summary>
+    public float speed = 1;
+    /// <summary>
     /// Index of controller to use for selection wheel (0/1)
     /// </summary>
     public int controllerIndex = 0;
@@ -24,6 +36,14 @@ public class SelectionWheelManager : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
+    /// <summary>
+    /// This is used to calculate the spin after touch input stopped
+    /// </summary>
+    private Vector2 prevPos = Vector2.zero;
+    /// <summary>
+    /// describes the spin, decreases over time with friction
+    /// </summary>
+    private float curSpin = 0;
     /// <summary>
     ///  Is selection wheel visible
     /// </summary>
@@ -91,55 +111,8 @@ public class SelectionWheelManager : MonoBehaviour
     void Update()
     {
 
-        // update the current spin with the mouse wheel
-        double friction;
-        Component[] children;
-        Vector3 newPos;
-        bool touched = VRUILogic.Instance.getTouchedInfo(controllerIndex);
-        Vector2 curPos = VRUILogic.Instance.getTouchPosition(controllerIndex);
-        /* If later spin desired
-        float value = Vector2.Distance(curPos,prevPos);
-        if (!TurningClockwise(prevPos, curPos)) value *= -1;
-        curSpin += value * speed * Time.deltaTime;
-        
-        //Visibility settings
-        if (curSpin > -threshold && curSpin < threshold && !touched) //if too slow
-        {
-            curSpin = 0;
-            if (visible  && !disabling) //prevent from calling multiple disable canvases if we're already disabling
-            {
-                StartCoroutine(DisableCanvas());
-                disabling = true;
-            }
-        }*/
-        if (touched) //if input found
-        {
-            disabling = false; //if change occured whilst waiting for disable, do not disable
-            if (!visible) EnableCanvas();
-            curAngle = VectorToAngle(curPos);
-            Debug.Log("Cur ANgle: " + curAngle);
-        }
-        else //only spin if no touch anymore
-        {
-            DisableCanvas();
-            /*calculation part
-            friction = curSpin * Time.deltaTime;
-            curSpin -= (float)friction;
-            curAngle = AdjustAngle(curAngle + (float)curSpin);*/
-        }
-
-        //rotate children (each text)
-        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
-        for (int i = 0; i < children.Length; i++)
-        {
-            Transform transform = (Transform)children[i];
-            if (transform.gameObject != gameObject)
-            {
-                float childangle = AdjustAngle(curAngle + (360 / elems) * i);
-                newPos = radius * AngleToVector(childangle); //adjust position using new point on circle
-                children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
-            }
-        }
+        //SpinOnTouch(false);
+        SpinWithInertia();
         HighlightSelection();
     }
     #endregion
@@ -164,7 +137,8 @@ public class SelectionWheelManager : MonoBehaviour
     /// </summary>
     private void EnableCanvas()
     {
-        if (canvas) { 
+        if (canvas)
+        {
             canvas.GetComponent<Canvas>().enabled = true;
             visible = true;
         }
@@ -177,7 +151,7 @@ public class SelectionWheelManager : MonoBehaviour
     {
         Debug.Log("disable gunction called...");
         yield return new WaitForSeconds(0.5f);
-        
+
         if (disabling) //if disable still desired (whilst waiting further user input might have changed that)
         {
             if (canvas)
@@ -195,8 +169,8 @@ public class SelectionWheelManager : MonoBehaviour
     private void HighlightSelection()
     {
         int step = (360 / elems);
-        int tmp = elems -(int)(curAngle + step/2) / step -1;// map selection from 0 - (elems -1)
-        tmp = Mod((tmp + selectIndex), elems); // select the desired item clockwise
+        int tmp = elems - (int)(curAngle + step / 2) / step - 1;// map selection from 0 - (elems -1)
+        tmp = Mod((tmp + selectIndex - 1), elems); // select the desired item clockwise, start at the top (-1)
         if (tmp == selected)
         {
             return;
@@ -228,7 +202,7 @@ public class SelectionWheelManager : MonoBehaviour
     private Vector2 AngleToVector(float a)
     {
         a = Mathf.PI * a / 180;
-        return new Vector2(Mathf.Cos(a) , Mathf.Sin(a));
+        return new Vector2(Mathf.Cos(a), Mathf.Sin(a));
     }
 
     /// <summary>
@@ -238,9 +212,10 @@ public class SelectionWheelManager : MonoBehaviour
     /// <returns>angle in degrees</returns>
     private float VectorToAngle(Vector2 v)
     {
-        if(v.x == 0)
+        if (v.x == 0)
         {
-            if (v.y > 0) {
+            if (v.y > 0)
+            {
                 return 90;
             }
             else
@@ -249,18 +224,17 @@ public class SelectionWheelManager : MonoBehaviour
             }
         }
         float temp = Mathf.Atan(v.y / v.x) * 180 / Mathf.PI;
-        if(v.x <0)
+        if (v.x < 0)
         {
             return 180 + temp;
         }
         // TODOOOOOO
-        if(temp < 0)
+        if (temp < 0)
         {
             return temp + 360;
         }
         return temp;
     }
-
 
     /// <summary>
     /// Returns the angle within 0-360°
@@ -277,9 +251,98 @@ public class SelectionWheelManager : MonoBehaviour
         {
             a += 360;
         }
-        return a; 
+        return a;
     }
 
+    /// <summary>
+    /// Calculates the current angle based on the user input.
+    /// The angle is set with respect to the previous angle and the distance the finger tracked. 
+    /// </summary>
+    /// <param name="spin">should the wheel spin after touch input</param>
+    private void SpinOnTouch(bool spin)
+    {
+
+        bool touched = VRUILogic.Instance.getTouchedInfo(controllerIndex);
+        Vector2 curPos = VRUILogic.Instance.getTouchPosition(controllerIndex);
+
+        if (touched) //if input found
+        {
+            disabling = false; //if change (input) occured whilst waiting for disable, do not disable
+            if (!visible) EnableCanvas();
+            if (!prevPos.Equals(Vector2.zero)) //angle does not change if new input just arrived
+            {
+                curAngle += VectorToAngle(prevPos) - VectorToAngle(curPos);
+                curAngle = AdjustAngle(curAngle);
+                Debug.Log("Cur ANgle: " + curAngle);
+            }
+            prevPos = curPos;
+
+        }
+        else
+        {
+            prevPos = Vector2.zero;
+            if (visible && !disabling && !spin) //prevent from calling multiple disable canvases if we're already disabling
+            {
+                StartCoroutine(DisableCanvas());
+                disabling = true;
+            }
+        }
+    }
+    /// <summary>
+    /// Updates the position of the spinning wheel based on the touch input
+    /// </summary>
+    private void SpinWithInertia()
+    {
+        // update the current spin with the mouse wheel
+        Component[] children;
+        Vector3 newPos;
+
+        bool touched = VRUILogic.Instance.getTouchedInfo(controllerIndex);
+        Vector2 curPos = VRUILogic.Instance.getTouchPosition(controllerIndex);
+
+
+        //Visibility settings for spin effect
+        if (!touched && curSpin > -threshold && curSpin < threshold) //if too slow and no input
+        {
+            curSpin = 0;
+            if (visible && !disabling) //prevent from calling multiple disable canvases if we're already disabling
+            {
+                StartCoroutine(DisableCanvas());
+                disabling = true;
+                return;
+            }
+        }
+
+        if (touched)
+        {
+            if (curPos != null && !curPos.Equals(prevPos))
+            {
+                Debug.Log("Calculating spin");
+                curSpin = Vector2.Distance(curPos, prevPos) * speed;
+                if (!TurningClockwise(prevPos, curPos)) curSpin *= -1;
+            }
+            SpinOnTouch(true);
+        }
+        else
+        {
+            prevPos = Vector2.zero;
+            curSpin -= curSpin * Time.deltaTime * friction;
+            Debug.Log("applying spin and friction to abgle");
+            curAngle = AdjustAngle(curAngle + (float)curSpin);
+        }
+        //rotate children (each text)
+        children = gameObject.GetComponentsInChildren(typeof(RectTransform));
+        for (int i = 0; i < children.Length; i++)
+        {
+            Transform transform = (Transform)children[i];
+            if (transform.gameObject != gameObject)
+            {
+                float childangle = AdjustAngle( 360 -(curAngle + (360 / elems) * i));
+                newPos = radius * AngleToVector(childangle); //adjust position using new point on circle
+                children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
+            }
+        }
+    }
 
     private bool TurningClockwise(Vector2 prev, Vector2 cur)
     {

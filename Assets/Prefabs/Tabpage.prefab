@@ -22,9 +22,10 @@ GameObject:
   - component: {fileID: 222243428201144282}
   - component: {fileID: 114044828567903998}
   - component: {fileID: 114887186839063822}
+  - component: {fileID: 65786720342673812}
   m_Layer: 0
   m_Name: Tab
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,6 +40,7 @@ GameObject:
   - component: {fileID: 224071173049416790}
   - component: {fileID: 222967815945247382}
   - component: {fileID: 114327952655465852}
+  - component: {fileID: 65799037259557078}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -61,6 +63,30 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &65786720342673812
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1377969294827362}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 230, y: 90, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65799037259557078
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1459976335989994}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 700, y: 600, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114044828567903998
 MonoBehaviour:
   m_ObjectHideFlags: 1
