@@ -59,7 +59,7 @@ This ROS node creates four publishers for the joints of PaBi. In the Main loop i
 To make the movement smooth the published joint angles are changed gradually in small steps from -90° to 0° and back.
 Therefore we have two functions. One to start the animation:
 
-.. code:: c++
+.. code-block:: c++
 
   void PaBiDanceSimulator::startDanceAnimation()
   {
@@ -72,7 +72,7 @@ Therefore we have two functions. One to start the animation:
 
 And another to adjust the pose:
 
-.. code:: c++
+.. code-block:: c++
 
   bool PaBiDanceSimulator::adjustPoseGradually(bool goUp)
   {
