@@ -19,25 +19,18 @@ The main part on the simulation site is the plugin *ForceJointPlugin*. The locat
 The plugin does the following:
 
 1) It loads the model into Gazebo.
-2) It starts a topic with type Float32 as message type for every revolute joint of the PaBi model.
-3) It subscribes to the created topics.
+2) It starts one topic for all revolute joints of the PaBi model. That means you have only one topic for all joints at once.
+3) It subscribes to the created topic.
 4) It creates a publisher which publishes the pose of PaBi so we can subscribe to the topic on the Unity side.
 5) It makes PaBi stationary so he does not fall down when the legs are not touching the ground.
 
-The topic names have a special structure:
+The topic name for the joint commands with type **roboy_communication_middleware::JointCommand** is:
 
 .. code:: bash
 
-  /roboy/pabi_angle/<joint_name>
+  /roboy/middleware/JointCommand
 
-At the current state of the model there are four topics with **Float32** message type:
-
-.. code:: bash
-
-  /roboy/pabi_angle/hip_1
-  /roboy/pabi_angle/hip_2
-  /roboy/pabi_angle/knee_1
-  /roboy/pabi_angle/knee_2
+The JointCommand expects an array of the link names and one value for each given link, meaning in the case of PaBi you need four values in both arrays.
 
 The pose is published with message type **roboy_communication_simulation::Pose** on the topic:
 
@@ -48,7 +41,7 @@ The pose is published with message type **roboy_communication_simulation::Pose**
 The main functions of the plugin are:
 
 1) Load: It loads the model into gazebo and creates the joint subscribers and the pose publisher.
-2) OnRosMsg: Is called every time the plugin receives a joint message. It updates the joint angles value list and publishes the new state.
+2) JointCommand: Is called every time the plugin receives a joint command. It updates the joint angles value list and publishes the new state.
 3) publishPose: Publishes the pose of PaBi.
 4) OnUpdate: Is called every gazebo update frame. Therefore we have to zero out the forces of PaBi and update the joint angles of the
 actual model.
