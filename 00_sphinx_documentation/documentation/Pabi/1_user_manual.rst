@@ -55,6 +55,9 @@ There should be a ROSBridge object in the hierarchy. Select this object and ente
 .. figure:: ../images/rosbridge.*
 	:align: center
 	:alt: ROSBridge
+	
+	ROSBridge in Unity
+
 
 As soon as you start the scene SteamVR should open if that is not already the case. Then you have to follow the instructions on the screen to setup your Vive controllers. 
 
@@ -63,12 +66,14 @@ As soon as you start the scene SteamVR should open if that is not already the ca
     :alt: Controller Selection GUI
 	
 	Instruction to choose the GUI Controller
-	
+
+
 .. figure:: ../images/controller_selection_2.*
     :align: center
     :alt: Controller Selection Tools
 	
 	Instruction to choose the Tool Controller
+
 
 Afterwards you can watch PaBi showing his best dance moves and interact with him via a GUI and different tools.
 
@@ -77,6 +82,7 @@ Afterwards you can watch PaBi showing his best dance moves and interact with him
     :alt: PaBi Selection
 	
 	Unity Scene of PaBi
+
 
 *Note: Shooting PaBi with the nerf gun does not have any consequences and serves as a alleviation of stress*
 
