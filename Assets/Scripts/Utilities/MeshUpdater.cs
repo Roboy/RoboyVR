@@ -261,6 +261,7 @@ public class MeshUpdater : MonoBehaviour {
                 }
 
                 GameObject meshCopy = Instantiate(meshPrefab);
+                meshCopy.tag = "RoboyPart";
                 attachCollider(meshCopy, relativeModelPath, name);
 
                 SelectableObject selectableObjectComponent = meshCopy.AddComponent<SelectableObject>();
