@@ -23,6 +23,8 @@ This should be the result:
 .. figure:: images/pabi_simulation_dance.*
 	:align: center
 	:alt: PaBi Dance
+	
+	PaBi model in Gazebo
 
 **Troubleshooting**
 
@@ -60,15 +62,21 @@ As soon as you start the scene SteamVR should open if that is not already the ca
     :align: center
     :alt: Controller Selection GUI
 	
+	Instruction to choose the GUI Controller
+	
 .. figure:: ../images/controller_selection_2.*
     :align: center
     :alt: Controller Selection Tools
+	
+	Instruction to choose the Tool Controller
 
 Afterwards you can watch PaBi showing his best dance moves and interact with him via a GUI and different tools.
 
 .. figure:: images/pabi_selection.*
     :align: center
     :alt: PaBi Selection
+	
+	Unity Scene of PaBi
 
 *Note: Shooting PaBi with the nerf gun does not have any consequences and serves as a alleviation of stress*
 
@@ -79,3 +87,5 @@ If the window of SteamVR shows any errors, then simply restart it.
 .. figure:: ../images/steamvr_error.*
     :align: center
     :alt: SteamVR Error
+	
+	SteamVR Error

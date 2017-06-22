@@ -9,6 +9,8 @@ Gazebo Plugin
 .. figure:: images/ForceJointPlugin_Sequence.png
 	:align: center
 	:alt: Plugin Sequence Diagram
+	
+	Sequence diagramm of the ForceJointPlugin
 
 The main part on the simulation site is the plugin *ForceJointPlugin*. The location is:
 
@@ -108,6 +110,8 @@ Unity Scene
 In Unity we have the ROSBridge which connects to the ROSBridge on the simulation side. On the PaBi legs we have a **ROSObject** script attached to the legs.
 
 .. figure:: ../images/ros_object.png
+
+	ROSObject component
 
 This script is needed because the **ROSBridge** searches for every **ROSObject** in the scene and adds every **ROS Actor** (Subscriber, Publisher, Service) on this object.
 So f.e. if you want to add your own subscriber you have to write the subscriber such that it derives from *ROSBridgeSubscriber* and define on which topic you subscribe, which message type the topic has and
