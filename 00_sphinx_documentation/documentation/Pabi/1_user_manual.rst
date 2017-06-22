@@ -23,7 +23,7 @@ This should be the result:
 .. figure:: images/pabi_simulation_dance.*
 	:align: center
 	:alt: PaBi Dance
-	
+         
 	PaBi model in Gazebo
 
 **Troubleshooting**
@@ -55,7 +55,7 @@ There should be a ROSBridge object in the hierarchy. Select this object and ente
 .. figure:: ../images/rosbridge.*
 	:align: center
 	:alt: ROSBridge
-	
+         
 	ROSBridge in Unity
 
 
@@ -64,14 +64,14 @@ As soon as you start the scene SteamVR should open if that is not already the ca
 .. figure:: ../images/controller_selection_1.*
     :align: center
     :alt: Controller Selection GUI
-	
+         
 	Instruction to choose the GUI Controller
 
 
 .. figure:: ../images/controller_selection_2.*
     :align: center
     :alt: Controller Selection Tools
-	
+         
 	Instruction to choose the Tool Controller
 
 
@@ -80,7 +80,7 @@ Afterwards you can watch PaBi showing his best dance moves and interact with him
 .. figure:: images/pabi_selection.*
     :align: center
     :alt: PaBi Selection
-	
+         
 	Unity Scene of PaBi
 
 
@@ -93,5 +93,5 @@ If the window of SteamVR shows any errors, then simply restart it.
 .. figure:: ../images/steamvr_error.*
     :align: center
     :alt: SteamVR Error
-	
+         
 	SteamVR Error
