@@ -35,7 +35,7 @@ for example it would start it in a not paused stated ("paused" set to "false").
 **Example for a world (camera.world) file:**
 In this case the world file contains a ground plane, the legs with upper body roboy model and a light source, a sun.
 
-.. code:: bash
+.. code-block:: xml
 
 	<world name="default">
 
@@ -73,7 +73,7 @@ commended to attach this sensor to a position close to the models head because y
 POV to maximize the POV experience. To implement such a thing, just open the model.sdf of the
 specific model you want to have in the simulation and add the following section.
 
-.. code:: bash
+.. code-block:: xml
 
 	<sensor type="camera" name="camera">
 	      <update_rate>1.0</update_rate>
@@ -129,7 +129,7 @@ correctly and parse them afterwards in the right manner.
 
 **Image message in Unity**
 
-.. code:: bash
+.. code-block:: c#
 
 	namespace ROSBridgeLib
 	{
@@ -157,7 +157,7 @@ correctly and parse them afterwards in the right manner.
 	
 **Image Subscriber in Unity**
 
-.. code:: bash
+.. code-block:: c#
 
 	namespace ROSBridgeLib
 	{
