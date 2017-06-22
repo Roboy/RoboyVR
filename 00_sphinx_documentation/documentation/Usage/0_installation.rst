@@ -32,6 +32,13 @@ Follow the setup instructions on the main `Roboy repository <https://github.com/
 | *Note: Export the gazebo paths AFTER the catkin_make because the devel directory is just created at this command.*
 |
 
+On top of that it may be necessary to update the submodules of this repository:
+
+.. code:: bash
+  
+  cd /path-to-roboy-repository/
+  git submodule update --recursive --remote
+  
 There may also occur an error that says that you need to install the OpenPowerlink stack library. In that case
 follow the instructions on the `OpenPowerlink Homepage <http://openpowerlink.sourceforge.net/doc/2.2/2.2.0/d1/dde/page_build_stack.html>`_.
 The OpenPowerlink folder lies in the *roboy_powerlink* folder.
