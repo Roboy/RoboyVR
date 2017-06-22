@@ -60,6 +60,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: GUI
+  - name: GUI World
     uniqueID: 2379361113
+    locked: 0
+  - name: GUI Overlay
+    uniqueID: 4137188381
     locked: 0
