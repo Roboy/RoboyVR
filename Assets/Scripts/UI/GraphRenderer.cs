@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,6 +12,8 @@ using UnityEditor;
 
 public class GraphRenderer : MonoBehaviour
 {
+    #region PUBLIC_VARIABLES
+
     // Color for the graph
     public Material GraphMaterial;
 
@@ -20,6 +23,9 @@ public class GraphRenderer : MonoBehaviour
     public float BorderTop;
     public float BorderBottom;
 
+    /// <summary>
+    /// Public property to create a text object to show the current value of the graph.
+    /// </summary>
     [ExposeProperty]
     public bool ShowCurrentValue
     {
@@ -38,11 +44,17 @@ public class GraphRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Text object for the current value. Is only there if <see cref="ShowCurrentValue"/> is true. 
+    /// </summary>
     public Text TextForValueName
     {
         get { return m_TextForValueName.GetComponent<Text>(); }
     }
 
+    /// <summary>
+    /// Public property to enable a text object to show the value name of the current value.
+    /// </summary>
     [ExposeProperty]
     public bool ShowValueName
     {
@@ -60,6 +72,10 @@ public class GraphRenderer : MonoBehaviour
             }
         }
     }
+
+    #endregion // PUBLIC_VARIABLES
+
+    #region PRIVATE_VARIABLES
 
     [HideInInspector]
     [SerializeField]
@@ -89,6 +105,9 @@ public class GraphRenderer : MonoBehaviour
     // LineRenderer to render the graph
     private LineRenderer m_OscillatorLineRenderer;
 
+    /// <summary>
+    /// Possible states of the graph.
+    /// </summary>
     private enum State
     {
         None,
@@ -130,11 +149,21 @@ public class GraphRenderer : MonoBehaviour
     // How often we update the graph`s values
     private float m_TimeStep;
 
+    #endregion // PRIVATE_VARIABLES
+
+    #region UNITY_MONOBEHAVIOR_METHODS
+
+    /// <summary>
+    /// Destroy the graph when attached gameObject is disabled.
+    /// </summary>
     void OnDisable()
     {
         Stop();
     }
 
+    /// <summary>
+    /// Play the graph when the gameObject is enabled and initialized.
+    /// </summary>
     void OnEnable()
     {
         if (m_CurrentState == State.Initialized)
@@ -225,8 +254,12 @@ public class GraphRenderer : MonoBehaviour
         m_BorderInitialized = true;
     }
 
+    #endregion // UNITY_MONOBEHAVIOR_METHODS
+
+    #region PUBLIC_METHODS
+
     /// <summary>
-    /// Initialize all the internal parameters 
+    /// Initialize all the internal parameters.
     /// </summary>
     /// <param name="valueList"></param>
     /// <param name="numPoints"></param>
@@ -259,8 +292,8 @@ public class GraphRenderer : MonoBehaviour
             m_TimeStep = timeStep;
 
             // For scaling purpose
-            m_MinValue = findSmallestElement(m_CurrentValues);
-            m_MaxValue = findBiggestElement(m_CurrentValues);
+            m_MinValue = m_CurrentValues.Min();
+            m_MaxValue = m_CurrentValues.Max();
 
             for (int i = 0; i < numPoints; i++)
             {
@@ -272,7 +305,7 @@ public class GraphRenderer : MonoBehaviour
         }
     }
     /// <summary>
-    /// Starts / Resumes the graph
+    /// Starts / Resumes the graph.
     /// </summary>
     public void Play()
     {
@@ -308,7 +341,7 @@ public class GraphRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// Pauses the graph value updates
+    /// Pauses the graph value updates.
     /// </summary>
     public void Pause()
     {
@@ -324,7 +357,7 @@ public class GraphRenderer : MonoBehaviour
         }
     }
     /// <summary>
-    /// Destroys the graph
+    /// Stops and destroys the graph.
     /// </summary>
     public void Stop()
     {
@@ -344,8 +377,42 @@ public class GraphRenderer : MonoBehaviour
             //Debug.Log("Stop");
         }
     }
+
     /// <summary>
-    /// Renders the graph according to panel movement
+    /// Changes the graph size to the given size.
+    /// </summary>
+    /// <param name="numPoints">The new size of the graph</param>
+    public void ChangeGraphSize(int numPoints)
+    {
+        if (numPoints == m_NumPoints)
+            return;
+
+        m_NumPoints = numPoints;
+        m_OscillatorLineRenderer.positionCount = numPoints;
+        m_StepSize = m_MaximumWidth / ((float)numPoints - 1);
+
+        int deltaSize = numPoints - m_CurrentValues.Count;
+
+        // create new 0 values for the values list so we dont get a null reference in the coroutines
+        if (deltaSize > 0)
+        {
+            for (int i = 0; i < deltaSize; i++)
+            {
+                m_CurrentValues.Add(0f);
+            }
+        }
+        else
+        {
+            m_CurrentValues.RemoveRange(numPoints, -deltaSize);
+        }
+    } 
+
+    #endregion // PUBLIC_METHODS
+
+    #region PRIVATE_METHODS
+
+    /// <summary>
+    /// Renders the graph according to panel movement.
     /// </summary>
     /// <returns></returns>
     private IEnumerator playCoroutine()
@@ -356,9 +423,9 @@ public class GraphRenderer : MonoBehaviour
 
             m_Positions.Clear();
 
-            // For scaling purpose
-            m_MinValue = findSmallestElement(m_CurrentValues);
-            m_MaxValue = findBiggestElement(m_CurrentValues);
+            // Update the minima and maxima for scaling purpose
+            m_MinValue = m_CurrentValues.Min();
+            m_MaxValue = m_CurrentValues.Max();
 
             for (int i = 0; i < m_NumPoints; i++)
             {
@@ -382,7 +449,7 @@ public class GraphRenderer : MonoBehaviour
         }
     }
     /// <summary>
-    /// Refreshes value list each timestamp
+    /// Refreshes value list each timestamp.
     /// </summary>
     /// <returns></returns>
     private IEnumerator updateValuesCoroutine()
@@ -409,61 +476,11 @@ public class GraphRenderer : MonoBehaviour
             }
             yield return new WaitForSeconds(m_TimeStep);
         }
-
+        // Print warning to console if this function is called manually when graph is not playing
         if (m_CurrentState != State.Playing)
         {
             Debug.Log("Graph is not playing! Cannot update the values!");
         }
-    }
-
-    float findSmallestElement(List<float> list)
-    {
-        if (list == null)
-        {
-            throw new ArgumentNullException("self");
-        }
-
-        if (list.Count == 0)
-        {
-            throw new ArgumentException("List is empty.", "self");
-        }
-
-        float minima = list[0];
-        // Looking for the smallest element in a list
-        foreach (float f in list)
-        {
-            if (f < minima)
-            {
-                minima = f;
-            }
-        }
-
-        return minima;
-    }
-
-    float findBiggestElement(List<float> list)
-    {
-        if (list == null)
-        {
-            throw new ArgumentNullException("self");
-        }
-
-        if (list.Count == 0)
-        {
-            throw new ArgumentException("List is empty.", "self");
-        }
-
-        float maxima = list[0];
-        // Looking for the biggest element in a list
-        foreach (float f in list)
-        {
-            if (f > maxima)
-            {
-                maxima = f;
-            }
-        }
-
-        return maxima;
     }
 
     /// <summary>
@@ -486,7 +503,7 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     Vector3 getGraphPositionAtIndex(int index)
     {
-        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), -2.5f);
+        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), -25f);
         pos -= m_RectTransform.pivot.x * m_MaximumWidth * Vector3.right;
         pos -= m_RectTransform.pivot.y * m_MaximumHeight * Vector3.up;
         Vector2 pivotDifference = Vector2.one * 0.5f - m_RectTransform.pivot;
@@ -495,6 +512,9 @@ public class GraphRenderer : MonoBehaviour
         return pos;
     }
 
+    /// <summary>
+    /// Creates a text field object for the current value. Set as child to this gameObject.
+    /// </summary>
     private void createTextfieldForCurrentValue()
     {
         m_TextForCurrentValue = new GameObject();
@@ -507,10 +527,17 @@ public class GraphRenderer : MonoBehaviour
         m_TextForCurrentValue.AddComponent<Text>();
     }
 
+    /// <summary>
+    /// Destroys the text field object.
+    /// </summary>
     private void destroyTextfieldForCurrentValue()
     {
         DestroyImmediate(m_TextForCurrentValue);
     }
+
+    /// <summary>
+    /// Creates a text field for the current value name. Set as child to this gameObject.
+    /// </summary>
     private void createTextfieldForValueName()
     {
         m_TextForValueName = new GameObject();
@@ -523,9 +550,13 @@ public class GraphRenderer : MonoBehaviour
         m_TextForValueName.AddComponent<Text>();
     }
 
+    /// <summary>
+    /// Destroys the text field object for the value name.
+    /// </summary>
     private void destroyTextfieldForValueName()
     {
         DestroyImmediate(m_TextForValueName);
     }
 
+    #endregion // PRIVATE_METHODS
 }

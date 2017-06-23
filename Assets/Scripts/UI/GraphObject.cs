@@ -112,8 +112,7 @@ public class GraphObject : MonoBehaviour
     /// <param name="value"></param>
     public void AddValue(float value)
     {
-        //m_Values.ShiftRight(1);
-        ExtensionMethods.ShiftRight<float>(m_Values, 1);
+        m_Values.ShiftRight(1);
         m_Values.Add(value);
     }
 
@@ -123,8 +122,7 @@ public class GraphObject : MonoBehaviour
     /// <param name="values">Set of float values.</param>
     public void AddValues(List<float> values)
     {
-        //m_Values.ShiftRight(values.Count);
-        ExtensionMethods.ShiftRight<float>(m_Values, values.Count);
+        m_Values.ShiftRight(values.Count);
 
         for (int i = 0; i < values.Count; i++)
         {
@@ -139,7 +137,7 @@ public class GraphObject : MonoBehaviour
     public void ShowLastValues(int count)
     {
         int _count = Mathf.Min(m_Values.Count, count);
-        //m_GraphRenderer.ChangeGraphSize(_count);
+        m_GraphRenderer.ChangeGraphSize(_count);
     }
     #endregion
 
