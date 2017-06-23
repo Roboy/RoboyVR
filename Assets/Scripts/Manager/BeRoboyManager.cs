@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VR;
-using ROSBridgeLib;
 using ROSBridgeLib.sensor_msgs;
-using UnityEngine.UI;
-using System.IO;
-
 
 /// <summary>
 /// BeRoboymanager has different tasks to do:
@@ -63,28 +59,27 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <summary>
     /// Variable to determine if headset was rotated.
     /// </summary>
-    private float m_current_Angle = 0.0f;
+    private float m_CurrentAngle = 0.0f;
 
     /// <summary>
     /// Color array for the simulation image conversion.
     /// </summary>
-    private Color[] m_colorArraySim = new Color[640 * 480];
+    private Color[] m_ColorArraySim = new Color[640 * 480];
 
     /// <summary>
     /// Color array for the zed image conversion.
     /// </summary>
-    private Color[] m_colorArrayZed = new Color[1280 * 720];
+    private Color[] m_ColorArrayZed = new Color[1280 * 720];
 
     #endregion PRIVATE_MEMBER_VARIABLES
 
     #region MONOBEHAVIOR_METHODS
 
     /// <summary>
-    /// Initialize texture
+    /// Initialize textures.
     /// </summary>
     void Awake()
     {
-        //Initialize the textures
         m_TexSim = new Texture2D(640, 480);
         m_TexZed = new Texture2D(1280, 720);
     }
@@ -95,7 +90,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         //Looking for the HMD camera in scene
         if (!m_CamInitialized)
         {
-            TryInitializeCamera();
+            tryInitializeCamera();
         }
         else
         {
@@ -109,13 +104,13 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         // Looking for the HMD camera in scene.
         if (!m_CamInitialized)
         {
-            TryInitializeCamera();
+            tryInitializeCamera();
         }
         // If the camera is found, move and rotate Roboy accordingly.
         else
         {
             if(TrackingEnabled)
-            TranslateRoboy();
+                translateRoboy();
         }
     }
     #endregion //MONOBEHAVIOR_METHODS
@@ -157,95 +152,64 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         int j = 0;
         for (int i = 0; i < image_temp.Length; i += 3)
         {
-            m_colorArrayZed[j].b = image_temp[i] / (float)255;
-            m_colorArrayZed[j].g = image_temp[i + 1] / (float)255;
-            m_colorArrayZed[j].r = image_temp[i + 2] / (float)255;
+            m_ColorArrayZed[j].b = image_temp[i] / (float)255;
+            m_ColorArrayZed[j].g = image_temp[i + 1] / (float)255;
+            m_ColorArrayZed[j].r = image_temp[i + 2] / (float)255;
 
-            m_colorArrayZed[j].a = 1f;
+            m_ColorArrayZed[j].a = 1f;
             j++;
         }
 
         // Load data into the texture.
-        m_TexZed.SetPixels(m_colorArrayZed);
+        m_TexZed.SetPixels(m_ColorArrayZed);
         m_TexZed.Apply();
 
         Graphics.Blit(m_TexZed, RT_Zed);
     }
 
     /// <summary>
-    /// Renders the received images from the simulation
+    /// Renders the received images from the simulation.
     /// </summary>
     /// <param name="msg">JSON msg containing the roboy pose.</param>
     private void RefreshSimImage(ImageMsg image)
     {
         
-        //Get the image as an array from the message.
+        // Get the image as an array from the message.
         byte[] image_temp = image.GetImage();
         
 
         int j = 0;
         for (int i = 0; i < image_temp.Length; i += 3)
         {
-            m_colorArraySim[j].r = image_temp[i] / (float)255;
-            m_colorArraySim[j].g = image_temp[i + 1] / (float)255;
-            m_colorArraySim[j].b = image_temp[i + 2] / (float)255;
+            m_ColorArraySim[j].r = image_temp[i] / (float)255;
+            m_ColorArraySim[j].g = image_temp[i + 1] / (float)255;
+            m_ColorArraySim[j].b = image_temp[i + 2] / (float)255;
 
-            m_colorArraySim[j].a = 1f;
+            m_ColorArraySim[j].a = 1f;
             j++;
         }
 
         // Load data into the texture.
-        m_TexSim.SetPixels(m_colorArraySim);
+        m_TexSim.SetPixels(m_ColorArraySim);
         m_TexSim.Apply();
 
         Graphics.Blit(m_TexSim, RT_Simulation);
     }
 
-
-    /// <summary>
-    /// Useful to save a texture to the assets folder.
-    /// </summary>
-    /// <param name="tex"></param>
-    private void saveTextureToFile(Texture2D tex)
-    {
-        string filename = "temp.png";
-        byte[] bytes = tex.EncodeToPNG();
-        var filestream = File.Open(Application.dataPath + "/" + filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-        var binarywriter = new BinaryWriter(filestream);
-        binarywriter.Write(bytes);
-        filestream.Close();
-    }
-
-    /// <summary>
-    /// Useful to load a texture from the assets folder.
-    /// </summary>
-    /// <param name="filename"></param>
-    private Texture2D loadTextureFromFile(string filename)
-    {
-        Texture2D tex = null;
-        byte[] fileData;
-        string filePath = Application.dataPath + "/" + filename;
-
-        fileData = File.ReadAllBytes(filePath);
-        tex = new Texture2D(2, 2);
-        tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-        return tex;
-    }
-
     /// <summary>
     /// Turn Roboy with the movement of the HMD.
     /// </summary>
-    private void TranslateRoboy()
+    private void translateRoboy()
     {
-        //Check whether the user has rotated the headset or not
-        if (m_current_Angle != m_Cam.transform.eulerAngles.y)
+        // Check whether the user has rotated the headset or not
+        if (m_CurrentAngle != m_Cam.transform.eulerAngles.y)
         {
-            //If the headset was rotated, rotate roboy
-            transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_current_Angle);
+            // If the headset was rotated, rotate roboy
+            transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
         }
-        m_current_Angle = m_Cam.transform.eulerAngles.y;
+        m_CurrentAngle = m_Cam.transform.eulerAngles.y;
 
-        //Move roboy accordingly to headset movement
+        // Move roboy accordingly to headset movement
         Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
     }
@@ -253,9 +217,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <summary>
     /// Looking for the main camera in the scene, which can be attached to Roboy.
     /// </summary>
-    private void TryInitializeCamera()
+    private void tryInitializeCamera()
     {
-        //Look for a camera and initialize it.
+        // Look for a camera and initialize it.
         m_Cam = GameObject.FindGameObjectWithTag("MainCamera");
         if (m_Cam != null)
             m_CamInitialized = true;
@@ -263,4 +227,3 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
     #endregion PRIVATE_METHODS
 }
-
