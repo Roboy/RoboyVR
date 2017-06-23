@@ -90,6 +90,20 @@ SelectorManager
 .. doxygenclass:: SelectorManager
   :members:
   :private-members:
+  
+BeRoboyManager
+**************
+
+.. doxygenclass:: BeRoboyManager
+  :members:
+  :private-members:
+  
+ViewSelectionManager
+********************
+
+.. doxygenclass:: ViewSelectionManager
+  :members:
+  :private-members:
 
   
 Tools
@@ -144,6 +158,20 @@ Projectile
 **********
 
 .. doxygenclass:: Projectile
+  :members:
+  :private-members:
+  
+MeshUpdater
+***********
+
+.. doxygenclass:: MeshUpdater
+  :members:
+  :private-members:
+  
+MeshUpdaterEditor
+*****************
+
+.. doxygenclass:: MeshUpdaterEditor
   :members:
   :private-members:
 

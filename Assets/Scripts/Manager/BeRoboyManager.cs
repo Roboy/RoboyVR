@@ -37,8 +37,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
     #endregion PUBLIC_MEMBER_VARIABLES
 
-    
-
     #region PRIVATE_MEMBER_VARIABLES
 
     /// <summary>

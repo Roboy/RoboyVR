@@ -64,9 +64,7 @@ public class SelectorTool : ControllerTool
                     Button b_pressed = hit.collider.GetComponent<Button>();
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
-                        b_pressed.onClick.Invoke();
-                        Debug.Log(b_pressed + " was pressed!");
-                        //Vibrate();
+                        b_pressed.onClick.Invoke();                    
                     }
                     break;
                 case "UISlider": //slider elem in BeRoboy

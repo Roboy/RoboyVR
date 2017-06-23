@@ -24,8 +24,8 @@ GameObject:
   - component: {fileID: 114386268815346620}
   - component: {fileID: 114834577203159720}
   m_Layer: 0
-  m_Name: VIS_shank_right(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_shank_right
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,8 +43,8 @@ GameObject:
   - component: {fileID: 114971945100513610}
   - component: {fileID: 114445455852953890}
   m_Layer: 0
-  m_Name: VIS_lower_arm_left(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_lower_arm_left
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,10 +77,9 @@ GameObject:
   - component: {fileID: 33665250230308056}
   - component: {fileID: 23265703138725688}
   - component: {fileID: 64959654691791180}
-  - component: {fileID: 114716940229109712}
   - component: {fileID: 114948581644647318}
   m_Layer: 0
-  m_Name: VIS_neck(Clone)
+  m_Name: VIS_neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,8 +100,8 @@ GameObject:
   - component: {fileID: 114314303170246566}
   - component: {fileID: 114262794668029126}
   m_Layer: 0
-  m_Name: VIS_hip(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_hip
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,8 +153,8 @@ GameObject:
   - component: {fileID: 114147658052021836}
   - component: {fileID: 114162128444256354}
   m_Layer: 0
-  m_Name: VIS_shank_left(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_shank_left
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -191,8 +190,8 @@ GameObject:
   - component: {fileID: 114179886471579536}
   - component: {fileID: 114889291172604132}
   m_Layer: 0
-  m_Name: VIS_fuss_links(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_fuss_links
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -245,7 +244,7 @@ GameObject:
   - component: {fileID: 114014723022561490}
   - component: {fileID: 114345084751769160}
   m_Layer: 0
-  m_Name: VIS_vertebrae_3(Clone)
+  m_Name: VIS_vertebrae_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -281,8 +280,8 @@ GameObject:
   - component: {fileID: 114968942680383718}
   - component: {fileID: 114475386775372600}
   m_Layer: 0
-  m_Name: VIS_thigh_right(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_thigh_right
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -318,8 +317,8 @@ GameObject:
   - component: {fileID: 114394852567781700}
   - component: {fileID: 114828573999384974}
   m_Layer: 0
-  m_Name: VIS_lower_arm_right(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_lower_arm_right
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -338,8 +337,8 @@ GameObject:
   - component: {fileID: 114305697059243352}
   - component: {fileID: 114565784324648492}
   m_Layer: 0
-  m_Name: VIS_head(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_head
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -355,10 +354,9 @@ GameObject:
   - component: {fileID: 33240518524210146}
   - component: {fileID: 23146348968625098}
   - component: {fileID: 64889283299255832}
-  - component: {fileID: 114870718427402210}
   - component: {fileID: 114488323534104162}
   m_Layer: 0
-  m_Name: VIS_gelenkhuelse-v01_1(Clone)
+  m_Name: VIS_gelenkhuelse-v01_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -372,6 +370,13 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4816916003560052}
+  - component: {fileID: 114646047319080236}
+  - component: {fileID: 114866450938418228}
+  - component: {fileID: 114441043619050024}
+  - component: {fileID: 114474421709871342}
+  - component: {fileID: 114735457759783656}
+  - component: {fileID: 114751206459616382}
+  - component: {fileID: 114604901320191958}
   m_Layer: 0
   m_Name: Roboy_simplified
   m_TagString: Roboy
@@ -392,8 +397,8 @@ GameObject:
   - component: {fileID: 114955610795791398}
   - component: {fileID: 114795479556900044}
   m_Layer: 0
-  m_Name: VIS_thigh_left(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_thigh_left
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -462,8 +467,8 @@ GameObject:
   - component: {fileID: 114697900689395170}
   - component: {fileID: 114784703512085634}
   m_Layer: 0
-  m_Name: VIS_hand_right(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_hand_right
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -479,10 +484,9 @@ GameObject:
   - component: {fileID: 33406144662209996}
   - component: {fileID: 23940045522935268}
   - component: {fileID: 64017057115126780}
-  - component: {fileID: 114665116486937180}
   - component: {fileID: 114427563177166786}
   m_Layer: 0
-  m_Name: VIS_neck_cross(Clone)
+  m_Name: VIS_neck_cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -501,8 +505,8 @@ GameObject:
   - component: {fileID: 114173588297554576}
   - component: {fileID: 114622974631037002}
   m_Layer: 0
-  m_Name: VIS_spine(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_spine
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -538,8 +542,8 @@ GameObject:
   - component: {fileID: 114847834666472790}
   - component: {fileID: 114632594196576602}
   m_Layer: 0
-  m_Name: VIS_upper_arm_left(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_upper_arm_left
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -592,7 +596,7 @@ GameObject:
   - component: {fileID: 114583484678875006}
   - component: {fileID: 114569746343327980}
   m_Layer: 0
-  m_Name: VIS_vertebrae_2(Clone)
+  m_Name: VIS_vertebrae_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -629,8 +633,8 @@ GameObject:
   - component: {fileID: 114378660026015654}
   - component: {fileID: 114505627469561096}
   m_Layer: 0
-  m_Name: VIS_upper_arm_right(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_upper_arm_right
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -666,8 +670,8 @@ GameObject:
   - component: {fileID: 114219310353473792}
   - component: {fileID: 114769383572254708}
   m_Layer: 0
-  m_Name: VIS_fuss_rechts(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_fuss_rechts
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -737,7 +741,7 @@ GameObject:
   - component: {fileID: 114502805851923184}
   - component: {fileID: 114728858601136920}
   m_Layer: 0
-  m_Name: VIS_vertebrae_1(Clone)
+  m_Name: VIS_vertebrae_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -771,10 +775,9 @@ GameObject:
   - component: {fileID: 33074547558570244}
   - component: {fileID: 23359278831673648}
   - component: {fileID: 64259299165331468}
-  - component: {fileID: 114646806241103034}
   - component: {fileID: 114657032379803956}
   m_Layer: 0
-  m_Name: VIS_gelenkhuelse-v01_2(Clone)
+  m_Name: VIS_gelenkhuelse-v01_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,8 +815,8 @@ GameObject:
   - component: {fileID: 114584419550631570}
   - component: {fileID: 114087344927202956}
   m_Layer: 0
-  m_Name: VIS_torso(Clone)
-  m_TagString: Untagged
+  m_Name: VIS_torso
+  m_TagString: RoboyPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1303,9 +1306,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1362698887050110}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_Children:
   - {fileID: 4509366486825148}
   - {fileID: 4941035300659364}
@@ -1331,7 +1334,7 @@ Transform:
   - {fileID: 4616487279641348}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!4 &4853420869259674
 Transform:
   m_ObjectHideFlags: 1
@@ -3519,6 +3522,17 @@ MonoBehaviour:
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 0}
   MotorCount: 0
+--- !u!114 &114441043619050024
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1362698887050110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b3f423d7a727945897dd38e26f72ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114445455852953890
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3533,6 +3547,17 @@ MonoBehaviour:
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 0}
   MotorCount: 0
+--- !u!114 &114474421709871342
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1362698887050110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9142ea98cd780b4090bae775b350342, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114475386775372600
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3642,6 +3667,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
+--- !u!114 &114604901320191958
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1362698887050110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34a3c5ca7ec62d942af48c69eb2f3be2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackingEnabled: 0
+  RT_Zed: {fileID: 8400000, guid: d1286fd59d88d8145b4cf643af358ecd, type: 2}
+  RT_Simulation: {fileID: 8400000, guid: 00613c44db0b2f84da25c58a69bc828e, type: 2}
+  m_Cam: {fileID: 0}
 --- !u!114 &114622974631037002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3670,19 +3710,17 @@ MonoBehaviour:
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 0}
   MotorCount: 0
---- !u!114 &114646806241103034
+--- !u!114 &114646047319080236
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1899520749293784}
+  m_GameObject: {fileID: 1362698887050110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f95a3b0ec59dbb44b66ab8247866578, type: 3}
+  m_Script: {fileID: 11500000, guid: 768a524c48909a4409e39094364ae478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
-  SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
 --- !u!114 &114657032379803956
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3697,38 +3735,12 @@ MonoBehaviour:
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 0}
   MotorCount: 0
---- !u!114 &114665116486937180
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1429114656994100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f95a3b0ec59dbb44b66ab8247866578, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
-  SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
 --- !u!114 &114697900689395170
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1417224698907394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f95a3b0ec59dbb44b66ab8247866578, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
-  SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
---- !u!114 &114716940229109712
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1046584104439736}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f95a3b0ec59dbb44b66ab8247866578, type: 3}
@@ -3750,6 +3762,28 @@ MonoBehaviour:
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 0}
   MotorCount: 0
+--- !u!114 &114735457759783656
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1362698887050110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2c768d460c6cb4c9ef7793061dc33c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114751206459616382
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1362698887050110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a76df4b456f67469e54c531379b4c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114769383572254708
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3833,19 +3867,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
---- !u!114 &114870718427402210
+--- !u!114 &114866450938418228
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1349414339581636}
+  m_GameObject: {fileID: 1362698887050110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f95a3b0ec59dbb44b66ab8247866578, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ef7f76c4c10b3f4a9c5cbe5b053db98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
-  SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
 --- !u!114 &114889291172604132
 MonoBehaviour:
   m_ObjectHideFlags: 1
