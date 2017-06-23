@@ -28,6 +28,7 @@ Part 2: Github Repository
 
 Enter the link of the Github Repository where the models are located, which you want to download.
 Make sure the link ends with a slash. Also you can set here, which branch you want to download the models from.
+As of right now you may need to change the branch to "VRTEAM", since we overhauled the folder structure and model.sdf files.
 
 Default:
 Github_Repository = https://github.com/Roboy/roboy_models/
