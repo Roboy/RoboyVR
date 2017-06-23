@@ -31,8 +31,10 @@ Make sure the link ends with a slash. Also you can set here, which branch you wa
 As of right now you may need to change the branch to "VRTEAM", since we overhauled the folder structure and model.sdf files.
 
 Default:
-Github_Repository = https://github.com/Roboy/roboy_models/
-Branch = master
+
+- Github_Repository = https://github.com/Roboy/roboy_models/
+
+- Branch = master
 
 
 Part 3: Set Blender.exe
