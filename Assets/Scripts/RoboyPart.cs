@@ -13,7 +13,10 @@ public class RoboyPart : MonoBehaviour
 
     [HideInInspector] public Dictionary<ModeManager.Panelmode, Category> Categories =
         new Dictionary<ModeManager.Panelmode, Category>();
-
+    
+    /// <summary>
+    /// number of motors of that part of roboy
+    /// </summary>
     [HideInInspector] public int MotorCount;
 
     public void Initialize(int count)

@@ -59,7 +59,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     private Transform m_Roboy;
 
     /// <summary>
-    /// Pose message of roboy in our build in class
+    /// Pose message of roboy in ou r build in class
     /// </summary>
     private RoboyPoseMsg m_RoboyPoseMessage;
 

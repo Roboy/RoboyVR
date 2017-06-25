@@ -15,37 +15,37 @@ public class SelectionWheelManager : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
-    
+
     /// <summary>
     /// Threshold for display, if spin is below this value, DisableCanvas() will be called.
     /// </summary>
     [SerializeField]
     private float Threshold = 0.1f;
-    
+
     /// <summary>
     /// Multiplied when calculating friction, scales friction effect.
     /// </summary>
     [SerializeField]
-    private float Friction = 1;
-    
+    private float Friction = 3;
+
     /// <summary>
     /// Scales speed  that is applied to turn the wheel after touch input.
     /// </summary>
     [SerializeField]
-    private float Speed = 1;
-    
+    private float Speed = 20;
+
     /// <summary>
     /// Index of controller to use for selection wheel (0/1).
     /// </summary>
     [SerializeField]
     private int ControllerIndex = 0;
-    
+
     /// <summary>
     /// Specify where selected item should be positioned (clockwise, index in range of number of elem on circle).
     /// </summary>
     [SerializeField]
-    private int SelectIndex = 1;
-   
+    private int SelectIndex = 0;
+
     /// <summary>
     /// Canvas with selection wheel, en- and disabled depending on wheel.
     /// </summary>
@@ -56,42 +56,42 @@ public class SelectionWheelManager : MonoBehaviour
     /// This is used to calculate the spin after touch input stopped.
     /// </summary>
     private Vector2 m_PrevPos = Vector2.zero;
-    
+
     /// <summary>
     /// Describes the spin, decreases over time with friction.
     /// </summary>
     private float m_CurSpin = 0;
-    
+
     /// <summary>
     ///  Is selection wheel visible
     /// </summary>
     private bool m_IsVisible = false;
-    
+
     /// <summary>
     /// before disabling wheel:was it moved again? Should it still be disabled?
     /// </summary>
     private bool m_Disabling = false;
-    
+
     /// <summary>
     /// Radius of this object to rotate text on circle around centre.
     /// </summary>
     private float m_Radius;
-    
+
     /// <summary>
     /// Overall angle of rotation around z axis, needed for selection.
     /// </summary>
     private float m_CurAngle = 0;
-    
+
     /// <summary>
     /// number of text elems in selection wheel.
     /// </summary>
     private int m_ElemCount;
-    
+
     /// <summary>
     /// currently selected text elem by index.
     /// </summary>
     private int m_SelectedTextIndex = -1;
-    
+
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -105,9 +105,9 @@ public class SelectionWheelManager : MonoBehaviour
         // assuming width and height identical 
         m_Radius = GetComponent<RectTransform>().rect.width;
         // ignore this element
-        m_ElemCount = children.Length - 1; 
+        m_ElemCount = children.Length - 1;
         // stay within boundaries, not necessarily needed though
-        if (SelectIndex > m_ElemCount) SelectIndex = SelectIndex % m_ElemCount; 
+        if (SelectIndex > m_ElemCount) SelectIndex = SelectIndex % m_ElemCount;
         for (int i = 0; i < children.Length; i++)
         {
             RectTransform t = (RectTransform)children[i];
@@ -222,8 +222,8 @@ public class SelectionWheelManager : MonoBehaviour
     private void spinOnTouch(bool spin)
     {
 
-        bool touched = VRUILogic.Instance.getTouchedInfo(ControllerIndex);
-        Vector2 curPos = VRUILogic.Instance.getTouchPosition(ControllerIndex);
+        bool touched = VRUILogic.Instance.GetTouchedInfo(ControllerIndex);
+        Vector2 curPos = VRUILogic.Instance.GetTouchPosition(ControllerIndex);
 
         if (touched) // if input found
         {
@@ -233,7 +233,6 @@ public class SelectionWheelManager : MonoBehaviour
             {
                 m_CurAngle += MathUtility.VectorToAngle(m_PrevPos) - MathUtility.VectorToAngle(curPos);
                 m_CurAngle = MathUtility.WrapAngle(m_CurAngle);
-                Debug.Log("Current Angle: " + m_CurAngle);
             }
             m_PrevPos = curPos;
 
@@ -257,8 +256,8 @@ public class SelectionWheelManager : MonoBehaviour
         Component[] children;
         Vector3 newPos;
 
-        bool touched = VRUILogic.Instance.getTouchedInfo(ControllerIndex);
-        Vector2 curPos = VRUILogic.Instance.getTouchPosition(ControllerIndex);
+        bool touched = VRUILogic.Instance.GetTouchedInfo(ControllerIndex);
+        Vector2 curPos = VRUILogic.Instance.GetTouchPosition(ControllerIndex);
 
         // Visibility settings for spin effect
         if (!touched && m_CurSpin > -Threshold && m_CurSpin < Threshold) // if too slow and no input
@@ -296,7 +295,7 @@ public class SelectionWheelManager : MonoBehaviour
             Transform transform = (Transform)children[i];
             if (transform.gameObject != gameObject)
             {
-                float childangle = MathUtility.WrapAngle( 360 -(m_CurAngle + (360 / m_ElemCount) * i));
+                float childangle = MathUtility.WrapAngle(360 - (m_CurAngle + (360 / m_ElemCount) * i));
                 newPos = m_Radius * MathUtility.RotateVectorDegrees(childangle); //adjust position using new point on circle
                 children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
             }

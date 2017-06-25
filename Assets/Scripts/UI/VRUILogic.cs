@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Singleton Instance that functions as the main data base and core logic.
@@ -26,9 +27,15 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
     private bool[] touchedPad;
+
+    /// <summary>
+    /// VR Headset camera, for position and rotation information
+    /// </summary>
+    [SerializeField]
+    private Camera headset;
     #endregion
 
-    #region UNITY_MONOBEHAVIOUR_METHODS
+    #region UNITY_MONOBEHAVIOUR_METHODS1
     /// <summary>
     /// Starts UI by disabling all except for specified modes.
     /// </summary>
@@ -104,7 +111,7 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     /// <param name="i">index of controller</param>
     /// <returns>touched yes/no</returns>
-    public bool getTouchedInfo(int i)
+    public bool GetTouchedInfo(int i)
     {
         if (i < touchedPad.Length && i >= 0)
         {
@@ -117,7 +124,7 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     /// <param name="i">touchpad index</param>
     /// <returns>Current position on touchpad with max length == 1</returns>
-    public Vector2 getTouchPosition(int i)
+    public Vector2 GetTouchPosition(int i)
     {
         if (i < touchData.Length && i >= 0)
         {
@@ -125,5 +132,22 @@ public class VRUILogic : Singleton<VRUILogic> {
         }
         return Vector2.zero;
     }
+    /// <summary>
+    ///  Returns a list of selected objects from the selectorManager containing the info.
+    /// </summary>
+    /// <returns>List of objects</returns>
+    public List<SelectableObject> GetSelectedParts()
+    {
+        return SelectorManager.Instance.SelectedParts;
+    }
     #endregion
+
+    /// <summary>
+    /// returns current rotation of headset (camera rig)
+    /// </summary>
+    /// <returns>Current rotation in quaternion</returns>
+    public Quaternion GetCameraRotation()
+    {
+        return headset.transform.rotation;
+    }
 }
