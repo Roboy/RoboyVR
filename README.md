@@ -14,3 +14,5 @@ http://roboyvr-experience.readthedocs.io/en/develop/
 ## Setup
 
 Follow the installation instructions in the [documentation](http://roboyvr-experience.readthedocs.io/en/develop/Usage/0_installation.html)
+
+![Roboy Family](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/roboy_family.png?raw=true "Roboy Family")
