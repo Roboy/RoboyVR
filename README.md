@@ -13,7 +13,7 @@ With the help of a VR-Headset you can watch roboy move around in a virtual space
 
 [![RoboyVR techdemo](https://raw.githubusercontent.com/sheveg/roboyVR/164b1f24ddfb1b060015f2370fcedeca5a160d78/Assets/thumbnail.png)](https://www.youtube.com/watch?v=4lgiljctMw8)
 
-[![RoboyVR meshupdater](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/roboyvr_thumbnail_02.png?raw=true)](https://youtu.be/nNV-3x-7Jho)
+[![RoboyVR meshupdater](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/roboyVR_meshupdater.png?raw=true)](https://youtu.be/nNV-3x-7Jho)
 
 
 
