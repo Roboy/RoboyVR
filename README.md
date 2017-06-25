@@ -3,7 +3,7 @@
 Check out the whole large-scale documentation of roboyVR here:
 http://roboyvr-experience.readthedocs.io/en/develop/
 
-![Roboy Family](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/roboy_family.png?raw=true "Roboy Family")
+![Roboy Family](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/roboy_evolution.png?raw=true "Roboy Family")
 
 **How it works:**  
 Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
