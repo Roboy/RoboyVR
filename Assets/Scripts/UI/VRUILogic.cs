@@ -33,6 +33,12 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     [SerializeField]
     private Camera headset;
+
+    /// <summary>
+    /// For the main selection wheel, set which mode is default (offset)
+    /// </summary>
+    [SerializeField]
+    private int selectIndex = 0;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS1
@@ -70,6 +76,8 @@ public class VRUILogic : Singleton<VRUILogic> {
     {
         if (Instance.mode != null)
         {
+            i += selectIndex;
+            i %= mode.Length;
             Debug.Log("New mode" + i);
             if (i < mode.Length && i >= 0)
             {

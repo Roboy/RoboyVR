@@ -16,19 +16,27 @@ public class UIModeManager : MonoBehaviour
     private bool fixedScreen = true;
 
     /// <summary>
+    /// Saves position of object when initialized
+    /// </summary>
+    private Vector3 initPos; 
+    /// <summary>
     /// The screen belonging to that mode
     /// </summary>
     [SerializeField]
     private Canvas screen;
+    /// <summary>
+    /// How much the screen should be rotated further to the headset (no hiding screens behind Roboy)
+    /// </summary>
+    [SerializeField]
+    private float rotationOffset = 20;
     #endregion
-
     #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
     /// Called once by Unity during startup
     /// </summary>
-    void Start()
+    void OnEnable()
     {
-        
+        initPos = screen.transform.position;
     }
 
     /// <summary>
@@ -38,9 +46,12 @@ public class UIModeManager : MonoBehaviour
     {
         if (!fixedScreen)
         {
-            //TODO: BUGGY!!!!!
-            float angle = VRUILogic.Instance.GetCameraRotation().eulerAngles.y;
-            screen.transform.RotateAround(Vector3.zero, Vector3.up,  angle);
+            //only use angle around y axis to rotate around
+            float angle = VRUILogic.Instance.GetCameraRotation().eulerAngles.y + rotationOffset;
+            //Vector 0 as pivot point. can be arbitary point
+            screen.transform.position  = Quaternion.Euler (0,angle,0) * (initPos    - Vector3.zero) + Vector3.zero ; 
+            //make canvas face towards pivot point (zero vector)
+            screen.transform.localRotation = Quaternion.Euler(0, angle, 0);
         }
     }
     #endregion
