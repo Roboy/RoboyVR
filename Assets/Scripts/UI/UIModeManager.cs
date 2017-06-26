@@ -31,12 +31,21 @@ public class UIModeManager : MonoBehaviour
     private float rotationOffset = 20;
     #endregion
     #region UNITY_MONOBEHAVIOUR_METHODS
+
     /// <summary>
-    /// Called once by Unity during startup
+    /// initialize standard position
+    /// </summary>
+    void Awake()
+    {
+        initPos = screen.transform.position;
+    }
+
+    /// <summary>
+    /// Called as soon as enabled
     /// </summary>
     void OnEnable()
     {
-        initPos = screen.transform.position;
+        AdjustScreen();
     }
 
     /// <summary>
