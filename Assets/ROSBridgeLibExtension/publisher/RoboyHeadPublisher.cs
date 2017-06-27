@@ -2,19 +2,19 @@
 
 namespace ROSBridgeLib
 {
-    public class RoboyForcePublisher : ROSBridgePublisher
+    public class RoboyHeadPublisher : ROSBridgePublisher
     {
         public new static string GetMessageTopic()
         {
-            return "/roboy/external_force";
+            return "/roboy/simulation/external_pose";
         }
 
         public new static string GetMessageType()
         {
-            return "roboy_communication_simulation/ExternalForce";
+            return "roboy_communication_middleware/Pose";
         }
 
-        public static string ToYAMLString(ExternalForceMsg msg)
+        public static string ToYAMLString(RoboyPoseMsg msg)
         {
             return msg.ToYAMLString();
         }
