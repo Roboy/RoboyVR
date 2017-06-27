@@ -1,4 +1,9 @@
-#roboyVR™
+![roboyVR™](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/channel_art.png?raw=true "roboyVR™")
+
+Check out the whole large-scale documentation of roboyVR here:
+http://roboyvr-experience.readthedocs.io/en/develop/
+
+![Roboy Family](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/roboy_evolution.png?raw=true "Roboy Family")
 
 [![RoboyVR techdemo](https://raw.githubusercontent.com/sheveg/roboyVR/164b1f24ddfb1b060015f2370fcedeca5a160d78/Assets/thumbnail.png)](https://www.youtube.com/watch?v=4lgiljctMw8)
 
