@@ -62,6 +62,12 @@ public class InputManager : Singleton<InputManager> {
     private GUIController m_GUIController;
 
     /// <summary>
+    /// Selection wheel to select tools.
+    /// </summary>
+    [SerializeField]
+    private SelectionWheel m_ToolWheel;
+
+    /// <summary>
     /// Controllers initialized or not.
     /// </summary>
     private bool m_Initialized = false;
@@ -136,7 +142,12 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="e"></param>
     public void ToolControllerSideButtons(object sender, ClickedEventArgs e)
     {
-        ModeManager.Instance.ChangeToolMode();
+        if (m_ToolWheel == null)
+            ModeManager.Instance.ChangeToolMode();
+        else
+        {
+            m_ToolWheel.gameObject.SetActive(!m_ToolWheel.gameObject.activeSelf);
+        }
     }
 
     /// <summary>
@@ -187,6 +198,7 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="toolList"></param>
     private void setTools(List<ControllerTool> toolList)
     {
+        List<SelectionWheelPart> toolWheelParts = new List<SelectionWheelPart>();
         foreach (ControllerTool tool in toolList)
         {
             if (tool is GUIController)
@@ -205,7 +217,16 @@ public class InputManager : Singleton<InputManager> {
             {
                 m_TimeTool = (TimeTool)tool;
             }
+
+            if (m_ToolWheel)
+            {
+                SelectionWheelPart wheelPart;
+                if ((wheelPart = tool.gameObject.GetComponent<SelectionWheelPart>()) != null)
+                    toolWheelParts.Add(wheelPart);
+            }
         }
+        if (m_ToolWheel)
+            m_ToolWheel.Initialize(toolWheelParts);
     }
 
     /// <summary>
