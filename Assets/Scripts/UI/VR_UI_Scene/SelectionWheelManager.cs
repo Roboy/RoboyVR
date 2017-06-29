@@ -118,7 +118,6 @@ public class SelectionWheelManager : MonoBehaviour
                 Vector2 offset = MathUtility.RotateVectorDegrees(360 / (m_ElemCount) * (i - 1));
                 offset *= m_Radius; //apply length
                 //move elem to that position on circle
-                Debug.Log("offset unit size: " + offset);
                 t.localPosition = new Vector3(offset.x, offset.y, 0);
             }
         }
@@ -195,7 +194,6 @@ public class SelectionWheelManager : MonoBehaviour
             return;
         }
         m_SelectedTextIndex = tmp;
-        Debug.Log("selection: " + m_SelectedTextIndex);
         VRUILogic.Instance.SelectedModeChanged(m_SelectedTextIndex);
         Text[] texts = GetComponentsInChildren<Text>();
         for (int i = 0; i < texts.Length; i++)

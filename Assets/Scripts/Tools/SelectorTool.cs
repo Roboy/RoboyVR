@@ -22,7 +22,8 @@ public class SelectorTool : ControllerTool
     /// <summary>
     /// Maximum ray length for selection.
     /// </summary>
-    private float m_RayDistance = 3f;
+    [SerializeField]
+    private float m_RayDistance = 7f;
 
     private bool m_Is_released = false;
 

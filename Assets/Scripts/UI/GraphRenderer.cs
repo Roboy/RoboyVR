@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,7 +48,12 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public Text TextForValueName
     {
-        get { return m_TextForValueName.GetComponent<Text>(); }
+        get
+        {
+            if (m_TextForValueName)
+                return m_TextForValueName.GetComponent<Text>();
+            return null;
+        }
     }
 
     /// <summary>
@@ -106,24 +110,36 @@ public class GraphRenderer : MonoBehaviour
     private LineRenderer m_OscillatorLineRenderer;
 
     /// <summary>
-    /// Possible states of the graph.
+    /// indicates whether the graph curve is updating
     /// </summary>
-    private enum State
-    {
-        None,
-        Initialized,
-        Playing,
-        Paused
-    }
+    private bool playing = false;
+    /// <summary>
+    /// indicates whether all required objects and values are set
+    /// </summary>
+    private bool initialized = false;
 
-    // Current State
-    private State m_CurrentState = State.None;
+    /// <summary>
+    /// defines whether axis should be adjusted 
+    /// </summary>
+    private bool adjustAxis = false;
 
-    // Reference of the origin value list in the initialize method
-    private List<float> m_OriginValues;
+    /// <summary>
+    /// If axis not automatically adjusted, this range will be used. 
+    /// x is the lower bound, y the upper. 
+    /// </summary>
+    private Vector2 yAxisRange = Vector2.zero;
 
-    // The last updated values and positions in 3D of the graph
-    private List<float> m_CurrentValues = new List<float>();
+    /// <summary>
+    /// Sets the distance from the graph to the canvas / panel
+    /// </summary>
+    private float zdistance = -0.1f;
+
+    /// <summary>
+    /// The last updated values and positions in 3D of the graph
+    /// since not primitive -> pointer -> changes can be applied by other methods with same pointer
+    /// </summary>
+    private List<float> m_Values;
+
     private List<Vector3> m_Positions = new List<Vector3>();
 
     // Coroutines to handle the play process
@@ -136,10 +152,6 @@ public class GraphRenderer : MonoBehaviour
     // Number of points the graph displays
     private int m_NumPoints = 0;
 
-    // Minimum and maximum values of the data input
-    private float m_MinValue = 0f;
-    private float m_MaxValue = 1f;
-
     // Scaled width and height of the panel
     private float m_MaximumWidth;
     private float m_MaximumHeight;
@@ -148,7 +160,6 @@ public class GraphRenderer : MonoBehaviour
 
     // How often we update the graph`s values
     private float m_TimeStep;
-
     #endregion // PRIVATE_VARIABLES
 
     #region UNITY_MONOBEHAVIOR_METHODS
@@ -158,7 +169,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     void OnDisable()
     {
-        Stop();
+        Pause();
     }
 
     /// <summary>
@@ -166,7 +177,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     void OnEnable()
     {
-        if (m_CurrentState == State.Initialized)
+        if (initialized && !playing)
         {
             Play();
         }
@@ -260,22 +271,19 @@ public class GraphRenderer : MonoBehaviour
 
     /// <summary>
     /// Initialize all the internal parameters.
+    /// Default y axis range = (-1,1);
+    /// default scale of y axis: false
     /// </summary>
     /// <param name="valueList"></param>
     /// <param name="numPoints"></param>
     /// <param name="timeStep"></param>
     public void Initialize(List<float> valueList, int numPoints, float timeStep)
     {
-        if (m_CurrentState == State.None)
+        if (!initialized)
         {
+            Debug.Log("Initializing graph");
             // Intialize the values list with values from the given list or set them to zero if numPoints exceeds the list length
-            for (int i = 0; i < numPoints; i++)
-            {
-                if (i < valueList.Count)
-                    m_CurrentValues.Add(valueList[i]);
-                else
-                    m_CurrentValues.Add(0f);
-            }
+            m_Values = valueList;
 
             // Get the rect transform component
             m_RectTransform = GetComponent<RectTransform>();
@@ -288,20 +296,33 @@ public class GraphRenderer : MonoBehaviour
             m_NumPoints = numPoints;
             m_StepSize = m_MaximumWidth / ((float)numPoints - 1);
 
-            m_OriginValues = valueList;
+            m_Values = valueList;
             m_TimeStep = timeStep;
 
-            // For scaling purpose
-            m_MinValue = m_CurrentValues.Min();
-            m_MaxValue = m_CurrentValues.Max();
-
+            if (m_Values.Count < m_NumPoints) //need to add additional values if count smaller than requested data
+            {
+                int additions = m_NumPoints - m_Values.Count;
+                m_Values.AddRange(Enumerable.Repeat(0.0f, additions).ToList());
+            }
             for (int i = 0; i < numPoints; i++)
             {
                 // Stick the graph to panel movement
                 Vector3 pos = getGraphPositionAtIndex(i);
                 m_Positions.Add(pos);
             }
-            m_CurrentState = State.Initialized;
+
+            if (GetComponent<LineRenderer>() == null) // if no component created yet
+            {
+                // Create a LineRenderer component and attach it with the given parameters
+                m_OscillatorLineRenderer = gameObject.AddComponent<LineRenderer>();
+                m_OscillatorLineRenderer.useWorldSpace = false;
+                m_OscillatorLineRenderer.positionCount = m_NumPoints;
+                m_OscillatorLineRenderer.material = GraphMaterial;
+                m_OscillatorLineRenderer.startWidth = m_OscillatorLineRenderer.endWidth = 0.005f;
+                m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
+            }
+            if (yAxisRange.Equals(Vector2.zero)) yAxisRange = new Vector2(-1, 1);
+            initialized = true;
         }
     }
     /// <summary>
@@ -309,35 +330,31 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void Play()
     {
-        if (m_CurrentState == State.Initialized)
+        //TODO: apparently concurrency issues -> lock?
+        if (initialized && !playing)
         {
-            // Create a LineRenderer component and attach it with the given parameters
-            m_OscillatorLineRenderer = gameObject.AddComponent<LineRenderer>();
-
-            m_OscillatorLineRenderer.useWorldSpace = false;
-            m_OscillatorLineRenderer.positionCount = m_NumPoints;
-            m_OscillatorLineRenderer.material = GraphMaterial;
-            m_OscillatorLineRenderer.startWidth = m_OscillatorLineRenderer.endWidth = 0.005f;
-            m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
-
-            // Update graph position each frame
-            m_PlayCoroutine = playCoroutine();
-            // Update graph values each timestep
-            m_UpdateValuesCoroutine = updateValuesCoroutine();
-            m_CurrentState = State.Playing;
-            StartCoroutine(m_PlayCoroutine);
-            StartCoroutine(m_UpdateValuesCoroutine);
+            playing = true;
+            if (m_PlayCoroutine == null) // if no coroutine running yet
+            {
+                // Update graph position each frame
+                m_PlayCoroutine = playCoroutine();
+                // Update graph values each timestep
+                m_UpdateValuesCoroutine = updateValuesCoroutine();
+                StartCoroutine(m_PlayCoroutine);
+                StartCoroutine(m_UpdateValuesCoroutine);
+            }
+            else
+            {//when paused, this coroutine is deleted 
+                m_UpdateValuesCoroutine = updateValuesCoroutine();
+                StartCoroutine(m_UpdateValuesCoroutine);
+                StartCoroutine(m_PlayCoroutine);
+            }
         }
-        else if (m_CurrentState == State.Paused)
-        {
-            m_CurrentState = State.Playing;
-            m_UpdateValuesCoroutine = updateValuesCoroutine();
-            StartCoroutine(m_UpdateValuesCoroutine);
-        }
-        else if (m_CurrentState == State.None)
+        if (!initialized)
         {
             Debug.Log("Graph not initialized yet! Call the initialize function first!");
         }
+
     }
 
     /// <summary>
@@ -345,7 +362,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void Pause()
     {
-        if (m_CurrentState == State.Playing)
+        if (initialized && playing)
         {
             //Debug.Log("Pause");
 
@@ -353,7 +370,7 @@ public class GraphRenderer : MonoBehaviour
             StopCoroutine(m_UpdateValuesCoroutine);
             m_UpdateValuesCoroutine = null;
             //m_OscillatorLineRenderer.enabled = false;
-            m_CurrentState = State.Paused;
+            playing = false;
         }
     }
     /// <summary>
@@ -361,7 +378,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        if (m_CurrentState != State.None)
+        if (initialized) //if not stopped already
         {
             // Kill linerenderer, stop the coroutines
             if (m_PlayCoroutine != null)
@@ -372,9 +389,10 @@ public class GraphRenderer : MonoBehaviour
             m_PlayCoroutine = null;
             Destroy(m_OscillatorLineRenderer);
             // m_CurrentState = State.None;
-            m_CurrentState = State.Initialized;
+            playing = false;
+            initialized = false;
 
-            //Debug.Log("Stop");
+            Debug.Log("Graph renderer Stopped");
         }
     }
 
@@ -384,28 +402,61 @@ public class GraphRenderer : MonoBehaviour
     /// <param name="numPoints">The new size of the graph</param>
     public void ChangeGraphSize(int numPoints)
     {
-        if (numPoints == m_NumPoints)
-            return;
-
-        m_NumPoints = numPoints;
-        m_OscillatorLineRenderer.positionCount = numPoints;
-        m_StepSize = m_MaximumWidth / ((float)numPoints - 1);
-
-        int deltaSize = numPoints - m_CurrentValues.Count;
-
-        // create new 0 values for the values list so we dont get a null reference in the coroutines
-        if (deltaSize > 0)
+        if (initialized)
         {
-            for (int i = 0; i < deltaSize; i++)
+            if (numPoints == m_NumPoints)
+                return;
+
+            m_NumPoints = numPoints;
+            m_OscillatorLineRenderer.positionCount = numPoints;
+            m_StepSize = m_MaximumWidth / ((float)numPoints - 1);
+
+            int deltaSize = numPoints - m_Values.Count;
+
+            // create new 0 values for the values list so we dont get a null reference in the coroutines
+            if (deltaSize > 0)
             {
-                m_CurrentValues.Add(0f);
+                for (int i = 0; i < deltaSize; i++)
+                {
+                    m_Values.Add(0f);
+                }
+            }
+            else
+            {
+                m_Values.RemoveRange(numPoints, -deltaSize);
             }
         }
         else
         {
-            m_CurrentValues.RemoveRange(numPoints, -deltaSize);
+            Debug.Log("Please initialize first before changing graph size");
         }
-    } 
+    }
+
+    /// <summary>
+    /// changes the graph to not be dynamically adjusted depending on its current values, uses manual y axis value then
+    /// </summary>
+    public void SetNoAdjustment()
+    {
+        adjustAxis = false;
+    }
+
+    /// <summary>
+    /// changes graph to automatically scale y axis ´depending on current values
+    /// </summary>
+    public void SetAutomaticAdjust()
+    {
+        adjustAxis = true;
+    }
+
+    /// <summary>
+    /// sets range in for which the y values will be displayed
+    /// </summary>
+    /// <param name="range"></param>
+    public void SetYAxisRange(Vector2 range)
+    {
+        Debug.Log("setting range");
+        yAxisRange = range;
+    }
 
     #endregion // PUBLIC_METHODS
 
@@ -417,15 +468,11 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     private IEnumerator playCoroutine()
     {
-        while (m_CurrentState == State.Playing || m_CurrentState == State.Paused)
+        while (initialized)
         {
-            //Debug.Log("playCoroutine");
+            // Debug.Log("playCoroutine");
 
             m_Positions.Clear();
-
-            // Update the minima and maxima for scaling purpose
-            m_MinValue = m_CurrentValues.Min();
-            m_MaxValue = m_CurrentValues.Max();
 
             for (int i = 0; i < m_NumPoints; i++)
             {
@@ -438,64 +485,41 @@ public class GraphRenderer : MonoBehaviour
             m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
             yield return null;
         }
-
-        if (m_CurrentState == State.Initialized)
-        {
-            Debug.Log("Graph is initialized but not currently playing! Start the graph!");
-        }
-        else if (m_CurrentState == State.None)
+        if (!initialized)
         {
             Debug.Log("Graph is not initialized! Initialize the graph first");
         }
     }
+
     /// <summary>
     /// Refreshes value list each timestamp.
     /// </summary>
     /// <returns></returns>
     private IEnumerator updateValuesCoroutine()
     {
-        while (m_CurrentState == State.Playing)
+        while (playing)
         {
             //Debug.Log("updateValuesCoroutine");
 
-            m_CurrentValues.Clear();
-
-            for (int i = 0; i < m_NumPoints; i++)
+            if (m_Values.Count < m_NumPoints) //need to add additional values
             {
-
-                if (i < m_OriginValues.Count)
-                    m_CurrentValues.Add(m_OriginValues[i]);
-                // Origin list is shorter than the number of graph points you want to display 
-                else
-                    m_CurrentValues.Add(0f);
+                int additions = m_NumPoints - m_Values.Count;
+                m_Values.AddRange(Enumerable.Repeat(0.0f, additions).ToList());
             }
 
             if (m_ShowCurrentValue && m_TextForCurrentValue)
             {
-                m_TextForCurrentValue.GetComponent<Text>().text = m_CurrentValues[0].ToString("n2");
+                m_TextForCurrentValue.GetComponent<Text>().text = m_Values[0].ToString("n2");
             }
             yield return new WaitForSeconds(m_TimeStep);
         }
         // Print warning to console if this function is called manually when graph is not playing
-        if (m_CurrentState != State.Playing)
+        if (!playing)
         {
             Debug.Log("Graph is not playing! Cannot update the values!");
         }
     }
 
-    /// <summary>
-    /// Converts original values between [0, max. Height]
-    /// </summary>
-    /// <param name="min"></param>
-    /// <param name="max"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    float scaleValues(float min, float max, float value)
-    {
-        if (min == max)
-            return value;
-        return (value - min) * m_MaximumHeight / (max - min);
-    }
     /// <summary>
     /// Transforms point from local space to panel space
     /// </summary>
@@ -503,7 +527,19 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     Vector3 getGraphPositionAtIndex(int index)
     {
-        Vector3 pos = new Vector3(index * m_StepSize, scaleValues(m_MinValue, m_MaxValue, m_CurrentValues[index]), -25f);
+        Vector3 pos;
+        if (adjustAxis)
+        {//adapt range depending on 
+            yAxisRange = new Vector2(m_Values.Min(), m_Values.Max());
+        }
+        //check for boundaries
+        float temp = m_Values[index];
+        if (temp < yAxisRange.x) temp = yAxisRange.x;
+        if (temp > yAxisRange.y) temp = yAxisRange.y;
+        //adjust to range
+        float y = m_MaximumHeight * (temp - yAxisRange.x) / (yAxisRange.y - yAxisRange.x); // size * (my_dist / overall_dist)
+        pos = new Vector3(index * m_StepSize, y, zdistance);
+
         pos -= m_RectTransform.pivot.x * m_MaximumWidth * Vector3.right;
         pos -= m_RectTransform.pivot.y * m_MaximumHeight * Vector3.up;
         Vector2 pivotDifference = Vector2.one * 0.5f - m_RectTransform.pivot;
@@ -524,7 +560,7 @@ public class GraphRenderer : MonoBehaviour
         m_TextForCurrentValue.transform.localPosition = Vector3.zero;
         m_TextForCurrentValue.transform.localRotation = Quaternion.identity;
 
-        m_TextForCurrentValue.AddComponent<Text>();
+        object temp = m_TextForCurrentValue.AddComponent<Text>();
     }
 
     /// <summary>
@@ -546,7 +582,6 @@ public class GraphRenderer : MonoBehaviour
         m_TextForValueName.transform.localScale = transform.localScale;
         m_TextForValueName.transform.localPosition = Vector3.zero;
         m_TextForValueName.transform.localRotation = Quaternion.identity;
-
         m_TextForValueName.AddComponent<Text>();
     }
 

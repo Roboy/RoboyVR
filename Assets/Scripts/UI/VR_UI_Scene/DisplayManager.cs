@@ -6,6 +6,7 @@ using UnityEngine.UI;
 /// Handles multiple displays.
 /// Upon start, 2 displays are activated if 2 cameras and 2 monitors are found. 
 /// Additional information is shortly displayed on the main screen.
+/// Must be attached to a canvas directly
 /// </summary>
 public class DisplayManager : MonoBehaviour
 {
@@ -87,10 +88,7 @@ public class DisplayManager : MonoBehaviour
         if (c == null) yield return null;
         c.enabled = true;
         yield return new WaitForSeconds(sec);
-        foreach (Component comp in c.GetComponentsInChildren<Component>())
-        {
-            Destroy(comp.gameObject);
-        }
+        Destroy(this);
     }
     #endregion
 }

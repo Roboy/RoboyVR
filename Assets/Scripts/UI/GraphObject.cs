@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
@@ -44,6 +42,7 @@ public class GraphObject : MonoBehaviour
     void Awake()
     {
         m_GraphRenderer = gameObject.AddComponent<GraphRenderer>();
+		Debug.Log ("New m_GraphRenderer");
     }
 
     #endregion
@@ -112,8 +111,8 @@ public class GraphObject : MonoBehaviour
     /// <param name="value"></param>
     public void AddValue(float value)
     {
-        m_Values.ShiftRight(1);
         m_Values.Add(value);
+        m_Values.RemoveAt(0);
     }
 
     /// <summary>
@@ -122,12 +121,8 @@ public class GraphObject : MonoBehaviour
     /// <param name="values">Set of float values.</param>
     public void AddValues(List<float> values)
     {
-        m_Values.ShiftRight(values.Count);
-
-        for (int i = 0; i < values.Count; i++)
-        {
-            m_Values[i] = values[i];
-        }
+        m_Values.AddRange(values);
+        m_Values.RemoveRange(0, values.Count);
     }
 
     /// <summary>
@@ -139,9 +134,34 @@ public class GraphObject : MonoBehaviour
         int _count = Mathf.Min(m_Values.Count, count);
         m_GraphRenderer.ChangeGraphSize(_count);
     }
+
+
+    /// <summary>
+    /// changes the graph to not be dynamically adjusted depending on its current values, uses manual y axis value then
+    /// </summary>
+    public void SetNoAdjustment()
+    {
+        m_GraphRenderer.SetNoAdjustment();
+    }
+
+    /// <summary>
+    /// changes graph to automatically scale y axis ´depending on current values
+    /// </summary>
+    public void SetAutomaticAdjust()
+    {
+        m_GraphRenderer.SetAutomaticAdjust();
+    }
+
+    /// <summary>
+    /// sets range in for which the y values will be displayed
+    /// </summary>
+    /// <param name="range">x value == lower bownd, y upper</param>
+    public void SetYAxisRange(Vector2 range)
+    {
+        m_GraphRenderer.SetYAxisRange(range);
+    }
     #endregion
 
-    #region PRIVATE_METHODS
-    #endregion
+
 }
 
