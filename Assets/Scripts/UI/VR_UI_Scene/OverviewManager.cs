@@ -58,7 +58,7 @@ public class OverviewManager : MonoBehaviour
 
         heart.SetDefaultValue(2);
         heart.SetNoAdjustment();
-        heart.SetYAxisRange(new Vector2(0, 4));
+        //heart.SetYAxisRange(new Vector2(0, 4));
         heart.Run(null, 200, 1 / 200);
     }
 

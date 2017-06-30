@@ -32,6 +32,10 @@ public class ViewSelectionManager : MonoBehaviour {
     /// </summary>
     public RawImage ZedImage;
 
+    public GameObject Cave;
+
+    public GameObject Roboy;
+
     #endregion PUBLIC_MEMBER_VARIABLES
 
     #region PRIVATE_MEMBER_VARIABLES
@@ -74,7 +78,9 @@ public class ViewSelectionManager : MonoBehaviour {
         GazeboImage.gameObject.SetActive(true);
         HtcImage.gameObject.SetActive(false);
         ZedImage.gameObject.SetActive(false);
-        
+        Cave.gameObject.SetActive(false);
+        Roboy.gameObject.SetActive(true);
+
     }
     
     /// <summary>
@@ -92,6 +98,8 @@ public class ViewSelectionManager : MonoBehaviour {
         GazeboImage.gameObject.SetActive(false);
         HtcImage.gameObject.SetActive(false);
         ZedImage.gameObject.SetActive(true);
+        Cave.gameObject.SetActive(false);
+        Roboy.gameObject.SetActive(false);
         
     }
     
@@ -107,7 +115,9 @@ public class ViewSelectionManager : MonoBehaviour {
 
         //Turn Canvas On/Off and enable the image that should be seen.
         InstructionCanvas.gameObject.SetActive(false);
-        
+        Cave.gameObject.SetActive(true);
+        Roboy.gameObject.SetActive(true);
+
     }
     
     /// <summary>
@@ -122,6 +132,8 @@ public class ViewSelectionManager : MonoBehaviour {
 
         //Turn Canvas On/Off and enable the image that should be seen.
         InstructionCanvas.gameObject.SetActive(false);
+        Cave.gameObject.SetActive(true);
+        Roboy.gameObject.SetActive(true);
 
     }
 
