@@ -106,9 +106,9 @@ public class OverviewManager : MonoBehaviour
     private IEnumerator test()
     {
         yield return new WaitForSeconds(5);
-        heart.SetNumberOfPoints(10);
+        heart.Pause();
         yield return new WaitForSeconds(1.5f);
-        heart.SetNumberOfPoints(400);
+        heart.Resume();
         testing = false;
     }
     /// <summary>

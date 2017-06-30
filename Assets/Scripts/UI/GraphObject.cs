@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using System;
 
 /// <summary>
 /// Wrapper class around GraphRenderer and ExtensionMethod.
@@ -42,8 +44,11 @@ public class GraphObject : MonoBehaviour
     /// How often do we want to update the graph renderer.
     /// </summary>
     private float m_TimeStep = 0f;
-
-    private bool m_WaitingOver = true;
+    /* TODO: 
+    /// <summary>
+    /// Only add elements into the List if waiting time is marked as over (true). manually set false afterwards
+    /// </summary>
+    private bool m_WaitingOver = true;*/
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -94,6 +99,7 @@ public class GraphObject : MonoBehaviour
         // init graph renderer
         m_GraphRenderer.Initialize(m_Values, m_DisplayedPointsCount);
         m_GraphRenderer.Play();
+        //TODO : StartCoroutine(MonitorTimeStep());
     }
 
     /// <summary>
@@ -101,7 +107,7 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     public void Resume()
     {
-        //Debug.Log("Resuming graph");
+        Debug.Log("Resuming graph");
         if (m_Values == null) //if empty list found
         {
             m_Values = new List<float>();
@@ -139,6 +145,9 @@ public class GraphObject : MonoBehaviour
     /// <param name="value">one value</param>
     public void AddValue(float value)
     {
+        /*TODO
+        if (!m_WaitingOver) return;
+        m_WaitingOver = false;*/
         if (m_GraphRenderer.IsPlaying()) // update displayed values list
         {
             m_Values.Add(value);
@@ -150,12 +159,14 @@ public class GraphObject : MonoBehaviour
             {
                 m_buffered = new List<float>();
             }
+            //Debug.Log("buffering");
             m_buffered.Add(value);
             if (m_buffered.Count > m_DisplayedPointsCount) //keep list cropped to max_size
             {
                 m_buffered.RemoveAt(0);
             }
         }
+
     }
 
     /// <summary>
@@ -164,6 +175,9 @@ public class GraphObject : MonoBehaviour
     /// <param name="values">Set of float values.</param>
     public void AddValues(List<float> values)
     {
+        /*TODO
+        if (!m_WaitingOver) return;
+        m_WaitingOver = false;*/
         List<float> change;
         if (m_GraphRenderer.IsPlaying()) //update displayed values if playing
         {
@@ -183,6 +197,7 @@ public class GraphObject : MonoBehaviour
         {
             change.RemoveRange(0, delta);
         }
+
     }
 
     /// <summary>
@@ -192,7 +207,7 @@ public class GraphObject : MonoBehaviour
     public void ShowLastValues(int count)
     {
         int _count = Mathf.Min(m_Values.Count, count);
-        m_GraphRenderer.ChangeGraphPointNumber(_count);
+        m_GraphRenderer.ChangeGraphPointNumber(count);
     }
 
 
@@ -248,5 +263,18 @@ public class GraphObject : MonoBehaviour
         m_GraphRenderer.ChangeGraphPointNumber(number);
     }
     #endregion
+
+    /*TODO: 
+    #region PRIVATE_METHODS
+    /// <summary>
+    /// Extra function to monitor timestep to adjust when new elements shall be added to the list
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator MonitorTimeStep()
+    {
+        yield return new WaitForSeconds(m_TimeStep);
+        m_WaitingOver = true;
+    }
+        #endregion*/
 }
 
