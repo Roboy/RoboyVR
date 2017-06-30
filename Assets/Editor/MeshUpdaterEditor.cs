@@ -45,6 +45,36 @@ class MeshUpdaterEditor : Editor
         if (meshUpdater.CurrentState < MeshUpdater.State.BlenderPathSet)
             return;
 
+        //if (meshUpdater.CurrentState == MeshUpdater.State.BlenderPathSet)
+        //{
+        if (meshUpdater.DownloadType == MeshUpdater.DLType.Models) {
+            GUI.enabled = false;
+        }
+            GUILayout.BeginHorizontal("box");
+            if (GUILayout.Button("Download Models")) {
+                Debug.Log("DownloadType: Models");
+                meshUpdater.DownloadType = MeshUpdater.DLType.Models;
+                
+                //GUILayout.Button("Download Models", Color.green);
+
+            }
+        GUI.enabled = true;
+        if (meshUpdater.DownloadType == MeshUpdater.DLType.Worlds)
+        {
+            GUI.enabled = false;
+        }
+        if (GUILayout.Button("Download Worlds")) {
+                Debug.Log("DownloadType: Worlds");
+                meshUpdater.DownloadType = MeshUpdater.DLType.Worlds;
+            }
+            GUILayout.EndHorizontal();
+        //}
+
+        if (meshUpdater.CurrentState < MeshUpdater.State.TypeSet)
+            return;
+
+        GUI.enabled = true;
+
         if (GUILayout.Button("Scan"))
         {
             meshUpdater.Scan();

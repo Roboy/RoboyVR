@@ -17,8 +17,9 @@ public class MeshUpdater : MonoBehaviour {
         None = 0,
         Initialized = 1,
         BlenderPathSet = 2,
-        Scanned = 3,
-        Downloaded = 4
+        TypeSet = 3,
+        Scanned = 4,
+        Downloaded = 5
     }
 
     /// <summary>
@@ -39,6 +40,31 @@ public class MeshUpdater : MonoBehaviour {
                 m_CurrentState = (State) Mathf.Max((int)State.BlenderPathSet, (int)m_CurrentState);
         }
     }
+
+    /// <summary>
+    /// If set false download models, if true download worlds
+    /// </summary>
+    [HideInInspector]
+    public DLType DownloadType {
+        get { return m_DownloadType; }
+        set {
+            m_DownloadType = value;
+            m_CurrentState = (State)Mathf.Max((int)State.TypeSet, (int)m_CurrentState);
+        }
+    }
+
+    private DLType m_DownloadType = DLType.None;
+
+    /// <summary>
+    /// Type enum to choose what type will be downloaded 
+    /// </summary>
+    public enum DLType
+    {
+        None = 0,
+        Models = 1,
+        Worlds = 2,
+    }
+
     /// <summary>
     /// Public property of the URL Dic for the editor script
     /// </summary>
@@ -164,124 +190,137 @@ public class MeshUpdater : MonoBehaviour {
     /// </summary>
     public void UpdateModels()
     {
-        string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/";
-        //var processInfo = new ProcessStartInfo("cmd.exe", "/C" + "start \"\" \"" + m_PathToBlender + "\" -P \"" + m_PathToDownloadScript + "\" \"" + pathToMeshes + "\" \"" + m_pathToProjectModels + "\" \"\"");
-        //UnityEngine.Debug.Log("Run not implemented yet!");
-        // get a list of all entries which the user wants to update
-        List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
-        foreach (var urlEntry in tempURLList)
-        {
-            string[] scanArguments = { "python", m_PathToScanScript, m_URLDictionary[urlEntry.Key] };
-            CommandlineUtility.RunCommandLine(scanArguments);
-            //Debug.Log(m_URLDictionary[urlEntry.Key]);
-
-            string pathToScanFile = m_ProjectFolder + @"/tempModelURLs.txt";
-            if (!File.Exists(pathToScanFile))
+        if (m_DownloadType == DLType.Models) {
+            string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/";
+            //var processInfo = new ProcessStartInfo("cmd.exe", "/C" + "start \"\" \"" + m_PathToBlender + "\" -P \"" + m_PathToDownloadScript + "\" \"" + pathToMeshes + "\" \"" + m_pathToProjectModels + "\" \"\"");
+            //UnityEngine.Debug.Log("Run not implemented yet!");
+            // get a list of all entries which the user wants to update
+            List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
+            foreach (var urlEntry in tempURLList)
             {
-                Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
-                return;
-            }
-            // get file content of format title:url
-            string[] scanContent = File.ReadAllLines(pathToScanFile);
+                string[] scanArguments = { "python", m_PathToScanScript, m_URLDictionary[urlEntry.Key] };
+                CommandlineUtility.RunCommandLine(scanArguments);
+                //Debug.Log(m_URLDictionary[urlEntry.Key]);
 
-            File.Delete(pathToScanFile);
-
-            foreach (var line in scanContent)
-            {
-                string[] titleURL = line.Split(';');
-                // check if there is exactly one ";" meaning only two elements
-                if (titleURL.Length != 2)
+                string pathToScanFile = m_ProjectFolder + @"/tempModelURLs.txt";
+                if (!File.Exists(pathToScanFile))
                 {
-                    Debug.Log("In line:\n" + line + "\nthe format does not match title;URL");
-                    continue;
+                    Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+                    return;
                 }
-                // ignore link if it is not in the github repo
-                if (!titleURL[1].Contains(Github_Repository))
+                // get file content of format title:url
+                string[] scanContent = File.ReadAllLines(pathToScanFile);
+
+                File.Delete(pathToScanFile);
+
+                foreach (var line in scanContent)
                 {
-                    Debug.Log("Link does not have the github repository!");
-                    continue;
-                }             
+                    string[] titleURL = line.Split(';');
+                    // check if there is exactly one ";" meaning only two elements
+                    if (titleURL.Length != 2)
+                    {
+                        Debug.Log("In line:\n" + line + "\nthe format does not match title;URL");
+                        continue;
+                    }
+                    // ignore link if it is not in the github repo
+                    if (!titleURL[1].Contains(Github_Repository))
+                    {
+                        Debug.Log("Link does not have the github repository!");
+                        continue;
+                    }
 
-                //replace "tree" with "raw" in URL
-                var regex = new Regex(Regex.Escape("tree"));
-                titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
+                    //replace "tree" with "raw" in URL
+                    var regex = new Regex(Regex.Escape("tree"));
+                    titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
 
-                //start modeldownloader.py for visual
-                string[] updateArgumentsVis = { "start \"\" \"" + m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/visual/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/visual", "" };
-                CommandlineUtility.RunCommandLine(updateArgumentsVis);
+                    //start modeldownloader.py for visual
+                    string[] updateArgumentsVis = { "start \"\" \"" + m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/visual/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/visual", "" };
+                    CommandlineUtility.RunCommandLine(updateArgumentsVis);
 
-                //start modeldownloader.py for collision
-                string[] updateArgumentsCol = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/collision/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/collision", "" };
-                CommandlineUtility.RunCommandLine(updateArgumentsCol);
+                    //start modeldownloader.py for collision
+                    string[] updateArgumentsCol = { "start \"\" \"" + m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/collision/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/collision", "" };
+                    CommandlineUtility.RunCommandLine(updateArgumentsCol);
 
-                if (!m_ModelNames.Contains(urlEntry.Key)) {
-                    m_ModelNames.Add(urlEntry.Key);                               
+                    if (!m_ModelNames.Contains(urlEntry.Key)) {
+                        m_ModelNames.Add(urlEntry.Key);
+                    }
                 }
+                m_CurrentState = State.Downloaded;
             }
-            m_CurrentState = State.Downloaded;
-        }  
+        } else if (m_DownloadType == DLType.Worlds) {
+
+            }
     }
 
     /// <summary>
     /// Creates prefabs for every model which were downloaded. 
     /// </summary>
-    public void CreatePrefab() {
-        foreach (string modelName in m_ModelNames)
-        {   
-            string absoluteModelPath = m_ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
-            //Create GameObject where everything will be attached
-            GameObject modelParent = new GameObject(modelName);
-
-
-            //List for all downloaded visuals
-            List<string> visMeshList = new List<string>();
-            if (absoluteModelPath != "")
+    public void CreatePrefab()
+    {
+        if (m_DownloadType == DLType.Models)
+        {
+            foreach (string modelName in m_ModelNames)
             {
-                visMeshList = getFilePathsFBX(absoluteModelPath + @"/visual");
-            }
+                string absoluteModelPath = m_ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
+                //Create GameObject where everything will be attached
+                GameObject modelParent = new GameObject(modelName);
 
-            //List for all downloaded colliders
-            List<string> colMeshList = new List<string>();
-            if (absoluteModelPath != "")
-            {
-                colMeshList = getFilePathsFBX(absoluteModelPath + @"/collision");
-            }
 
-            foreach (string name in visMeshList)
-            {
-                GameObject meshPrefab = null;
-                string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
-                // import Mesh
-                meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + @"visual/" + name, typeof(Object));
-                //StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
-                if (meshPrefab == null)
+                //List for all downloaded visuals
+                List<string> visMeshList = new List<string>();
+                if (absoluteModelPath != "")
                 {
-                    Debug.Log("Could not import model!");
-                    continue;
+                    visMeshList = getFilePathsFBX(absoluteModelPath + @"/visual");
                 }
 
-                GameObject meshCopy = Instantiate(meshPrefab);
-                meshCopy.tag = "RoboyPart";
-                attachCollider(meshCopy, relativeModelPath, name);
+                //List for all downloaded colliders
+                List<string> colMeshList = new List<string>();
+                if (absoluteModelPath != "")
+                {
+                    colMeshList = getFilePathsFBX(absoluteModelPath + @"/collision");
+                }
 
-                SelectableObject selectableObjectComponent = meshCopy.AddComponent<SelectableObject>();
-                selectableObjectComponent.TargetedMaterial = Resources.Load("RoboyMaterials/TargetedMaterial") as Material;
-                selectableObjectComponent.SelectedMaterial = Resources.Load("RoboyMaterials/SelectedMaterial") as Material;
+                foreach (string name in visMeshList)
+                {
+                    GameObject meshPrefab = null;
+                    string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
+                    // import Mesh
+                    meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + @"visual/" + name, typeof(Object));
+                    //StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
+                    if (meshPrefab == null)
+                    {
+                        Debug.Log("Could not import model!");
+                        continue;
+                    }
 
-                meshCopy.AddComponent<RoboyPart>();
-                // Attach Model with mesh to parent GO
-                meshCopy.transform.parent = modelParent.transform;
+                    GameObject meshCopy = Instantiate(meshPrefab);
+                    meshCopy.tag = "RoboyPart";
+                    attachCollider(meshCopy, relativeModelPath, name);
+
+                    SelectableObject selectableObjectComponent = meshCopy.AddComponent<SelectableObject>();
+                    selectableObjectComponent.TargetedMaterial = Resources.Load("RoboyMaterials/TargetedMaterial") as Material;
+                    selectableObjectComponent.SelectedMaterial = Resources.Load("RoboyMaterials/SelectedMaterial") as Material;
+
+                    meshCopy.AddComponent<RoboyPart>();
+                    // Attach Model with mesh to parent GO
+                    meshCopy.transform.parent = modelParent.transform;
+                }
+                modelParent.tag = "Roboy";
+
+                //Create Prefab of existing GO
+                Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
+                PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
+                //Destroy GO after prefab is created
+                DestroyImmediate(modelParent);
             }
-            modelParent.tag = "Roboy";
-
-            //Create Prefab of existing GO
-            Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
-            PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
-            //Destroy GO after prefab is created
-            DestroyImmediate(modelParent);
+            m_ModelNames.Clear();
         }
-        m_ModelNames.Clear();
+        else if (m_DownloadType == DLType.Worlds)
+        {
+        }
     }
+ 
+
 
     ///// <summary>
     ///// Tries to import the model in the given path. Does not work like intended cause of reasons.
