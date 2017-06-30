@@ -13,7 +13,7 @@ public class GraphObject : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
-    
+
     /// <summary>
     /// Cached reference to our graph renderer.
     /// </summary>
@@ -43,6 +43,7 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     private float m_TimeStep = 0f;
 
+    private bool m_WaitingOver = true;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -62,7 +63,7 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     /// <param name="values">A list of floats which you want to display. Can be empty.</param>
     /// <param name="displayedPointsCount">How many points of the list you want to display.</param>
-    /// <param name="timeStep">How often the graph will be updated.</param>
+    /// <param name="timeStep">How often the graph will be updated. If set to 0-> every frame.</param>
     public void Run(List<float> values, int displayedPointsCount, float timeStep)
     {
         // return when the function is called with bad values
@@ -81,17 +82,17 @@ public class GraphObject : MonoBehaviour
             timeStep = 0f;
 
         // fill the list if necessary
-        if (values.Count < displayedPointsCount )
+        if (values.Count < displayedPointsCount)
         {
             m_Values = values;
-            m_Values.AddRange(Enumerable.Repeat(defaultVal, (displayedPointsCount-values.Count)).ToList());
+            m_Values.AddRange(Enumerable.Repeat(defaultVal, (displayedPointsCount - values.Count)).ToList());
         }
         // init values
         m_Values = values;
         m_DisplayedPointsCount = displayedPointsCount;
         m_TimeStep = timeStep;
         // init graph renderer
-        m_GraphRenderer.Initialize(m_Values, m_DisplayedPointsCount, m_TimeStep);
+        m_GraphRenderer.Initialize(m_Values, m_DisplayedPointsCount);
         m_GraphRenderer.Play();
     }
 
@@ -100,28 +101,23 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     public void Resume()
     {
-        Debug.Log("Resuming graph");
-        if(m_Values == null) //if empty list found
+        //Debug.Log("Resuming graph");
+        if (m_Values == null) //if empty list found
         {
             m_Values = new List<float>();
-            if(m_buffered == null)
+            if (m_buffered == null)
             {
                 m_Values.AddRange(Enumerable.Repeat(defaultVal, (m_DisplayedPointsCount)).ToList());
             }
         }
         //update list if buffered values found
-        if(m_buffered != null && m_buffered.Count > 0)
+        if (m_buffered != null && m_buffered.Count > 0)
         {
+            //operate on this list (setting it to buffer list will not set list of graphrenderer)
             int numchanges = m_buffered.Count;
-            if(numchanges == m_DisplayedPointsCount || numchanges> m_Values.Count)
-            {
-                m_Values = m_buffered;
-            }
-            else
-            {
-                m_Values.RemoveRange(0, numchanges);
-                m_Values.AddRange(m_buffered);
-            }
+            m_Values.RemoveRange(0, numchanges);
+            m_Values.AddRange(m_buffered);
+
             //delete buffer (praise the garbage collection)
             m_buffered = null;
         }
@@ -145,17 +141,17 @@ public class GraphObject : MonoBehaviour
     {
         if (m_GraphRenderer.IsPlaying()) // update displayed values list
         {
-        m_Values.Add(value);
-        m_Values.RemoveAt(0);
+            m_Values.Add(value);
+            m_Values.RemoveAt(0);
         }
         else //insert in buffered list
         {
-            if(m_buffered == null)
+            if (m_buffered == null)
             {
                 m_buffered = new List<float>();
             }
             m_buffered.Add(value);
-            if(m_buffered.Count > m_DisplayedPointsCount) //keep list cropped to max_size
+            if (m_buffered.Count > m_DisplayedPointsCount) //keep list cropped to max_size
             {
                 m_buffered.RemoveAt(0);
             }
@@ -175,7 +171,7 @@ public class GraphObject : MonoBehaviour
         }
         else //update buffer if not
         {
-            if(m_buffered == null)
+            if (m_buffered == null)
             {
                 m_buffered = new List<float>();
             }
@@ -196,7 +192,7 @@ public class GraphObject : MonoBehaviour
     public void ShowLastValues(int count)
     {
         int _count = Mathf.Min(m_Values.Count, count);
-        m_GraphRenderer.ChangeGraphSize(_count);
+        m_GraphRenderer.ChangeGraphPointNumber(_count);
     }
 
 
@@ -233,8 +229,6 @@ public class GraphObject : MonoBehaviour
     {
         m_GraphRenderer.SetManualAdjust(min, max);
     }
-    #endregion
-
     /// <summary>
     /// sets default value which is used to create new elems if list not filled
     /// </summary>
@@ -245,5 +239,14 @@ public class GraphObject : MonoBehaviour
         m_GraphRenderer.SetDefaultValue(val);
     }
 
+    /// <summary>
+    /// sets number of points to plot the graph. The list will be adapted to the new size
+    /// </summary>
+    /// <param name="number"></param>
+    public void SetNumberOfPoints(int number)
+    {
+        m_GraphRenderer.ChangeGraphPointNumber(number);
+    }
+    #endregion
 }
 

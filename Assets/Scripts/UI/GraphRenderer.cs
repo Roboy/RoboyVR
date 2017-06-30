@@ -151,9 +151,11 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     private float m_DefaultValue = 0f;
 
-    // Coroutines to handle the play process
-    private IEnumerator m_PlayCoroutine;
-    private IEnumerator m_UpdateValuesCoroutine;
+    /// <summary>
+    ///  Coroutines to handle the play process. References needed to stop these. 
+    /// </summary>
+    private IEnumerator m_PlayCoroutine = null;
+    private IEnumerator m_UpdateValuesCoroutine = null;
 
     // Distance between each point
     private float m_StepSize = 0f;
@@ -165,10 +167,11 @@ public class GraphRenderer : MonoBehaviour
     private float m_MaximumWidth;
     private float m_MaximumHeight;
 
+    /// <summary>
+    /// rectangle containing size, position & rotation (local space)
+    /// </summary>
     private RectTransform m_RectTransform;
 
-    // How often we update the graph`s values
-    private float m_TimeStep;
     #endregion // PRIVATE_VARIABLES
 
     #region UNITY_MONOBEHAVIOR_METHODS
@@ -274,6 +277,20 @@ public class GraphRenderer : MonoBehaviour
         m_BorderInitialized = true;
     }
 
+    /// <summary>
+    /// event, called by unity as soon as RectTransform Component recognised changed. 
+    /// Updates m_MaximumWidth and m_MaximumHeight for graph plotter
+    /// </summary>
+    void OnRectTransformDimensionsChange()
+    {
+
+        m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
+        m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop);
+
+        m_StepSize = m_MaximumWidth / ((float)m_NumPoints - 1);
+        Debug.Log("CHANGE IN SCALE !!!");
+    }
+
     #endregion // UNITY_MONOBEHAVIOR_METHODS
 
     #region PUBLIC_METHODS
@@ -285,12 +302,11 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     /// <param name="valueList"></param>
     /// <param name="numPoints"></param>
-    /// <param name="timeStep"></param>
-    public void Initialize(List<float> valueList, int numPoints, float timeStep)
+    public void Initialize(List<float> valueList, int numPoints)
     {
         if (!m_Initialized)
         {
-            Debug.Log("Initializing graph");
+            Debug.Log("Initializing graph renderer");
             // Intialize the values list with values from the given list or set them to zero if numPoints exceeds the list length
             m_Values = valueList;
             // Get the rect transform component
@@ -305,7 +321,6 @@ public class GraphRenderer : MonoBehaviour
             m_StepSize = m_MaximumWidth / ((float)numPoints - 1);
 
             m_Values = valueList;
-            m_TimeStep = timeStep;
 
             if (m_Values.Count < m_NumPoints) //need to add additional values if count smaller than requested data
             {
@@ -338,6 +353,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void Play()
     {
+        //Debug.Log("Graph renderer: Play called");
         //TODO: apparently concurrency issues -> lock?
         if (m_Initialized && !m_Playing)
         {
@@ -346,13 +362,13 @@ public class GraphRenderer : MonoBehaviour
             {
                 // Update graph position each frame
                 m_PlayCoroutine = playCoroutine();
-                // Update graph values each timestep
                 m_UpdateValuesCoroutine = updateValuesCoroutine();
+                // Update graph values each timestep
                 StartCoroutine(m_PlayCoroutine);
                 StartCoroutine(m_UpdateValuesCoroutine);
             }
             else
-            {//when paused, this coroutine is deleted 
+            {//when paused only playcoroutine running
                 m_UpdateValuesCoroutine = updateValuesCoroutine();
                 StartCoroutine(m_UpdateValuesCoroutine);
                 StartCoroutine(m_PlayCoroutine);
@@ -372,8 +388,7 @@ public class GraphRenderer : MonoBehaviour
     {
         if (m_Initialized && m_Playing)
         {
-            //Debug.Log("Pause");
-
+            //Debug.Log("Graph renderer Pause");
             // Stop updating the values
             StopCoroutine(m_UpdateValuesCoroutine);
             m_UpdateValuesCoroutine = null;
@@ -390,11 +405,16 @@ public class GraphRenderer : MonoBehaviour
         {
             // Kill linerenderer, stop the coroutines
             if (m_PlayCoroutine != null)
+            {
                 StopCoroutine(m_PlayCoroutine);
+                m_PlayCoroutine = null;
+            }
             if (m_UpdateValuesCoroutine != null)
+            {
                 StopCoroutine(m_UpdateValuesCoroutine);
-            m_UpdateValuesCoroutine = null;
-            m_PlayCoroutine = null;
+                m_UpdateValuesCoroutine = null;
+            }
+
             Destroy(m_OscillatorLineRenderer);
             // m_CurrentState = State.None;
             m_Playing = false;
@@ -405,10 +425,10 @@ public class GraphRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// Changes the graph size to the given size.
+    /// Changes the number of points to be plotted to the given number.
     /// </summary>
     /// <param name="numPoints">The new size of the graph</param>
-    public void ChangeGraphSize(int numPoints)
+    public void ChangeGraphPointNumber(int numPoints)
     {
         if (m_Initialized)
         {
@@ -424,7 +444,7 @@ public class GraphRenderer : MonoBehaviour
             // create new 0 values for the values list so we dont get a null reference in the coroutines
             if (deltaSize > 0)
             {
-                 m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, deltaSize).ToList());
+                m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, deltaSize).ToList());
             }
             else
             {
@@ -496,7 +516,8 @@ public class GraphRenderer : MonoBehaviour
     /// returns, whether the coroutines are being executed and state is set to play. 
     /// </summary>
     /// <returns>playing (true), not playing(false)</returns>
-    public bool IsPlaying(){
+    public bool IsPlaying()
+    {
         return m_Playing;
     }
     #endregion // PUBLIC_METHODS
@@ -551,9 +572,9 @@ public class GraphRenderer : MonoBehaviour
             if (m_ShowCurrentValue && m_TextForCurrentValue)
             {
                 Text tmp = m_TextForCurrentValue.GetComponent<Text>();
-                if(tmp) tmp.text = m_Values[0].ToString("n2");
+                if (tmp) tmp.text = m_Values[0].ToString("n2");
             }
-            yield return new WaitForSeconds(m_TimeStep);
+            yield break;
         }
         // Print warning to console if this function is called manually when graph is not playing
         if (!m_Playing)

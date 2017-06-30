@@ -31,7 +31,7 @@ public class UIPanelPage : MonoBehaviour
 
             //Debug.Log(motorIndex);
 
-            graphRenderer.Initialize(roboyPart.Categories[panelMode].Motors[motorIndex].Values, 30, 0f);
+            graphRenderer.Initialize(roboyPart.Categories[panelMode].Motors[motorIndex].Values, 30);
             graphRenderer.Play();
 
             GraphRenderers.Add(graphRenderer);

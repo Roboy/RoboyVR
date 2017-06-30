@@ -58,8 +58,8 @@ public class OverviewManager : MonoBehaviour
 
         heart.SetDefaultValue(2);
         heart.SetNoAdjustment();
-        //heart.SetYAxisRange(new Vector2(0, 4));
-        heart.Run(null, 200, 1 / 200);
+        heart.SetManualAdjust(new Vector2(0, 4));
+        heart.Run(null, 200, 1);
     }
 
     /// <summary>
@@ -95,23 +95,22 @@ public class OverviewManager : MonoBehaviour
     #endregion
 
     #region PUBLIC_METHODS
+
+    #endregion
+
+    #region PRIVATE_METHODS
     /// <summary>
     /// coroutine to test graph pause and resume functions / behaviour. pauses and restarts after short amount of waiting time
     /// </summary>
     /// <returns></returns>
-    IEnumerator test()
+    private IEnumerator test()
     {
-        yield return new WaitForSeconds(3);
-        heart.Pause();
-
-        yield return new WaitForSeconds(2f);
-        heart.Resume();
+        yield return new WaitForSeconds(5);
+        heart.SetNumberOfPoints(10);
+        yield return new WaitForSeconds(1.5f);
+        heart.SetNumberOfPoints(400);
         testing = false;
     }
-    #endregion
-
-    #region PRIVATE_METHODS
-
     /// <summary>
     /// returns heartbeat value of current time step
     /// </summary>
