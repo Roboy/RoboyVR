@@ -23,19 +23,20 @@ public class OverviewManager : MonoBehaviour
     [SerializeField]
     private Canvas screen;
 
-   /* For test purposes to adjust heartbeat
-    *  #region heartbeat values
-    [SerializeField]
-    private float a= 0.2f;
-    [SerializeField]
-    private float d= 1.4f;
-    [SerializeField]
-    private float h= 3;
-    [SerializeField]
-    private float s= 0.05f;
-    [SerializeField]
-    private float w= 0.02f;
-    #endregion*/
+    private bool testing = false;
+    /* For test purposes to adjust heartbeat
+     *  #region heartbeat values
+     [SerializeField]
+     private float a= 0.2f;
+     [SerializeField]
+     private float d= 1.4f;
+     [SerializeField]
+     private float h= 3;
+     [SerializeField]
+     private float s= 0.05f;
+     [SerializeField]
+     private float w= 0.02f;
+     #endregion*/
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -44,7 +45,7 @@ public class OverviewManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        
+
         GameObject obj = new GameObject();
         obj.name = "heartbeat";
         obj.transform.parent = screen.transform; //linked to screen
@@ -54,31 +55,59 @@ public class OverviewManager : MonoBehaviour
         //add graph
         obj.AddComponent<GraphObject>();
         heart = obj.GetComponent<GraphObject>();
-        List<float> vals = new List<float>();
-        vals.Add(2.0f);
+
+        heart.SetDefaultValue(2);
         heart.SetNoAdjustment();
         heart.SetYAxisRange(new Vector2(0, 4));
-        heart.Run(vals, 200, 1/200);
-        
+        heart.Run(null, 200, 1 / 200);
     }
 
     /// <summary>
     /// do stuff as soon as enabled again
     /// </summary>
-        void OnEnable()
+    void OnEnable()
     {
-
+        if (heart)
+        {
+            heart.Resume();
+        }
+    }
+    void OnDisable()
+    {
+        if (heart)
+        {
+            heart.Pause();
+        }
     }
     /// <summary>
     /// Called once every frame
     /// </summary>
     void Update()
     {
+        //test graph renderer behaviour
+        if (!testing)
+        {
+            testing = true;
+            StartCoroutine(test());
+        }
         heart.AddValue(GetBeat());
     }
     #endregion
 
     #region PUBLIC_METHODS
+    /// <summary>
+    /// coroutine to test graph pause and resume functions / behaviour. pauses and restarts after short amount of waiting time
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator test()
+    {
+        yield return new WaitForSeconds(3);
+        heart.Pause();
+
+        yield return new WaitForSeconds(2f);
+        heart.Resume();
+        testing = false;
+    }
     #endregion
 
     #region PRIVATE_METHODS
@@ -89,9 +118,9 @@ public class OverviewManager : MonoBehaviour
     /// <returns></returns>
     private float GetBeat()
     {
-        
+
         //create heartbeat function
-        float L =3f; // factor when to loop function again
+        float L = 3f; // factor when to loop function again
         float x = Time.time;
         x = x - Mathf.Ceil(x / L - 0.5f) * L;
         /* a lot of adjusting parameters */
@@ -107,11 +136,10 @@ public class OverviewManager : MonoBehaviour
             Debug.Log("some issues with heartbeat period");
         }
 
-        float y_1 = a * Mathf.Pow(e , (-Mathf.Pow(x + d, 2) / (2 * w)));
-        float y_2 = Mathf.Pow( e , (-Mathf.Pow(x - d, 2) / (2 * w)));
-        float y_3 = h - (Mathf.Abs(x / s) - x) * Mathf.Pow( e ,(-Mathf.Pow(7 * x, 2) / 2));
+        float y_1 = a * Mathf.Pow(e, (-Mathf.Pow(x + d, 2) / (2 * w)));
+        float y_2 = Mathf.Pow(e, (-Mathf.Pow(x - d, 2) / (2 * w)));
+        float y_3 = h - (Mathf.Abs(x / s) - x) * Mathf.Pow(e, (-Mathf.Pow(7 * x, 2) / 2));
         float y = y_1 + y_2 + y_3;
-        Debug.Log("heartbeat: "+ x + "  " + y);
 
         return y;
 

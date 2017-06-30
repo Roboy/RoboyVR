@@ -140,7 +140,15 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     private List<float> m_Values;
 
+    /// <summary>
+    /// List of positions of graph points??? (No clue)
+    /// </summary>
     private List<Vector3> m_Positions = new List<Vector3>();
+
+    /// <summary>
+    /// default value that is used to initialize points on graph
+    /// </summary>
+    private float defaultVal = 0f;
 
     // Coroutines to handle the play process
     private IEnumerator m_PlayCoroutine;
@@ -284,7 +292,6 @@ public class GraphRenderer : MonoBehaviour
             Debug.Log("Initializing graph");
             // Intialize the values list with values from the given list or set them to zero if numPoints exceeds the list length
             m_Values = valueList;
-
             // Get the rect transform component
             m_RectTransform = GetComponent<RectTransform>();
 
@@ -302,7 +309,7 @@ public class GraphRenderer : MonoBehaviour
             if (m_Values.Count < m_NumPoints) //need to add additional values if count smaller than requested data
             {
                 int additions = m_NumPoints - m_Values.Count;
-                m_Values.AddRange(Enumerable.Repeat(0.0f, additions).ToList());
+                m_Values.AddRange(Enumerable.Repeat(defaultVal, additions).ToList());
             }
             for (int i = 0; i < numPoints; i++)
             {
@@ -416,10 +423,7 @@ public class GraphRenderer : MonoBehaviour
             // create new 0 values for the values list so we dont get a null reference in the coroutines
             if (deltaSize > 0)
             {
-                for (int i = 0; i < deltaSize; i++)
-                {
-                    m_Values.Add(0f);
-                }
+                 m_Values.AddRange(Enumerable.Repeat(defaultVal, deltaSize).ToList());
             }
             else
             {
@@ -454,10 +458,25 @@ public class GraphRenderer : MonoBehaviour
     /// <param name="range"></param>
     public void SetYAxisRange(Vector2 range)
     {
-        Debug.Log("setting range");
         yAxisRange = range;
     }
 
+    /// <summary>
+    /// sets default value which is being used to initialize missing points
+    /// </summary>
+    /// <param name="val">default value</param>
+    public void SetDefaultValue(float val)
+    {
+        defaultVal = val;
+    }
+
+    /// <summary>
+    /// returns, whether the coroutines are being executed and state is set to play. 
+    /// </summary>
+    /// <returns>playing (true), not playing(false)</returns>
+    public bool IsPlaying(){
+        return playing;
+    }
     #endregion // PUBLIC_METHODS
 
     #region PRIVATE_METHODS
@@ -492,7 +511,7 @@ public class GraphRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// Refreshes value list each timestamp.
+    /// Refreshes value list each timestamp. Fills List if count smaller than requested elems. Uses defined default value 
     /// </summary>
     /// <returns></returns>
     private IEnumerator updateValuesCoroutine()
@@ -504,12 +523,13 @@ public class GraphRenderer : MonoBehaviour
             if (m_Values.Count < m_NumPoints) //need to add additional values
             {
                 int additions = m_NumPoints - m_Values.Count;
-                m_Values.AddRange(Enumerable.Repeat(0.0f, additions).ToList());
+                m_Values.AddRange(Enumerable.Repeat(defaultVal, additions).ToList());
             }
 
             if (m_ShowCurrentValue && m_TextForCurrentValue)
             {
-                m_TextForCurrentValue.GetComponent<Text>().text = m_Values[0].ToString("n2");
+                Text tmp = m_TextForCurrentValue.GetComponent<Text>();
+                if(tmp) tmp.text = m_Values[0].ToString("n2");
             }
             yield return new WaitForSeconds(m_TimeStep);
         }
