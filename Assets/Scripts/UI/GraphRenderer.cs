@@ -110,29 +110,29 @@ public class GraphRenderer : MonoBehaviour
     private LineRenderer m_OscillatorLineRenderer;
 
     /// <summary>
-    /// indicates whether the graph curve is updating
+    /// Indicates whether the graph curve is updating
     /// </summary>
-    private bool playing = false;
+    private bool m_Playing = false;
     /// <summary>
-    /// indicates whether all required objects and values are set
+    /// Indicates whether all required objects and values are set
     /// </summary>
-    private bool initialized = false;
+    private bool m_Initialized = false;
 
     /// <summary>
-    /// defines whether axis should be adjusted 
+    /// Defines whether axis should be adjusted 
     /// </summary>
-    private bool adjustAxis = false;
+    private bool m_AdjustAxis = false;
 
     /// <summary>
     /// If axis not automatically adjusted, this range will be used. 
     /// x is the lower bound, y the upper. 
     /// </summary>
-    private Vector2 yAxisRange = Vector2.zero;
+    private Vector2 m_YAxisRange = Vector2.zero;
 
     /// <summary>
     /// Sets the distance from the graph to the canvas / panel
     /// </summary>
-    private float zdistance = -0.1f;
+    private float m_ZDistance = -0.1f;
 
     /// <summary>
     /// The last updated values and positions in 3D of the graph
@@ -141,14 +141,15 @@ public class GraphRenderer : MonoBehaviour
     private List<float> m_Values;
 
     /// <summary>
-    /// List of positions of graph points??? (No clue)
+    /// Points on the lineRenderer in the local space.
+    /// These points are already scaled and position on the graph.
     /// </summary>
     private List<Vector3> m_Positions = new List<Vector3>();
 
     /// <summary>
     /// default value that is used to initialize points on graph
     /// </summary>
-    private float defaultVal = 0f;
+    private float m_DefaultValue = 0f;
 
     // Coroutines to handle the play process
     private IEnumerator m_PlayCoroutine;
@@ -185,7 +186,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     void OnEnable()
     {
-        if (initialized && !playing)
+        if (m_Initialized && !m_Playing)
         {
             Play();
         }
@@ -287,7 +288,7 @@ public class GraphRenderer : MonoBehaviour
     /// <param name="timeStep"></param>
     public void Initialize(List<float> valueList, int numPoints, float timeStep)
     {
-        if (!initialized)
+        if (!m_Initialized)
         {
             Debug.Log("Initializing graph");
             // Intialize the values list with values from the given list or set them to zero if numPoints exceeds the list length
@@ -309,7 +310,7 @@ public class GraphRenderer : MonoBehaviour
             if (m_Values.Count < m_NumPoints) //need to add additional values if count smaller than requested data
             {
                 int additions = m_NumPoints - m_Values.Count;
-                m_Values.AddRange(Enumerable.Repeat(defaultVal, additions).ToList());
+                m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, additions).ToList());
             }
             for (int i = 0; i < numPoints; i++)
             {
@@ -328,8 +329,8 @@ public class GraphRenderer : MonoBehaviour
                 m_OscillatorLineRenderer.startWidth = m_OscillatorLineRenderer.endWidth = 0.005f;
                 m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
             }
-            if (yAxisRange.Equals(Vector2.zero)) yAxisRange = new Vector2(-1, 1);
-            initialized = true;
+            if (m_YAxisRange.Equals(Vector2.zero)) m_YAxisRange = new Vector2(-1, 1);
+            m_Initialized = true;
         }
     }
     /// <summary>
@@ -338,9 +339,9 @@ public class GraphRenderer : MonoBehaviour
     public void Play()
     {
         //TODO: apparently concurrency issues -> lock?
-        if (initialized && !playing)
+        if (m_Initialized && !m_Playing)
         {
-            playing = true;
+            m_Playing = true;
             if (m_PlayCoroutine == null) // if no coroutine running yet
             {
                 // Update graph position each frame
@@ -357,7 +358,7 @@ public class GraphRenderer : MonoBehaviour
                 StartCoroutine(m_PlayCoroutine);
             }
         }
-        if (!initialized)
+        if (!m_Initialized)
         {
             Debug.Log("Graph not initialized yet! Call the initialize function first!");
         }
@@ -369,7 +370,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void Pause()
     {
-        if (initialized && playing)
+        if (m_Initialized && m_Playing)
         {
             //Debug.Log("Pause");
 
@@ -377,7 +378,7 @@ public class GraphRenderer : MonoBehaviour
             StopCoroutine(m_UpdateValuesCoroutine);
             m_UpdateValuesCoroutine = null;
             //m_OscillatorLineRenderer.enabled = false;
-            playing = false;
+            m_Playing = false;
         }
     }
     /// <summary>
@@ -385,7 +386,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        if (initialized) //if not stopped already
+        if (m_Initialized) //if not stopped already
         {
             // Kill linerenderer, stop the coroutines
             if (m_PlayCoroutine != null)
@@ -396,8 +397,8 @@ public class GraphRenderer : MonoBehaviour
             m_PlayCoroutine = null;
             Destroy(m_OscillatorLineRenderer);
             // m_CurrentState = State.None;
-            playing = false;
-            initialized = false;
+            m_Playing = false;
+            m_Initialized = false;
 
             Debug.Log("Graph renderer Stopped");
         }
@@ -409,7 +410,7 @@ public class GraphRenderer : MonoBehaviour
     /// <param name="numPoints">The new size of the graph</param>
     public void ChangeGraphSize(int numPoints)
     {
-        if (initialized)
+        if (m_Initialized)
         {
             if (numPoints == m_NumPoints)
                 return;
@@ -423,7 +424,7 @@ public class GraphRenderer : MonoBehaviour
             // create new 0 values for the values list so we dont get a null reference in the coroutines
             if (deltaSize > 0)
             {
-                 m_Values.AddRange(Enumerable.Repeat(defaultVal, deltaSize).ToList());
+                 m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, deltaSize).ToList());
             }
             else
             {
@@ -441,7 +442,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void SetNoAdjustment()
     {
-        adjustAxis = false;
+        m_AdjustAxis = false;
     }
 
     /// <summary>
@@ -449,25 +450,46 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     public void SetAutomaticAdjust()
     {
-        adjustAxis = true;
+        m_AdjustAxis = true;
     }
 
     /// <summary>
-    /// sets range in for which the y values will be displayed
+    /// Sets range in for which the y values will be displayed
     /// </summary>
     /// <param name="range"></param>
-    public void SetYAxisRange(Vector2 range)
+    public void SetManualAdjust(Vector2 range)
     {
-        yAxisRange = range;
+        if (range.x >= range.y)
+        {
+            Debug.Log("Your given minimum value is bigger or equal to the maximum!");
+            return;
+        }
+        m_YAxisRange = range;
+        m_AdjustAxis = false;
     }
 
     /// <summary>
-    /// sets default value which is being used to initialize missing points
+    /// Sets range in for which the y values will be displayed
+    /// </summary>
+    /// <param name="range"></param>
+    public void SetManualAdjust(float min, float max)
+    {
+        if (min >= max)
+        {
+            Debug.Log("Your given minimum value is bigger or equal to the maximum!");
+            return;
+        }
+        m_YAxisRange = new Vector2(min, max);
+        m_AdjustAxis = false;
+    }
+
+    /// <summary>
+    /// Sets default value which is being used to initialize missing points
     /// </summary>
     /// <param name="val">default value</param>
     public void SetDefaultValue(float val)
     {
-        defaultVal = val;
+        m_DefaultValue = val;
     }
 
     /// <summary>
@@ -475,7 +497,7 @@ public class GraphRenderer : MonoBehaviour
     /// </summary>
     /// <returns>playing (true), not playing(false)</returns>
     public bool IsPlaying(){
-        return playing;
+        return m_Playing;
     }
     #endregion // PUBLIC_METHODS
 
@@ -487,7 +509,7 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     private IEnumerator playCoroutine()
     {
-        while (initialized)
+        while (m_Initialized)
         {
             // Debug.Log("playCoroutine");
 
@@ -504,7 +526,7 @@ public class GraphRenderer : MonoBehaviour
             m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
             yield return null;
         }
-        if (!initialized)
+        if (!m_Initialized)
         {
             Debug.Log("Graph is not initialized! Initialize the graph first");
         }
@@ -516,14 +538,14 @@ public class GraphRenderer : MonoBehaviour
     /// <returns></returns>
     private IEnumerator updateValuesCoroutine()
     {
-        while (playing)
+        while (m_Playing)
         {
             //Debug.Log("updateValuesCoroutine");
 
             if (m_Values.Count < m_NumPoints) //need to add additional values
             {
                 int additions = m_NumPoints - m_Values.Count;
-                m_Values.AddRange(Enumerable.Repeat(defaultVal, additions).ToList());
+                m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, additions).ToList());
             }
 
             if (m_ShowCurrentValue && m_TextForCurrentValue)
@@ -534,7 +556,7 @@ public class GraphRenderer : MonoBehaviour
             yield return new WaitForSeconds(m_TimeStep);
         }
         // Print warning to console if this function is called manually when graph is not playing
-        if (!playing)
+        if (!m_Playing)
         {
             Debug.Log("Graph is not playing! Cannot update the values!");
         }
@@ -548,17 +570,17 @@ public class GraphRenderer : MonoBehaviour
     Vector3 getGraphPositionAtIndex(int index)
     {
         Vector3 pos;
-        if (adjustAxis)
+        if (m_AdjustAxis)
         {//adapt range depending on 
-            yAxisRange = new Vector2(m_Values.Min(), m_Values.Max());
+            m_YAxisRange = new Vector2(m_Values.Min(), m_Values.Max());
         }
         //check for boundaries
         float temp = m_Values[index];
-        if (temp < yAxisRange.x) temp = yAxisRange.x;
-        if (temp > yAxisRange.y) temp = yAxisRange.y;
+        if (temp < m_YAxisRange.x) temp = m_YAxisRange.x;
+        if (temp > m_YAxisRange.y) temp = m_YAxisRange.y;
         //adjust to range
-        float y = m_MaximumHeight * (temp - yAxisRange.x) / (yAxisRange.y - yAxisRange.x); // size * (my_dist / overall_dist)
-        pos = new Vector3(index * m_StepSize, y, zdistance);
+        float y = m_MaximumHeight * (temp - m_YAxisRange.x) / (m_YAxisRange.y - m_YAxisRange.x); // size * (my_dist / overall_dist)
+        pos = new Vector3(index * m_StepSize, y, m_ZDistance);
 
         pos -= m_RectTransform.pivot.x * m_MaximumWidth * Vector3.right;
         pos -= m_RectTransform.pivot.y * m_MaximumHeight * Vector3.up;

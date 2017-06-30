@@ -220,9 +220,18 @@ public class GraphObject : MonoBehaviour
     /// sets range in for which the y values will be displayed
     /// </summary>
     /// <param name="range">x value == lower bownd, y upper</param>
-    public void SetYAxisRange(Vector2 range)
+    public void SetManualAdjust(Vector2 range)
     {
-        m_GraphRenderer.SetYAxisRange(range);
+        m_GraphRenderer.SetManualAdjust(range);
+    }
+
+    /// <summary>
+    /// sets range in for which the y values will be displayed
+    /// </summary>
+    /// <param name="range">x value == lower bownd, y upper</param>
+    public void SetManualAdjust(float min, float max)
+    {
+        m_GraphRenderer.SetManualAdjust(min, max);
     }
     #endregion
 
