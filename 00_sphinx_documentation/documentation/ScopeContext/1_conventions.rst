@@ -25,29 +25,29 @@ In general all scripts are ordered in regions:
   
 **However**, in some cases it does make sense do deviate from this structure.
 
-1. Delete empty regions!
+**1. Delete empty regions!**
 
 It is okay to have empty regions if you plan on filling this region in the near future (READ: in the next seven days).
 But to avoid whitespace code remove empty regions.
 
-2. Add extra regions!
+**2. Add extra regions!**
 
 If you have a lot of variables of functions which are bundled together through some kind of logic then it may be beneficial for the readability
 to structure them in a seperate region, e.g. variables which are private but are marked with **[SerializeField]** so you can adjust them in the editor and are only used
 once then you can create a region **EDITOR_VARIABLES**.
 
-3. Delete regions in small classes!
+**3. Delete regions in small classes!**
 
 If you have a class with only two or three small functions/ variables then just write the code without the regions at all.
 
-4. Use your brain!
+**4. Use your brain!**
 
-As we are not the masterminds of the universe there are a ton of other cases where it does make more sense to use your **own* region logic. Feel free to extend/ adjust
+As we are not the masterminds of the universe there are a ton of other cases where it does make more sense to use your **own** region logic. Feel free to extend/ adjust
 this list if you have a better approach.
 
 **Region Content**
 
-What goes where should be obvious. In the UNTIY_MONOBEHAVIOUR_METHODS region write your code in the same order as the unity functions are called, meanining:
+What goes where should be obvious. In the UNTIY_MONOBEHAVIOUR_METHODS region write your code in the same order as the unity functions are called, meaning:
 
 ..  code-block:: c#
   
@@ -67,7 +67,7 @@ What goes where should be obvious. In the UNTIY_MONOBEHAVIOUR_METHODS region wri
   
 These are of course not all Unity functions but the most common ones. Note that **OnEnable()** is actucally called before **Start()** but more often than not
 the logic in **OnEnable()** is coupled with **OnDisable()**. If this is not the case for you then change the order as you need it. For further reading of the execution order
-click `here <https://docs.unity3d.com/Manual/ExecutionOrder.html>`_ .
+click `here <https://docs.unity3d.com/Manual/ExecutionOrder.html>`_.
 
 OLD_DOCU REWRITE THIS SHIT
 ========================
