@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// ViewSelectionManager handles the transition between various view scenarios.
 /// </summary>
-public class ViewSelectionManager : MonoBehaviour {
+public class ViewSelectionManager : Singleton<ViewSelectionManager> {
 
 
     #region PUBLIC_MEMBER_VARIABLES

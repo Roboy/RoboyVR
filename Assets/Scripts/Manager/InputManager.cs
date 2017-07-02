@@ -15,6 +15,14 @@ public class InputManager : Singleton<InputManager> {
     }
 
     /// <summary>
+    /// Public ViewController reference.
+    /// </summary>
+    public ViewController View_Controller
+    {
+        get { return m_ViewController; }
+    }
+
+    /// <summary>
     /// Public SelectorTool reference.
     /// </summary>
     public SelectorTool Selector_Tool
@@ -60,6 +68,12 @@ public class InputManager : Singleton<InputManager> {
     /// </summary>
     [SerializeField]
     private GUIController m_GUIController;
+
+    /// <summary>
+    /// Private GUIController reference. Is serialized so it can be dragged in the editor.
+    /// </summary>
+    [SerializeField]
+    private ViewController m_ViewController;
 
     /// <summary>
     /// Selection wheel to select tools.
@@ -132,7 +146,17 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="e"></param>
     public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
     {
-        RoboyManager.Instance.ResetSimulation();
+        if (m_GUIController.gameObject.activeSelf)
+        {
+            m_GUIController.gameObject.SetActive(false);
+            m_ViewController.gameObject.SetActive(true);
+        }
+        else if (m_ViewController.gameObject.activeSelf)
+        {
+            m_GUIController.gameObject.SetActive(true);
+            m_ViewController.gameObject.SetActive(false);
+        }
+        //RoboyManager.Instance.ResetSimulation();
     }
 
     /// <summary>
@@ -217,6 +241,10 @@ public class InputManager : Singleton<InputManager> {
             {
                 m_TimeTool = (TimeTool)tool;
             }
+            else if (tool is ViewController)
+            {
+                m_ViewController = (ViewController)tool;
+            }
 
             if (m_ToolWheel)
             {
@@ -238,6 +266,7 @@ public class InputManager : Singleton<InputManager> {
         m_SelectorTool.gameObject.SetActive(true);
         m_ShootingTool.gameObject.SetActive(false);
         m_TimeTool.gameObject.SetActive(false);
+        m_ViewController.gameObject.SetActive(false);
 
         while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
             yield return Time.fixedDeltaTime;

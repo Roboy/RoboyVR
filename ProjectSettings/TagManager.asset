@@ -23,6 +23,8 @@ TagManager:
   - ZedImg
   - HtcImg
   - VRUI
+  - VSM
+  - ViewController
   layers:
   - Default
   - TransparentFX
