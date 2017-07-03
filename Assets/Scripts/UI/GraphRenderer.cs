@@ -22,76 +22,10 @@ public class GraphRenderer : MonoBehaviour
     public float BorderTop;
     public float BorderBottom;
 
-    /// <summary>
-    /// Public property to create a text object to show the current value of the graph.
-    /// </summary>
-    [ExposeProperty]
-    public bool ShowCurrentValue
-    {
-        get { return m_ShowCurrentValue; }
-        set
-        {
-            if (m_ShowCurrentValue != value)
-            {
-                m_ShowCurrentValue = value;
-
-                if (m_ShowCurrentValue)
-                    createTextfieldForCurrentValue();
-                else
-                    destroyTextfieldForCurrentValue();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Text object for the current value. Is only there if <see cref="ShowCurrentValue"/> is true. 
-    /// </summary>
-    public Text TextForValueName
-    {
-        get
-        {
-            if (m_TextForValueName)
-                return m_TextForValueName.GetComponent<Text>();
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Public property to enable a text object to show the value name of the current value.
-    /// </summary>
-    [ExposeProperty]
-    public bool ShowValueName
-    {
-        get { return m_ShowValueName; }
-        set
-        {
-            if (m_ShowValueName != value)
-            {
-                m_ShowValueName = value;
-
-                if (m_ShowValueName)
-                    createTextfieldForValueName();
-                else
-                    destroyTextfieldForValueName();
-            }
-        }
-    }
 
     #endregion // PUBLIC_VARIABLES
 
     #region PRIVATE_VARIABLES
-
-    [HideInInspector]
-    [SerializeField]
-    private bool m_ShowCurrentValue = false;
-
-    [HideInInspector]
-    [SerializeField]
-    private bool m_ShowValueName = false;
-
-    [HideInInspector]
-    [SerializeField]
-    private GameObject m_TextForCurrentValue;
 
     [HideInInspector]
     [SerializeField]
@@ -127,7 +61,7 @@ public class GraphRenderer : MonoBehaviour
     /// If axis not automatically adjusted, this range will be used. 
     /// x is the lower bound, y the upper. 
     /// </summary>
-    private Vector2 m_YAxisRange = Vector2.zero;
+    private Vector2 m_YAxisRange = new Vector2(-1,1);
 
     /// <summary>
     /// Sets the distance from the graph to the canvas / panel
@@ -135,8 +69,8 @@ public class GraphRenderer : MonoBehaviour
     private float m_ZDistance = -0.1f;
 
     /// <summary>
-    /// The last updated values and positions in 3D of the graph
-    /// since not primitive -> pointer -> changes can be applied by other methods with same pointer
+    /// The List of values to display. 
+    /// since not primitive -> object pointer -> changes can be applied by other methods having same pointer
     /// </summary>
     private List<float> m_Values;
 
@@ -155,7 +89,6 @@ public class GraphRenderer : MonoBehaviour
     ///  Coroutines to handle the play process. References needed to stop these. 
     /// </summary>
     private IEnumerator m_PlayCoroutine = null;
-    private IEnumerator m_UpdateValuesCoroutine = null;
 
     // Distance between each point
     private float m_StepSize = 0f;
@@ -277,19 +210,23 @@ public class GraphRenderer : MonoBehaviour
         m_BorderInitialized = true;
     }
 
-    /// <summary>
-    /// event, called by unity as soon as RectTransform Component recognised changed. 
-    /// Updates m_MaximumWidth and m_MaximumHeight for graph plotter
-    /// </summary>
-    void OnRectTransformDimensionsChange()
-    {
+    ///// <summary> TODO: scaling not working as of now -> manual scale
+    ///// event, called by unity as soon as RectTransform Component recognised changed. 
+    ///// Updates m_MaximumWidth and m_MaximumHeight for graph plotter
+    ///// </summary>
+    //void OnRectTransformDimensionsChange()
+    //{
 
-        m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
-        m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop);
+    //    if (m_RectTransform)
+    //    {
+    //        m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
+    //        m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop);
 
-        m_StepSize = m_MaximumWidth / ((float)m_NumPoints - 1);
-        Debug.Log("CHANGE IN SCALE !!!");
-    }
+    //        m_StepSize = m_MaximumWidth / ((float)m_NumPoints - 1);
+    //        m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
+
+    //    }
+    //}
 
     #endregion // UNITY_MONOBEHAVIOR_METHODS
 
@@ -311,7 +248,10 @@ public class GraphRenderer : MonoBehaviour
             m_Values = valueList;
             // Get the rect transform component
             m_RectTransform = GetComponent<RectTransform>();
-
+            if (!m_RectTransform)
+            {
+                m_RectTransform = gameObject.AddComponent<RectTransform>();
+            }
             // Get the maximum scaled width and height
             m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
             m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop);
@@ -362,15 +302,11 @@ public class GraphRenderer : MonoBehaviour
             {
                 // Update graph position each frame
                 m_PlayCoroutine = playCoroutine();
-                m_UpdateValuesCoroutine = updateValuesCoroutine();
                 // Update graph values each timestep
                 StartCoroutine(m_PlayCoroutine);
-                StartCoroutine(m_UpdateValuesCoroutine);
             }
             else
-            {//when paused only playcoroutine running
-                m_UpdateValuesCoroutine = updateValuesCoroutine();
-                StartCoroutine(m_UpdateValuesCoroutine);
+            {
                 StartCoroutine(m_PlayCoroutine);
             }
         }
@@ -389,10 +325,6 @@ public class GraphRenderer : MonoBehaviour
         if (m_Initialized && m_Playing)
         {
             //Debug.Log("Graph renderer Pause");
-            // Stop updating the values
-            StopCoroutine(m_UpdateValuesCoroutine);
-            m_UpdateValuesCoroutine = null;
-            //m_OscillatorLineRenderer.enabled = false;
             m_Playing = false;
         }
     }
@@ -408,11 +340,6 @@ public class GraphRenderer : MonoBehaviour
             {
                 StopCoroutine(m_PlayCoroutine);
                 m_PlayCoroutine = null;
-            }
-            if (m_UpdateValuesCoroutine != null)
-            {
-                StopCoroutine(m_UpdateValuesCoroutine);
-                m_UpdateValuesCoroutine = null;
             }
 
             Destroy(m_OscillatorLineRenderer);
@@ -448,7 +375,7 @@ public class GraphRenderer : MonoBehaviour
             }
             else
             {
-                m_Values.RemoveRange(numPoints, -deltaSize);
+                m_Values.RemoveRange(0, -deltaSize);
             }
         }
         else
@@ -553,35 +480,6 @@ public class GraphRenderer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Refreshes value list each timestamp. Fills List if count smaller than requested elems. Uses defined default value 
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator updateValuesCoroutine()
-    {
-        while (m_Playing)
-        {
-            //Debug.Log("updateValuesCoroutine");
-
-            if (m_Values.Count < m_NumPoints) //need to add additional values
-            {
-                int additions = m_NumPoints - m_Values.Count;
-                m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, additions).ToList());
-            }
-
-            if (m_ShowCurrentValue && m_TextForCurrentValue)
-            {
-                Text tmp = m_TextForCurrentValue.GetComponent<Text>();
-                if (tmp) tmp.text = m_Values[0].ToString("n2");
-            }
-            yield break;
-        }
-        // Print warning to console if this function is called manually when graph is not playing
-        if (!m_Playing)
-        {
-            Debug.Log("Graph is not playing! Cannot update the values!");
-        }
-    }
 
     /// <summary>
     /// Transforms point from local space to panel space
@@ -612,49 +510,13 @@ public class GraphRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates a text field object for the current value. Set as child to this gameObject.
+    /// sets the colour of the respective graph. Must be set after initialization
     /// </summary>
-    private void createTextfieldForCurrentValue()
+    /// <param name="color"></param>
+    public void SetColour(Color color)
     {
-        m_TextForCurrentValue = new GameObject();
-        m_TextForCurrentValue.name = "Current Value";
-        m_TextForCurrentValue.transform.parent = transform;
-        m_TextForCurrentValue.transform.localScale = transform.localScale;
-        m_TextForCurrentValue.transform.localPosition = Vector3.zero;
-        m_TextForCurrentValue.transform.localRotation = Quaternion.identity;
-
-        object temp = m_TextForCurrentValue.AddComponent<Text>();
+        if (m_OscillatorLineRenderer)
+            m_OscillatorLineRenderer.material.color = color;
     }
-
-    /// <summary>
-    /// Destroys the text field object.
-    /// </summary>
-    private void destroyTextfieldForCurrentValue()
-    {
-        DestroyImmediate(m_TextForCurrentValue);
-    }
-
-    /// <summary>
-    /// Creates a text field for the current value name. Set as child to this gameObject.
-    /// </summary>
-    private void createTextfieldForValueName()
-    {
-        m_TextForValueName = new GameObject();
-        m_TextForValueName.name = "Value Name";
-        m_TextForValueName.transform.parent = transform;
-        m_TextForValueName.transform.localScale = transform.localScale;
-        m_TextForValueName.transform.localPosition = Vector3.zero;
-        m_TextForValueName.transform.localRotation = Quaternion.identity;
-        m_TextForValueName.AddComponent<Text>();
-    }
-
-    /// <summary>
-    /// Destroys the text field object for the value name.
-    /// </summary>
-    private void destroyTextfieldForValueName()
-    {
-        DestroyImmediate(m_TextForValueName);
-    }
-
     #endregion // PRIVATE_METHODS
 }

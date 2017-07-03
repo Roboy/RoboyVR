@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 /// <summary>
 /// Wrapper class around GraphRenderer and ExtensionMethod.
@@ -15,6 +16,37 @@ public class GraphObject : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
+
+    /// <summary>
+    /// for multiple curves in one Graph-plotter, this defines one curve
+    /// </summary>
+    private struct m_GraphInstance
+    {
+        /// <summary>
+        /// instance of the plotting class
+        /// </summary>
+        GraphRenderer renderer;
+        /// <summary>
+        /// list of values to plot (pointer to same list that renderer has)
+        /// </summary>
+        List<float> values;
+        /// <summary>
+        /// List of buffered values in case graph is paused
+        /// </summary>
+        List<float> buffer;
+        /// <summary>
+        /// colour of displayed curve
+        /// </summary>
+        Color colour;
+        /// <summary>
+        /// default value which is used for undefined points/list elems
+        /// </summary>
+        float defaultValue;
+        /// <summary>
+        /// number of points to display, defines list sizes
+        /// </summary>
+        int numberOfDisplayedPoints;
+    }
 
     /// <summary>
     /// Cached reference to our graph renderer.
@@ -39,16 +71,6 @@ public class GraphObject : MonoBehaviour
     /// List that saves further values if graph is being paused, replaces (parts of) current list as soon as continuing
     /// </summary>
     private List<float> m_buffered;
-
-    /// <summary>
-    /// How often do we want to update the graph renderer.
-    /// </summary>
-    private float m_TimeStep = 0f;
-    /* TODO: 
-    /// <summary>
-    /// Only add elements into the List if waiting time is marked as over (true). manually set false afterwards
-    /// </summary>
-    private bool m_WaitingOver = true;*/
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -67,39 +89,36 @@ public class GraphObject : MonoBehaviour
     /// Starts a graph with the given values.
     /// </summary>
     /// <param name="values">A list of floats which you want to display. Can be empty.</param>
-    /// <param name="displayedPointsCount">How many points of the list you want to display.</param>
-    /// <param name="timeStep">How often the graph will be updated. If set to 0-> every frame.</param>
-    public void Run(List<float> values, int displayedPointsCount, float timeStep)
+    /// <param name="displayedSeconds">How many seconds you want to display (time frame).</param>
+    public void Run(List<float> values, float displayedSeconds)
     {
         // return when the function is called with bad values
         if (values == null)
         {
             values = new List<float>();
         }
-
-        if (displayedPointsCount < 2)
+        if (displayedSeconds < 2* Time.deltaTime)
         {
             Debug.Log("Cannot start a graph with less than 2 points!");
             return;
         }
+        else
+        {
+            DisplayForNumberOfSeconds(displayedSeconds);
+        }
 
-        if (timeStep < 0f)
-            timeStep = 0f;
 
         // fill the list if necessary
-        if (values.Count < displayedPointsCount)
+        if (values.Count < m_DisplayedPointsCount)
         {
             m_Values = values;
-            m_Values.AddRange(Enumerable.Repeat(defaultVal, (displayedPointsCount - values.Count)).ToList());
+            m_Values.AddRange(Enumerable.Repeat(defaultVal, m_DisplayedPointsCount).ToList());
         }
         // init values
         m_Values = values;
-        m_DisplayedPointsCount = displayedPointsCount;
-        m_TimeStep = timeStep;
         // init graph renderer
         m_GraphRenderer.Initialize(m_Values, m_DisplayedPointsCount);
         m_GraphRenderer.Play();
-        //TODO : StartCoroutine(MonitorTimeStep());
     }
 
     /// <summary>
@@ -204,12 +223,32 @@ public class GraphObject : MonoBehaviour
     /// Changes the count of displayed points.
     /// </summary>
     /// <param name="count">New count of the displayed points.</param>
-    public void ShowLastValues(int count)
+    public void NumberOfDisplayedPoints(int count)
     {
-        int _count = Mathf.Min(m_Values.Count, count);
-        m_GraphRenderer.ChangeGraphPointNumber(count);
+        if (count > 2)
+        {
+            m_GraphRenderer.ChangeGraphPointNumber(count);
+        }
     }
 
+    /// <summary>
+    /// Sets the number of points to display the frame of specified number of seconds
+    /// </summary>
+    /// <param name="seconds">display all values in a time frame of (seconds) secs</param>
+    public void DisplayForNumberOfSeconds(float seconds)
+    {
+        if (seconds > 0)
+        {
+            int pointNumber = (int)(seconds / Time.deltaTime);
+            m_GraphRenderer.ChangeGraphPointNumber(pointNumber);
+            m_DisplayedPointsCount = pointNumber;
+            Debug.Log(seconds + " sec range");
+        }
+        else
+        {
+            Debug.Log("Graph display frame must be positive!");
+        }
+    }
 
     /// <summary>
     /// changes the graph to not be dynamically adjusted depending on its current values, uses manual y axis value then
@@ -262,19 +301,64 @@ public class GraphObject : MonoBehaviour
     {
         m_GraphRenderer.ChangeGraphPointNumber(number);
     }
+
+    /// <summary>
+    /// Sets colour of the respective Graph. Graph renderer must be initialized first (call run before)!
+    /// </summary>
+    /// <param name="colour">Any colour</param>
+    public void SetGraphColour(Color colour)
+    {
+        m_GraphRenderer.SetColour(colour);
+    }
     #endregion
 
-    /*TODO: 
     #region PRIVATE_METHODS
+
     /// <summary>
-    /// Extra function to monitor timestep to adjust when new elements shall be added to the list
+    /// Creates a text field object for the current value. Set as child to this gameObject.
     /// </summary>
-    /// <returns></returns>
-    private IEnumerator MonitorTimeStep()
+    /// <returns>text component of the new object</returns>
+    private Text createTextfieldForCurrentValue()
     {
-        yield return new WaitForSeconds(m_TimeStep);
-        m_WaitingOver = true;
+        GameObject m_Text = new GameObject();
+        m_Text.name = "TextObject";
+        m_Text.transform.parent = transform;
+        m_Text.transform.localScale = transform.localScale;
+        m_Text.transform.localPosition = Vector3.zero;
+        m_Text.transform.localRotation = Quaternion.identity;
+
+        RectTransform rectTransform = m_Text.GetComponent<RectTransform>();
+        rectTransform.anchorMax = (new Vector2(0.2f, 1));
+        rectTransform.anchorMin = new Vector2(0.2f, 1);
+        rectTransform.sizeDelta = new Vector2(0.8f, 0.8f);
+        return AddText(m_Text);
     }
-        #endregion*/
+
+    /// <summary>
+    /// Adds text component to specified object with value presets such as overflowing text, anchoring, size, font and colour.
+    /// </summary>
+    /// <param name="obj">Object to which to attach the Text component</param>
+    /// <returns>Reference to the added Textcomponent of the Object</returns>
+    private Text AddText(GameObject obj)
+    {
+        if(obj.GetComponent<Text>() != null)
+        {
+            Debug.Log("Trying to add text Component to existing text component! Aborting");
+            return null;
+        }
+        Text text = obj.AddComponent<Text>(); /*Text message displaying information about screens*/
+        text.rectTransform.localPosition = Vector3.zero;
+        text.horizontalOverflow = HorizontalWrapMode.Overflow;
+        text.verticalOverflow = VerticalWrapMode.Overflow;
+        text.alignment = TextAnchor.UpperLeft;
+        Font f = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+        text.font = f;
+        text.fontSize = 56;
+        text.color = Color.black;
+        text.enabled = true;
+        return text;
+    }
+
+    #endregion
 }
 

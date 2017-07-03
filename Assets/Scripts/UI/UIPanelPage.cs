@@ -27,7 +27,7 @@ public class UIPanelPage : MonoBehaviour
 
             string motorIndex = "Motor" + (i + currentPage*4);
 
-            graphRenderer.TextForValueName.text = motorIndex;
+            //graphRenderer.TextForValueName.text = motorIndex;
 
             //Debug.Log(motorIndex);
 

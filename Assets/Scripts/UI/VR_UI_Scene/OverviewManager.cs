@@ -23,6 +23,15 @@ public class OverviewManager : MonoBehaviour
     [SerializeField]
     private Canvas screen;
 
+    /// <summary>
+    /// link to tabs on screen
+    /// </summary>
+    [SerializeField]
+    private GameObject[] tabs;
+
+    /// <summary>
+    /// for continuously testing graphrenderer
+    /// </summary>
     private bool testing = false;
     /* For test purposes to adjust heartbeat
      *  #region heartbeat values
@@ -48,18 +57,21 @@ public class OverviewManager : MonoBehaviour
 
         GameObject obj = new GameObject();
         obj.name = "heartbeat";
-        obj.transform.parent = screen.transform; //linked to screen
-        obj.transform.localScale = Vector3.one;
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localRotation = Quaternion.identity;
+        obj.transform.parent = tabs[1].transform.Find("Panel"); //linked to screen
+        /*Working well for gameobject to fit parent*/
+        AspectRatioFitter test = obj.AddComponent<AspectRatioFitter>();
+        test.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+        test.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        test.transform.localPosition = Vector3.zero;
+        
         //add graph
         obj.AddComponent<GraphObject>();
         heart = obj.GetComponent<GraphObject>();
-
         heart.SetDefaultValue(2);
         heart.SetNoAdjustment();
         heart.SetManualAdjust(new Vector2(0, 4));
-        heart.Run(null, 200, 1);
+        heart.Run(null, 3);
+        heart.SetGraphColour(Color.green);
     }
 
     /// <summary>
@@ -89,6 +101,7 @@ public class OverviewManager : MonoBehaviour
         {
             testing = true;
             StartCoroutine(test());
+            Debug.Log("new test");
         }
         heart.AddValue(GetBeat());
     }
@@ -105,10 +118,16 @@ public class OverviewManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator test()
     {
-        yield return new WaitForSeconds(5);
-        heart.Pause();
-        yield return new WaitForSeconds(1.5f);
-        heart.Resume();
+        yield return new WaitForSeconds(10);
+        if (heart.isActiveAndEnabled)
+        {
+            heart.DisplayForNumberOfSeconds(1);
+        }
+        yield return new WaitForSeconds(3);
+        if (heart.isActiveAndEnabled)
+        {
+            heart.DisplayForNumberOfSeconds(6);
+        }
         testing = false;
     }
     /// <summary>

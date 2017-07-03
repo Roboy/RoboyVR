@@ -10,11 +10,15 @@ using UnityEngine.UI;
 /// </summary>
 public class DisplayManager : MonoBehaviour
 {
-    #region PUBLIC_MEMBER:_VARIABLES
+    #region PUBLIC_MEMBER_VARIABLES
     /// <summary>
     /// This camera will be used for the second display
     /// </summary>
-    public Camera cam2; 
+    public Camera cam2;
+    #endregion
+
+    #region PRIVATE_VARIABLES
+    GameObject obj; 
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -23,7 +27,9 @@ public class DisplayManager : MonoBehaviour
     /// </summary>
     void Start()
     {
+  
         Canvas c = CreateInfoScreen();
+        obj = c.gameObject;
         Text t = c.GetComponentInChildren<Text>();
         Debug.Log(Display.displays.Length + " Displays found... activating");
         t.text = Display.displays.Length + " Displays found... activating";
@@ -88,6 +94,7 @@ public class DisplayManager : MonoBehaviour
         if (c == null) yield return null;
         c.enabled = true;
         yield return new WaitForSeconds(sec);
+        Destroy(obj);
         Destroy(this);
     }
     #endregion

@@ -22,7 +22,7 @@ public class TestGraph : MonoBehaviour {
             values.Add(Random.Range(-100, 100));
         }
         graph.SetAutomaticAdjust();
-        graph.Run(values, 100, 0.1f);
+        graph.Run(values, 100);
 
         
 
