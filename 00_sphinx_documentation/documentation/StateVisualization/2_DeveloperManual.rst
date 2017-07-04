@@ -4,7 +4,7 @@ Developer Manual
 General 
 -------
 
-The UI design goal was to create a modular and robust UI which does not rely on continuous data input. Due to the fact, that the Virtual Reality scenes will later be merged and therefore the setup will change, it was advantageous to not create one definite UI structure already containing all the desired elements, but a modular, easy-to-adjust  base which could easily be integrated in other scenes. 
+The UI design goal was to create a modular and robust UI which does not rely on continuous data input. Due to the fact, that the Virtual Reality scenes will later be merged and therefore the setup will change, it was advantageous to not create one definite UI structure already containing all the desired elements,. Instead, a modular, easy-to-adjust base was designed, which can easily be integrated in other scenes. 
 
 **Scripts:** 
 
@@ -77,7 +77,9 @@ This layer covers the UI logic. It displays the selected modes, updates the fron
     
     Selection wheel with four options and Overview selected
     
- UILogic: This script operates as a database for important game values. Due to its `Singleton <https://en.wikipedia.org/wiki/Singleton_pattern>` implementation, it is always accessible and no dublicates and therefore (versionierung / ) and all functions can use it as a data platform. It does not contain an Update() function and does not actively request data. Other functions and instances can set and get the desired data. This design choice was made, since it assures modularity of the respective elements, both front and back-end. It provides less assurance considering the age of the given data when later used.  Nevertheless, an Event-driven UI can still be implemented using the subscriber scheme. The issue there would be if the data is provided in non-continuous time intervals. One operation which is implemented using that style is the change of modes. As soon as the selected index changed, the respective game object and mode, which is linked in the public modes array,  is activated, the others are deactivated. 
+ UILogic: This script operates as a database for important game values. Due to its Singleton_ implementation, there are no dublicates, it is always accessible and all functions can use it as a data platform. It does not contain an Update() function and does not actively request data. Other functions and instances can set and get the desired data. This design choice was made bacause it assures modularity of the respective elements, both front and back-end. It provides less assurance considering the age of the given data when later used.  Nevertheless, an event-driven UI can still be implemented using the subscriber scheme. The issue there would be if the data was provided in non-continuous time intervals. One operation which is implemented using that style is the change of modes. As soon as the selected index changed, the respective game object and mode, which is linked in the public modes array,  is activated and the others are deactivated. 
+ 
+ .. _Singleton: https://en.wikipedia.org/wiki/Singleton_pattern
 **Game Objects:** 
  UILogic: This empty game object is not displayed, but contains all relevant UI components as child objects. 
    
