@@ -294,6 +294,8 @@ public class MeshUpdater : MonoBehaviour {
                     }
 
                     GameObject meshCopy = Instantiate(meshPrefab);
+                    var regex = new Regex(Regex.Escape("(Clone)"));
+                    meshCopy.name = regex.Replace(meshCopy.name, "", 1);
                     meshCopy.tag = "RoboyPart";
                     attachCollider(meshCopy, relativeModelPath, name);
 
