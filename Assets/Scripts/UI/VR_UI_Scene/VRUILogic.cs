@@ -16,30 +16,32 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <summary>
     /// Array containing the current finger position on the touchpad if touched
     /// </summary>
-    private Vector2[] touchData;
+    private Vector2[] m_touchData;
   
     /// <summary>
     /// This value specifies the currently selected mode
     /// </summary>
-    private int selectedMode = 0;
+    private int m_selectedMode = 0;
   
     /// <summary>
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
-    private bool[] touchedPad;
+    private bool[] m_touchedPad;
 
     /// <summary>
     /// VR Headset camera, for position and rotation information
     /// </summary>
     [SerializeField]
-    private Camera headset;
+    private Camera m_headset;
 
     /// <summary>
     /// For the main selection wheel, set which mode is default (offset)
     /// </summary>
     [SerializeField]
-    private int selectIndex = 0;
+    private int m_selectIndex = 0;
     #endregion
+
+    private List<Notification> m_notifications;
 
     #region UNITY_MONOBEHAVIOUR_METHODS1
     /// <summary>
@@ -53,17 +55,17 @@ public class VRUILogic : Singleton<VRUILogic> {
             {
                 obj.SetActive(false);
             }
-            mode[selectedMode].gameObject.SetActive(true);
+            mode[m_selectedMode].gameObject.SetActive(true);
         }
         
-        touchData = new Vector2[2];
-        touchData[0] = Vector2.zero;
-        touchData[1] = Vector2.zero;
-        touchedPad = new bool[2];
-        touchedPad[0] = false;
-        touchedPad[1] = false;
+        m_touchData = new Vector2[2];
+        m_touchData[0] = Vector2.zero;
+        m_touchData[1] = Vector2.zero;
+        m_touchedPad = new bool[2];
+        m_touchedPad[0] = false;
+        m_touchedPad[1] = false;
 
-        
+        m_notifications = new List<Notification>();
     }
     #endregion
 
@@ -76,14 +78,14 @@ public class VRUILogic : Singleton<VRUILogic> {
     {
         if (Instance.mode != null)
         {
-            i += selectIndex;
+            i += m_selectIndex;
             i %= mode.Length;
             Debug.Log("New mode" + i);
             if (i < mode.Length && i >= 0)
             {
-                mode[selectedMode].gameObject.SetActive(false);
+                mode[m_selectedMode].gameObject.SetActive(false);
                 mode[i].gameObject.SetActive(true);
-                selectedMode = i;
+                m_selectedMode = i;
             }
         }
     }
@@ -95,9 +97,9 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <param name="newPos">Vector containing new position.</param>
     public void SetTouchPosition(int i, Vector2 newPos)
     {
-        if(i< touchData.Length && i >= 0)
+        if(i< m_touchData.Length && i >= 0)
         {
-            touchData[i] = newPos;
+            m_touchData[i] = newPos;
         }
     }
 
@@ -108,9 +110,9 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <param name="touched"></param>
     public void SetTouched(int i, bool touched)
     {
-        if (i < touchedPad.Length && i >= 0)
+        if (i < m_touchedPad.Length && i >= 0)
         {
-            touchedPad[i] = touched;
+            m_touchedPad[i] = touched;
         }
     }
 
@@ -121,12 +123,13 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <returns>touched yes/no</returns>
     public bool GetTouchedInfo(int i)
     {
-        if (i < touchedPad.Length && i >= 0)
+        if (i < m_touchedPad.Length && i >= 0)
         {
-            return touchedPad[i];
+            return m_touchedPad[i];
         }
         return false;
     }
+
     /// <summary>
     /// returns a vector containing the position on the touchpad with index i
     /// </summary>
@@ -134,12 +137,13 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <returns>Current position on touchpad with max length == 1</returns>
     public Vector2 GetTouchPosition(int i)
     {
-        if (i < touchData.Length && i >= 0)
+        if (i < m_touchData.Length && i >= 0)
         {
-            return touchData[i];
+            return m_touchData[i];
         }
         return Vector2.zero;
     }
+
     /// <summary>
     ///  Returns a list of selected objects from the selectorManager containing the info.
     /// </summary>
@@ -147,15 +151,44 @@ public class VRUILogic : Singleton<VRUILogic> {
     public List<SelectableObject> GetSelectedParts()
     {
         return SelectorManager.Instance.SelectedParts;
-    }
-    #endregion
-
+    }  
+    
     /// <summary>
     /// returns current rotation of headset (camera rig)
     /// </summary>
     /// <returns>Current rotation in quaternion</returns>
     public Quaternion GetCameraRotation()
     {
-        return headset.transform.rotation;
+        return m_headset.transform.rotation;
     }
+
+    /// <summary>
+    /// The specified notification note is added to the list of existing notifications
+    /// </summary>
+    /// <param name="note">Notification which is to be added</param>
+    public void AddNotification(Notification note)
+    {
+        if(note != null)
+        {
+            m_notifications.Add(note);
+        }
+    }
+
+    /// <summary>
+    /// returns list of all errors currently saved
+    /// </summary>
+    /// <returns></returns>
+    public List<Notification> GetAllErrors()
+    {
+        List<Notification> errors = new List<Notification>();
+        foreach( Notification note in m_notifications)
+        {
+            if( note.getType() == DummyStates.MessageType.ERROR)
+            {
+                errors.Add(note);
+            }
+        }
+        return errors;
+    }
+    #endregion
 }
