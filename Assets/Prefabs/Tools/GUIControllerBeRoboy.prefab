@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 65969526594525954}
   - component: {fileID: 225848596194924984}
   m_Layer: 5
-  m_Name: VIS_head
+  m_Name: head
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 65168952267621168}
   - component: {fileID: 225392300193506634}
   m_Layer: 5
-  m_Name: VIS_lower_arm_left
+  m_Name: lower_arm_left
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 65043771897731198}
   - component: {fileID: 225315143695903246}
   m_Layer: 5
-  m_Name: VIS_hand_right
+  m_Name: hand_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 65715686663432404}
   - component: {fileID: 225839541324181230}
   m_Layer: 5
-  m_Name: VIS_fuss_links
+  m_Name: fuss_links
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 65889618082776384}
   - component: {fileID: 225831666038238710}
   m_Layer: 5
-  m_Name: VIS_lower_arm_right
+  m_Name: lower_arm_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 65350303182548042}
   - component: {fileID: 225592144283895020}
   m_Layer: 5
-  m_Name: VIS_torso
+  m_Name: torso
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 65386361912521292}
   - component: {fileID: 225623227084920462}
   m_Layer: 5
-  m_Name: VIS_spine
+  m_Name: spine
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,7 +472,7 @@ GameObject:
   - component: {fileID: 65908651666357282}
   - component: {fileID: 225882046126499792}
   m_Layer: 5
-  m_Name: VIS_upper_arm_left
+  m_Name: upper_arm_left
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -508,7 +508,7 @@ GameObject:
   - component: {fileID: 65737287288370450}
   - component: {fileID: 225942346680237170}
   m_Layer: 5
-  m_Name: VIS_upper_arm_right
+  m_Name: upper_arm_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 65444573720033942}
   - component: {fileID: 225799400885316444}
   m_Layer: 5
-  m_Name: VIS_thigh_left
+  m_Name: thigh_left
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -652,7 +652,7 @@ GameObject:
   - component: {fileID: 65215021882290530}
   - component: {fileID: 225174289441276208}
   m_Layer: 5
-  m_Name: VIS_shank_right
+  m_Name: shank_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 65454174420612480}
   - component: {fileID: 225252792362020348}
   m_Layer: 5
-  m_Name: VIS_fuss_rechts
+  m_Name: fuss_rechts
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -742,7 +742,7 @@ GameObject:
   - component: {fileID: 65067792473393288}
   - component: {fileID: 225118454657581030}
   m_Layer: 5
-  m_Name: VIS_thigh_right
+  m_Name: thigh_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -761,7 +761,7 @@ GameObject:
   - component: {fileID: 65009065160163062}
   - component: {fileID: 225527421489979934}
   m_Layer: 5
-  m_Name: VIS_shank_left
+  m_Name: shank_left
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -781,7 +781,7 @@ GameObject:
   - component: {fileID: 65427437896376656}
   - component: {fileID: 225811662113862962}
   m_Layer: 5
-  m_Name: VIS_hip
+  m_Name: hip
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

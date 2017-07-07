@@ -294,10 +294,15 @@ public class MeshUpdater : MonoBehaviour {
                     }
 
                     GameObject meshCopy = Instantiate(meshPrefab);
-                    var regex = new Regex(Regex.Escape("(Clone)"));
-                    meshCopy.name = regex.Replace(meshCopy.name, "", 1);
+                    
                     meshCopy.tag = "RoboyPart";
                     attachCollider(meshCopy, relativeModelPath, name);
+
+                    var regex1 = new Regex(Regex.Escape("(Clone)"));
+                    meshCopy.name = regex1.Replace(meshCopy.name, "", 1);
+
+                    var regex2 = new Regex(Regex.Escape("VIS_"));
+                    meshCopy.name = regex2.Replace(meshCopy.name, "", 1);
 
                     SelectableObject selectableObjectComponent = meshCopy.AddComponent<SelectableObject>();
                     selectableObjectComponent.TargetedMaterial = Resources.Load("RoboyMaterials/TargetedMaterial") as Material;
