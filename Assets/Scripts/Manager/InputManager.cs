@@ -266,7 +266,9 @@ public class InputManager : Singleton<InputManager> {
         m_SelectorTool.gameObject.SetActive(true);
         m_ShootingTool.gameObject.SetActive(false);
         m_TimeTool.gameObject.SetActive(false);
-        m_ViewController.gameObject.SetActive(false);
+        if (m_ViewController != null)
+        { m_ViewController.gameObject.SetActive(false); }
+        
 
         while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
             yield return Time.fixedDeltaTime;
