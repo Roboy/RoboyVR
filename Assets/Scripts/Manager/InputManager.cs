@@ -161,8 +161,8 @@ public class InputManager : Singleton<InputManager> {
                 m_GUIController.gameObject.SetActive(true);
                 m_ViewController.gameObject.SetActive(false);
             }
+            //RoboyManager.Instance.ResetSimulation();
         }
-        //RoboyManager.Instance.ResetSimulation();
     }
 
     /// <summary>
