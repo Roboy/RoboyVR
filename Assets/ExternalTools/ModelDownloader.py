@@ -76,26 +76,44 @@ for i in range (0, len(titleListFinal)):
 	filelist.append(re.sub('"', '', titleListFinal[i]));
 
 print(str(filelist).strip('[]'))
-	
+
+worldlist = list()
+
+for file in filelist:
+	if (".world" in file):
+		worldlist.append(file)
+
+modellist = list()		
+
 # remove entries which are neither .dae or .STL
 for file in filelist:
-	if (".dae" not in file)	and (".STL" not in file) and (".stl" not in file):
-		print("removing: "+file)
-		filelist.remove(file)
+	if (".dae" in file)	or (".STL" in file) or (".stl" in file):
+		modellist.append(file)
 		
-print(str(filelist).strip('[]'))
+			
+			
+		
+print(str(modellist).strip('[]'))
+print(str(worldlist).strip('[]'))
 
 #############################################################
 export_list = []
 tempArr = list()
 
-for file in filelist:
-	tempArr.append(re.sub(' ', '%20', file))
+export_Wlist = []
+tempArrW = list()
+
+for model in modellist:
+	tempArr.append(re.sub(' ', '%20', model))
+	
+for world in worldlist:
+	tempArrW.append(re.sub(' ', '%20', world))
 
 print(str(tempArr).strip('[]'))
 
 if sys.argv[5] == "":
-	export_list = tempArr	
+	export_list = tempArr
+	export_Wlist = tempArrW
 else:
 	#compare arguments with list of directory in github
 	for filename in tempArr:	
@@ -104,6 +122,18 @@ else:
 
 
 print("Meshes to be updated: ", export_list)
+
+
+#Download all (.world)s located at GitHub
+for filename in export_Wlist:
+	print("Downloading: " + filename + " from " + dir_ip_addr + filename)
+	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
+	if not os.path.exists(pathToProjectModels):
+		os.makedirs(pathToProjectModels)
+	localfile = open(pathToProjectModels + "/" + filename,'wb')
+	localfile.write(remotefile.read())
+	localfile.close()
+	remotefile.close()
 
 #Download all (.dae/.STL)s located at GitHub
 for filename in export_list:

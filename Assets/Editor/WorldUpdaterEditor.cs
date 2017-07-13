@@ -6,18 +6,20 @@ using System.Collections.Generic;
 /// <summary>
 /// Custom editor script to be able to call functions from MeshUpdater at edit time through buttons.
 /// </summary>
-[CustomEditor(typeof(MeshUpdater))]
-class MeshUpdaterEditor : Editor
-{
+[CustomEditor(typeof(WorldUpdater))]
+class WorldUpdaterEditor : Editor
+{ 
+
+
     public override void OnInspectorGUI()
     {
         base.DrawDefaultInspector();
 
-        MeshUpdater meshUpdater = (MeshUpdater)target;
+        WorldUpdater worldUpdater = (WorldUpdater)target;
 
         // Show the blender path if it is set
-        if (meshUpdater.ModelsCurrentState >= UpdaterUtility.State.BlenderPathSet )
-        {   
+        if (worldUpdater.WorldsCurrentState >= UpdaterUtility.State.BlenderPathSet)
+        {
             //Disable GUI so it can't be edited in UnityEditor
             GUI.enabled = false;
             EditorGUILayout.TextField("Blender Path: ", UpdaterUtility.PathToBlender);
@@ -38,46 +40,48 @@ class MeshUpdaterEditor : Editor
             else
             {
                 UpdaterUtility.PathToBlender = blenderpath;
-                meshUpdater.ModelsCurrentState = (UpdaterUtility.State)Mathf.Max((int)UpdaterUtility.State.BlenderPathSet, (int)meshUpdater.ModelsCurrentState);
+                worldUpdater.WorldsCurrentState = (UpdaterUtility.State)Mathf.Max((int)UpdaterUtility.State.BlenderPathSet, (int)worldUpdater.WorldsCurrentState);
             }
         }
 
         // Do not show Scan, Download and Create Prefab button if blender path is not set
-        if (meshUpdater.ModelsCurrentState < UpdaterUtility.State.BlenderPathSet)
+        if (worldUpdater.WorldsCurrentState < UpdaterUtility.State.BlenderPathSet)
             return;
 
         if (GUILayout.Button("Scan"))
         {
-            meshUpdater.Scan();
+            worldUpdater.Scan();
         }
 
         // stop here if meshupdater did not scan yet
-        if (meshUpdater.ModelsCurrentState < UpdaterUtility.State.Scanned)
+        if (worldUpdater.WorldsCurrentState < UpdaterUtility.State.Scanned)
             return;
 
         // ? THIS WON'T RESET WHEN DICTIONARY CLEARS ?
-        var keys = new List<string>(meshUpdater.ModelChoiceDictionary.Keys);
+        var keys = new List<string>(worldUpdater.WorldChoiceDictionary.Keys);
         // show checkboxes for each model entry and update their values
         foreach (string modelEntryKey in keys)
         {
-            meshUpdater.ModelChoiceDictionary[modelEntryKey] = EditorGUILayout.Toggle(modelEntryKey, meshUpdater.ModelChoiceDictionary[modelEntryKey]);
+            worldUpdater.WorldChoiceDictionary[modelEntryKey] = EditorGUILayout.Toggle(modelEntryKey, worldUpdater.WorldChoiceDictionary[modelEntryKey]);
         }
 
         // downloads models and converts them to .fbx (models will also be imported into unity)
-        if (GUILayout.Button("Download"))
+        if (GUILayout.Button("Download .world files"))
         {
-            meshUpdater.UpdateModels();
+            worldUpdater.LoadWorlds();
+            worldUpdater.Magic();
         }
 
         // don't show "Create Prefab" before models are imported
-        if (meshUpdater.ModelsCurrentState < UpdaterUtility.State.Downloaded)
+        if (worldUpdater.WorldsCurrentState < UpdaterUtility.State.Downloaded)
             return;
 
         // create prefab
-        if (GUILayout.Button("Create Prefab"))
+        if (GUILayout.Button("Create World"))
         {
-            meshUpdater.CreatePrefab();
+            worldUpdater.CreateWorld();
         }
 
     }
+
 }

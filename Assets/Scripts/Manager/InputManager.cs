@@ -146,17 +146,21 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="e"></param>
     public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
     {
-        if (m_GUIController.gameObject.activeSelf)
+
+        if (m_ViewController != null)
         {
-            m_GUIController.gameObject.SetActive(false);
-            m_ViewController.gameObject.SetActive(true);
+            if (m_GUIController.gameObject.activeSelf)
+            {
+                m_GUIController.gameObject.SetActive(false);
+                m_ViewController.gameObject.SetActive(true);
+            }
+            else if (m_ViewController.gameObject.activeSelf)
+            {
+                m_GUIController.gameObject.SetActive(true);
+                m_ViewController.gameObject.SetActive(false);
+            }
+            //RoboyManager.Instance.ResetSimulation();
         }
-        else if (m_ViewController.gameObject.activeSelf)
-        {
-            m_GUIController.gameObject.SetActive(true);
-            m_ViewController.gameObject.SetActive(false);
-        }
-        //RoboyManager.Instance.ResetSimulation();
     }
 
     /// <summary>
