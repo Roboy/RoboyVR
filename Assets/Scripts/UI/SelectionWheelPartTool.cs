@@ -12,7 +12,7 @@ public class SelectionWheelPartTool : SelectionWheelPart {
     /// </summary>
     public override void Highlight()
     {
-        Debug.Log(gameObject.name + " : Highlight!");
+        //Debug.Log(gameObject.name + " : Highlight!");
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ public class SelectionWheelPartTool : SelectionWheelPart {
     /// </summary>
     public override void Unhighlight()
     {
-        Debug.Log(gameObject.name + " : Unhighlight!");
+        //Debug.Log(gameObject.name + " : Unhighlight!");
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class SelectionWheelPartTool : SelectionWheelPart {
     /// </summary>
     public override void Select()
     {
-        Debug.Log(gameObject.name + " : Select!");
+        //Debug.Log(gameObject.name + " : Select!");
     }
 
     /// <summary>
@@ -36,6 +36,6 @@ public class SelectionWheelPartTool : SelectionWheelPart {
     /// </summary>
     public override void Deselect()
     {
-        Debug.Log(gameObject.name + " : Deselect!");
+        //Debug.Log(gameObject.name + " : Deselect!");
     }
 }

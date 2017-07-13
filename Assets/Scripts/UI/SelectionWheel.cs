@@ -98,11 +98,20 @@ public class SelectionWheel : MonoBehaviour {
     private bool m_Recognizing = false;
 
     /// <summary>
+    /// We need this as we can set the controller through an external class.
+    /// </summary>
+    private bool m_Binded = false;
+
+    /// <summary>
     /// Initalize the controller event listener and parts.
     /// </summary>
     private void Awake()
     {
-        m_ControllerEventListener = m_TrackedController.gameObject.GetComponent<SteamVR_TrackedController>();
+        if (m_TrackedController != null)
+        {
+            m_ControllerEventListener = m_TrackedController.gameObject.GetComponent<SteamVR_TrackedController>();
+            m_Binded = true;
+        }          
     }
 
     /// <summary>
@@ -110,6 +119,11 @@ public class SelectionWheel : MonoBehaviour {
     /// </summary>
     public void Initialize(List<SelectionWheelPart> parts)
     {
+        if (!m_Binded)
+        {
+            Debug.Log("Controller is not binded yet! Call BindController() first!");
+            return;
+        }
         // add an image component to each part and adjust the settings
         for (int i = 0; i < parts.Count; i++)
         {
@@ -143,6 +157,15 @@ public class SelectionWheel : MonoBehaviour {
         m_ControllerEventListener.PadTouched += startRecognition;
         m_ControllerEventListener.PadUntouched += stopRecognition;
         m_ControllerEventListener.PadClicked += selectPart;
+        
+    }
+
+    public void BindController(SteamVR_TrackedObject controller)
+    {
+        m_TrackedController = controller;
+        m_ControllerEventListener = m_TrackedController.gameObject.GetComponent<SteamVR_TrackedController>();
+        m_Binded = true;
+
     }
 
     /// <summary>

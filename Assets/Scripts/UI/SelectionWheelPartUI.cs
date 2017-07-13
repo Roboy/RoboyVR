@@ -82,6 +82,8 @@ public class SelectionWheelPartUI : MonoBehaviour {
         m_Outline = GetComponent<Outline>();
         m_Outline.effectColor = DefaultOutlineColor;
         m_Outline.effectDistance = new Vector2(5f, -5f);
+        m_Outline.enabled = false;
+        m_Outline.enabled = true;
     }
 
     /// <summary>

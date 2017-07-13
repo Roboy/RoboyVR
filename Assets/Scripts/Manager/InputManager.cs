@@ -63,6 +63,9 @@ public class InputManager : Singleton<InputManager> {
     [SerializeField]
     private TimeTool m_TimeTool;
 
+    [SerializeField]
+    private HandTool m_HandTool;
+
     /// <summary>
     /// Private GUIController reference. Is serialized so it can be dragged in the editor.
     /// </summary>
@@ -146,15 +149,18 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="e"></param>
     public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
     {
-        if (m_GUIController.gameObject.activeSelf)
+        if (m_ViewController != null)
         {
-            m_GUIController.gameObject.SetActive(false);
-            m_ViewController.gameObject.SetActive(true);
-        }
-        else if (m_ViewController.gameObject.activeSelf)
-        {
-            m_GUIController.gameObject.SetActive(true);
-            m_ViewController.gameObject.SetActive(false);
+            if (m_GUIController.gameObject.activeSelf)
+            {
+                m_GUIController.gameObject.SetActive(false);
+                m_ViewController.gameObject.SetActive(true);
+            }
+            else if (m_ViewController.gameObject.activeSelf)
+            {
+                m_GUIController.gameObject.SetActive(true);
+                m_ViewController.gameObject.SetActive(false);
+            }
         }
         //RoboyManager.Instance.ResetSimulation();
     }
@@ -245,6 +251,10 @@ public class InputManager : Singleton<InputManager> {
             {
                 m_ViewController = (ViewController)tool;
             }
+            else if (tool is HandTool)
+            {
+                m_HandTool = (HandTool)tool;
+            }
 
             if (m_ToolWheel)
             {
@@ -254,7 +264,11 @@ public class InputManager : Singleton<InputManager> {
             }
         }
         if (m_ToolWheel)
+        {
+            m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
             m_ToolWheel.Initialize(toolWheelParts);
+        }
+            
     }
 
     /// <summary>

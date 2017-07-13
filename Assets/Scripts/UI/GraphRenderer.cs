@@ -243,7 +243,7 @@ public class GraphRenderer : MonoBehaviour
     {
         if (!m_Initialized)
         {
-            Debug.Log("Initializing graph renderer");
+            // Debug.Log("Initializing graph renderer");
             // Intialize the values list with values from the given list or set them to zero if numPoints exceeds the list length
             m_Values = valueList;
             // Get the rect transform component
