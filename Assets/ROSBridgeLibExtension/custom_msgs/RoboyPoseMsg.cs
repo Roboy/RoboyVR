@@ -70,6 +70,10 @@ namespace ROSBridgeLib
 
             #region PRIVATE_MEMBER_VARIABLES
 
+            // TO DO MSG SO WE CAN PUBLISH IT
+            private Dictionary<LinkMsg, int> _linkIndexDic;
+            private Dictionary<LinkMsg, float> hereComesTheNewDic;
+
             private Dictionary<string, int> _nameIndexDic;
             private Dictionary<string, float> _xDic, _yDic, _zDic, _qxDic, _qyDic, _qzDic, _qwDic;
 
@@ -171,13 +175,12 @@ namespace ROSBridgeLib
             }
 
             /// <summary>
-            /// The YAML format is only needed when we publish a msg over the ROSBridge. It does not make much sense in this case because we only should 
-            /// manipulate roboy through forces and not by setting the pose directly.
+            /// The YAML format is only needed when we publish a msg over the ROSBridge. TO DO CHANGE SO WE CAN PUBLISH IT
             /// </summary>
             /// <returns></returns>
             public override string ToYAMLString()
             {
-                return "NOT IMPLEMENTED";
+                return "{ \"name\":[]}";
             }
 
             #endregion //PUBLIC_METHODS

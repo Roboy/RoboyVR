@@ -62,6 +62,8 @@ namespace ROSBridgeLib {
 		private string _serviceName = null;
 		private string _serviceValues = null;
 		private List<RenderTask> _taskQ = new List<RenderTask>();
+        // Adjustment to be able to add ros objects at runtime while connected
+        private bool _running = false;
 
 		private object _queueLock = new object ();
 
@@ -128,13 +130,40 @@ namespace ROSBridgeLib {
 			_serviceResponse = serviceResponse;
 		}
 
+        /**
+         * Not Implemented! 
+         */
+        public void RemoveServiceResponse(Type serviceResponse)
+        {
+            // Code here
+        }
+
 		/**
 		 * Add a subscriber callback to this connection. There can be many subscribers.
 		 */
 		public void AddSubscriber(Type subscriber) {
 			IsValidSubscriber(subscriber);
 			_subscribers.Add (subscriber);
+            if (_running)
+            {
+                _ws.Send(ROSBridgeMsg.Subscribe(GetMessageTopic(subscriber), GetMessageType(subscriber)));
+            }
 		}
+
+        /**
+         * Removes a subscriber and disconnects him if the connection is already running.
+         */
+        public void RemoveSubscriber(Type subscriber)
+        {
+            if (!_subscribers.Contains(subscriber))
+                return;
+
+            _subscribers.Remove(subscriber);
+            if (_running)
+            {
+                _ws.Send(ROSBridgeMsg.UnSubscribe(GetMessageTopic(subscriber)));
+            }
+        }
 
 		/**
 		 * Add a publisher to this connection. There can be many publishers.
@@ -142,7 +171,26 @@ namespace ROSBridgeLib {
 		public void AddPublisher(Type publisher) {
 			IsValidPublisher(publisher);
 			_publishers.Add (publisher);
-		}
+            if(_running)
+            {
+                _ws.Send(ROSBridgeMsg.Advertise(GetMessageTopic(publisher), GetMessageType(publisher)));
+            }
+        }
+
+        /**
+         * Removes a publisher from the connection. Disconnects the publisher if connection is already running.
+         */
+        public void RemovePublisher(Type publisher)
+        {
+            if (!_publishers.Contains(publisher))
+                return;
+
+            _publishers.Remove(publisher);
+            if (_running)
+            {
+                _ws.Send(ROSBridgeMsg.UnAdvertise(GetMessageTopic(publisher)));
+            }
+        }
 
 		/**
 		 * Connect to the remote ros environment.
@@ -168,14 +216,16 @@ namespace ROSBridgeLib {
 				//Debug.Log ("Sending " + ROSBridgePacket.unAdvertise (getMessageTopic(p)));
 			}
 			_ws.Close ();
-		}
+            _running = false;
 
-		private void Run() {
+        }
+
+		private void Run() {         
 			_ws = new WebSocket(_host + ":" + _port);
 			_ws.OnMessage += (sender, e) => this.OnMessage(e.Data);
 			_ws.Connect();
-
-			foreach(Type p in _subscribers) {
+            _running = true;
+            foreach (Type p in _subscribers) {
 				_ws.Send(ROSBridgeMsg.Subscribe (GetMessageTopic(p), GetMessageType (p)));
 				//Debug.Log ("Sending " + ROSBridgeMsg.Subscribe (GetMessageTopic(p), GetMessageType (p)));
 			}
@@ -189,7 +239,7 @@ namespace ROSBridgeLib {
 		}
 
 		private void OnMessage(string s) {
-			//Debug.Log ("Got a message " + s);
+			Debug.Log ("Got a message " + s);
 			if((s!= null) && !s.Equals ("")) {
 				JSONNode node = JSONNode.Parse(s);
 				//Debug.Log ("Parsed it");

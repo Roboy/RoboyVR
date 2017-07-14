@@ -26,7 +26,7 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// <summary>
     /// Public property of all active ROSObjects in the scene.
     /// </summary>
-    public List<GameObject> ROSObjects { get { return m_ROSObjects; } }
+    public List<ROSObject> ROSObjects { get { return m_ROSObjects; } }
 
     /// <summary>
     /// ROS websocket connection.
@@ -41,7 +41,12 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// <summary>
     /// List of all active ROSObjects.
     /// </summary>
-    private List<GameObject> m_ROSObjects = new List<GameObject>();
+    private List<ROSObject> m_ROSObjects = new List<ROSObject>();
+
+    /// <summary>
+    /// List so we can add ROSObjects also when the connection is not established yet and add the objects as soon as the connection is established.
+    /// </summary>
+    private List<ROSObject> m_ROSObjectsToAdd = new List<ROSObject>();
 
     /// <summary>
     /// Initializes the ROS websocket connection and searches for all ROSObjects in the scene.
@@ -52,43 +57,108 @@ public class ROSBridge : Singleton<ROSBridge> {
 
         if (m_ROS != null)
         {
-            // find all ROSObjects
-            var rosObjects = FindObjectsOfType<ROSObject>();
-            
-            // get all attached ros components of all ROSObjects and add them
-            foreach (ROSObject rosObj in rosObjects)
-            {
-                var subscribers = rosObj.GetComponents<ROSBridgeSubscriber>();
-                var publishers = rosObj.GetComponents<ROSBridgePublisher>();
-                var services = rosObj.GetComponents<ROSBridgeService>();
-
-                foreach (var sub in subscribers)
-                    m_ROS.AddSubscriber(sub.GetType());
-
-                foreach (var pub in publishers)
-                    m_ROS.AddPublisher(pub.GetType());
-
-                foreach (var serv in services)
-                    m_ROS.AddServiceResponse(serv.GetType());
-
-                m_ROSObjects.Add(rosObj.gameObject);
-            }
-
-            // start connection
             m_ROS.Connect();
             m_ROSInitialized = true;
-            Debug.Log("ROSBridge connection successfully established!");
         }
+           
+        //if (m_ROS != null)
+        //{
+        //    // find all ROSObjects
+        //    var rosObjects = FindObjectsOfType<ROSObject>();
+
+        //    // get all attached ros components of all ROSObjects and add them
+        //    foreach (ROSObject rosObj in rosObjects)
+        //    {
+        //        AddROSActor(rosObj);
+        //    }
+
+        //    // start connection
+        //    m_ROS.Connect();
+        //    m_ROSInitialized = true;
+        //    Debug.Log("ROSBridge connection successfully established!");
+        //}
     }
 
     /// <summary>
-    /// Run ROSBridge.
+    /// Adds a ROS Actor aka. Publisher, Subscriber, Service to the ROSBridge. Is public so a ROSObject can invoke it after Awake.
+    /// </summary>
+    /// <param name="rosObject"></param>
+    public void AddROSActor(ROSObject rosObject)
+    {
+        if (!m_ROSInitialized)
+        {
+            // add the cached rosobjects so we can add them later
+            m_ROSObjectsToAdd.Add(rosObject);
+            return;
+        }
+
+        if (m_ROSObjects.Contains(rosObject))
+            return;
+
+        var subscribers = rosObject.GetComponents<ROSBridgeSubscriber>();
+        var publishers = rosObject.GetComponents<ROSBridgePublisher>();
+        var services = rosObject.GetComponents<ROSBridgeService>();
+        
+        foreach (var sub in subscribers)
+            m_ROS.AddSubscriber(sub.GetType());
+
+        foreach (var pub in publishers)
+            m_ROS.AddPublisher(pub.GetType());
+
+        foreach (var serv in services)
+            m_ROS.AddServiceResponse(serv.GetType());
+
+        m_ROSObjects.Add(rosObject);
+    }
+
+    /// <summary>
+    /// Removes a ROS Actor. Is useful so objects can disconnect from the ROSBridge if they are not active and do not need to be to connected again.
+    /// </summary>
+    /// <param name="rosObject"></param>
+    public void RemoveROSActor(ROSObject rosObject)
+    {
+        if (!m_ROSInitialized)
+        {
+            return;
+        }
+
+        if (!m_ROSObjects.Contains(rosObject))
+            return;
+
+        var subscribers = rosObject.GetComponents<ROSBridgeSubscriber>();
+        var publishers = rosObject.GetComponents<ROSBridgePublisher>();
+        var services = rosObject.GetComponents<ROSBridgeService>();
+
+        foreach (var sub in subscribers)
+            m_ROS.RemoveSubscriber(sub.GetType());
+
+        foreach (var pub in publishers)
+            m_ROS.RemovePublisher(pub.GetType());
+
+        foreach (var serv in services)
+            m_ROS.RemoveServiceResponse(serv.GetType());
+
+        m_ROSObjects.Remove(rosObject);
+    }
+
+    /// <summary>
+    /// Run ROSBridge if initialized.
     /// </summary>
     private void Update()
     {
-        if (m_ROSInitialized)
+        if (!m_ROSInitialized)
+            return;
+
+        m_ROS.Render();
+
+        // add all cached ROSObjects and delete them from the cached list
+        if (m_ROSObjectsToAdd.Count > 0 )
         {
-            m_ROS.Render();
+            foreach (var rosObject in m_ROSObjectsToAdd)
+            {
+                AddROSActor(rosObject);
+            }
+            m_ROSObjectsToAdd.Clear();
         }
     }
 
@@ -100,6 +170,7 @@ public class ROSBridge : Singleton<ROSBridge> {
         if (m_ROSInitialized)
         {
             m_ROS.Disconnect();
+            m_ROSInitialized = false;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ROSBridgeLib;
 
 /// <summary>
 /// Tool to push Roboy around and apply forces via direct contact.
@@ -12,6 +13,8 @@ public class HandTool : ControllerTool {
 
     [SerializeField]
     Mesh m_LeftHandMesh;
+
+    private RoboyHandsPublisher m_RoboyHandsPublisher;
 
     private MeshFilter m_MeshFilter;
 
@@ -39,5 +42,10 @@ public class HandTool : ControllerTool {
         {
             m_MeshFilter.mesh = m_LeftHandMesh;
         }
+    }
+
+    private void Update()
+    {
+        
     }
 }
