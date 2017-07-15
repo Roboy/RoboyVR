@@ -71,8 +71,8 @@ namespace ROSBridgeLib
             #region PRIVATE_MEMBER_VARIABLES
 
             // TO DO MSG SO WE CAN PUBLISH IT
-            private Dictionary<LinkMsg, int> _linkIndexDic;
-            private Dictionary<LinkMsg, float> hereComesTheNewDic;
+            private LinkArrayMsg _linkNames;
+            private FloatArrayMsg _xArray, _yArray, _zArray, _qxArray, _qyArray, _qzArray, _qwArray;
 
             private Dictionary<string, int> _nameIndexDic;
             private Dictionary<string, float> _xDic, _yDic, _zDic, _qxDic, _qyDic, _qzDic, _qwDic;
@@ -162,6 +162,20 @@ namespace ROSBridgeLib
                     string meshName = nameArray[i].ToString().Replace("\"", string.Empty);
                     _qwDic.Add(meshName, qwArray[i].AsFloat);
                 }
+            }
+
+            // TO DO: PARSE THE DICS SO THEY ARE IN FLOAT ARRAY MSGS IN THE RIGHT ORDER
+            public RoboyPoseMsg(List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
+                Dictionary<string, float> qyDic, Dictionary<string, float> qzDic, Dictionary<string, float> qwDic)
+            {
+                _linkNames = new LinkArrayMsg(linkNames);
+
+                List<float> xValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+
+                }
+
             }
 
             public static string GetMessageType()
