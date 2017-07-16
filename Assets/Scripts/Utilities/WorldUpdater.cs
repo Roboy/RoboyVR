@@ -51,6 +51,8 @@ public class WorldUpdater : MonoBehaviour
 
     private List<ModelTransformation> modellist = new List<ModelTransformation>();
 
+    private Dictionary<string, GameObject> m_PrefabDictionary = new Dictionary<string, GameObject>();
+
     // Use this for initialization
     void Awake()
     {
@@ -150,23 +152,19 @@ public class WorldUpdater : MonoBehaviour
     public void Magic() {
         List<KeyValuePair<string, bool>> tempURLList = WorldChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
-        {
+        {   //replace this with real data from .world files
             for (int i = 0; i <= 3; i++) {
                 ModelTransformation testModel = new ModelTransformation();
                 testModel.worldname = urlEntry.Key;
                 testModel.name = "construction_cone";
-                testModel.position = new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f));
+                testModel.position = new Vector3(Random.Range(-10.0f, 10.0f), Random.Range(0f, 10.0f), Random.Range(-10.0f, 10.0f));
                 testModel.rotation = new Vector3(0, 0, 0);
-                testModel.scale = new Vector3(1, 1, 1);
+                testModel.scale = new Vector3(10, 10, 10);
                 modellist.Add(testModel);
             }
+
             WorldsCurrentState = UpdaterUtility.State.Downloaded;
         }
-    }
-
-
-    public void CreateWorld()
-    {
         List<string> names = new List<string>();
         foreach (ModelTransformation model in modellist)
         {
@@ -182,23 +180,131 @@ public class WorldUpdater : MonoBehaviour
             var regex = new Regex(Regex.Escape("tree"));
             m_PathToModelsFolder = regex.Replace(m_PathToModelsFolder, "raw", 1);
             //start modeldownloader.py for visual
-            string[] updateArgumentsWorld = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, m_PathToModelsFolder + @"/" + name + @"/meshes/", UpdaterUtility.ProjectFolder + @"/SimulationWorlds/Models/" + name, "" };
+            string[] updateArgumentsWorld = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, m_PathToModelsFolder + @"/" + name + @"/meshes/", UpdaterUtility.ProjectFolder + @"/SimulationWorlds/Models/" + name + "/meshes", "" };
             CommandlineUtility.RunCommandLine(updateArgumentsWorld);
         }
+    }
 
+
+    public void CreateWorld()
+    {   
+        //stores every individual model in a list, to later create prefabs
+        List<string> modelNames = new List<string>();
+        foreach (ModelTransformation model in modellist)
+        {
+            if (!modelNames.Contains(model.name))
+            {
+                modelNames.Add(model.name);
+            }
+        }
+        //Create Prefab for individual models
+        foreach (string modelName in modelNames)
+        {
+            string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationWorlds/Models/" + modelName + @"/meshes";
+            //Create GameObject where everything will be attached
+            GameObject modelParent = new GameObject(modelName);
+
+            //List for all downloaded visuals
+            List<string> MeshList = new List<string>();
+            if (absoluteModelPath != "")
+            {
+                MeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath);
+            }
+
+            foreach (string name in MeshList) {
+                GameObject meshPrefab = null;
+                string relativeModelPath = @"Assets/SimulationWorlds/Models/" + modelName + @"/meshes/";
+                //Debug.Log(relativeModelPath + name);
+
+                // import Mesh (from visual if we changed folder structure of roboy_worlds/models
+                meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + name, typeof(Object));
+
+                if (meshPrefab == null)
+                {
+                    Debug.Log("Could not import model!");
+                    continue;
+                }
+
+                GameObject meshCopy = Instantiate(meshPrefab);
+                // set scale of childs to (1,1,1) in case the .stl file has childs with different scale
+                foreach (Transform child in meshCopy.transform) {
+                    child.localScale = Vector3.one;
+                }
+                meshCopy.transform.localScale = Vector3.one;
+
+                //meshCopy.tag = "WorldPart";
+                // !!!! the following part could be shortened if we change folder structure of roboy_worlds/models
+                //UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
+
+                // get the object which serves as mesh collider
+                GameObject colliderPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + name, typeof(Object));
+
+                if (colliderPrefab == null)
+                {
+                    Debug.Log("Did not find a collider object for mesh: " + name);
+                    return;
+                }
+                // set scale of childs to (1,1,1) in case the .stl file has childs with different scale
+                foreach (Transform child in colliderPrefab.transform)
+                {
+                    child.localScale = Vector3.one;
+                }
+                colliderPrefab.transform.localScale = Vector3.one;
+                // go through each mesh filter and add all mesh references as mesh colliders to the gameObject
+                List<MeshFilter> collRenderers = colliderPrefab.GetComponentsInChildren<MeshFilter>().ToList();
+
+                
+                foreach (MeshFilter collRenderer in collRenderers)
+                {
+                    MeshCollider meshCollider = meshCopy.AddComponent<MeshCollider>();
+                    meshCollider.sharedMesh = collRenderer.sharedMesh;
+                }
+
+                var regex1 = new Regex(Regex.Escape("(Clone)"));
+                meshCopy.name = regex1.Replace(meshCopy.name, "", 1);
+
+                //var regex2 = new Regex(Regex.Escape("VIS_"));
+                //meshCopy.name = regex2.Replace(meshCopy.name, "", 1);
+
+                // Attach Model with mesh to parent GO
+                meshCopy.transform.parent = modelParent.transform;
+            }
+
+            //Create Prefab of existing GO
+            Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationWorlds/Models/" + modelName + "/" + modelName + ".prefab");
+            GameObject test1 = PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
+            //add to dictionary to instanciate later
+            m_PrefabDictionary.Add(modelName, test1);
+            //Destroy GO after prefab is created
+            DestroyImmediate(modelParent);
+        }
         List<KeyValuePair<string, bool>> tempURLList = WorldChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
-        {
+        {   
+            //this is the parent object of the entire world
             GameObject worldParent = new GameObject(urlEntry.Key);
+            //foreach model in the .world files
             foreach (ModelTransformation model in modellist)
             {
                 string absoluteWorldPath = UpdaterUtility.ProjectFolder + @"/SimulationWorlds/" + model.name;
-                //Create GameObject where everything will be attached
+                //if model is part of the world urlEntry.Key
                 if (model.worldname == urlEntry.Key) {
-                    GameObject modelParent = new GameObject(model.name);
+                    GameObject model1 = Instantiate(m_PrefabDictionary[model.name]);
+                    var regex1 = new Regex(Regex.Escape("(Clone)"));
+                    model1.name = regex1.Replace(model1.name, "", 1);
+                    //set transform with the values gathered in .world file
+                    model1.transform.position = model.position;
+                    model1.transform.eulerAngles = model.position;
+                    model1.transform.localScale = model.scale;
+                    model1.transform.parent = worldParent.transform;
                 }                
                 
             }
+            // save whole world as prefab
+            Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationWorlds/" + urlEntry.Key + "/" + urlEntry.Key + ".prefab");
+            GameObject test1 = PrefabUtility.ReplacePrefab(worldParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
+            //Destroy GO after prefab is created
+            DestroyImmediate(worldParent);
         }
     }
 }

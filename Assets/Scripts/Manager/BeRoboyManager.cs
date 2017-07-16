@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VR;
 using ROSBridgeLib.sensor_msgs;
+using ROSBridgeLib;
+using ROSBridgeLib.custom_msgs;
 
 /// <summary>
 /// BeRoboymanager has different tasks to do:
@@ -135,6 +137,15 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     {
         RefreshSimImage(image);
     }
+
+    public void ReceiveExternalJoint(List<string> jointNames, List<float> angles)
+    {
+        ROSBridgeLib.custom_msgs.ExternalJointMsg msg =
+            new ROSBridgeLib.custom_msgs.ExternalJointMsg(jointNames, angles);
+
+        ROSBridge.Instance.Publish(RoboyHeadPublisher.GetMessageTopic(), msg);
+    }
+
     #endregion PUBLIC_METHODS
 
 
@@ -212,6 +223,22 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         // Move roboy accordingly to headset movement
         Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
+
+        Quaternion rot = GazeboUtility.UnityRotationToGazebo(InputTracking.GetLocalRotation(VRNode.Head));
+        float x_angle = 0.0f;
+        float y_angle = 0.0f;
+
+        x_angle = rot.eulerAngles.x * Mathf.Deg2Rad;
+        y_angle = rot.eulerAngles.y * Mathf.Deg2Rad;
+
+        List<string> joints = new List<string>();
+        joints.Add("neck_3");
+        joints.Add("neck_4");
+        List<float> angles = new List<float>();
+        angles.Add(y_angle);
+        angles.Add(x_angle);
+        
+        ReceiveExternalJoint(joints, angles);
     }
 
     /// <summary>

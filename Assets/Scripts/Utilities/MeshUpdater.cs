@@ -196,14 +196,14 @@ public class MeshUpdater : MonoBehaviour
             List<string> visMeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                visMeshList = getFilePathsFBX(absoluteModelPath + @"/visual");
+                visMeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath + @"/visual");
             }
 
             //List for all downloaded colliders
             List<string> colMeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                colMeshList = getFilePathsFBX(absoluteModelPath + @"/collision");
+                colMeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath + @"/collision");
             }
 
             foreach (string name in visMeshList)
@@ -222,7 +222,7 @@ public class MeshUpdater : MonoBehaviour
                 GameObject meshCopy = Instantiate(meshPrefab);
 
                 meshCopy.tag = "RoboyPart";
-                attachCollider(meshCopy, relativeModelPath, name);
+                UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
 
                 var regex1 = new Regex(Regex.Escape("(Clone)"));
                 meshCopy.name = regex1.Replace(meshCopy.name, "", 1);
@@ -275,50 +275,4 @@ public class MeshUpdater : MonoBehaviour
     //        yield return new WaitForSeconds(0.1f);
     //    }
     //}
-
-    /// <summary>
-    /// Returns fbx file paths in the given directory.
-    /// </summary>
-    /// <param name="sDir">The directory you want to search.</param>
-    /// <returns>List of all fbx file paths.</returns>
-    private List<string> getFilePathsFBX(string sDir)
-    {
-        List<string> files = new List<string>();
-        {
-            foreach (string f in Directory.GetFiles(sDir))
-            {
-                if (Path.GetExtension(f) == ".fbx")
-                    files.Add(Path.GetFileName(f));
-            }
-        }
-        return files;
-    }
-
-    /// <summary>
-    /// Attaches a collider to the given gameObject.
-    /// </summary>
-    /// <param name="meshGO">The gameObject you want to attach the colliders on.</param>
-    /// <param name="path">The path of the parent object in the Origin folder.</param>
-    /// <param name="modelName">The actual name of the visual model.</param>
-    private void attachCollider(GameObject meshGO, string path, string modelName)
-    {
-        // replace name from visual to collision
-        modelName = modelName.Replace("VIS_", "COL_");
-        // get the object which serves as mesh collider
-        GameObject colliderPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(path + @"collision/" + modelName, typeof(Object));
-
-        if (colliderPrefab == null)
-        {
-            Debug.Log("Did not found a collider object for mesh: " + modelName);
-            return;
-        }
-        // go through each mesh filter and add all mesh references as mesh colliders to the gameObject
-        List<MeshFilter> collRenderers = colliderPrefab.GetComponentsInChildren<MeshFilter>().ToList();
-
-        foreach (MeshFilter collRenderer in collRenderers)
-        {
-            MeshCollider meshCollider = meshGO.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = collRenderer.sharedMesh;
-        }
-    }
 }
