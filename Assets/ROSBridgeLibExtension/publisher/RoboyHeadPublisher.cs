@@ -6,12 +6,12 @@ namespace ROSBridgeLib
     {
         public new static string GetMessageTopic()
         {
-            return "/roboy/simulation/external_pose";
+            return "/roboy/middleware/JointCommandRevolute";
         }
 
         public new static string GetMessageType()
         {
-            return "roboy_communication_middleware/Pose";
+            return "roboy_communication_middleware/JointCommandRevolute";
         }
 
         public static string ToYAMLString(RoboyPoseMsg msg)
