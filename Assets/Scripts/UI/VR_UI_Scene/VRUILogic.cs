@@ -1,28 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Singleton Instance that functions as the main data base and core logic.
 /// Variables can be set/requested using the methods. 
 /// </summary>
-public class VRUILogic : Singleton<VRUILogic> {
+public class VRUILogic : Singleton<VRUILogic>
+{
 
     #region PUBLIC_MEMBER_VARIABLES
-    public GameObject[] mode;
+    /// <summary>
+    /// Current mode in enum type, helps different entities differ cases for display purposes
+    /// </summary>
+    public enum UIMode
+    {
+        Overview,
+        Control,
+        Cognition,
+        Middleware
+    };
+    public interface ISubscriber
+    {
 
+        /// <summary>
+        /// passes the information that the subscriber subscribed to.
+        /// </summary>
+        /// <param name="info"></param>
+        void BeInformed(object info);
+
+        /// <summary>
+        /// informs the subscriber of updates. Passing no arguments only if objects deleted otherwise the halo will not be created
+        /// </summary>
+        void BeInformed();
+    }
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
+    /// All modes from which can be chosen in this UI
+    /// Names need to match the string representations in the UIMode Enumeration
+    /// </summary>
+    [SerializeField]
+    private GameObject[] m_modes;
+    /// <summary>
     /// Array containing the current finger position on the touchpad if touched
     /// </summary>
     private Vector2[] m_touchData;
-  
+
     /// <summary>
     /// This value specifies the currently selected mode
     /// </summary>
     private int m_selectedMode = 0;
-  
+
     /// <summary>
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
@@ -39,9 +69,29 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     [SerializeField]
     private int m_selectIndex = 0;
-    #endregion
 
-    private List<Notification> m_notifications;
+    #region notifications
+    /// <summary>
+    /// Returns bool, if changes occured (set to true) since last check (set to false)
+    /// </summary>
+    public List<ISubscriber> m_NotificationSubscriber = new List<ISubscriber>();
+
+    /// <summary>
+    /// List containing all received error notifications
+    /// </summary>
+    private List<Notification> m_errorsList = new List<Notification>();
+
+    /// <summary>
+    /// List containing all received warnings
+    /// </summary>
+    private List<Notification> m_warningsList = new List<Notification>();
+
+    /// <summary>
+    /// List containing all received debug or similar additional information
+    /// </summary>
+    private List<Notification> m_debugsList = new List<Notification>();
+    #endregion
+    #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS1
     /// <summary>
@@ -49,15 +99,15 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     private void Awake()
     {
-        if (mode != null && mode.Length > 0)
+        if (m_modes != null && m_modes.Length > 0)
         {
-            foreach (GameObject obj in mode)
+            foreach (GameObject obj in m_modes)
             {
                 obj.SetActive(false);
             }
-            mode[m_selectedMode].gameObject.SetActive(true);
+            m_modes[m_selectedMode].gameObject.SetActive(true);
         }
-        
+
         m_touchData = new Vector2[2];
         m_touchData[0] = Vector2.zero;
         m_touchData[1] = Vector2.zero;
@@ -65,29 +115,38 @@ public class VRUILogic : Singleton<VRUILogic> {
         m_touchedPad[0] = false;
         m_touchedPad[1] = false;
 
-        m_notifications = new List<Notification>();
     }
     #endregion
 
     #region PUBLIC_METHODS
     /// <summary>
-    /// Function displays mode i and disables previous mode.
+    /// Function displays mode with index i and disables previous mode.
     /// </summary>
     /// <param name="i">index of mode</param>
     public void SelectedModeChanged(int i)
     {
-        if (Instance.mode != null)
+        if (Instance.m_modes != null)
         {
             i += m_selectIndex;
-            i %= mode.Length;
+            i %= m_modes.Length;
             Debug.Log("New mode" + i);
-            if (i < mode.Length && i >= 0)
+            if (i < m_modes.Length && i >= 0)
             {
-                mode[m_selectedMode].gameObject.SetActive(false);
-                mode[i].gameObject.SetActive(true);
+                m_modes[m_selectedMode].gameObject.SetActive(false);
+                m_modes[i].gameObject.SetActive(true);
                 m_selectedMode = i;
             }
         }
+    }
+
+    /// <summary>
+    /// Returns EnumState representation of currently selected state.
+    /// </summary>
+    /// <returns></returns>
+    public UIMode GetCurrentMode()
+    {
+        //TODO: really doggy..... hopefully not higher index than uimode-entities
+        return (UIMode)m_selectedMode;
     }
 
     /// <summary>
@@ -97,7 +156,7 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// <param name="newPos">Vector containing new position.</param>
     public void SetTouchPosition(int i, Vector2 newPos)
     {
-        if(i< m_touchData.Length && i >= 0)
+        if (i < m_touchData.Length && i >= 0)
         {
             m_touchData[i] = newPos;
         }
@@ -108,7 +167,7 @@ public class VRUILogic : Singleton<VRUILogic> {
     /// </summary>
     /// <param name="i"></param>
     /// <param name="touched"></param>
-    public void SetTouched(int i, bool touched)
+    public void SetTouchedInfo(int i, bool touched)
     {
         if (i < m_touchedPad.Length && i >= 0)
         {
@@ -151,8 +210,8 @@ public class VRUILogic : Singleton<VRUILogic> {
     public List<SelectableObject> GetSelectedParts()
     {
         return SelectorManager.Instance.SelectedParts;
-    }  
-    
+    }
+
     /// <summary>
     /// returns current rotation of headset (camera rig)
     /// </summary>
@@ -162,33 +221,115 @@ public class VRUILogic : Singleton<VRUILogic> {
         return m_headset.transform.rotation;
     }
 
+    #region notifications 
     /// <summary>
-    /// The specified notification note is added to the list of existing notifications
+    /// The specified notification note is added to the respective list of existing notifications (warning, debug or error as of now)
     /// </summary>
     /// <param name="note">Notification which is to be added</param>
     public void AddNotification(Notification note)
     {
-        if(note != null)
+        if (note != null)
         {
-            m_notifications.Add(note);
+            Debug.Log("New notification in VRUILogic");
+            switch (note.GetNotificationType())
+            {
+                case DummyStates.MessageType.DEBUG:
+                    m_debugsList.Add(note);
+                    break;
+                case DummyStates.MessageType.WARNING:
+                    m_warningsList.Add(note);
+                    break;
+                case DummyStates.MessageType.ERROR:
+                    m_errorsList.Add(note);
+                    break;
+                default:
+                    Debug.Log("[VRUILogic]This notification type is not implemented yet!" + note.GetNotificationType().ToString());
+                    break;
+            }
+            InformNotificationSubscribers(note);
         }
     }
 
     /// <summary>
-    /// returns list of all errors currently saved
+    /// Deletes all currently stored notifications and removes links to roboy
+    /// </summary>
+    public void ClearAllNotifications()
+    {
+        foreach (Notification note in m_errorsList)
+        {
+            note.UnlinkFromRoboy();
+        }
+        foreach (Notification note in m_warningsList)
+        {
+            note.UnlinkFromRoboy();
+        }
+        foreach (Notification note in m_debugsList)
+        {
+            note.UnlinkFromRoboy();
+        }
+        m_errorsList = new List<Notification>();
+        m_warningsList = new List<Notification>();
+        m_debugsList = new List<Notification>();
+        InformNotificationSubscribers(null);
+    }
+    /// <summary>
+    /// Returns list of all currently saved errors
     /// </summary>
     /// <returns></returns>
     public List<Notification> GetAllErrors()
     {
-        List<Notification> errors = new List<Notification>();
-        foreach( Notification note in m_notifications)
+        return m_errorsList;
+    }
+
+    /// <summary>
+    /// returns list of all currently saved warnings
+    /// </summary>
+    /// <returns></returns>
+    public List<Notification> GetAllWarnings()
+    {
+        return m_warningsList;
+    }
+    /// <summary>
+    /// returns list of all currently saved debug messages
+    /// </summary>
+    /// <returns></returns>
+    public List<Notification> GetAllDebugs()
+    {
+        return m_debugsList;
+    }
+
+    /// <summary>
+    /// Adds subscriber to list of classes to be informed of new notifications
+    /// </summary>
+    /// <param name="subscriber">ISubscriber which is to be subscribed</param>
+    public void SubscribeNotifications(ISubscriber subscriber)
+    {
+        if (subscriber != null && !m_NotificationSubscriber.Contains(subscriber))
         {
-            if( note.getType() == DummyStates.MessageType.ERROR)
-            {
-                errors.Add(note);
-            }
+            m_NotificationSubscriber.Add(subscriber);
         }
-        return errors;
+    }
+    #endregion
+    #endregion
+
+    #region PRIVATE_METHODS
+
+    /// <summary>
+    /// for each subscribed interface, inform method with new notification called
+    /// </summary>
+    /// <param name="note">Notification of which to inform subscribers</param>
+    private void InformNotificationSubscribers(Notification note)
+    {
+
+        foreach (ISubscriber subscriber in m_NotificationSubscriber)
+        {
+            if (note == null)
+            {
+                subscriber.BeInformed();
+            }
+            else
+                subscriber.BeInformed(note);
+        }
     }
     #endregion
 }
