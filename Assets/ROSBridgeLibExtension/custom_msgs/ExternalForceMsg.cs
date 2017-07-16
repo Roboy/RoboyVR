@@ -77,7 +77,7 @@ namespace ROSBridgeLib
 
             public static string GetMessageType()
             {
-                return "common_utilities/ExternalForce";
+                return "roboy_communication_simulation/ExternalForce";
             }
 
             public override string ToString()
