@@ -228,15 +228,23 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         float x_angle = 0.0f;
         float y_angle = 0.0f;
 
-        x_angle = rot.eulerAngles.x * Mathf.Deg2Rad;
-        y_angle = rot.eulerAngles.y * Mathf.Deg2Rad;
+        if (rot.eulerAngles.x > 180)
+            y_angle = (rot.eulerAngles.x - 360) * Mathf.Deg2Rad;
+        else
+            y_angle = rot.eulerAngles.x * Mathf.Deg2Rad;
+
+        x_angle = rot.eulerAngles.z * Mathf.Deg2Rad;
+        
+
+        //Debug.Log(rot.eulerAngles.x);
+        
 
         List<string> joints = new List<string>();
         joints.Add("neck_3");
         joints.Add("neck_4");
         List<float> angles = new List<float>();
-        angles.Add(y_angle);
         angles.Add(x_angle);
+        angles.Add(y_angle);
         
         ReceiveExternalJoint(joints, angles);
     }
