@@ -6,21 +6,25 @@ namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
-        public class LinkArrayMsg : ROSBridgeMsg
+        public class StringArrayMsg : ROSBridgeMsg
         {
+            private string _identifier;
             private List<string> _linkNames;
 
-            public LinkArrayMsg(JSONNode msg)
+            public StringArrayMsg(JSONNode msg)
             {
-                JSONArray linkNames = msg["name"].AsArray;
+                JSONArray linkNames = msg[_identifier].AsArray;
                 foreach (var linkName in linkNames)
                 {
                     _linkNames.Add(linkName.ToString());
                 }
             }
 
-            public LinkArrayMsg(List<string> linkNames)
+
+
+            public StringArrayMsg(string identifier, List<string> linkNames)
             {
+                _identifier = identifier;
                 _linkNames = linkNames;
             }
 
@@ -50,7 +54,7 @@ namespace ROSBridgeLib
 
             public override string ToYAMLString()
             {
-                string result = "\"name\": [";
+                string result = "\"" + _identifier + "\": [";
                 for (int i = 0; i < _linkNames.Count; i++)
                 {
                     // add each link name in quotation marks so it looks like : "hip", "thigh_left" ..

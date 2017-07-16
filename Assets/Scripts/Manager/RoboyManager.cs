@@ -135,14 +135,14 @@ public class RoboyManager : Singleton<RoboyManager> {
         ROSBridgeLib.custom_msgs.ExternalForceMsg msg = 
             new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, GazeboUtility.UnityPositionToGazebo(position), GazeboUtility.UnityPositionToGazebo(force), duration);
 
-        ROSBridge.Instance.ROS.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
+        ROSBridge.Instance.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
 
         //Debug.Log(msg.ToYAMLString());
     }
 
     public void ResetSimulation()
     {     
-        ROSBridge.Instance.ROS.CallService("/roboy/reset_world", "");
+        ROSBridge.Instance.CallService("/roboy/reset_world", "");
     }
 
     #endregion //PUBLIC_METHODS

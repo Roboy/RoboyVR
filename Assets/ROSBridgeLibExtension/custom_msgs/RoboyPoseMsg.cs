@@ -71,7 +71,7 @@ namespace ROSBridgeLib
             #region PRIVATE_MEMBER_VARIABLES
 
             // TO DO MSG SO WE CAN PUBLISH IT
-            private LinkArrayMsg _linkNames;
+            private StringArrayMsg _linkNames;
             private FloatArrayMsg _xArray, _yArray, _zArray, _qxArray, _qyArray, _qzArray, _qwArray;
 
             private Dictionary<string, int> _nameIndexDic;
@@ -168,13 +168,56 @@ namespace ROSBridgeLib
             public RoboyPoseMsg(List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
                 Dictionary<string, float> qyDic, Dictionary<string, float> qzDic, Dictionary<string, float> qwDic)
             {
-                _linkNames = new LinkArrayMsg(linkNames);
+                _linkNames = new StringArrayMsg("name", linkNames);
 
                 List<float> xValues = new List<float>();
                 foreach (var linkName in linkNames)
                 {
-
+                    xValues.Add(xDic[linkName]);
                 }
+                _xArray = new FloatArrayMsg("x", xValues);
+
+                List<float> yValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+                    yValues.Add(yDic[linkName]);
+                }
+                _yArray = new FloatArrayMsg("y", yValues);
+
+                List<float> zValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+                    zValues.Add(zDic[linkName]);
+                }
+                _zArray = new FloatArrayMsg("z", zValues);
+
+                List<float> qxValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+                    qxValues.Add(qxDic[linkName]);
+                }
+                _qxArray = new FloatArrayMsg("qx", qxValues);
+
+                List<float> qyValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+                    qyValues.Add(qyDic[linkName]);
+                }
+                _qyArray = new FloatArrayMsg("qy", qyValues);
+
+                List<float> qzValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+                    qzValues.Add(qzDic[linkName]);
+                }
+                _qzArray = new FloatArrayMsg("qz", qzValues);
+
+                List<float> qwValues = new List<float>();
+                foreach (var linkName in linkNames)
+                {
+                    qwValues.Add(qwDic[linkName]);
+                }
+                _qwArray = new FloatArrayMsg("qw", qwValues);
 
             }
 
@@ -194,7 +237,9 @@ namespace ROSBridgeLib
             /// <returns></returns>
             public override string ToYAMLString()
             {
-                return "{ \"name\":[]}";
+                return "{" + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
+                    ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() + 
+                    "}";
             }
 
             #endregion //PUBLIC_METHODS

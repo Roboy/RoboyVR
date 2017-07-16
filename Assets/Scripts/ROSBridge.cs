@@ -18,10 +18,10 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// </summary>
     public int Port = 9090;
 
-    /// <summary>
-    /// Public property for other classes to the ros websocket.
-    /// </summary>
-    public ROSBridgeWebSocketConnection ROS { get { return m_ROS; } }
+    ///// <summary>
+    ///// Public property for other classes to the ros websocket.
+    ///// </summary>
+    //public ROSBridgeWebSocketConnection ROS { get { return m_ROS; } }
 
     /// <summary>
     /// Public property of all active ROSObjects in the scene.
@@ -59,24 +59,17 @@ public class ROSBridge : Singleton<ROSBridge> {
         {
             m_ROS.Connect();
             m_ROSInitialized = true;
-        }
-           
-        //if (m_ROS != null)
-        //{
-        //    // find all ROSObjects
-        //    var rosObjects = FindObjectsOfType<ROSObject>();
+        }       
+    }
 
-        //    // get all attached ros components of all ROSObjects and add them
-        //    foreach (ROSObject rosObj in rosObjects)
-        //    {
-        //        AddROSActor(rosObj);
-        //    }
+    public void Publish(string topic, ROSBridgeMsg msg)
+    {
+        m_ROS.Publish(topic, msg);
+    }
 
-        //    // start connection
-        //    m_ROS.Connect();
-        //    m_ROSInitialized = true;
-        //    Debug.Log("ROSBridge connection successfully established!");
-        //}
+    public void CallService(string service, string args)
+    {
+        m_ROS.CallService(service, args);
     }
 
     /// <summary>
