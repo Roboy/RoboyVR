@@ -66,6 +66,9 @@ public class HandTool : ControllerTool {
         Vector3 gazeboPosition = GazeboUtility.UnityPositionToGazebo(transform.position);
         Quaternion gazeboRotation = GazeboUtility.UnityRotationToGazebo(transform.rotation);
 
+        //Vector3 gazeboPosition = transform.position;
+        //Quaternion gazeboRotation = transform.rotation;
+
         xDic.Add(linkName, gazeboPosition.x);
         yDic.Add(linkName, gazeboPosition.y);
         zDic.Add(linkName, gazeboPosition.z);

@@ -235,10 +235,17 @@ namespace ROSBridgeLib
             /// The YAML format is only needed when we publish a msg over the ROSBridge. TO DO CHANGE SO WE CAN PUBLISH IT
             /// </summary>
             /// <returns></returns>
+            //public override string ToYAMLString()
+            //{
+            //    return "{" + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
+            //        ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() +
+            //        "}";
+            //}
+
             public override string ToYAMLString()
             {
                 return "{" + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
-                    ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() + 
+                    ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() +
                     "}";
             }
 
