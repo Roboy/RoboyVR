@@ -28,7 +28,6 @@ public class OverviewManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     private GameObject[] tabs;
-
     /// <summary>
     /// for continuously testing graphrenderer
     /// </summary>
@@ -58,20 +57,23 @@ public class OverviewManager : MonoBehaviour
         GameObject obj = new GameObject();
         obj.name = "heartbeat";
         obj.transform.parent = tabs[1].transform.Find("Panel"); //linked to screen
+        tabs[0].GetComponentInChildren<Button>().onClick.Invoke(); //set tab 0 as default display
         /*Working well for gameobject to fit parent*/
         AspectRatioFitter test = obj.AddComponent<AspectRatioFitter>();
         test.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
         test.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
         test.transform.localPosition = Vector3.zero;
-        
+
         //add graph
         obj.AddComponent<GraphObject>();
         heart = obj.GetComponent<GraphObject>();
+        heart.Initialize(null, 3);
         heart.SetDefaultValue(2);
+        heart.SetNumberOfPoints(200);
         heart.SetNoAdjustment();
         heart.SetManualAdjust(new Vector2(0, 4));
-        heart.Run(null, 3);
         heart.SetGraphColour(Color.green);
+        heart.Play();
     }
 
     /// <summary>
@@ -101,9 +103,12 @@ public class OverviewManager : MonoBehaviour
         {
             testing = true;
             StartCoroutine(test());
-            Debug.Log("new test");
+            Debug.Log("new test"); 
         }
         heart.AddValue(GetBeat());
+        //this comment counts frames per sec.... some issues here. this update is only called 10 times per sec 
+        // (might be hardware related...)
+        //Debug.Log("heart update: " + (int)Time.time);
     }
     #endregion
 
@@ -118,18 +123,39 @@ public class OverviewManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator test()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(3);
         if (heart.isActiveAndEnabled)
         {
             heart.DisplayForNumberOfSeconds(1);
+            heart.SetGraphColour(Color.gray);
         }
         yield return new WaitForSeconds(3);
         if (heart.isActiveAndEnabled)
         {
             heart.DisplayForNumberOfSeconds(6);
+            heart.SetGraphColour(Color.cyan);
         }
+        yield return new WaitForSeconds(5);
+        if (heart.isActiveAndEnabled)
+        {
+            heart.Pause();
+        }
+        yield return new WaitForSeconds(3);
+        if (heart.isActiveAndEnabled)
+        {
+            heart.SetManualAdjust(-5, 11);
+            heart.Resume();
+        }
+        //TODO: buggy! way to expensive looking for min/max values in each frame
+        //yield return new WaitForSeconds(3);
+        //if (heart.isActiveAndEnabled)
+        //{
+        //    //heart.SetAutomaticAdjust();
+        //}
         testing = false;
     }
+
+
     /// <summary>
     /// returns heartbeat value of current time step
     /// </summary>

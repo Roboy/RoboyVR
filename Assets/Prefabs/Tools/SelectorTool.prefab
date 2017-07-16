@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 114467179743085454}
   - component: {fileID: 120719895032536240}
   - component: {fileID: 114884712767586166}
+  - component: {fileID: 114156677863510200}
   m_Layer: 0
   m_Name: SelectorTool
   m_TagString: SelectorTool
@@ -59,6 +60,17 @@ Transform:
   m_Father: {fileID: 224490437605368194}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114156677863510200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1482195654537682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7159915c90238c946901a10b773709de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114350130326900868
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41df825ed67c43b46a9bbcaacf32981c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_RayDistance: 7
 --- !u!114 &114884712767586166
 MonoBehaviour:
   m_ObjectHideFlags: 1

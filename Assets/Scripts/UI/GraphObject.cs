@@ -71,17 +71,26 @@ public class GraphObject : MonoBehaviour
     /// List that saves further values if graph is being paused, replaces (parts of) current list as soon as continuing
     /// </summary>
     private List<float> m_buffered;
+    /// <summary>
+    /// this restricts the addvalue function to only add when one fixed update frame is waited (for appropriate time representation)
+    /// </summary>
+    private bool m_update_possible = true;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
-    /// Called once by Unity during startup / next frame when game obj created
+    /// this restricts addition of new values to fixed update times. Needed for coherent time representation
     /// </summary>
-    void Awake()
+    void FixedUpdate()
     {
-        m_GraphRenderer = gameObject.AddComponent<GraphRenderer>();
+        //fixed update faster than update or no new values --> for correct time behaviour, fill list with additional values
+        //might result in step like behaviour.... TODO
+        if (m_update_possible)
+        {
+            AddValue(m_Values[m_Values.Count -1]);
+        }
+        m_update_possible = true;
     }
-
     #endregion
 
     #region PUBLIC_METHODS
@@ -90,23 +99,20 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     /// <param name="values">A list of floats which you want to display. Can be empty.</param>
     /// <param name="displayedSeconds">How many seconds you want to display (time frame).</param>
-    public void Run(List<float> values, float displayedSeconds)
+    public void Initialize(List<float> values, float displayedSeconds)
     {
         // return when the function is called with bad values
         if (values == null)
         {
             values = new List<float>();
         }
-        if (displayedSeconds < 2* Time.deltaTime)
+        if (displayedSeconds < 2 * Time.deltaTime)
         {
             Debug.Log("Cannot start a graph with less than 2 points!");
             return;
         }
-        else
-        {
-            DisplayForNumberOfSeconds(displayedSeconds);
-        }
 
+        m_GraphRenderer = gameObject.AddComponent<GraphRenderer>();
 
         // fill the list if necessary
         if (values.Count < m_DisplayedPointsCount)
@@ -118,6 +124,14 @@ public class GraphObject : MonoBehaviour
         m_Values = values;
         // init graph renderer
         m_GraphRenderer.Initialize(m_Values, m_DisplayedPointsCount);
+        DisplayForNumberOfSeconds(displayedSeconds);
+    }
+
+    /// <summary>
+    /// starts the Graphrenderer. call initialize() beforehand.
+    /// </summary>
+    public void Play()
+    {
         m_GraphRenderer.Play();
     }
 
@@ -160,13 +174,19 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// Adds a value at the start of the list. Depending on whether graph is playing or not, real values updated / buffered list
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="value">one value</param>
     public void AddValue(float value)
     {
-        /*TODO
-        if (!m_WaitingOver) return;
-        m_WaitingOver = false;*/
+        //this is used to visualise graph in right time frame
+        if (!m_update_possible)
+        {
+            return;
+        }
+        m_update_possible = false;
+        ///Debug.Log("List addition: Update (FPS info)" + (int)Time.time);
+
         if (m_GraphRenderer.IsPlaying()) // update displayed values list
         {
             m_Values.Add(value);
@@ -190,10 +210,16 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// Adds a set of values at the start of the list. Depending on whether graph is playing or not, real values updated / buffered list
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="values">Set of float values.</param>
     public void AddValues(List<float> values)
     {
+        if (!m_update_possible)
+        {
+            return;
+        }
+        m_update_possible = false;
         /*TODO
         if (!m_WaitingOver) return;
         m_WaitingOver = false;*/
@@ -221,6 +247,7 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// Changes the count of displayed points.
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="count">New count of the displayed points.</param>
     public void NumberOfDisplayedPoints(int count)
@@ -233,16 +260,18 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// Sets the number of points to display the frame of specified number of seconds
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="seconds">display all values in a time frame of (seconds) secs</param>
     public void DisplayForNumberOfSeconds(float seconds)
     {
         if (seconds > 0)
         {
-            int pointNumber = (int)(seconds / Time.deltaTime);
+            int pointNumber = (int)(seconds / Time.fixedDeltaTime);
+            //Debug.Log("Number of points for " + seconds + " seconds: " + pointNumber);
             m_GraphRenderer.ChangeGraphPointNumber(pointNumber);
             m_DisplayedPointsCount = pointNumber;
-            Debug.Log(seconds + " sec range");
+            //Debug.Log(seconds + " sec range");
         }
         else
         {
@@ -252,6 +281,7 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// changes the graph to not be dynamically adjusted depending on its current values, uses manual y axis value then
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     public void SetNoAdjustment()
     {
@@ -260,6 +290,7 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// changes graph to automatically scale y axis ´depending on current values
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     public void SetAutomaticAdjust()
     {
@@ -268,6 +299,7 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// sets range in for which the y values will be displayed
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="range">x value == lower bownd, y upper</param>
     public void SetManualAdjust(Vector2 range)
@@ -277,6 +309,7 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// sets range in for which the y values will be displayed
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="range">x value == lower bownd, y upper</param>
     public void SetManualAdjust(float min, float max)
@@ -285,6 +318,7 @@ public class GraphObject : MonoBehaviour
     }
     /// <summary>
     /// sets default value which is used to create new elems if list not filled
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="val">any desired val</param>
     public void SetDefaultValue(float val)
@@ -295,6 +329,7 @@ public class GraphObject : MonoBehaviour
 
     /// <summary>
     /// sets number of points to plot the graph. The list will be adapted to the new size
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="number"></param>
     public void SetNumberOfPoints(int number)
@@ -303,7 +338,8 @@ public class GraphObject : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets colour of the respective Graph. Graph renderer must be initialized first (call run before)!
+    /// Sets colour of the respective Graph.
+    /// Needs to be called after Graphrenderer initialized  
     /// </summary>
     /// <param name="colour">Any colour</param>
     public void SetGraphColour(Color colour)
@@ -341,7 +377,7 @@ public class GraphObject : MonoBehaviour
     /// <returns>Reference to the added Textcomponent of the Object</returns>
     private Text AddText(GameObject obj)
     {
-        if(obj.GetComponent<Text>() != null)
+        if (obj.GetComponent<Text>() != null)
         {
             Debug.Log("Trying to add text Component to existing text component! Aborting");
             return null;

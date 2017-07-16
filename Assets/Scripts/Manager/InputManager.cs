@@ -129,8 +129,8 @@ public class InputManager : Singleton<InputManager> {
         Valve.VR.EVRButtonId mask = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
         VRUILogic.Instance.SetTouchPosition(0, m_SelectorTool.Controller.GetAxis(mask));
         VRUILogic.Instance.SetTouchPosition(1, m_GUIController.Controller.GetAxis(mask));
-        VRUILogic.Instance.SetTouched(0, m_SelectorTool.Controller.GetTouch(mask));
-        VRUILogic.Instance.SetTouched(1, m_GUIController.Controller.GetTouch(mask));
+        VRUILogic.Instance.SetTouchedInfo(0, m_SelectorTool.Controller.GetTouch(mask));
+        VRUILogic.Instance.SetTouchedInfo(1, m_GUIController.Controller.GetTouch(mask));
     }
 
     /// <summary>

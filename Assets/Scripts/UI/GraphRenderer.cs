@@ -210,23 +210,24 @@ public class GraphRenderer : MonoBehaviour
         m_BorderInitialized = true;
     }
 
-    ///// <summary> TODO: scaling not working as of now -> manual scale
-    ///// event, called by unity as soon as RectTransform Component recognised changed. 
-    ///// Updates m_MaximumWidth and m_MaximumHeight for graph plotter
-    ///// </summary>
-    //void OnRectTransformDimensionsChange()
-    //{
+    /// <summary> TODO: scaling not working as of now -> manual scale
+    /// event, called by unity as soon as RectTransform Component recognised changed. 
+    /// Updates m_MaximumWidth and m_MaximumHeight for graph plotter
+    /// TODO: THIS IS NOT OPTIMAL AS DIMENSION CHANGE IS NOT ONLY SCALE (the only considered element here) BUT POSITION
+    /// </summary>
+    void OnRectTransformDimensionsChange()
+    {
 
-    //    if (m_RectTransform)
-    //    {
-    //        m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
-    //        m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop);
+        if (m_RectTransform)
+        {
+            m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
+            m_MaximumHeight = (m_RectTransform.rect.height - BorderBottom - BorderTop);
 
-    //        m_StepSize = m_MaximumWidth / ((float)m_NumPoints - 1);
-    //        m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
+            m_StepSize = m_MaximumWidth / ((float)m_NumPoints - 1);
+            m_MaximumWidth = (m_RectTransform.rect.width - BorderLeft - BorderRight);
 
-    //    }
-    //}
+        }
+    }
 
     #endregion // UNITY_MONOBEHAVIOR_METHODS
 
@@ -295,7 +296,7 @@ public class GraphRenderer : MonoBehaviour
     {
         //Debug.Log("Graph renderer: Play called");
         //TODO: apparently concurrency issues -> lock?
-        if (m_Initialized && !m_Playing)
+        if (m_Initialized && !m_Playing && isActiveAndEnabled)
         {
             m_Playing = true;
             if (m_PlayCoroutine == null) // if no coroutine running yet
@@ -307,7 +308,7 @@ public class GraphRenderer : MonoBehaviour
             }
             else
             {
-                StartCoroutine(m_PlayCoroutine);
+                if(isActiveAndEnabled) StartCoroutine(m_PlayCoroutine);
             }
         }
         if (!m_Initialized)
@@ -472,7 +473,7 @@ public class GraphRenderer : MonoBehaviour
 
             // Update the linerenderer with the new positions of the graph points
             m_OscillatorLineRenderer.SetPositions(m_Positions.ToArray());
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         if (!m_Initialized)
         {
