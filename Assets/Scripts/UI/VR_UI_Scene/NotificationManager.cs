@@ -121,16 +121,18 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
         note = new Notification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, 0);
         VRUILogic.Instance.AddNotification(note);
         Debug.Log("debug");
-
-        yield return new WaitForSeconds(2);
-        VRUILogic.Instance.ClearAllNotifications();
-        Debug.Log("Clear all notifications");
-
+        if(VRUILogic.Instance.GetAllDebugs().Count > 5)
+        {
+            yield return new WaitForSeconds(2);
+            VRUILogic.Instance.ClearAllNotifications();
+            Debug.Log("Clear all notifications");
+        }
         yield return new WaitForSeconds(2);
         note = new Notification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, 0);
         VRUILogic.Instance.AddNotification(note);
         Debug.Log("debug");
         testing = false;
+
     }
 
     /// <summary>
