@@ -65,6 +65,11 @@ public class VRUILogic : Singleton<VRUILogic>
     private Camera m_headset;
 
     /// <summary>
+    /// skybox connected to camera
+    /// </summary>
+    [SerializeField]
+    private Material skybox;
+    /// <summary>
     /// For the main selection wheel, set which mode is default (offset)
     /// </summary>
     [SerializeField]
@@ -114,7 +119,8 @@ public class VRUILogic : Singleton<VRUILogic>
         m_touchedPad = new bool[2];
         m_touchedPad[0] = false;
         m_touchedPad[1] = false;
-
+        Skybox box = m_headset.gameObject.AddComponent<Skybox>();
+        box.material = skybox;
     }
     #endregion
 
