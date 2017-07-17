@@ -157,9 +157,9 @@ public class WorldUpdater : MonoBehaviour
                 ModelTransformation testModel = new ModelTransformation();
                 testModel.worldname = urlEntry.Key;
                 testModel.name = "construction_cone";
-                testModel.position = new Vector3(Random.Range(-10.0f, 10.0f), Random.Range(0f, 10.0f), Random.Range(-10.0f, 10.0f));
+                testModel.position = new Vector3(Random.Range(-10.0f, 10.0f), 0f, Random.Range(-10.0f, 10.0f));
                 testModel.rotation = new Vector3(0, 0, 0);
-                testModel.scale = new Vector3(10, 10, 10);
+                testModel.scale = new Vector3(20, 20, 20);
                 modellist.Add(testModel);
             }
 
