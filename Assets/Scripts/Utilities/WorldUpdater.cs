@@ -287,6 +287,7 @@ public class WorldUpdater : MonoBehaviour
             foreach (ModelTransformation model in modellist)
             {
                 string absoluteWorldPath = UpdaterUtility.ProjectFolder + @"/SimulationWorlds/" + model.name;
+
                 //if model is part of the world urlEntry.Key
                 if (model.worldname == urlEntry.Key) {
                     GameObject model1 = Instantiate(m_PrefabDictionary[model.name]);
