@@ -44,12 +44,12 @@ namespace ROSBridgeLib
 
             public static string GetMessageType()
             {
-                return "roboy_communication_middleware/JointCommandRevolute";
+                return "roboy_communication_middleware/JointCommand";
             }
 
             public override string ToString()
             {
-                return "roboy_communication_middleware/JointCommandRevolute [name=";
+                return "roboy_communication_middleware/JointCommand [name=";
             }
 
             public override string ToYAMLString()
