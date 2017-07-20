@@ -289,7 +289,7 @@ namespace ROSBridgeLib
 
         private void OnMessage(string s)
         {
-            Debug.Log("Got a message " + s);
+            //Debug.Log("Got a message " + s);
             if ((s != null) && !s.Equals(""))
             {
                 JSONNode node = JSONNode.Parse(s);

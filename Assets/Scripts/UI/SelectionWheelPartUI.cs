@@ -95,6 +95,18 @@ public class SelectionWheelPartUI : MonoBehaviour {
         m_ActualPart = wheelPart;
     }
 
+    public void CreateIcon(Vector3 position, float zAngle)
+    {
+        GameObject iconGO = new GameObject("Icon");
+        iconGO.transform.parent = transform;
+        //iconGO.transform.localScale = Vector3.one;
+        iconGO.transform.localPosition = position;
+        iconGO.transform.localEulerAngles = new Vector3(0, 0, zAngle);
+        iconGO.transform.localScale = transform.localScale * 0.8f;
+        Image iconImg = iconGO.AddComponent<Image>();
+        iconImg.sprite = m_ActualPart.Icon;
+    }
+
     /// <summary>
     /// Highlight the part.
     /// </summary>

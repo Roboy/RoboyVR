@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectionWheelPart : MonoBehaviour {
+
+    public Sprite Icon;
 
     /// <summary>
     /// Highlight the part.

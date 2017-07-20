@@ -12,16 +12,10 @@ using UnityEngine.UI;
 public class SelectionWheel : MonoBehaviour {
 
     /// <summary>
-    /// Width of the UI parts.
+    /// Radius of the UI parts.
     /// </summary>
     [SerializeField]
-    private float Width = 800;
-
-    /// <summary>
-    /// Height of the UI parts.
-    /// </summary>
-    [SerializeField]
-    private float Height = 800;
+    private float Radius = 400;
 
     /// <summary>
     /// Default color for the parts.
@@ -137,7 +131,7 @@ public class SelectionWheel : MonoBehaviour {
             wheelPartUI.Initialize(parts[i]);
             // set the image component
             Image img = wheelPartGO.GetComponent<Image>();
-            img.rectTransform.sizeDelta = new Vector2(Width, Height);
+            img.rectTransform.sizeDelta = new Vector2(Radius, Radius);
             img.sprite = m_Sprite;
             img.type = Image.Type.Filled;
             img.fillMethod = Image.FillMethod.Radial360;
@@ -149,6 +143,8 @@ public class SelectionWheel : MonoBehaviour {
             wheelPartUI.SelectedColor = SelectColor;
             wheelPartUI.DefaultOutlineColor = DefaultOutlineColor;
             wheelPartUI.SelectedOutlineColor = SelectedOutlineColor;
+            // create an icon with an offset such that the icon corresponds to the right ui part of the selection wheel
+            wheelPartUI.CreateIcon(new Vector3(-Radius / 4, -Radius / 4, 0), -img.rectTransform.localEulerAngles.z);
 
             m_Parts.Add(wheelPartUI);
             wheelPartUI.Unhighlight();
@@ -175,7 +171,8 @@ public class SelectionWheel : MonoBehaviour {
     /// <param name="e"></param>
     private void startRecognition(object sender, ClickedEventArgs e)
     {
-        StartCoroutine(recognitionCoroutine());
+        if(gameObject.activeInHierarchy)
+            StartCoroutine(recognitionCoroutine());
     }
 
     /// <summary>

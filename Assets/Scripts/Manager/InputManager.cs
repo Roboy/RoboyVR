@@ -267,6 +267,7 @@ public class InputManager : Singleton<InputManager> {
         {
             m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
             m_ToolWheel.Initialize(toolWheelParts);
+            m_ToolWheel.gameObject.SetActive(false);
         }
             
     }
