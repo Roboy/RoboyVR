@@ -127,7 +127,7 @@ public class MeshUpdater : MonoBehaviour
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
-        {
+        {   
             string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, m_URLDictionary[urlEntry.Key] };
             CommandlineUtility.RunCommandLine(scanArguments);
             //Debug.Log(m_URLDictionary[urlEntry.Key]);
@@ -163,8 +163,12 @@ public class MeshUpdater : MonoBehaviour
                 var regex = new Regex(Regex.Escape("tree"));
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
 
+                //replace "tree" with "raw" in URL
+                var regex1 = new Regex(Regex.Escape("tree"));
+                string tempModelURL = regex.Replace(m_URLDictionary[urlEntry.Key], "raw", 1);
+
                 //start modeldownloader.py for visual
-                string[] updateArgumentsXML = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, m_URLDictionary[urlEntry.Key] + @"/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels", "" };
+                string[] updateArgumentsXML = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, tempModelURL + @"/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels", "" };
                 CommandlineUtility.RunCommandLine(updateArgumentsXML);
 
                 //start modeldownloader.py for visual

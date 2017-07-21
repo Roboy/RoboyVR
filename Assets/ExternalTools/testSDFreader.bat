@@ -1,0 +1,1 @@
+python "D:\RoboyVR\Assets\ExternalTools\SDF_reader.py" "D:\RoboyVR\Assets\SimulationModels\arm_simplified\OriginModels\model.sdf"
