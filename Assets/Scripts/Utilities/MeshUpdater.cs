@@ -164,6 +164,10 @@ public class MeshUpdater : MonoBehaviour
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
 
                 //start modeldownloader.py for visual
+                string[] updateArgumentsXML = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, m_URLDictionary[urlEntry.Key] + @"/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels", "" };
+                CommandlineUtility.RunCommandLine(updateArgumentsXML);
+
+                //start modeldownloader.py for visual
                 string[] updateArgumentsVis = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, titleURL[1] + @"/visual/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/visual", "" };
                 CommandlineUtility.RunCommandLine(updateArgumentsVis);
 

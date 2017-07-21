@@ -7,6 +7,7 @@ from math import pi
 import sys
 import os
 
+
 def areas_tuple():
     res = {}                                                               
     count = 0
@@ -77,11 +78,11 @@ for i in range (0, len(titleListFinal)):
 
 print(str(filelist).strip('[]'))
 
-worldlist = list()
+xmllist = list()
 
 for file in filelist:
-	if (".world" in file):
-		worldlist.append(file)
+	if (".world" in file) or (".sdf" in file):
+		xmllist.append(file)
 
 modellist = list()		
 
@@ -94,26 +95,26 @@ for file in filelist:
 			
 		
 print(str(modellist).strip('[]'))
-print(str(worldlist).strip('[]'))
+print(str(xmllist).strip('[]'))
 
 #############################################################
 export_list = []
 tempArr = list()
 
 export_Wlist = []
-tempArrW = list()
+tempArrXML = list()
 
 for model in modellist:
 	tempArr.append(re.sub(' ', '%20', model))
 	
-for world in worldlist:
-	tempArrW.append(re.sub(' ', '%20', world))
+for xml in xmllist:
+	tempArrXML.append(re.sub(' ', '%20', xml))
 
 print(str(tempArr).strip('[]'))
 
 if sys.argv[5] == "":
 	export_list = tempArr
-	export_Wlist = tempArrW
+	export_XMLlist = tempArrXML
 else:
 	#compare arguments with list of directory in github
 	for filename in tempArr:	
@@ -125,7 +126,7 @@ print("Meshes to be updated: ", export_list)
 
 
 #Download all (.world)s located at GitHub
-for filename in export_Wlist:
+for filename in export_XMLlist:
 	print("Downloading: " + filename + " from " + dir_ip_addr + filename)
 	remotefile = urllib.request.urlopen(dir_ip_addr + filename)
 	if not os.path.exists(pathToProjectModels):
