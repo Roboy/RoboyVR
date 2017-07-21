@@ -1,4 +1,4 @@
-//Run roscore
+﻿//Run roscore
 roscore
 
 //Source setup of roboy-ros-control
@@ -9,6 +9,7 @@ rosrun gazebo_ros gazebo
 
 //Subscribe to the image and display it in a window
 rosrun image_view image_view image:=roboy/camera/image_raw
+image_transport:=theora  (decreases bandwidth a LOT)
 
 //Useful for monitoring
 rosrun rqt_gui rqt_gui
