@@ -35,10 +35,14 @@ public class RoboyPart : MonoBehaviour
     private List<Notification> m_myWarnings = new List<Notification>();
 
     /// <summary>
-    /// List containing all received debug or similar additional information
+    /// List containing all received debugs
     /// </summary>
     private List<Notification> m_myDebugs = new List<Notification>();
 
+    /// <summary>
+    /// List containing all received infos or similar additional information
+    /// </summary>
+    private List<Notification> m_myInfos = new List<Notification>();
     #endregion
 
     #region PUBLIC_METHODS
@@ -120,7 +124,7 @@ public class RoboyPart : MonoBehaviour
     public void DisableWarnings()
     {
         Component comp = gameObject.transform.Find("Warning");
-        if (comp == null)
+        if (comp != null)
         {
             Destroy(comp.gameObject);
         }
@@ -162,6 +166,9 @@ public class RoboyPart : MonoBehaviour
             case DummyStates.MessageType.ERROR:
                 m_myErrors.Add(note);
                 break;
+            case DummyStates.MessageType.INFO:
+                m_myInfos.Add(note);
+                break;
             default:
                 break;
         }
@@ -183,6 +190,9 @@ public class RoboyPart : MonoBehaviour
                 break;
             case DummyStates.MessageType.ERROR:
                 m_myErrors.Remove(notification);
+                break;
+            case DummyStates.MessageType.INFO:
+                m_myInfos.Remove(notification);
                 break;
             default:
                 break;

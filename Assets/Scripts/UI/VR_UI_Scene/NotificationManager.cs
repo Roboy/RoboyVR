@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,21 +25,6 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     [SerializeField]
     private RawImage[] m_imageSlots;
 
-    /// <summary>
-    /// Texture of error icon
-    /// </summary>
-    [SerializeField]
-    private Texture m_error;
-    /// <summary>
-    /// texture of warning icon
-    /// </summary>
-    [SerializeField]
-    private Texture m_warning;
-    /// <summary>
-    /// texture of debug icon
-    /// </summary>
-    [SerializeField]
-    private Texture m_debug;
     /// <summary>
     /// saves the current mode setting, in which the notification manager is
     /// </summary>
@@ -109,28 +93,21 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     /// <returns></returns>
     private IEnumerator test()
     {
-        Notification note = new Notification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, 0);
         yield return new WaitForSeconds(2);
-        VRUILogic.Instance.AddNotification(note);
+        Notification note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "head", 3);
+        Debug.Log("Added Warning");
+
+        yield return new WaitForSeconds(4);
+        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "hip", 5);
+        Debug.Log("Added Error");
 
         yield return new WaitForSeconds(2);
-        note = new Notification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, 0);
-        VRUILogic.Instance.AddNotification(note);
-        Debug.Log("Warning");
+        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
+        Debug.Log("Added Debug");
+
         yield return new WaitForSeconds(2);
-        note = new Notification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, 0);
-        VRUILogic.Instance.AddNotification(note);
-        Debug.Log("debug");
-        if(VRUILogic.Instance.GetAllDebugs().Count > 5)
-        {
-            yield return new WaitForSeconds(2);
-            VRUILogic.Instance.ClearAllNotifications();
-            Debug.Log("Clear all notifications");
-        }
-        yield return new WaitForSeconds(2);
-        note = new Notification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, 0);
-        VRUILogic.Instance.AddNotification(note);
-        Debug.Log("debug");
+        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, "", 5f);
+        Debug.Log("Added debug");
         testing = false;
 
     }
@@ -140,59 +117,45 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     /// </summary>
     private void UpdateIconsAndText()
     {
-        Debug.Log("Updating icons and text");
-        int errorCount = VRUILogic.Instance.GetAllErrors().Count;
-        int warningCount = VRUILogic.Instance.GetAllWarnings().Count;
-        int debugCount = VRUILogic.Instance.GetAllDebugs().Count;
-        int count = 0;
+        //Debug.Log("Updating icons and text");
+        int[] counts = {
+            VRUILogic.Instance.GetAllErrors().Count,
+            VRUILogic.Instance.GetAllWarnings().Count,
+            VRUILogic.Instance.GetAllDebugs().Count ,
+            VRUILogic.Instance.GetAllInfos().Count};
+
+        Texture[] textures = {
+            VRUILogic.Instance.GetIconTexture(DummyStates.MessageType.ERROR),
+            VRUILogic.Instance.GetIconTexture(DummyStates.MessageType.WARNING),
+            VRUILogic.Instance.GetIconTexture(DummyStates.MessageType.DEBUG),
+            VRUILogic.Instance.GetIconTexture(DummyStates.MessageType.INFO),
+        };
+
+        int slotIndex = 0; //index of the current slot to work with
         //update each slot with current info
-        if (errorCount > 0)
+        for (int i = 0; i < counts.Length; i++)
         {
-            Debug.Log("Updating first slot");
-
-            if (!m_imageSlots[count].enabled) m_imageSlots[count].enabled = true;
-            Texture current = m_imageSlots[count].texture;
-            if (current != m_error)
+            if (counts[i] > 0)
             {
-                Debug.Log("Setting Texture");
-                m_imageSlots[count].texture = m_error;
+                RawImage currentSlot = m_imageSlots[slotIndex];
+                if (!currentSlot.enabled) currentSlot.enabled = true;
+                if (!currentSlot.texture.Equals(textures[i]))
+                {
+                    currentSlot.texture = textures[i];
+                }
+                Text slotText = currentSlot.GetComponentInChildren<Text>();
+                slotText.text = SlotText(counts[i]); //update displayed counts with respective number
+
+                slotIndex++; //work with next slot, this one filled
             }
-            Text slotText = m_imageSlots[count].GetComponentInChildren<Text>();
-            slotText.text = SlotText(errorCount);
-            count++;
-        }
-        if (warningCount > 0)
-        {
-            Debug.Log("Updating second slot");
-
-            if (!m_imageSlots[count].enabled) m_imageSlots[count].enabled = true;
-            Texture current = m_imageSlots[count].texture;
-            if (current != m_warning) m_imageSlots[count].texture = m_warning;
-            Text slotText = m_imageSlots[count].GetComponentInChildren<Text>();
-            slotText.text = SlotText(warningCount);
-            count++;
-        }
-        if (debugCount > 0)
-        {
-            Debug.Log("Updating third slot");
-
-            if (!m_imageSlots[count].enabled) m_imageSlots[count].enabled = true;
-            Texture current = m_imageSlots[count].texture;
-            if (current != m_debug) m_imageSlots[count].texture = m_debug;
-            Text slotText = m_imageSlots[count].GetComponentInChildren<Text>();
-            slotText.text = SlotText(debugCount);
-            count++;
         }
         //clear rest of the slots
-        for (; count < 3; count++)
+        for (; slotIndex < m_imageSlots.Length; slotIndex++)
         {
-            Debug.Log("disabling rest");
-
-            m_imageSlots[count].enabled = false;
-            m_imageSlots[count].GetComponentInChildren<Text>().text = "";
+            m_imageSlots[slotIndex].enabled = false;
+            m_imageSlots[slotIndex].GetComponentInChildren<Text>().text = "";
         }
     }
-
     /// <summary>
     /// sets respective text for slot depending on count 
     /// </summary>
@@ -206,7 +169,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
         }
         if (count == 1)
         {
-            return "";
+            return String.Empty;
         }
         return "(" + count + ")";
     }

@@ -17,6 +17,7 @@ public class DummyStates
 #endif
         enum MessageType
     {
+        INFO,
         DEBUG,
         WARNING,
         ERROR

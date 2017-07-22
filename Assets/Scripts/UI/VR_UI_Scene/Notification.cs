@@ -1,37 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 //TODO: include enumeration file
 /// <summary>
 /// This class provides structures and functionalities for Notifications.
-/// Creating these depending on the message type as well as provision of content depending on the type
+/// Creating these depending on the message type as well as provision of content depending on the type.
+/// Monobehaviour needed to call Destroy() and Invoke() functions
 /// </summary>
-public class Notification
+public class Notification : MonoBehaviour
 {
-
-    /// <summary>
-    /// Basic Notification constructor, creating note with specified type and state
-    /// </summary>
-    /// <param name="type">What type of message (warning, error ...)</param>
-    /// <param name="state">What state is the notification depicting</param>
-    /// <param name="objID">The ID of the concerned body part</param>
-    public Notification(DummyStates.MessageType type, DummyStates.State state, int objID)
-    {
-        m_state = state;
-        m_type = type;
-        m_content = null;
-        m_objectid = objID;
-        GetConcernedRoboyPart().GetComponent<RoboyPart>().AddNotification(this);
-    }
-
     #region PRIVATE_MEMBER_VARIABLES
+
     /// <summary>
     /// Time of creation of notification
     /// </summary>
     private float timestamp;
-
-    /// <summary>
-    /// The concerned object for which this notification was sent
-    /// </summary>
-    private int m_objectid;
 
     /// <summary>
     /// The reason/issue why this message was created. 
@@ -49,11 +33,21 @@ public class Notification
     private GameObject m_bodyPart;
 
     /// <summary>
+    /// Time that this element was created (not in unity but on the simulation/real roboy side)
+    /// </summary>
+    private DateTime m_timestamp;
+
+    /// <summary>
+    /// Time frame length (in seconds), how long message is valid and will exist. Automatic deletion after end
+    /// </summary>
+    private double m_timeFrame;
+    /// <summary>
     /// Content of  Notification.
     /// Depending on message type, different content is provided
     /// </summary>
     private Content m_content;
 
+    private List<GameObject> m_RelatedObjects = new List<GameObject>();
     /// <summary>
     /// class defining the content of a message
     /// </summary>
@@ -63,8 +57,10 @@ public class Notification
         /// provides Information in form of a string.
         /// </summary>
         public string m_information;
+
         /// <summary>
-        /// 
+        /// Backlog/ Callstack or sth like that? Still changing....
+        /// new lines wiht \n supposed to be supported but might not work out
         /// </summary>
         public string m_Origin;
 
@@ -98,6 +94,16 @@ public class Notification
     #endregion
 
     #region PUBLIC_METHODS
+    #region providing methods
+
+    /// <summary>
+    /// returns State that was sent along with this notification
+    /// </summary>
+    /// <returns>reported state</returns>
+    public DummyStates.State GetState()
+    {
+        return m_state;
+    }
     /// <summary>
     /// returns additional info if available, else returns empty string
     /// </summary>
@@ -110,7 +116,7 @@ public class Notification
         }
         else
         {
-            return string.Empty;
+            return "No additional information given";
         }
     }
 
@@ -124,72 +130,114 @@ public class Notification
     }
 
     /// <summary>
-    /// returns information about note in the following format:  [type]: [state]
+    /// returns information about note in the following format:  [Roboy BodyPart]: [state]
     /// </summary>
-    /// <returns> [type]: [state]</returns>
+    /// <returns> [bodypart name]: [state]</returns>
     public string GetBasicInfo()
     {
-        return m_type.ToString() + ": " + m_state.ToString();
+        if(m_bodyPart) 
+        return m_bodyPart.name.ToString() + ":\t" + m_state.ToString();
+        return "[General]:\t" + m_state.ToString();
     }
 
     /// <summary>
-    /// Displays Halo around concerned GameObject. Colour is chosen according to notification type
-    /// </summary>
-    public void DisplayHalo()
-    {
-        if (m_type != DummyStates.MessageType.DEBUG)
-            GetConcernedRoboyPart().GetComponent<RoboyPart>().UpdateHalo();
-
-    }
-
-    /// <summary>
-    /// disables halo if this notification is the only note causing a halo. 
-    /// Updates halo for other notifications if present.
-    /// [NOT IMPLEMENTED YET]
-    /// </summary>
-    public void DisableHalo()
-    {
-        //TODO: Disable only one notification: remove from list? 
-        //GetConcernedRoboyPart().GetComponent<RoboyPart>().Disable();
-    }
-    /// <summary>
-    /// returns gameobject which is concerned for this notification
+    /// returns gameobject which is concerned for this notification.
+    /// If no Roboy part linked -> null is returned!
     /// </summary>
     /// <returns></returns>
     public GameObject GetConcernedRoboyPart()
     {
         if (!m_bodyPart)
         {
-            //TODO find roboy body part according to obj id
-            Debug.Log("looking for dummy game object: oberarm_right");
-            m_bodyPart = GameObject.Find("oberarm_right");
+            Debug.Log("no Roboy body part found!");
         }
         return m_bodyPart;
     }
+    #endregion
 
     /// <summary>
-    /// automatically removes this message link to roboy, still in game list
+    /// Basic Notification constructor, creating note with specified type and state
     /// </summary>
-    public void UnlinkFromRoboy()
+    /// <param name="type">What type of message (warning, error ...)</param>
+    /// <param name="state">What state is the notification depicting</param>
+    /// <param name="objName">The name of the concerned body part</param>
+    /// <param name="timeFrame">time this notification is valid in seconds</param>
+    public void SetupNotification(DummyStates.MessageType type, DummyStates.State state, string objName, double timeFrame)
     {
-        GetConcernedRoboyPart().GetComponent<RoboyPart>().RemoveNotification(this);
-
-        GetConcernedRoboyPart().GetComponent<RoboyPart>().DisableErrors();
+        m_state = state;
+        m_type = type;
+        m_content = null;
+        SetConcernedRoboyPart(objName);
+        if (m_bodyPart)
+            m_bodyPart.GetComponent<RoboyPart>().AddNotification(this);
+        m_timestamp = DateTime.Now;
+        m_timeFrame = timeFrame;
+        //TODO: small time difference might occure
+        //get rid of this notification after specified amount of time
+        Invoke("DeleteNotification", (float)m_timeFrame);
     }
-    /*
+   
     /// <summary>
-    /// 
+    /// Displays Halo around concerned GameObject. Colour is chosen according to notification type
     /// </summary>
-    public void AddContent(string info)
+    public void DisplayHalo()
     {
-        if(m_type != DummyStates.MessageType.ERROR)
+        if (m_type != DummyStates.MessageType.DEBUG)
+            if (m_bodyPart)
+                m_bodyPart.GetComponent<RoboyPart>().UpdateHalo();
+
+    }
+
+    /// <summary>
+    /// removes this message's link to roboy. Deletes all related objects. Removes itself from database.
+    /// This method is automatically called as soon as the notification is not valid anymore.
+    /// It can also be called manually.
+    /// </summary>
+    public void DeleteNotification()
+    {
+        //TODO: check what happens if called manually before automatic destruction called as well 
+        if (m_bodyPart)
         {
-            Debug.Log("Only supporting additional Notification content for error messages. Aborting");
-            return;
+            GetConcernedRoboyPart().GetComponent<RoboyPart>().RemoveNotification(this);
+            //adjust halo to new/updated list 
+            GetConcernedRoboyPart().GetComponent<RoboyPart>().UpdateHalo();
         }
-    }*/
+        //delete every element that is related/dependent on this notification
+        foreach (GameObject obj in m_RelatedObjects)
+        {
+            Destroy(obj);
+        }
+        VRUILogic.Instance.RemoveNotification(this);
+        //destroy script and connected gameObject
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Each gameObject that calls this function will be deleted as soon as the Notification becomes outdated.
+    /// Once called there's no turning back / unsubscribe. 
+    /// </summary>
+    /// <param name="obj">object to be destroyed when outdated notification</param>
+    public void AddRelatedObject(GameObject obj)
+    {
+        if (obj)
+            m_RelatedObjects.Add(obj);
+    }
     #endregion
 
     #region PRIVATE_METHODS
+    /// <summary>
+    /// sets roboy part with name as given string
+    /// </summary>
+    /// <param name="s">Roboy body part name</param>
+    private void SetConcernedRoboyPart(string s)
+    {
+        //TODO find roboy body part according to obj id
+        if (s.Equals(string.Empty))
+        {
+            Debug.Log("[Notification] No body part to attach notification to!!!");
+        }
+        Debug.Log("looking for dummy game object: oberarm_right");
+        m_bodyPart = GameObject.Find(s);
+    }
     #endregion
 }
