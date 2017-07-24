@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
 {
@@ -58,10 +59,28 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
     {
         if (info.GetType().Equals(typeof(Notification)))
         {
+            float temp = 0;
+            ScrollRect scroll = GetComponentInChildren<ScrollRect>();
+            if (scroll)
+                temp = scroll.verticalNormalizedPosition;
+            Debug.Log("Scrolling position: " + temp);
             GameObject newItem = Instantiate(m_itemPrefab);
             newItem.GetComponent<NotificationListButton>().SetupItem((Notification)info);
             newItem.transform.SetParent(m_ListContentContainer.transform);
             newItem.transform.localScale = Vector3.one;
+            //new items would only change the setup at the end of the frame, we need changes earlier
+            //set scrolling: if at bottom, continue showing last element
+            //TODO: BUGGY; NOT WORKING
+            if (scroll)
+            {
+                Debug.Log("Cann change scroll");
+                if (Mathf.Abs(temp) < 0.0001f) 
+                {
+                    Debug.Log("Forcing 1");
+                    Canvas.ForceUpdateCanvases();  //TODO: needed?
+                    scroll.verticalNormalizedPosition = 0;
+                }
+            }
         }
     }
     #endregion

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -63,9 +64,25 @@ public class SelectorTool : ControllerTool
                 case "UIButton":
                     hittedObject = null;
                     Button b_pressed = hit.collider.GetComponent<Button>();
+                    //TODO: WOrk in progress
+                    //for scroll option
+                   // EventTrigger eventsystem = b_pressed.GetComponent<EventTrigger>();
+
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
-                        b_pressed.onClick.Invoke();                    
+                        b_pressed.onClick.Invoke();
+                        /*TODO: work in progress ctd.
+                        if (eventsystem)
+                        {
+                            eventsystem.OnPointerDown(null);
+                        }
+                    }
+                    if (eventsystem)
+                    {
+                        if (m_SteamVRDevice.GetHairTriggerUp())
+                        {
+                            b_pressed.GetComponent<EventTrigger>().OnPointerUp(null);
+                        }*/
                     }
                     break;
                 case "UISlider": //slider elem in BeRoboy

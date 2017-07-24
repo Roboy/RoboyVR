@@ -66,9 +66,10 @@ public class AdditionalInfoScreenManager : MonoBehaviour
         if (part)
             m_bodyPartText.text = part.name;
         else
-            m_bodyPartText.text = "[General] \n test";
+            m_bodyPartText.text = "[General]";
         m_stateText.text = note.GetState().ToString();
         m_MoreContent.text = note.GetAdditionalInfo();
+
     }
     #endregion
 }

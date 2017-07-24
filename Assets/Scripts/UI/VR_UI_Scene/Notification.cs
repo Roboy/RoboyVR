@@ -234,9 +234,8 @@ public class Notification : MonoBehaviour
         //TODO find roboy body part according to obj id
         if (s.Equals(string.Empty))
         {
-            Debug.Log("[Notification] No body part to attach notification to!!!");
+            Debug.Log("[Notification] No body part to attach notification to!");
         }
-        Debug.Log("looking for dummy game object: oberarm_right");
         m_bodyPart = GameObject.Find(s);
     }
     #endregion

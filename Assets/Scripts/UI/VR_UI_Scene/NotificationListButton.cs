@@ -59,6 +59,14 @@ public class NotificationListButton : MonoBehaviour
         //ensures that this list item is deleted as soon as notification is outdated
         note.AddRelatedObject(gameObject);
         m_note = note;
+
+
+        //TODO: must be set, but rect.width is zero due to automatic scaling scripts... 
+
+        //BoxCollider collider = GetComponent<BoxCollider>();
+        //Rect rect = GetComponent<RectTransform>().rect;//no way to access the value found as of now... set manually
+        //collider.size = new Vector3(rect.width, rect.height, 0.01f);
+        //Debug.Log("UI BUTTON SIZE: " + collider.size);
     }
 
     /// <summary>
