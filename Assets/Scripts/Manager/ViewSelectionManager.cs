@@ -31,10 +31,18 @@ public class ViewSelectionManager : Singleton<ViewSelectionManager> {
     /// Reference to the image where the zed feed can be displayed.
     /// </summary>
     public RawImage ZedImage;
-
+    /// <summary>
+    /// Reference to Roboy's surrounding.
+    /// </summary>
     public GameObject Cave;
-
+    /// <summary>
+    /// Reference to Roboy itself.
+    /// </summary>
     public GameObject Roboy;
+    /// <summary>
+    /// Reference to the teleporter ray.
+    /// </summary>
+    public GameObject Pointer;
 
     #endregion PUBLIC_MEMBER_VARIABLES
 
@@ -80,6 +88,7 @@ public class ViewSelectionManager : Singleton<ViewSelectionManager> {
         ZedImage.gameObject.SetActive(false);
         Cave.gameObject.SetActive(false);
         Roboy.gameObject.SetActive(true);
+        Pointer.gameObject.SetActive(false);
 
     }
     
@@ -100,7 +109,8 @@ public class ViewSelectionManager : Singleton<ViewSelectionManager> {
         ZedImage.gameObject.SetActive(true);
         Cave.gameObject.SetActive(false);
         Roboy.gameObject.SetActive(false);
-        
+        Pointer.gameObject.SetActive(false);
+
     }
     
     /// <summary>
@@ -117,6 +127,7 @@ public class ViewSelectionManager : Singleton<ViewSelectionManager> {
         InstructionCanvas.gameObject.SetActive(false);
         Cave.gameObject.SetActive(true);
         Roboy.gameObject.SetActive(true);
+        Pointer.gameObject.SetActive(true);
 
     }
     
@@ -134,6 +145,7 @@ public class ViewSelectionManager : Singleton<ViewSelectionManager> {
         InstructionCanvas.gameObject.SetActive(false);
         Cave.gameObject.SetActive(true);
         Roboy.gameObject.SetActive(true);
+        Pointer.gameObject.SetActive(false);
 
     }
 
