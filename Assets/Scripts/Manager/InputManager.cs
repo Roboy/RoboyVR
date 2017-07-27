@@ -295,10 +295,11 @@ public class InputManager : Singleton<InputManager> {
         if (m_ToolWheel)
         {
             m_HandTool.gameObject.SetActive(false);
-            SteamVR_RenderModel controllerModel = m_SelectorTool.transform.parent.GetComponentInChildren<SteamVR_RenderModel>();
-            controllerModel.gameObject.SetActive(false);
         }
-        
+
+        SteamVR_RenderModel controllerModel = m_SelectorTool.transform.parent.GetComponentInChildren<SteamVR_RenderModel>();
+        controllerModel.gameObject.SetActive(false);
+
         if (m_ViewController != null)
         { m_ViewController.gameObject.SetActive(false); }
         
