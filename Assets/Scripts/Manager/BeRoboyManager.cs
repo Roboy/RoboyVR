@@ -61,7 +61,12 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <summary>
     /// Variable to determine if headset was rotated.
     /// </summary>
-    private float m_CurrentAngle = 0.0f;
+    private float m_CurrentAngleY = 0.0f;
+
+    /// <summary>
+    /// Variable to determine if headset was rotated.
+    /// </summary>
+    private float m_CurrentAngleX = 0.0f;
 
     /// <summary>
     /// Color array for the simulation image conversion.
@@ -114,6 +119,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
             if(TrackingEnabled)
                 translateRoboy();
         }
+
     }
     #endregion //MONOBEHAVIOR_METHODS
 
@@ -212,40 +218,62 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private void translateRoboy()
     {
+        Transform head_parent = transform.GetChild(0).Find("head");
+        Transform head_pivot = head_parent.GetChild(0);
+
         // Check whether the user has rotated the headset or not
-        if (m_CurrentAngle != m_Cam.transform.eulerAngles.y)
+        if (m_CurrentAngleY != m_Cam.transform.eulerAngles.y)
         {
             // If the headset was rotated, rotate roboy
-            transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
+            head_parent.RotateAround(head_pivot.position, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngleY);
+            //transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
+
         }
-        m_CurrentAngle = m_Cam.transform.eulerAngles.y;
+        m_CurrentAngleY = m_Cam.transform.eulerAngles.y;
+
+        // Check whether the user has rotated the headset or not
+        if (m_CurrentAngleX != m_Cam.transform.eulerAngles.x)
+        {
+            // If the headset was rotated, rotate roboy
+            head_parent.RotateAround(head_pivot.position, Vector3.right, m_Cam.transform.eulerAngles.x - m_CurrentAngleX);
+            //transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
+
+        }
+        m_CurrentAngleX = m_Cam.transform.eulerAngles.x;
+
+
 
         // Move roboy accordingly to headset movement
         Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
-
+     
+        //Convert the headset rotation from unity coordinate spaze to gazebo coordinates
         Quaternion rot = GazeboUtility.UnityRotationToGazebo(InputTracking.GetLocalRotation(VRNode.Head));
         float x_angle = 0.0f;
         float y_angle = 0.0f;
 
         if (rot.eulerAngles.x > 180)
+        {
             y_angle = (rot.eulerAngles.x - 360) * Mathf.Deg2Rad;
+        }
         else
+        {
             y_angle = rot.eulerAngles.x * Mathf.Deg2Rad;
+        }
 
         x_angle = rot.eulerAngles.z * Mathf.Deg2Rad;
         
-
-        //Debug.Log(rot.eulerAngles.x);
-        
-
+        //Determine which joints should me modified
         List<string> joints = new List<string>();
         joints.Add("neck_3");
         joints.Add("neck_4");
+
+        //Determine the angle for the joints
         List<float> angles = new List<float>();
         angles.Add(x_angle);
         angles.Add(y_angle);
         
+        //Start sending the actual message
         ReceiveExternalJoint(joints, angles);
     }
 
