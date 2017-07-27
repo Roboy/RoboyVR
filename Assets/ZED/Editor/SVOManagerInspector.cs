@@ -4,14 +4,21 @@ using UnityEditor;
 [CustomEditor(typeof(SVOManager)), CanEditMultipleObjects]
 public class SVOManagerInspector : Editor
 {
-
-
     private bool current_recordValue = false;
     private bool current_readValue = false;
+
+    private SerializedProperty pause;
+    private SerializedProperty record;
+    private SerializedProperty read;
+    private SerializedProperty loop;
+    private SerializedProperty videoFile;
+    private SerializedProperty currentFrame;
+    private SerializedProperty numberFrameMax;
 
     Rect drop_area;
 
     private GUILayoutOption[] optionsButtonBrowse = { GUILayout.MaxWidth(30) };
+    string pauseText = "Pause";
 
     string[] filters = { "Svo files", "svo" };
     private SVOManager obj;
@@ -22,7 +29,7 @@ public class SVOManagerInspector : Editor
         EditorGUI.BeginChangeCheck();
         DrawDefaultInspector();
         EditorGUILayout.BeginHorizontal();
-        obj.videoFile = EditorGUILayout.TextField("SVO Path", obj.videoFile);
+        videoFile.stringValue = EditorGUILayout.TextField("SVO Path", videoFile.stringValue);
         if (GUILayout.Button("...", optionsButtonBrowse))
         {
             obj.videoFile = EditorUtility.OpenFilePanelWithFilters("Load SVO", "", filters);
@@ -37,35 +44,72 @@ public class SVOManagerInspector : Editor
         {
             CheckChange();
         }
-        //serializedObject.ApplyModifiedProperties();
+        EditorGUI.BeginChangeCheck();
+
+        GUI.enabled = (obj.NumberFrameMax > 0);
+        currentFrame.intValue = EditorGUILayout.IntSlider("Frame ", currentFrame.intValue, 0, numberFrameMax.intValue);
+        if (EditorGUI.EndChangeCheck())
+        {
+            if (sl.ZEDCamera.GetInstance() != null)
+            {
+                sl.ZEDCamera.GetInstance().SetSVOPosition(currentFrame.intValue);
+                if (pause.boolValue)
+                {
+                    sl.ZEDCamera.GetInstance().Grab();
+                    sl.ZEDCamera.GetInstance().UpdateTextures();
+                }
+            }
+        }
+        GUI.enabled = true;
+
+        GUI.enabled = sl.ZEDCamera.GetInstance() != null && sl.ZEDCamera.GetInstance().CameraIsReady;
+        pauseText = pause.boolValue ? "Resume" : "Pause";
+        if (GUILayout.Button(pauseText))
+        {
+            pause.boolValue = !pause.boolValue;
+            ZEDUpdater.GetInstance().SetPauseThread(pause.boolValue);
+        }
+        GUI.enabled = true;
         DropAreaGUI();
 
         serializedObject.ApplyModifiedProperties();
 
     }
 
+    private void OnEnable()
+    {
+        pause = serializedObject.FindProperty("pause");
+        record = serializedObject.FindProperty("record");
+        read = serializedObject.FindProperty("read");
+        loop = serializedObject.FindProperty("loop");
+
+        videoFile = serializedObject.FindProperty("videoFile");
+        currentFrame = serializedObject.FindProperty("currentFrame");
+        numberFrameMax = serializedObject.FindProperty("numberFrameMax");
+    }
+
     private void CheckChange()
     {
-        if (obj.loop && obj.record)
+        if (loop.boolValue && record.boolValue)
         {
-            obj.loop = false;
+            loop.boolValue = false;
         }
-        if (obj.read && (current_readValue != obj.read))
+        if (read.boolValue && (current_readValue != read.boolValue))
         {
-            obj.record = false;
+            record.boolValue = false;
             current_recordValue = false;
-            current_readValue = obj.read;
+            current_readValue = read.boolValue;
         }
-        if (!obj.read && (current_readValue != obj.read))
+        if (!read.boolValue && (current_readValue != read.boolValue))
         {
-            obj.loop = false;
+            loop.boolValue = false;
         }
-        if (obj.record && (current_recordValue != obj.record))
+        if (record.boolValue && (current_recordValue != record.boolValue))
         {
-            obj.read = false;
+            read.boolValue = false;
             current_readValue = false;
-            obj.loop = false; 
-            current_recordValue = obj.record;
+            loop.boolValue = false;
+            current_recordValue = record.boolValue;
         }
 
     }
@@ -88,7 +132,7 @@ public class SVOManagerInspector : Editor
                     DragAndDrop.AcceptDrag();
                     foreach (string dragged_object in DragAndDrop.paths)
                     {
-                        obj.videoFile = dragged_object;
+                        videoFile.stringValue = dragged_object;
                     }
                 }
                 break;

@@ -23,7 +23,7 @@ class CameraPreview : EditorWindow
     static GUIStyle textStyle = new GUIStyle();
     static public bool isFullScreen = false;
     static Color color;
-    static bool booster = false;
+    static public Vector2 customResolution = new Vector2(1280,720);
     static void Init()
     {
         var editorWindow = (EditorWindow)GetWindow<CameraPreview>(typeof(CameraPreview));
@@ -36,7 +36,7 @@ class CameraPreview : EditorWindow
             CreateBg();
         }
         oldPos = new Rect(0,0,1280,720);
-        oldMinSize = new Vector2(100,100);
+        oldMinSize = new Vector2(672,376);
         oldMaxSize = editorWindow.maxSize;
     }
 
@@ -50,10 +50,11 @@ class CameraPreview : EditorWindow
         
 
 
-    public static void FullScreenGameWindow()
+    public static void SetGameWindow(bool fullScreen = false)
     {
+        isFullScreen = fullScreen;
         color = Color.white;
-        isFullScreen = true;
+        
         tabHeight = 10;
 
         var editorWindow = (EditorWindow)GetWindow<CameraPreview>(typeof(CameraPreview));
@@ -65,13 +66,23 @@ class CameraPreview : EditorWindow
         Rect newPos = new Rect(0, 0 - tabHeight, Screen.currentResolution.width, Screen.currentResolution.height + tabHeight);
         newPos.x = Mathf.Sign(oldPos.x) * (int)Mathf.Round(Mathf.Abs(oldPos.x) / Screen.currentResolution.width) * Screen.currentResolution.width;
 
-        editorWindow.position = newPos;
-        editorWindow.minSize = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height + tabHeight);
-        editorWindow.maxSize = editorWindow.minSize;
-        editorWindow.position = newPos;
+        if (isFullScreen)
+        {
+            editorWindow.position = newPos;
+            editorWindow.minSize = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height + tabHeight);
+            editorWindow.maxSize = editorWindow.minSize;
+            editorWindow.position = newPos;
+        }
+        else
+        {
+            editorWindow.minSize = new Vector2(customResolution.x, customResolution.y + tabHeight);
+            editorWindow.maxSize = editorWindow.minSize;
+            
+        }
+
     }
 
-    public static void CloseGameWindow()
+    public static void Resize()
     {
         isFullScreen = false;
         var editorWindow = (EditorWindow)GetWindow<CameraPreview>(typeof(CameraPreview));
@@ -83,7 +94,8 @@ class CameraPreview : EditorWindow
     }
 
     void Update()
-    {        
+    {
+        
         isOpen = true;
         if (camera != null)
         {
@@ -111,17 +123,12 @@ class CameraPreview : EditorWindow
     private void OnDestroy()
     {
         isOpen = false;
-    }
-
-
-    static public void Boost(bool value)
-    {
-        booster = value;
-        if (mat != null)
+       if(renderTexture != null && renderTexture.IsCreated())
         {
-            mat.SetFloat("_Color_Booster", value ? 2.2f : 1.0f);
+            renderTexture.Release();
         }
     }
+
 
     private void OnFocus()
     {
@@ -137,8 +144,6 @@ class CameraPreview : EditorWindow
             if (mat == null)
             {
                 mat = new Material(Shader.Find("ZED/ZED_PreviewShader"));
-                mat.SetFloat("_Color_Booster", booster ? 2.2f : 1.0f);
-
             }
 
             if (renderTexture != null) renderTexture.Release();
@@ -158,7 +163,7 @@ class CameraPreview : EditorWindow
                 {
                     if (Event.current.keyCode == (KeyCode.Escape))
                     {
-                        CloseGameWindow();
+                        Resize();
                     }
                     break;
                 }
@@ -168,8 +173,6 @@ class CameraPreview : EditorWindow
             CreateBg();
         }
       
-        //GUI.contentColor = Color.black;
-
         GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), tex, ScaleMode.StretchToFill);
 
         if (renderTexture != null)
@@ -184,7 +187,7 @@ class CameraPreview : EditorWindow
             {
                 color.a = 0;
             }
-            //textStyle.normal.textColor.a -= 0.1f;
+
             textStyle.fontSize = 30;
             GUI.Label(new Rect(position.width / 2.0f - 200 + 30, position.height / 2.0f - 15, 100, 30), "Press escape to exit", textStyle);
          }

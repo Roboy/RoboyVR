@@ -64,14 +64,10 @@
 
 
 		uint index = 0;
-		//Compute the 8 UVs they need to be clamped, the min value is 0.0006 and the max is 0.999f. If these values are changed lines may appear on the screen
-		float2 uv1 = clamp(uv + float2(-_MainTex_TexelSize.x*_erosion, 0), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
+		//Compute the 4 UVs they need to be clamped. If these values are changed lines may appear on the screen
 		float2 uv2 = clamp(uv + float2(-_MainTex_TexelSize.x, -_MainTex_TexelSize.y), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
-		float2 uv3 = clamp(uv + float2(0, -_MainTex_TexelSize.y*_erosion), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
 		float2 uv4 = clamp(uv + float2(_MainTex_TexelSize.x, -_MainTex_TexelSize.y), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
-		float2 uv5 = clamp(uv + float2(_MainTex_TexelSize.x*_erosion, 0), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
 		float2 uv6 = clamp(uv + float2(-_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
-		float2 uv7 = clamp(uv + float2(0, _MainTex_TexelSize.y*_erosion), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
 		float2 uv8 = clamp(uv + float2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
 
 		//X | 0 | X

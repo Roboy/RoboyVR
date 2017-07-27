@@ -12,7 +12,7 @@ public class ZEDManager : MonoBehaviour
     /// <summary>
     /// Selected resolution
     /// </summary>
-    public sl.RESOLUTION videoMode = sl.RESOLUTION.HD720;
+    public sl.RESOLUTION resolution = sl.RESOLUTION.HD720;
     /// <summary>
     /// Targeted FPS
     /// </summary>
@@ -22,10 +22,16 @@ public class ZEDManager : MonoBehaviour
     /// </summary>
     public sl.DEPTH_MODE depthMode = sl.DEPTH_MODE.PERFORMANCE;
     /// <summary>
+    /// Sensing mode
+    /// </summary>
+    public sl.SENSING_MODE sensingMode = sl.SENSING_MODE.FILL;
+    /// <summary>
     /// Enable camera overlay
     /// </summary>
     [Tooltip("Enable ZED images")]
     public bool videoOverlay = true;
+    [HideInInspector]
+    public bool depthStabilizer = true;
     /// <summary>
     /// Enable grab threading
     /// </summary>
@@ -38,17 +44,68 @@ public class ZEDManager : MonoBehaviour
     /// </summary>
     public bool tracking = true;
 
+    private bool isMoving = false;
     private bool isThreaded = false;
+    private bool isTrackingEnable = false;
 
     private Quaternion orientation;
     private Vector3 position;
 
-    private SVOManager ZedSVOManager;
+    private SVOManager zedSVOManager;
     private Vector3 positionInit = new Vector3();
     private Quaternion rotationInit = Quaternion.identity;
+
+
     private bool spatialMemory = true;
+    private Transform cameraLeft;
+
+#if UNITY_EDITOR
+    void OnValidate()
+    {
+        if (zedCamera != null)
+        {
+
+            if (!isTrackingEnable && tracking)
+            {
+                //Enables the tracking and initializes the first position of the camera
+                Quaternion quat = Quaternion.identity;
+                Vector3 vec = new Vector3(0, 0, 0);
+                if (!(tracking = (zedCamera.EnableTracking(ref quat, ref vec, spatialMemory) == sl.ERROR_CODE.SUCCESS)))
+                {
+                    depthStabilizer = false;
+                    throw new Exception("Error, tracking not available");
+                }
+                else
+                {
+                    isMoving = true;
+                    isTrackingEnable = true;
+                }
+            }
+
+            if (isThreaded != multithreading)
+            {
+                if (tracking && UnityEngine.VR.VRSettings.enabled && multithreading)
+                {
+                    Debug.Log("[ZED Plugin] : Multi-threading is deactivated with VR");
+                    multithreading = false;
+                    isThreaded = false;
+                }
+                else
+                {
+                    ZEDUpdater.GetInstance().SetMultiThread(multithreading);
+                    isThreaded = multithreading;
+                }
+            }
+        }
+
+    }
+#endif
+
+
     void Awake()
     {
+        isMoving = tracking;
+
         positionInit = transform.localPosition;
         rotationInit = transform.localRotation;
         position = positionInit;
@@ -56,29 +113,29 @@ public class ZEDManager : MonoBehaviour
 
         isThreaded = multithreading;
         zedCamera = sl.ZEDCamera.GetInstance();
-
-        ZedSVOManager = GetComponent<SVOManager>();
-        if (ZedSVOManager != null)
+        zedSVOManager = GetComponent<SVOManager>();
+        if (zedSVOManager != null)
         {
             //Create a camera
-            if ((ZedSVOManager.read || ZedSVOManager.record) && ZedSVOManager.videoFile.Length == 0)
+            if ((zedSVOManager.read || zedSVOManager.record) && zedSVOManager.videoFile.Length == 0)
             {
-                ZedSVOManager.record = false;
-                ZedSVOManager.read = false;
+                zedSVOManager.record = false;
+                zedSVOManager.read = false;
             }
-            if (ZedSVOManager.read)
+            if (zedSVOManager.read)
             {
-                ZedSVOManager.record = false;
-                zedCamera.CreateCameraSVO(ZedSVOManager.videoFile);
+                zedSVOManager.record = false;
+                zedCamera.CreateCameraSVO(zedSVOManager.videoFile);
             }
             else
             {
-                zedCamera.CreateCameraLive(videoMode, FPS);
+                zedCamera.CreateCameraLive(resolution, FPS);
             }
         }
         else
         {
-            zedCamera.CreateCameraLive(videoMode, FPS);
+
+            zedCamera.CreateCameraLive(resolution, FPS);
         }
 
         Debug.Log("ZED SDK Version " + sl.ZEDCamera.GetSDKVersion());
@@ -92,22 +149,46 @@ public class ZEDManager : MonoBehaviour
         }
 
 
-        if (ZedSVOManager != null)
+        if (zedSVOManager != null)
         {
-            if (ZedSVOManager.record)
+            if (zedSVOManager.record)
             {
-                if (zedCamera.EnableRecording(ZedSVOManager.videoFile) != sl.ERROR_CODE.SUCCESS)
+
+                if (zedCamera.EnableRecording(zedSVOManager.videoFile) != sl.ERROR_CODE.SUCCESS)
                 {
-                    ZedSVOManager.record = false;
+                    zedSVOManager.record = false;
                 }
             }
+
+
+            if (zedSVOManager.read)
+            {
+                zedSVOManager.NumberFrameMax = zedCamera.GetSVONumberOfFrames();
+            }
+
         }
+
+        Component[] cams = gameObject.transform.GetComponentsInChildren(typeof(Camera));
+        foreach (Camera cam in cams)
+        {
+            if (cam.stereoTargetEye == StereoTargetEyeMask.None)
+            {
+                cameraLeft = cam.transform;
+               // cam.cullingMask &= ~(1 << sl.ZEDCamera.TagOneObject);
+            }
+        }
+
     }
 
+    public Transform GetLeftCameraTransform()
+    {
+        return cameraLeft;
+    }
 
 
     private void Start()
     {
+
         if (tracking && UnityEngine.VR.VRSettings.enabled && multithreading)
         {
             multithreading = false;
@@ -115,15 +196,21 @@ public class ZEDManager : MonoBehaviour
             Debug.Log("[ZED Plugin] : Multi-threading is deactivated with VR");
         }
 
-        zedCamera.SetMultiThread(isThreaded);
-        if (tracking)
+        ZEDUpdater.GetInstance().SetMultiThread(isThreaded);
+        if (!isTrackingEnable && tracking)
         {
             //Enables the tracking and initializes the first position of the camera
             Quaternion quat = Quaternion.identity;
             Vector3 vec = new Vector3(0, 0, 0);
             if (!(tracking = (zedCamera.EnableTracking(ref quat, ref vec, spatialMemory) == sl.ERROR_CODE.SUCCESS)))
             {
+                depthStabilizer = false;
                 throw new Exception("Error, tracking not available");
+            }
+            else
+            {
+                isMoving = true;
+                isTrackingEnable = true;
             }
         }
 
@@ -139,88 +226,124 @@ public class ZEDManager : MonoBehaviour
         // This method is run whenever the play mode state is changed.
         if (UnityEditor.EditorApplication.isPaused)
         {
-            zedCamera.SetPauseThread(true);
+            ZEDUpdater.GetInstance().SetPauseThread(true);
         }
-        else
+        else if (zedSVOManager != null && !zedSVOManager.pause)
         {
-            zedCamera.SetPauseThread(false);
+            ZEDUpdater.GetInstance().SetPauseThread(false);
         }
-    }
-#endif
 
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.playmodeStateChanged = HandleOnPlayModeChanged;
+#endif
+    }
+
+
+
+#endif
     /// <summary>
     /// Get the tracking position from the ZED and update the manager's position
     /// </summary>
     private void UpdateTracking()
     {
         zedCamera.GetPosition(ref orientation, ref position);
-
-        transform.localRotation = orientation;
-        transform.localPosition = position;
+        if (isMoving)
+        {
+            transform.localRotation = orientation;
+            transform.localPosition = position;
+        }
     }
+
+
+
 
     // Update is called once per frame
     void Update()
     {
+        ZEDUpdater.GetInstance().Update(sensingMode);
+    }
+
+
+    public void OnEnable()
+    {
+        ZEDUpdater.OnGrab += Grab;
+    }
+
+    public void OnDisable()
+    {
+        ZEDUpdater.OnGrab -= Grab;
+    }
+
+
+
+    public void Grab()
+    {
         if (zedCamera != null)
         {
-            if (isThreaded || zedCamera.Grab() == 0)
+
+            if (tracking)
             {
-                if (tracking)
-                {
-                    UpdateTracking();
-                }
-
-                if (videoOverlay)
-                {
-                    zedCamera.UpdateTextures();
-                }
-
-
-                if (ZedSVOManager != null)
-                {
-                    if (ZedSVOManager.record)
-                    {
-                        zedCamera.Record();
-                    }
-
-                    if (ZedSVOManager.read && ZedSVOManager.loop)
-                    {
-                        if (zedCamera.GetSVOPosition() >= zedCamera.GetSVONumberOfFrames() - 2)
-                        {
-                            zedCamera.SetSVOPosition(0);
-
-                            if (tracking)
-                            {
-                                zedCamera.DisableTracking();
-                                Quaternion quat = Quaternion.identity;
-                                Vector3 vec = new Vector3(0, 0, 0);
-                                if (!(tracking = (zedCamera.EnableTracking(ref quat, ref vec, spatialMemory) == sl.ERROR_CODE.SUCCESS)))
-                                {
-                                    throw new Exception("Error, tracking not available");
-                                }
-                                transform.localPosition = positionInit;
-                                transform.localRotation = rotationInit;
-                            }
-                        }
-
-                        
-                    }
-                }
-
+                UpdateTracking();
             }
+
+            if (videoOverlay)
+            {
+                zedCamera.UpdateTextures();
+            }
+
+
+            if (zedSVOManager != null)
+            {
+                if (zedSVOManager.record)
+                {
+                    zedCamera.Record();
+                }
+                if (zedSVOManager.read)
+                {
+                    zedSVOManager.CurrentFrame = zedCamera.GetSVOPosition();
+                }
+                if (zedSVOManager.read && zedSVOManager.loop)
+                {
+
+
+                    if (zedCamera.GetSVOPosition() >= zedCamera.GetSVONumberOfFrames() - 2)
+                    {
+                        zedCamera.SetSVOPosition(0);
+
+
+                        if (tracking)
+                        {
+                            zedCamera.DisableTracking();
+                            Quaternion quat = Quaternion.identity;
+                            Vector3 vec = new Vector3(0, 0, 0);
+                            if (!(tracking = (zedCamera.EnableTracking(ref quat, ref vec, spatialMemory) == sl.ERROR_CODE.SUCCESS)))
+                            {
+
+                                throw new Exception("Error, tracking not available");
+                            }
+                            transform.localPosition = positionInit;
+                            transform.localRotation = rotationInit;
+                        }
+                    }
+                }
+            }
+
         }
     }
 
+    public void SetSensingMode(sl.SENSING_MODE sensingMode)
+    {
+        this.sensingMode = sensingMode;
+    }
 
     void OnApplicationQuit()
     {
         if (zedCamera != null)
         {
             zedCamera.DisableTracking();
-            if (ZedSVOManager != null)
+            if (zedSVOManager != null)
             {
-                if (ZedSVOManager.record)
+                if (zedSVOManager.record)
                 {
                     zedCamera.DisableRecording();
                 }

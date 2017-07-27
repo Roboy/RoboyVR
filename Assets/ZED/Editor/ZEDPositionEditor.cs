@@ -18,6 +18,9 @@ public class ZEDPositionEditor : Editor
     {
         GUILayout.Space(5);
         EditorGUILayout.BeginHorizontal();
+
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Save Camera Offset"))
         {
             positionManager.SaveZEDPos();

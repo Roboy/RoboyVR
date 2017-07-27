@@ -21,15 +21,6 @@ namespace sl
             public int option;
         };
 
-        /// <summary>
-        /// Grab parameters for multithreading
-        /// </summary>
-        private struct GrabParameters
-        {
-            public SENSING_MODE mode;
-            public bool depth;
-        }
-
         /********* Camera members ********/
 
         //DLL name
@@ -65,37 +56,14 @@ namespace sl
         //The current resolution
         private RESOLUTION currentResolution;
 
-        /******** Threading members ***********/
-
-        //The grab parameters
-        private GrabParameters grabParameters;
-
-        //Thread doing grab call
-        private Thread threadGrab;
-
-        //True if the thread is running
-        private bool running = false;
-
-        //Timer for the thread
-        private System.Diagnostics.Stopwatch timer;
-
-        //True if threading is activated
-        private bool isThreaded = false;
-
-        //Mutex of the grab
-        private object grabLock = new object();
-
         //Callback for c++ debug, should not be used in C#
         private delegate void DebugCallback(string message);
 
         //HD720 default FPS
         private uint fpsMax = 60;
+        private ZEDCameraSettingsManager cameraSettingsManager = new ZEDCameraSettingsManager();
 
-        //Update texture when needed in the pipeline, more reliable than GL.issuePluGinEvent
-        private CommandBuffer commandBuffer = null;
 
-        //True if the command buffer is set. The command buffer can only be used once
-        private bool commandBufferIsSet = false;
 
         // Baseline of the camera
         private float baseline = 0.0f;
@@ -103,8 +71,7 @@ namespace sl
         {
             get { return baseline; }
         }
-        // To pause the thread
-        bool pauseThread = false;
+
 
         static private string[] dependenciesNeeded =
         {
@@ -116,6 +83,18 @@ namespace sl
             "sl_svorw64.dll",
             "sl_zed64.dll"
         };
+        const int tagZEDCamera = 20;
+        public static int Tag
+        {
+            get { return tagZEDCamera; }
+        }
+
+        const int tagOneObject = 12;
+        public static int TagOneObject
+        {
+            get { return tagOneObject; }
+        }
+
         /******** DLL members ***********/
 
         [DllImport(nameDll, EntryPoint = "GetRenderEventFunc")]
@@ -154,7 +133,7 @@ namespace sl
         * Grab function
         */
         [DllImport(nameDll, EntryPoint = "dllz_grab")]
-        private static extern int dllz_grab(int sensingMode, int depth);
+        private static extern int dllz_grab(int sensingMode, int depth, int measureMode);
 
 
         /*
@@ -193,9 +172,9 @@ namespace sl
         private static extern int dllz_get_self_calibration_state();
 
 
-       /*
-        * Camera control functions
-        */
+        /*
+         * Camera control functions
+         */
         [DllImport(nameDll, EntryPoint = "dllz_get_zed_firmware")]
         private static extern int dllz_get_zed_firmware();
 
@@ -217,7 +196,7 @@ namespace sl
         [DllImport(nameDll, EntryPoint = "dllz_get_camera_information")]
         private static extern IntPtr dllz_get_camera_information();
 
- 
+
         [DllImport(nameDll, EntryPoint = "dllz_set_camera_settings")]
         private static extern void dllz_set_camera_settings(int mode, int value, int usedefault);
 
@@ -227,7 +206,7 @@ namespace sl
         [DllImport(nameDll, EntryPoint = "dllz_is_zed_connected")]
         private static extern int dllz_is_zed_connected();
 
-     
+
         [DllImport(nameDll, EntryPoint = "dllz_get_camera_timestamp")]
         private static extern ulong dllz_get_camera_timestamp();
 
@@ -277,7 +256,8 @@ namespace sl
         [DllImport(nameDll, EntryPoint = "dllz_get_depth_min_range_value")]
         private static extern float dllz_get_depth_min_range_value();
 
-       
+
+
         /*
          * Motion Tracking functions
          */
@@ -294,12 +274,13 @@ namespace sl
         private static extern int dllz_get_position(ref Quaternion quat, ref Vector3 vec, int reference_frame);
 
         [DllImport(nameDll, EntryPoint = "dllz_get_position_at_target_frame")]
-        private static extern int dllz_get_position_at_target_frame(ref Quaternion quaternion, ref Vector3 translation,  ref Quaternion targetQuaternion, ref Vector3 targetTranslation, int reference_frame);
+
+        private static extern int dllz_get_position_at_target_frame(ref Quaternion quaternion, ref Vector3 translation, ref Quaternion targetQuaternion, ref Vector3 targetTranslation, int reference_frame);
 
         [DllImport(nameDll, EntryPoint = "dllz_transform_pose")]
         private static extern void dllz_transform_pose(ref Quaternion quaternion, ref Vector3 translation, ref Quaternion targetQuaternion, ref Vector3 targetTranslation);
 
- 
+
         /*
          * Specific plugin functions
          */
@@ -312,6 +293,25 @@ namespace sl
         [DllImport(nameDll, EntryPoint = "dllz_get_sdk_version")]
         private static extern IntPtr dllz_get_sdk_version();
 
+        [DllImport(nameDll, EntryPoint = "dllz_compute_offset")]
+        private static extern void dllz_compute_offset(float[] A, float[] B, int nbVectors, float[] C);
+
+        public static void ComputeOffset(float[] A, float[] B, int nbVectors, ref Quaternion rotation, ref Vector3 translation)
+        {
+            float[] C = new float[16];
+            if (A.Length != 4 * nbVectors || B.Length != 4 * nbVectors || C.Length != 16) return;
+            dllz_compute_offset(A, B, nbVectors, C);
+
+            Matrix4x4 m = Matrix4x4.identity;
+            Float2Matrix(ref m, C);
+
+            rotation = Matrix4ToQuaternion(m);
+            Vector4 t = m.GetColumn(3);
+            translation.x = t.x;
+            translation.y = t.y;
+            translation.z = t.z;
+
+        }
 
         /// <summary>
         /// Return a string from a pointer to char
@@ -336,6 +336,7 @@ namespace sl
             return System.Text.Encoding.ASCII.GetString(array);
         }
 
+
         /// <summary>
         /// Display a console message from c++
         /// </summary>
@@ -356,14 +357,6 @@ namespace sl
             return array;
         }
 
-        /// <summary>
-        /// Pause the Grab in threading mode
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetPauseThread(bool value)
-        {
-            pauseThread = value;
-        }
 
         /// <summary>
         /// Get the max fps for each resolution, higher fps will cause lower GPU performance
@@ -404,13 +397,13 @@ namespace sl
         /// <summary>
         /// Check if the plugin is available
         /// </summary>
-        private static void CheckPlugin()
+        public static string CheckPlugin()
         {
             try
             {
                 dllz_check_plugin();
             }
-            catch (DllNotFoundException e)
+            catch (DllNotFoundException)
             {
                 pluginIsReady = false;
                 string env = Environment.GetEnvironmentVariable("ZED_SDK_ROOT_DIR");
@@ -421,14 +414,18 @@ namespace sl
                     {
                         Debug.LogError("[ZED Plugin ] : The version of this SDK may not match the version used by the plugin, or another dependency is missing");
                     }
-                } else
+                }
+                else
                 {
                     Debug.LogError("[ ZED Plugin ] : The SDK is not installed");
                 }
-                throw new Exception("The ZED plugin could not be loaded. Please check you have the ZED SDK and its dependencies (CUDA) installed." +
+                string errorMessage = "The ZED plugin could not be loaded. Please check you have the ZED SDK and its dependencies (CUDA) installed." +
                                     "\n Unity needs to be restarted after installation of the missing dependencies." +
-                                    "\n If the problem persists, please contact our support team at support@stereolabs.com\n" + e);
+                                    "\n If the problem persists, please contact our support team at support@stereolabs.com\n";
+                return errorMessage;
+
             }
+            return "";
         }
 
         static private bool CheckDependencies(string[] filesFound)
@@ -440,13 +437,13 @@ namespace sl
                 bool found = false;
                 foreach (string file in filesFound)
                 {
-                    if(System.IO.Path.GetFileName(file).Equals(dependency))
+                    if (System.IO.Path.GetFileName(file).Equals(dependency))
                     {
                         found = true;
                         break;
                     }
                 }
-                if(!found)
+                if (!found)
                 {
                     isASDKPb = true;
                     Debug.LogError("[ZED Plugin ] : " + dependency + " is not found");
@@ -455,32 +452,7 @@ namespace sl
             return isASDKPb;
         }
 
-        /// <summary>
-        /// Activate or deactivate threading mode. Performance may be increased when multi thread is activated
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetMultiThread(bool value)
-        {
-            isThreaded = value;
-            if (!running && isThreaded)
-            {
-                InitGrabThread();
-                dllz_set_is_threaded();
-            }
-            else if (running && isThreaded)
-            {
-                Debug.Log("Already threaded");
 
-            }
-            else if (running && !isThreaded)
-            {
-                running = false;
-                if (threadGrab != null)
-                {
-                    threadGrab.Join();
-                }
-            }
-        }
 
         /// <summary>
         /// Gets an instance of the ZEDCamera
@@ -500,42 +472,6 @@ namespace sl
             }
         }
 
-        /// <summary>
-        /// Set the grab parameters for threading mode
-        /// </summary>
-        /// <param name="mode"></param>
-        public void SetGrabParametersThreadingMode(sl.SENSING_MODE mode, bool depth)
-        {
-            lock (grabLock)
-            {
-                grabParameters.mode = mode;
-                grabParameters.depth = depth;
-            }
-        }
-
-        /// <summary>
-        /// Run image/data grab in a thread
-        /// </summary>
-        private void ThreadedGrab()
-        {
-            while (running)
-            {
-               
-                float timePerTick = 1000.0f / fpsMax;
-                timer.Reset();
-                lock (grabLock)
-                {
-                    if (!pauseThread) Grab(grabParameters.mode, grabParameters.depth);
-
-                }
-                timer.Stop();
-                TimeSpan ts = timer.Elapsed;
-                if (ts.Milliseconds < timePerTick)
-                {
-                    Thread.Sleep(((int)timePerTick - ts.Milliseconds));
-                }
-            }
-        }
 
         /// <summary>
         /// Private constructor
@@ -546,13 +482,6 @@ namespace sl
             textures = new Dictionary<int, Dictionary<int, Texture2D>>();
             texturesRequested = new List<TextureRequested>();
 
-            //Create the timer used in the grab thread
-            timer = new System.Diagnostics.Stopwatch();
-
-            //Default grab parameters for threaded mode
-            grabParameters = new GrabParameters();
-            grabParameters.mode = SENSING_MODE.FILL;
-            grabParameters.depth = true;
         }
 
         /// <summary>
@@ -568,9 +497,11 @@ namespace sl
             {
                 throw new Exception("The graphic library [" + infoSystem + "] is not supported");
             }
+
             currentResolution = mode;
             fpsMax = GetFpsForResolution(mode);
-
+            if (fps == 0.0f) fps = fpsMax;
+            ZEDUpdater.GetInstance().fpsMax = fpsMax;
             dllz_create_camera_live((int)mode, fps, linux_id);
         }
 
@@ -594,17 +525,10 @@ namespace sl
         /// </summary>
         public void Destroy()
         {
-            //If the camera is threaded, first stop the thread
-            if (isThreaded)
-            {
-                running = false;
-                if (threadGrab != null)
-                {
-                    threadGrab.Join();
-                }
-            }
+            ZEDUpdater.GetInstance().Destroy();
 
             cameraIsReady = false;
+
             dllz_close();
 
             DestroyAllTexture();
@@ -633,7 +557,6 @@ namespace sl
             cameraIsReady = true;
             imageWidth = dllz_get_width();
             imageHeight = dllz_get_height();
-            InitializeCommandBuffer();
             FillProjectionMatrix();
             baseline = GetCameraInformation().calibParameters.Trans[0];
 
@@ -641,35 +564,13 @@ namespace sl
         }
 
 
-        /// <summary>
-        /// Initialize the command buffer to update texture
-        /// </summary>
-        private void InitializeCommandBuffer()
-        {
-            if (commandBuffer == null)
-            {
-                commandBuffer = new CommandBuffer();
-                commandBuffer.name = "ZED_Image_Update";
-                commandBuffer.IssuePluginEvent(GetRenderEventFunc(), 0);
-            }
-        }
-
-        /// <summary>
-        /// Initializes the grab thread
-        /// </summary>
-        private void InitGrabThread()
-        {
-            running = true;
-            threadGrab = new Thread(new ThreadStart(ThreadedGrab));
-            threadGrab.Start();
-        }
 
         /// <summary>
         /// Fill the projection matrix with the parameters of the ZED, needs to be called only once. This projection matrix is off center.
         /// </summary>
         /// <param name="zFar"></param>
         /// <param name="zNear"></param>
-        private void FillProjectionMatrix(float zFar = 500, float zNear = 0.2f)
+        public void FillProjectionMatrix(float zFar = 500, float zNear = 0.2f)
         {
             CalibrationParameters parameters = GetCameraInformation().calibParameters;
             float fovx = parameters.leftCam.hFOV * Mathf.Deg2Rad;
@@ -707,11 +608,13 @@ namespace sl
         /// <param name="sensingMode">defines the type of disparity map, more info : SENSING_MODE definition</param>
         /// <returns>the function returns false if no problem was encountered,
         /// true otherwise.</returns>
-        public sl.ERROR_CODE Grab(SENSING_MODE sensingMode = SENSING_MODE.FILL, bool computeDepth = true)
+
+        public sl.ERROR_CODE Grab(SENSING_MODE sensingMode = SENSING_MODE.FILL, bool computeDepth = true, REFERENCE_FRAME referenceFrame = REFERENCE_FRAME.CAMERA)
         {
             AssertCameraIsReady();
-            return (sl.ERROR_CODE)dllz_grab((int)sensingMode, Convert.ToInt32(computeDepth));
-
+            sl.ERROR_CODE error = sl.ERROR_CODE.FAILURE;
+            error = (sl.ERROR_CODE)dllz_grab((int)sensingMode, Convert.ToInt32(computeDepth), (int)referenceFrame);
+            return error;
         }
 
         /// <summary>
@@ -772,6 +675,8 @@ namespace sl
             if (GetFpsForResolution(currentResolution) >= fps)
             {
                 fpsMax = (uint)fps;
+                ZEDUpdater.GetInstance().fpsMax = fpsMax;
+
             }
 
             AssertCameraIsReady();
@@ -828,7 +733,7 @@ namespace sl
         {
             return dllz_get_image_updater_time_stamp();
         }
- 
+
         /// <summary>
         /// Get the current position of the SVO in the record
         /// </summary>
@@ -877,11 +782,12 @@ namespace sl
         /// <param name="enableSpatialMemory">  (optional) define if spatial memory is enable or not.</param>
         /// <param name="areaFilePath"> (optional) file of spatial memory file that has to be loaded to relocate in the scene.</param>
         /// <returns></returns>
-        public sl.ERROR_CODE EnableTracking(ref Quaternion quat, ref Vector3 vec, bool enableSpatialMemory= true, string areaFilePath = "")
+
+        public sl.ERROR_CODE EnableTracking(ref Quaternion quat, ref Vector3 vec, bool enableSpatialMemory = true, string areaFilePath = "")
         {
             AssertCameraIsReady();
             sl.ERROR_CODE trackingStatus = sl.ERROR_CODE.CAMERA_NOT_DETECTED;
-            lock (grabLock)
+            lock (ZEDUpdater.GetInstance().grabLock)
             {
                 trackingStatus = (sl.ERROR_CODE)dllz_enable_tracking(ref quat, ref vec, enableSpatialMemory, areaFilePath);
             }
@@ -905,7 +811,6 @@ namespace sl
         private void RegisterTexture(Texture2D m_Texture, int type, int mode)
         {
             TextureRequested t = new TextureRequested();
-            m_Texture.filterMode = FilterMode.Trilinear;
 
             t.type = type;
             t.option = mode;
@@ -935,14 +840,16 @@ namespace sl
                 m_Texture = new Texture2D(ImageWidth, ImageHeight, TextureFormat.Alpha8, false);
 
             }
-            else if(mode == VIEW.SIDE_BY_SIDE)
+            else if (mode == VIEW.SIDE_BY_SIDE)
             {
-                m_Texture = new Texture2D(ImageWidth*2, ImageHeight, TextureFormat.RGBA32, false);
+                m_Texture = new Texture2D(ImageWidth * 2, ImageHeight, TextureFormat.RGBA32, false);
             }
             else
             {
                 m_Texture = new Texture2D(ImageWidth, ImageHeight, TextureFormat.RGBA32, false);
             }
+            m_Texture.filterMode = FilterMode.Trilinear;
+            //m_Texture.anisoLevel = 1;
             m_Texture.Apply();
 
             IntPtr idTexture = m_Texture.GetNativeTexturePtr();
@@ -976,15 +883,17 @@ namespace sl
 
             Texture2D m_Texture;
 
-            if (mode == MEASURE.XYZ || mode == MEASURE.XYZABGR || mode == MEASURE.XYZARGB || mode == MEASURE.XYZBGRA || mode == MEASURE.XYZRGBA)
+            if (mode == MEASURE.XYZ || mode == MEASURE.XYZABGR || mode == MEASURE.XYZARGB || mode == MEASURE.XYZBGRA || mode == MEASURE.XYZRGBA || mode == MEASURE.NORMALS)
             {
                 m_Texture = new Texture2D(ImageWidth, ImageHeight, TextureFormat.RGBAFloat, false, true);
             }
-            else if (mode == MEASURE.DEPTH || mode == MEASURE.CONFIDENCE)
+            else if (mode == MEASURE.DEPTH || mode == MEASURE.CONFIDENCE || mode == MEASURE.DISPARITY)
             {
                 m_Texture = new Texture2D(ImageWidth, ImageHeight, TextureFormat.RFloat, false, true);
             }
             else m_Texture = new Texture2D(ImageWidth, ImageHeight, TextureFormat.RGBA32, false, true);
+            m_Texture.filterMode = FilterMode.Point;
+
             m_Texture.Apply();
 
             IntPtr idTexture = m_Texture.GetNativeTexturePtr();
@@ -1182,40 +1091,10 @@ namespace sl
                 return new CameraInformations();
             }
             CameraInformations parameters = (CameraInformations)Marshal.PtrToStructure(p, typeof(CameraInformations));
+
             return parameters;
         }
 
-        /// <summary>
-        /// Update textures with command buffer.
-        /// </summary>
-        /// <param name="cam">The camera used</param>
-        public void SetUpdateEvent(Camera cam)
-        {
-            if (isThreaded) return;
-            if(commandBuffer != null && !commandBufferIsSet)
-            {
-                foreach(CommandBuffer cb in cam.GetCommandBuffers(CameraEvent.BeforeForwardOpaque))
-                {
-                    if (cb == commandBuffer)
-                    {
-                        return;
-                    }
-                }
-                cam.AddCommandBuffer(CameraEvent.BeforeForwardOpaque, commandBuffer);
-            }
-        }
-
-        /// <summary>
-        /// Update textures with command buffer.
-        /// </summary>
-        /// <param name="cam">The camera used</param>
-        public void RemoveUpdateEvent(Camera cam)
-        {
-            if(commandBuffer != null)
-            {
-                cam.RemoveCommandBuffer(CameraEvent.BeforeForwardOpaque, commandBuffer);
-            }
-        }
 
 
         /// <summary>
@@ -1268,37 +1147,40 @@ namespace sl
         }
 
         /// <summary>
-        ///  Return the position of the camera and the current state of the Tracker
+        ///  Gets the position of the camera and the current state of the Tracker
         /// </summary>
-        /// <param name="position">the matrix containing the position of the camera</param>
-        /// <param name="mat_type">define if the function return the path (the cumulate displacement of the camera) or just the pose (the displacement from the previous position).</param>
-        /// <returns></returns>
-        public TRACKING_FRAME_STATE GetPosition(ref Quaternion quat, ref Vector3 vec, REFERENCE_FRAME mat_type = REFERENCE_FRAME.WORLD)
+        /// <param name="rotation">the quaternion will be filled with the current rotation of the camera depending on the reference</param>
+        /// <param name="position">the vector will be filled with the current position of the camera depending on the reference</param>
+        /// <param name="referenceType">The reference type will fill the quaternion and vector with either the diffrences between the last pose(CAMERA) or the cumul of poses (WORLD)</param>
+        /// <returns>A tracking frame state</returns>
+        public TRACKING_FRAME_STATE GetPosition(ref Quaternion rotation, ref Vector3 position, REFERENCE_FRAME referenceType = REFERENCE_FRAME.WORLD)
         {
             AssertCameraIsReady();
-            return (TRACKING_FRAME_STATE)dllz_get_position(ref quat, ref vec, (int)mat_type);
+            return (TRACKING_FRAME_STATE)dllz_get_position(ref rotation, ref position, (int)referenceType);
         }
+
 
         /// <summary>
         /// Get the current position of the camera with an optionnal transformation of the camera frame/motion tracking frame.
         /// 
         /// </summary>
-        /// <param name="quat"></param>
-        /// <param name="vec"></param>
-        /// <param name="offset"></param>
-        /// <param name="offsetRotation"></param>
+        /// <param name="rotation">the quaternion will be filled with the current rotation of the camera depending on the reference</param>
+        /// <param name="position">the vector will be filled with the current position of the camera depending on the reference</param>
+        /// <param name="targetQuaternion"></param>
+        /// <param name="targetTranslation"></param>
         /// <param name="mat_type"></param>
         /// <returns></returns>
-        public TRACKING_FRAME_STATE GetPosition(ref Quaternion quaternion, ref Vector3 translation, ref Quaternion targetQuaternion,  ref Vector3 targetTranslation, REFERENCE_FRAME mat_type = REFERENCE_FRAME.WORLD)
+        public TRACKING_FRAME_STATE GetPosition(ref Quaternion rotation, ref Vector3 translation, ref Quaternion targetQuaternion, ref Vector3 targetTranslation, REFERENCE_FRAME mat_type = REFERENCE_FRAME.WORLD)
         {
             AssertCameraIsReady();
-            return (TRACKING_FRAME_STATE)dllz_get_position_at_target_frame(ref quaternion, ref translation, ref targetQuaternion, ref targetTranslation, (int)mat_type);
+            return (TRACKING_FRAME_STATE)dllz_get_position_at_target_frame(ref rotation, ref translation, ref targetQuaternion, ref targetTranslation, (int)mat_type);
         }
+
 
         public TRACKING_FRAME_STATE GetPosition(ref Pose pose)
         {
             AssertCameraIsReady();
-            return (TRACKING_FRAME_STATE)dllz_get_position_data(ref pose,0/*WORLD_FRAME*/);
+            return (TRACKING_FRAME_STATE)dllz_get_position_data(ref pose, 0/*WORLD_FRAME*/);
         }
 
         /// <summary>
@@ -1363,7 +1245,7 @@ namespace sl
         /// <param name="usedefault">will set default (or automatic) value if set to true (value (int) will not be taken into account)</param>
         public void SetCameraSettings(CAMERA_SETTINGS settings, int value, bool usedefault = false)
         {
-            dllz_set_camera_settings((int)settings, value, Convert.ToInt32(usedefault));
+            cameraSettingsManager.SetCameraSettings(settings, value, usedefault);
         }
 
         /// <summary>
@@ -1372,8 +1254,52 @@ namespace sl
         /// <param name="settings"></param>
         public int GetCameraSettings(CAMERA_SETTINGS settings)
         {
-            return dllz_get_camera_settings((int)settings);
+            return cameraSettingsManager.GetCameraSettings(settings);
         }
+
+        /// <summary>
+        /// Load the camera settings (brightness, contrast, hue, saturation, gain, exposure)
+        /// </summary>
+        /// <param name="path"></param>
+        public void LoadCameraSettings(string path)
+        {
+            cameraSettingsManager.LoadCameraSettings(instance, path);
+        }
+
+        /// <summary>
+        /// Save the camera settings (brightness, contrast, hue, saturation, gain, exposure)
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveCameraSettings(string path)
+        {
+            cameraSettingsManager.SaveCameraSettings(path);
+        }
+
+        /// <summary>
+        /// Retrieves camera settings from the camera
+        /// </summary>
+        public void RetrieveCameraSettings()
+        {
+            cameraSettingsManager.RetrieveSettingsCamera(instance);
+        }
+
+        /// <summary>
+        /// Returns a copy of the camera settings, cannot be modified
+        /// </summary>
+        /// <returns></returns>
+        public ZEDCameraSettingsManager.CameraSettings GetCameraSettings()
+        {
+            return cameraSettingsManager.Settings;
+        }
+
+        /// <summary>
+        /// Set all the settings registered, to the camera
+        /// </summary>
+        public void SetCameraSettings()
+        {
+            cameraSettingsManager.SetSettings(instance);
+        }
+
 
         /// <summary>
         /// The function checks if ZED cameras are connected, can be called before instantiating a Camera object
@@ -1396,8 +1322,9 @@ namespace sl
 
         private void AssertCameraIsReady()
         {
-            if (!cameraIsReady && !pluginIsReady)
-                throw new Exception("Camera is not ready, init was not called or a dependency problem occurred");
+
+            if (!cameraIsReady || !pluginIsReady)
+                throw new Exception("Camera is not connected, init was not called or a dependency problem occurred");
         }
 
         /// <summary>
@@ -1407,15 +1334,7 @@ namespace sl
         {
             //Retrieves the images from the ZED
             RetrieveTextures();
-            if (commandBufferIsSet) return;
-            if (isThreaded)
-            {
-                GL.IssuePluginEvent(GetRenderEventFunc(), 1);
-            }
-            else if(!isThreaded)
-            {
-                GL.IssuePluginEvent(GetRenderEventFunc(), 1);
-            }
+            GL.IssuePluginEvent(GetRenderEventFunc(), 1);
         }
 
         /// <summary>
@@ -1444,5 +1363,6 @@ namespace sl
             float posY = ImageHeight * (1 - (float)position.y / (float)Screen.height);
             return dllz_get_depth_value((uint)posX, (uint)posY);
         }
+
     }
 } // namespace sl
