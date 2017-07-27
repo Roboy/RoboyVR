@@ -63,6 +63,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private float m_CurrentAngleY = 0.0f;
 
+    private float m_CurrentAngle = 0.0f;
+
     /// <summary>
     /// Variable to determine if headset was rotated.
     /// </summary>
@@ -220,6 +222,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     {
         Transform head_parent = transform.GetChild(0).Find("head");
         Transform head_pivot = head_parent.GetChild(0);
+        Transform torso_parent = transform.GetChild(0).Find("torso");
+        Transform torso_pivot = torso_parent.GetChild(0);
 
         // Check whether the user has rotated the headset or not
         if (m_CurrentAngleY != m_Cam.transform.eulerAngles.y)
@@ -245,8 +249,21 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
         // Move roboy accordingly to headset movement
         Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
-        transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
-     
+        //transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
+
+        
+        Vector3 dir = InputTracking.GetLocalPosition(VRNode.RightHand) - torso_parent.position;
+        float angle = Vector3.Angle(torso_parent.forward, dir);
+        if (m_CurrentAngle != angle)
+        {
+            Debug.Log("Moved controller! "+ (m_CurrentAngle - angle ));
+            torso_parent.RotateAround(torso_pivot.position, Vector3.up, (m_CurrentAngle - angle)*10);
+        }
+
+        m_CurrentAngle = angle;
+
+        //torso_parent.RotateAround(torso_pivot.position, Vector3.up, InputTracking.GetLocalRotation(VRNode.RightHand).eulerAngles.z);
+
         //Convert the headset rotation from unity coordinate spaze to gazebo coordinates
         Quaternion rot = GazeboUtility.UnityRotationToGazebo(InputTracking.GetLocalRotation(VRNode.Head));
         float x_angle = 0.0f;
