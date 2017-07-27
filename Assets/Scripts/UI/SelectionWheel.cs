@@ -111,7 +111,7 @@ public class SelectionWheel : MonoBehaviour {
     /// <summary>
     /// Adjust the image component of the parts and subscribe to the controller events.
     /// </summary>
-    public void Initialize(List<SelectionWheelPart> parts)
+    public void Initialize(List<SelectionWheelPart> parts, int defaultIndex)
     {
         if (!m_Binded)
         {
@@ -148,6 +148,13 @@ public class SelectionWheel : MonoBehaviour {
 
             m_Parts.Add(wheelPartUI);
             wheelPartUI.Unhighlight();
+
+            if (i == defaultIndex)
+            {
+                m_SelectedPart = wheelPartUI;
+                wheelPartUI.Select();
+            }
+               
         }
         // subcribe to the events
         m_ControllerEventListener.PadTouched += startRecognition;
@@ -156,12 +163,15 @@ public class SelectionWheel : MonoBehaviour {
         
     }
 
+    /// <summary>
+    /// Binds the controller so other classes can tell which controller to use for the recognition.
+    /// </summary>
+    /// <param name="controller"></param>
     public void BindController(SteamVR_TrackedObject controller)
     {
         m_TrackedController = controller;
         m_ControllerEventListener = m_TrackedController.gameObject.GetComponent<SteamVR_TrackedController>();
         m_Binded = true;
-
     }
 
     /// <summary>
@@ -197,6 +207,10 @@ public class SelectionWheel : MonoBehaviour {
     /// <param name="e"></param>
     private void selectPart(object sender, ClickedEventArgs e)
     {
+        // as the event is also triggered when the selectionwheel is not active but the controller itself is we need ignore calls when recognition is off
+        if (!m_Recognizing)
+            return;
+
         int buttonID = getButtonID();
         if (buttonID == -1)
             return;

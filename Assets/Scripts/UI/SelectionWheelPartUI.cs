@@ -66,7 +66,7 @@ public class SelectionWheelPartUI : MonoBehaviour {
     /// <summary>
     /// Returns the actual part. Override this property in your actual class so it returns the part you implemented.
     /// </summary>
-    protected SelectionWheelPart m_SelectionWheelPart { get { return getPart(); } }
+    public SelectionWheelPart m_SelectionWheelPart { get { return getPart(); } }
 
     /// <summary>
     /// The actual content of this part.
@@ -93,6 +93,7 @@ public class SelectionWheelPartUI : MonoBehaviour {
     public virtual void Initialize(SelectionWheelPart wheelPart)
     {
         m_ActualPart = wheelPart;
+        m_ActualPart.Initialize(this);
     }
 
     public void CreateIcon(Vector3 position, float zAngle)

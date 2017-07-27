@@ -7,6 +7,18 @@ using UnityEngine;
 /// </summary>
 public class SelectionWheelPartTool : SelectionWheelPart {
 
+    public ControllerTool Tool
+    {
+        get
+        {
+            if (m_Tool == null)
+                m_Tool = GetComponent<ControllerTool>();
+            return m_Tool;
+        }
+    }
+
+    private ControllerTool m_Tool;
+
     /// <summary>
     /// Highlight the part.
     /// </summary>
@@ -28,7 +40,7 @@ public class SelectionWheelPartTool : SelectionWheelPart {
     /// </summary>
     public override void Select()
     {
-        //Debug.Log(gameObject.name + " : Select!");
+        ModeManager.Instance.ChangeToolMode(Tool);
     }
 
     /// <summary>

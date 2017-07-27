@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// InputManager holds a reference of every tool. On top of that it listens to button events from these tools and forwards touchpad input to the respective classes.
@@ -46,6 +47,11 @@ public class InputManager : Singleton<InputManager> {
         get { return m_TimeTool; }
     }
 
+    public HandTool HandTool
+    {
+        get { return m_HandTool; }
+    }
+
     /// <summary>
     /// Private SelectorTool reference. Is serialized so it can be dragged in the editor.
     /// </summary>
@@ -63,6 +69,9 @@ public class InputManager : Singleton<InputManager> {
     [SerializeField]
     private TimeTool m_TimeTool;
 
+    /// <summary>
+    /// Private HandTool reference. Is serialized so it can be dragged in the editor.
+    /// </summary>
     [SerializeField]
     private HandTool m_HandTool;
 
@@ -266,7 +275,7 @@ public class InputManager : Singleton<InputManager> {
         if (m_ToolWheel)
         {
             m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
-            m_ToolWheel.Initialize(toolWheelParts);
+            m_ToolWheel.Initialize(toolWheelParts, 0);
             m_ToolWheel.gameObject.SetActive(false);
         }
             
@@ -281,6 +290,15 @@ public class InputManager : Singleton<InputManager> {
         m_SelectorTool.gameObject.SetActive(true);
         m_ShootingTool.gameObject.SetActive(false);
         m_TimeTool.gameObject.SetActive(false);
+
+        // right now the tool wheel is only in the RoboyInteractionScene, so we need to be aware of that
+        if (m_ToolWheel)
+        {
+            m_HandTool.gameObject.SetActive(false);
+            SteamVR_RenderModel controllerModel = m_SelectorTool.transform.parent.GetComponentInChildren<SteamVR_RenderModel>();
+            controllerModel.gameObject.SetActive(false);
+        }
+        
         if (m_ViewController != null)
         { m_ViewController.gameObject.SetActive(false); }
         

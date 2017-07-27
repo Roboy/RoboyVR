@@ -71,6 +71,7 @@ namespace ROSBridgeLib
         private List<RenderTask> _taskQ = new List<RenderTask>();
         // Adjustment to be able to add ros objects at runtime while connected
         private bool _running = false;
+        private bool _sendErrorMessage = false;
 
         private object _queueLock = new object();
 
@@ -284,7 +285,12 @@ namespace ROSBridgeLib
          */
         private void OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
-            Debug.Log(e.Message);
+            if (!_sendErrorMessage)
+            {
+                Debug.Log(e.Message);
+                _sendErrorMessage = true;
+            }
+                
         }
 
         private void OnMessage(string s)

@@ -51,8 +51,10 @@ public class ModeManager : Singleton<ModeManager> {
     public enum ToolMode
     {
         SelectorTool,
-        ShooterTool,
-        TimeTool
+        ShootingTool,
+        TimeTool,
+        HandTool,
+        Undefined
     }
 
     /// <summary>
@@ -153,9 +155,9 @@ public class ModeManager : Singleton<ModeManager> {
             InputManager.Instance.ShootingTool.enabled = true;
             InputManager.Instance.Selector_Tool.gameObject.SetActive(false);
             InputManager.Instance.ShootingTool.gameObject.SetActive(true);
-            m_CurrentToolMode = ToolMode.ShooterTool;
+            m_CurrentToolMode = ToolMode.ShootingTool;
         }
-        else if (m_CurrentToolMode == ToolMode.ShooterTool)
+        else if (m_CurrentToolMode == ToolMode.ShootingTool)
         {
             //Debug.Log("toolmode to time");
             InputManager.Instance.TimeTool.enabled = true;
@@ -173,6 +175,24 @@ public class ModeManager : Singleton<ModeManager> {
             InputManager.Instance.TimeTool.gameObject.SetActive(false);
             m_CurrentToolMode = ToolMode.SelectorTool;
         }
+    }
+
+    /// <summary>
+    /// Changes the tool mode based on the enum to the new one and turns off the old tool.
+    /// </summary>
+    /// <param name="mode"></param>
+    public void ChangeToolMode(ToolMode mode)
+    {
+        changeToolStatus(m_CurrentToolMode, false);
+        m_CurrentToolMode = mode;
+        changeToolStatus(m_CurrentToolMode, true);
+    }
+
+    public void ChangeToolMode(ControllerTool tool)
+    {
+        changeToolStatus(m_CurrentToolMode, false);
+        m_CurrentToolMode = mapToolTypeToEnum(tool);
+        changeToolStatus(m_CurrentToolMode, true);
     }
 
     /// <summary>
@@ -204,5 +224,61 @@ public class ModeManager : Singleton<ModeManager> {
     public void ResetPanelMode()
     {
         m_CurrentPanelmode = Panelmode.Motor_Force;
+    }
+
+    /// <summary>
+    /// Changes the tool based on the enum to the new state.
+    /// </summary>
+    /// <param name="tool"></param>
+    /// <param name="state"></param>
+    private void changeToolStatus(ToolMode tool, bool state)
+    {
+        switch (tool)
+        {
+            case ToolMode.SelectorTool:
+                InputManager.Instance.Selector_Tool.enabled = state;
+                InputManager.Instance.Selector_Tool.gameObject.SetActive(state);
+                break;
+            case ToolMode.ShootingTool:
+                InputManager.Instance.ShootingTool.enabled = state;
+                InputManager.Instance.ShootingTool.gameObject.SetActive(state);
+                break;
+            case ToolMode.TimeTool:
+                InputManager.Instance.TimeTool.enabled = state;
+                InputManager.Instance.TimeTool.gameObject.SetActive(state);
+                break;
+            case ToolMode.HandTool:
+                InputManager.Instance.HandTool.enabled = state;
+                InputManager.Instance.HandTool.gameObject.SetActive(state);
+                break;
+            default:
+                Debug.Log("Tool mode: " + tool + " not implemented!");
+                break;
+        }
+    }
+
+    private ToolMode mapToolTypeToEnum(ControllerTool tool)
+    {
+        if (tool is SelectorTool)
+        {
+            return ToolMode.SelectorTool;
+        }
+        else if (tool is ShootingTool)
+        {
+            return ToolMode.ShootingTool;
+        }
+        else if (tool is TimeTool)
+        {
+            return ToolMode.TimeTool;
+        }
+        else if (tool is HandTool)
+        {
+            return ToolMode.HandTool;
+        }
+        else
+        {
+            Debug.Log("Tool mode: " + tool + " not implemented!");
+            return ToolMode.Undefined;
+        }
     }
 }
