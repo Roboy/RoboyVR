@@ -184,7 +184,7 @@ public class Notification : MonoBehaviour
     {
         if (m_type != DummyStates.MessageType.DEBUG)
             if (m_bodyPart)
-                m_bodyPart.GetComponent<RoboyPart>().UpdateHalo();
+                m_bodyPart.GetComponent<RoboyPart>().UpdateNotificationsDisplay();
 
     }
 
@@ -200,7 +200,7 @@ public class Notification : MonoBehaviour
         {
             GetConcernedRoboyPart().GetComponent<RoboyPart>().RemoveNotification(this);
             //adjust halo to new/updated list 
-            GetConcernedRoboyPart().GetComponent<RoboyPart>().UpdateHalo();
+            GetConcernedRoboyPart().GetComponent<RoboyPart>().UpdateNotificationsDisplay();
         }
         //delete every element that is related/dependent on this notification
         foreach (GameObject obj in m_RelatedObjects)

@@ -15,7 +15,7 @@ public class AdditionalInfoScreenManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     private RawImage m_Icon;
-    
+
     /// <summary>
     /// Text displayed as headline. 
     /// -> Warning/Debug/info/error
@@ -60,16 +60,19 @@ public class AdditionalInfoScreenManager : MonoBehaviour
     /// <param name="note">Note for which this screen is displayed</param>
     public void Setup(Notification note)
     {
-        m_Icon.texture = VRUILogic.Instance.GetIconTexture(note.GetNotificationType());
-        m_Headline.text = note.GetNotificationType().ToString();
-        GameObject part = note.GetConcernedRoboyPart();
-        if (part)
-            m_bodyPartText.text = part.name;
-        else
-            m_bodyPartText.text = "[General]";
-        m_stateText.text = note.GetState().ToString();
-        m_MoreContent.text = note.GetAdditionalInfo();
-
+        if (note)
+        {
+            m_Icon.texture = VRUILogic.Instance.GetIconTexture(note.GetNotificationType());
+            m_Headline.text = note.GetNotificationType().ToString();
+            GameObject part = note.GetConcernedRoboyPart();
+            if (part)
+                m_bodyPartText.text = part.name;
+            else
+                m_bodyPartText.text = "[General]";
+            m_stateText.text = note.GetState().ToString();
+            m_MoreContent.text = note.GetAdditionalInfo();
+        }
+        GetComponent<Canvas>().worldCamera = VRUILogic.Instance.GetCamera();
     }
     #endregion
 }

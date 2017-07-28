@@ -29,6 +29,12 @@ public class SelectorTool : ControllerTool
     private bool m_Is_released = false;
 
     /// <summary>
+    /// Holds reference to object where eventtrigger GetHairTriggerDown() was invoked.
+    /// Reference needed to call Reverse event.
+    /// </summary>
+    EventTrigger m_LastHeldObject = null;
+
+    /// <summary>
     /// Initializes the lineRenderer component.
     /// </summary>
     void Start()
@@ -66,23 +72,17 @@ public class SelectorTool : ControllerTool
                     Button b_pressed = hit.collider.GetComponent<Button>();
                     //TODO: WOrk in progress
                     //for scroll option
-                   // EventTrigger eventsystem = b_pressed.GetComponent<EventTrigger>();
+                    EventTrigger eventsystem = b_pressed.GetComponent<EventTrigger>();
 
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
                         b_pressed.onClick.Invoke();
-                        /*TODO: work in progress ctd.
+                        /*TODO: work in progress ctd.*/
                         if (eventsystem)
                         {
                             eventsystem.OnPointerDown(null);
+                            m_LastHeldObject = eventsystem;
                         }
-                    }
-                    if (eventsystem)
-                    {
-                        if (m_SteamVRDevice.GetHairTriggerUp())
-                        {
-                            b_pressed.GetComponent<EventTrigger>().OnPointerUp(null);
-                        }*/
                     }
                     break;
                 case "UISlider": //slider elem in BeRoboy
@@ -143,10 +143,16 @@ public class SelectorTool : ControllerTool
 
             m_LastSelectedObject = null;
         }
+
+        //for grabbing and holding updates:
+        if (m_LastHeldObject) //check if object thinks it's still held (no matter of ray hit sth)
+        {
+            if (m_SteamVRDevice.GetHairTriggerUp()) //if trigger not held anymore
+            {
+                m_LastHeldObject.OnPointerUp(null);
+                m_LastHeldObject = null;
+            }
+        }
     }
-
-
-
-
 }
 

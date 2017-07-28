@@ -126,6 +126,11 @@ public class VRUILogic : Singleton<VRUILogic>
     /// List containing all information sent as notifications
     /// </summary>
     private List<Notification> m_infosList = new List<Notification>();
+
+    /// <summary>
+    /// Container to set as parents of notifications
+    /// </summary>
+    private GameObject m_NotificationsContainer;
     #endregion
     #endregion
 
@@ -150,8 +155,13 @@ public class VRUILogic : Singleton<VRUILogic>
         m_touchedPad = new bool[2];
         m_touchedPad[0] = false;
         m_touchedPad[1] = false;
-        Skybox box = m_headset.gameObject.AddComponent<Skybox>();
-        box.material = skybox;
+        if (skybox)
+        {
+            Skybox box = m_headset.gameObject.AddComponent<Skybox>();
+            box.material = skybox;
+        }
+        m_NotificationsContainer = new GameObject();
+        m_NotificationsContainer.name = "NotificationContainer";
     }
     #endregion
 
@@ -230,6 +240,15 @@ public class VRUILogic : Singleton<VRUILogic>
     {
         return m_headset.transform.rotation;
     }
+
+    /// <summary>
+    /// returns the headset (camera of the scene)
+    /// </summary>
+    /// <returns>main camera</returns>
+    public Camera GetCamera()
+    {
+        return m_headset;
+    }
     #endregion
 
     #region setters
@@ -272,7 +291,7 @@ public class VRUILogic : Singleton<VRUILogic>
         {
             i += m_selectIndex;
             i %= m_modes.Length;
-            Debug.Log("New mode" + i);
+            //Debug.Log("New mode: " + i);
             if (i < m_modes.Length && i >= 0)
             {
                 m_modes[m_selectedMode].gameObject.SetActive(false);
@@ -324,13 +343,14 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="objectName">name of Roboy body part notification is related to (can be null)</param>
     /// <param name="timeFrame">time frame in which notification is valid</param>
     /// <returns></returns>
-    public Notification AddNewNotification(DummyStates.MessageType messageType, DummyStates.State state, string objectName , float timeFrame)
+    public Notification AddNewNotification(DummyStates.MessageType messageType, DummyStates.State state, string objectName, float timeFrame)
     {
         GameObject obj = new GameObject();
         obj.name = "Notification"; //unity automatically changes name if multiple instances occure -> e.g. "Notification(3)" 
         Notification note = obj.AddComponent<Notification>();
         note.SetupNotification(messageType, state, objectName, timeFrame);
         AddNotification(note);
+        note.transform.SetParent(m_NotificationsContainer.transform);
         return note;
     }
 
@@ -421,7 +441,8 @@ public class VRUILogic : Singleton<VRUILogic>
         return m_infosList;
     }
     /// <summary>
-    /// Adds subscriber to list of classes to be informed of new notifications
+    /// Adds subscriber to list of classes to be informed of new notifications.
+    /// If already added, nothing will happen.
     /// </summary>
     /// <param name="subscriber">ISubscriber which is to be subscribed</param>
     public void SubscribeNotifications(ISubscriber subscriber)

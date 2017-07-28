@@ -63,7 +63,6 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
             ScrollRect scroll = GetComponentInChildren<ScrollRect>();
             if (scroll)
                 temp = scroll.verticalNormalizedPosition;
-            Debug.Log("Scrolling position: " + temp);
             GameObject newItem = Instantiate(m_itemPrefab);
             newItem.GetComponent<NotificationListButton>().SetupItem((Notification)info);
             newItem.transform.SetParent(m_ListContentContainer.transform);
@@ -73,7 +72,6 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
             //TODO: BUGGY; NOT WORKING
             if (scroll)
             {
-                Debug.Log("Cann change scroll");
                 if (Mathf.Abs(temp) < 0.0001f) 
                 {
                     Debug.Log("Forcing 1");

@@ -26,6 +26,11 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     private RawImage[] m_imageSlots;
 
     /// <summary>
+    /// reference to screen which displays slots. If attached, it is enabled upon start
+    /// </summary>
+    [SerializeField]
+    private Canvas m_Screen;
+    /// <summary>
     /// saves the current mode setting, in which the notification manager is
     /// </summary>
     private VRUILogic.UIMode m_currentModeSetting;
@@ -41,6 +46,8 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     /// </summary>
     public void OnEnable()
     {
+        if (m_Screen)
+            m_Screen.enabled = true;
         VRUILogic.Instance.SubscribeNotifications(this);
         UpdateIconsAndText();
     }
@@ -94,7 +101,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     private IEnumerator test()
     {
         yield return new WaitForSeconds(2);
-        Notification note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "head", 3);
+        Notification note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
         Debug.Log("Added Warning");
 
         yield return new WaitForSeconds(4);
@@ -102,11 +109,11 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
         Debug.Log("Added Error");
 
         yield return new WaitForSeconds(2);
-        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
+        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
         Debug.Log("Added Debug");
 
         yield return new WaitForSeconds(2);
-        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.DEBUG, DummyStates.State.MOTOR_DEAD, "", 5f);
+        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
         Debug.Log("Added debug");
         testing = false;
 
