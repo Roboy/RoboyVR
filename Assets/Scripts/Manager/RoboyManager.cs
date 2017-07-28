@@ -234,12 +234,18 @@ public class RoboyManager : Singleton<RoboyManager> {
             getRoboy();
         }
 
-        foreach (Transform t in m_Roboy)
+        foreach (Transform trans in m_Roboy)
         {
-            if (t == null | !t.CompareTag("RoboyPart"))
-                continue;
-            m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
+            foreach (Transform t in trans.GetComponentsInChildren<Transform>())
+            {
+                if (t == null | !t.CompareTag("RoboyPart"))
+                    continue;
+                m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
+            }
         }
+
+
+
     }
     #endregion //PRIVATE_METHODS
 }
