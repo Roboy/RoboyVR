@@ -1,24 +1,15 @@
 fileFormatVersion: 2
-guid: a1089a807478ed94eb3970ec3263759f
-timeCreated: 1486388306
+guid: e7a8b4a4505f05f4b82ebd560278affa
+timeCreated: 1501242131
 licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 21
   fileIDToRecycleName:
-    100000: default
-    100002: default_MeshPart0
-    100004: default_MeshPart1
-    100006: //RootNode
-    400000: default
-    400002: default_MeshPart0
-    400004: default_MeshPart1
-    400006: //RootNode
-    2300000: default_MeshPart0
-    2300002: default_MeshPart1
-    3300000: default_MeshPart0
-    3300002: default_MeshPart1
-    4300000: default_MeshPart0
-    4300002: default_MeshPart1
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: node
   materials:
     importMaterials: 1
     materialName: 0
@@ -29,6 +20,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -39,6 +32,7 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -46,7 +40,10 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 1
     importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -62,6 +59,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
