@@ -3,6 +3,7 @@ import urllib.request
 import re
 import sys
 import os
+import math
 
 
 sdf_location = sys.argv[1]
@@ -30,10 +31,18 @@ for i in range(0, len(links)):
 	
 	VIS_model = links[i].visual[0]
 	VIS_geometry = VIS_model.geometry[0]
-	#if mesh[0] in VIS_geometry 
-	#VIS_mesh = VIS_geometry.mesh[0]
-	#localfile.write("Visual uri = " + VIS_uri + "\n")
-	#i++
+	#if mesh in VIS_geometry 
+	try:
+		VIS_geometry.mesh[0]
+	except NameError:
+		print("NameError")
+	else:
+		print("Yes")
+		#if(hasattr(VIS_geometry, 'mesh'))
+		#VIS_mesh = VIS_geometry.mesh
+		#localfile.write("Visual uri = " + VIS_geometry.mesh.uri + "\n")
+		
+	print(i)
 
 
 localfile.close()
