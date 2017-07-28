@@ -277,6 +277,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         Quaternion rot = GazeboUtility.UnityRotationToGazebo(InputTracking.GetLocalRotation(VRNode.Head));
         float x_angle = 0.0f;
         float y_angle = 0.0f;
+        float r_angle = 0.0f;
 
         if (rot.eulerAngles.x > 180)
         {
@@ -288,16 +289,30 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         }
 
         x_angle = rot.eulerAngles.z * Mathf.Deg2Rad;
+
+        if (torso_pivot.eulerAngles.y > 180)
+        {
+            r_angle = (torso_pivot.eulerAngles.y - 360) * Mathf.Deg2Rad;
+        }
+        else
+        {
+            r_angle = torso_pivot.eulerAngles.y * Mathf.Deg2Rad;
+        }
+
+
+        Debug.Log(r_angle);
         
         //Determine which joints should me modified
         List<string> joints = new List<string>();
         joints.Add("neck_3");
         joints.Add("neck_4");
+        joints.Add("spine_1");
 
         //Determine the angle for the joints
         List<float> angles = new List<float>();
         angles.Add(x_angle);
         angles.Add(y_angle);
+        angles.Add(r_angle * (-1.0f));
         
         //Start sending the actual message
         ReceiveExternalJoint(joints, angles);
