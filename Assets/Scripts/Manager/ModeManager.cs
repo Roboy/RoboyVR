@@ -169,12 +169,22 @@ public class ModeManager : Singleton<ModeManager> {
         else if (m_CurrentToolMode == ToolMode.TimeTool)
         {
             //Debug.Log("toolmode to select");
-            InputManager.Instance.Selector_Tool.enabled = true;
+            InputManager.Instance.HandTool.enabled = true;
             InputManager.Instance.TimeTool.enabled = false;
-            InputManager.Instance.Selector_Tool.gameObject.SetActive(true);
+            InputManager.Instance.HandTool.gameObject.SetActive(true);
             InputManager.Instance.TimeTool.gameObject.SetActive(false);
+            m_CurrentToolMode = ToolMode.HandTool;
+        }
+        else if (m_CurrentToolMode == ToolMode.HandTool)
+        {
+            //Debug.Log("toolmode to select");
+            InputManager.Instance.Selector_Tool.enabled = true;
+            InputManager.Instance.HandTool.enabled = false;
+            InputManager.Instance.Selector_Tool.gameObject.SetActive(true);
+            InputManager.Instance.HandTool.gameObject.SetActive(false);
             m_CurrentToolMode = ToolMode.SelectorTool;
         }
+
     }
 
     /// <summary>

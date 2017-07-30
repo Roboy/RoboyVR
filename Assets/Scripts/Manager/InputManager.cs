@@ -302,7 +302,9 @@ public class InputManager : Singleton<InputManager> {
 
         if (m_ViewController != null)
         { m_ViewController.gameObject.SetActive(false); }
-        
+
+        if (m_HandTool != null)
+        { m_HandTool.gameObject.SetActive(false); }
 
         while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
             yield return Time.fixedDeltaTime;
