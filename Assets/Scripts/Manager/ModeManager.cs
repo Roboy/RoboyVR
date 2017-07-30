@@ -168,7 +168,7 @@ public class ModeManager : Singleton<ModeManager> {
         }
         else if (m_CurrentToolMode == ToolMode.TimeTool)
         {
-            //Debug.Log("toolmode to select");
+            //Debug.Log("toolmode to hand");
             InputManager.Instance.HandTool.enabled = true;
             InputManager.Instance.TimeTool.enabled = false;
             InputManager.Instance.HandTool.gameObject.SetActive(true);

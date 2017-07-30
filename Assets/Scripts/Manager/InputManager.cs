@@ -272,6 +272,7 @@ public class InputManager : Singleton<InputManager> {
                     toolWheelParts.Add(wheelPart);
             }
         }
+
         if (m_ToolWheel)
         {
             m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
@@ -300,11 +301,16 @@ public class InputManager : Singleton<InputManager> {
         SteamVR_RenderModel controllerModel = m_SelectorTool.transform.parent.GetComponentInChildren<SteamVR_RenderModel>();
         controllerModel.gameObject.SetActive(false);
 
+        //If there is a view controller, disable it.
         if (m_ViewController != null)
-        { m_ViewController.gameObject.SetActive(false); }
-
+        {
+            m_ViewController.gameObject.SetActive(false);
+        }
+        //If there is a hand tool, disable it.
         if (m_HandTool != null)
-        { m_HandTool.gameObject.SetActive(false); }
+        {
+            m_HandTool.gameObject.SetActive(false);
+        }
 
         while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
             yield return Time.fixedDeltaTime;
