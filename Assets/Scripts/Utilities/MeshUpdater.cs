@@ -15,7 +15,7 @@ public class MeshUpdater : MonoBehaviour
     /// </summary>
     public string Github_Repository = @"https://github.com/Roboy/roboy_models/";
 
-    public string Branch = "master";
+    public string Branch = "VRTeam";
 
 
     /// <summary>
@@ -59,6 +59,7 @@ public class MeshUpdater : MonoBehaviour
         UpdaterUtility.ProjectFolder = Application.dataPath;
         UpdaterUtility.PathToDownloadScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelDownloader.py";
         UpdaterUtility.PathToScanScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelScanner.py";
+        UpdaterUtility.PathToSDFreader = UpdaterUtility.ProjectFolder + @"/ExternalTools/SDF_reader.py";
 
         UpdaterUtility.showWarnings();
     }
@@ -184,6 +185,18 @@ public class MeshUpdater : MonoBehaviour
                     m_ModelNames.Add(urlEntry.Key);
                 }
             }
+            if (File.Exists(pathToOriginModels + urlEntry.Key + @"/OriginModels/model.sdf"))
+            {
+                Debug.Log("model.sdf found!");
+                // read .sdf file
+                string[] argumentsSDFreader = { "python \"" + UpdaterUtility.PathToSDFreader + "\"", pathToOriginModels + urlEntry.Key + @"/OriginModels/model.sdf" };
+                CommandlineUtility.RunCommandLine(argumentsSDFreader);
+            }
+            else
+            {
+                Debug.LogWarning("model.sdf not found!");
+            }
+
             ModelsCurrentState = UpdaterUtility.State.Downloaded;
         }
     }
@@ -193,6 +206,19 @@ public class MeshUpdater : MonoBehaviour
     /// </summary>
     public void CreatePrefab()
     {
+        string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/tempModelSDFs.txt";
+        if (!File.Exists(pathToSDFFile))
+        {
+            Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+            return;
+        }
+        // get file content of format title:url
+        string[] sdfContent = File.ReadAllLines(pathToSDFFile);
+
+        //////File.Delete(pathToSDFFile);
+        //
+        //ADD Pose and scale to models
+        //
         foreach (string modelName in m_ModelNames)
         {
             string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";

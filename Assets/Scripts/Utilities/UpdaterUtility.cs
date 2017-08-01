@@ -54,6 +54,11 @@ public class UpdaterUtility : MonoBehaviour {
     public static string PathToScanScript;
 
     /// <summary>
+    /// This should be the path to the "MeshScanner". It is located in the ExternalTools directory.
+    /// </summary>
+    public static string PathToSDFreader;
+
+    /// <summary>
     /// Cached variable of the projects assets directory.
     /// </summary>
     public static string ProjectFolder;
@@ -127,6 +132,15 @@ public class UpdaterUtility : MonoBehaviour {
         else
         {
             Debug.LogWarning("Scan script not found!");
+        }
+
+        if (File.Exists(PathToSDFreader))
+        {
+            Debug.Log("SDF_Reader script found!");
+        }
+        else
+        {
+            Debug.LogWarning("SDF_Reader script not found!");
         }
     }
 }
