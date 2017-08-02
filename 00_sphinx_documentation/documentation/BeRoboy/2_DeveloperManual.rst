@@ -26,8 +26,9 @@ for example it would start it in a not paused stated ("paused" set to "false").
 		<arg name="use_sim_time" value="true"/>
 		<arg name="gui" value="true"/>
 		<arg name="headless" value="false"/>
-			<arg name="debug" value="false"/>
+		<arg name="debug" value="false"/>
 		</include>
+		<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 	</launch>
 
 
@@ -45,7 +46,7 @@ In this case the world file contains a ground plane, the legs with upper body ro
         </include>
 	<!--PabiRoboy -->
 	<include>
-	    <uri>model://legs_with_upper_body</uri>
+	    <uri>model://Roboy_with_camera_simplified</uri>
 	</include>
 	<!--Sun -->
         <include>
@@ -76,7 +77,7 @@ specific model you want to have in the simulation and add the following section.
 .. code-block:: xml
 
 	<sensor type="camera" name="camera">
-	      <update_rate>1.0</update_rate>
+	      <update_rate>3.0</update_rate>
 	      <camera name="head">
 		<pose>0 1.25 0 -1.5707963267948966 -1.5707963267948966 0</pose>
 		<horizontal_fov>1.6962634</horizontal_fov>

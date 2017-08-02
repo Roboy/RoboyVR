@@ -308,8 +308,11 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         
         // Determine which joints should me modified
         List<string> joints = new List<string>();
+        // X rotation
         joints.Add("neck_3");
+        // Y rotation
         joints.Add("neck_4");
+        // Body rotation
         joints.Add("spine_1");
 
         // Determine the angle for the joints

@@ -10,13 +10,13 @@ Start your Ubuntu machine and open a terminal.
 
 .. code:: bash
 
-  source /path-to-roboy-ros-control/devel.setup.bash
+  source /path-to-roboy-ros-control/devel/setup.bash
   
 2. Start the launch file which starts Gazebo with the Roboy and a Camera ROS node
 
 .. code:: bash
 
-  roslaunch roboy_simulation camera_test.launch  
+  roslaunch roboy_simulation roboy_camera.launch  
 
 
 Starting Unity
