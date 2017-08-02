@@ -2,21 +2,22 @@
 
 namespace ROSBridgeLib
 {
-    public class RoboyHeadPublisher : ROSBridgePublisher
+    public class RoboyModelPublisher : ROSBridgePublisher
     {
         public new static string GetMessageTopic()
         {
-            return "/roboy/middleware/JointCommand";
+            return "/roboy/simulation/Model";
         }
 
         public new static string GetMessageType()
         {
-            return "roboy_communication_middleware/JointCommand";
+            return "roboy_communication_simulation/Model";
         }
 
-        public static string ToYAMLString(ExternalJointMsg msg)
+        public static string ToYAMLString(ModelMsg msg)
         {
             return msg.ToYAMLString();
         }
     }
 }
+

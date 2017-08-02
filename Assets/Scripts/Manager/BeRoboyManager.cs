@@ -11,7 +11,7 @@ using ROSBridgeLib.custom_msgs;
 ///
 ///     -# Keep track of user movement and translate roboy when in specific view modes
 ///     -# Convert received images into textures which can then be rendered on screen
-///     -# FUTURE: Send tracking messages over the rosbridge to gazebo/ real roboy
+///     -# Send tracking messages over the rosbridge to gazebo/ real roboy
 /// </summary>
 public class BeRoboyManager : Singleton<BeRoboyManager> {
 
@@ -161,6 +161,14 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         ROSBridge.Instance.Publish(RoboyHeadPublisher.GetMessageTopic(), msg);
     }
 
+    public void ReceivePosition(Vector3 pos)
+    {
+        ROSBridgeLib.custom_msgs.RoboyPositionMsg msg =
+            new ROSBridgeLib.custom_msgs.RoboyPositionMsg(pos.x, pos.y, pos.z);
+
+        ROSBridge.Instance.Publish(RoboyPositionPublisher.GetMessageTopic(), msg);
+    }
+
     #endregion PUBLIC_METHODS
 
 
@@ -227,29 +235,25 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private void translateRoboy()
     {
+        // References to roboy parts we need for rotation/ translation
         Transform head_parent = transform.GetChild(0).Find("head");
         Transform head_pivot = head_parent.GetChild(0);
-        
         Transform torso_pivot = transform.GetChild(0).Find("torso_pivot");
-        //Transform torso_parent = transform.GetChild(0).Find("torso");
 
-        // Check whether the user has rotated the headset or not
+
+        // Check whether the user has rotated the headset in y direction or not
         if (m_CurrentAngleY != m_Cam.transform.eulerAngles.y)
         {
             // If the headset was rotated, rotate roboy
             head_parent.RotateAround(head_pivot.position, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngleY);
-            //transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
-
         }
         m_CurrentAngleY = m_Cam.transform.eulerAngles.y;
 
-        // Check whether the user has rotated the headset or not
+        // Check whether the user has rotated the headset in x direction or not
         if (m_CurrentAngleX != m_Cam.transform.eulerAngles.x)
         {
             // If the headset was rotated, rotate roboy
             head_parent.RotateAround(head_pivot.position, Vector3.right, m_Cam.transform.eulerAngles.x - m_CurrentAngleX);
-            //transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
-
         }
         m_CurrentAngleX = m_Cam.transform.eulerAngles.x;
 
@@ -259,21 +263,13 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
 
+        // Publish position to gazebo
+        ReceivePosition(GazeboUtility.UnityPositionToGazebo(transform.position));
 
-        //Vector3 dir = InputTracking.GetLocalPosition(VRNode.RightHand) - torso_parent.position;
-        //float angle = Vector3.Angle(torso_parent.up, dir);
-        //if (m_Dir != dir)
-        //{
-        //    Debug.Log("Moved controller! "+ (m_CurrentAngle - angle ));
-        //    torso_parent.RotateAround(torso_pivot.position, Vector3.up, (m_CurrentAngle - angle));
-        //    dir = InputTracking.GetLocalPosition(VRNode.RightHand) - torso_parent.position;
-        //}
-
-        //m_Dir = dir;
-
+        // The torso of roboy will be rotated towards the (right)controller position
         torso_pivot.transform.LookAt(new Vector3(m_Controller.transform.position.x, torso_pivot.transform.position.y, m_Controller.transform.position.z));
 
-        //Convert the headset rotation from unity coordinate spaze to gazebo coordinates
+        // Convert the headset rotation from unity coordinate spaze to gazebo coordinates
         Quaternion rot = GazeboUtility.UnityRotationToGazebo(InputTracking.GetLocalRotation(VRNode.Head));
         float x_angle = 0.0f;
         float y_angle = 0.0f;
@@ -302,19 +298,19 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
         Debug.Log(r_angle);
         
-        //Determine which joints should me modified
+        // Determine which joints should me modified
         List<string> joints = new List<string>();
         joints.Add("neck_3");
         joints.Add("neck_4");
         joints.Add("spine_1");
 
-        //Determine the angle for the joints
+        // Determine the angle for the joints
         List<float> angles = new List<float>();
         angles.Add(x_angle);
         angles.Add(y_angle);
         angles.Add(r_angle * (-1.0f));
         
-        //Start sending the actual message
+        // Start sending the actual message
         ReceiveExternalJoint(joints, angles);
     }
 
