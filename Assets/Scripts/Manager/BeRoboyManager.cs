@@ -304,7 +304,6 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         {
             t_angle = torso_pivot.eulerAngles.y * Mathf.Deg2Rad;
         }
-
         
         // Determine which joints should me modified
         List<string> joints = new List<string>();
@@ -317,10 +316,12 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
         // Determine the angle for the joints
         List<float> angles = new List<float>();
+        // Add the x-angle of the headset after conversion from unity to ros
         angles.Add(x_angle);
+        // Add the y-angle of the headset after conversion from unity to ros
         angles.Add(y_angle);
+        // Add the torso rotation angle after conversion from unity to ros
         angles.Add(t_angle * (-1.0f));
-        
         // Start sending the actual message
         ReceiveExternalJoint(joints, angles);
     }

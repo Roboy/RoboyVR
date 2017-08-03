@@ -215,16 +215,42 @@ public class MeshUpdater : MonoBehaviour
         // get file content of format title:url
         string[] sdfContent = File.ReadAllLines(pathToSDFFile);
 
-        //////File.Delete(pathToSDFFile);
-        //
-        //ADD Pose and scale to models
-        //
+        // !!!!  File.Delete(pathToSDFFile); !!!!!!!!!
+
+        List<List<string[]>> sdfContentList = new List<List<string[]>>();
+
+        foreach (var line in sdfContent)
+        {
+            List<string[]> linkList = null;
+            if (line.Contains("model_name")) {
+                if (linkList != null) {
+                    sdfContentList.Add(linkList);
+                }
+                linkList = new List<string[]>();
+            }
+            string[] SDFline = line.Split(';');
+            linkList.Add(SDFline);
+          
+        }
+
+
         foreach (string modelName in m_ModelNames)
         {
+            GameObject modelParent = null;
             string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
-            //Create GameObject where everything will be attached
-            GameObject modelParent = new GameObject(modelName);
-
+            foreach (List<string[]> linkList in sdfContentList)
+            {
+                foreach (string[] line in linkList)
+                {
+                    if (line[0] == "model_name")
+                    {
+                        //Create GameObject where everything will be attached
+                        modelParent = new GameObject(line[1]);
+                        //linkList.Remove(line);
+                        continue;
+                    }
+                }
+            }
 
             //List for all downloaded visuals
             List<string> visMeshList = new List<string>();
@@ -241,7 +267,8 @@ public class MeshUpdater : MonoBehaviour
             }
 
             foreach (string name in visMeshList)
-            {
+            {   
+
                 GameObject meshPrefab = null;
                 string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
                 // import Mesh
