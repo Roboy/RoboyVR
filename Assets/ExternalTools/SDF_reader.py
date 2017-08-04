@@ -15,7 +15,7 @@ robot = root.model[0]
 print(len(robot.link))
 
 # create a text file
-localfile = open("Assets//tempModelSDFs.txt" ,'w')
+localfile = open("Assets//temp" + robot.name + "SDFs.txt" ,'w')
 
 links = robot.link
 

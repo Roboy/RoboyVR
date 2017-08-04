@@ -206,48 +206,38 @@ public class MeshUpdater : MonoBehaviour
     /// </summary>
     public void CreatePrefab()
     {
-        string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/tempModelSDFs.txt";
-        if (!File.Exists(pathToSDFFile))
-        {
-            Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
-            return;
-        }
-        // get file content of format title:url
-        string[] sdfContent = File.ReadAllLines(pathToSDFFile);
-
-        // !!!!  File.Delete(pathToSDFFile); !!!!!!!!!
-
-        List<List<string[]>> sdfContentList = new List<List<string[]>>();
-
-        foreach (var line in sdfContent)
-        {
-            List<string[]> linkList = null;
-            if (line.Contains("model_name")) {
-                if (linkList != null) {
-                    sdfContentList.Add(linkList);
-                }
-                linkList = new List<string[]>();
-            }
-            string[] SDFline = line.Split(';');
-            linkList.Add(SDFline);
-          
-        }
-
-
         foreach (string modelName in m_ModelNames)
         {
+            string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/temp" + modelName + "SDFs.txt";
+            if (!File.Exists(pathToSDFFile))
+            {
+                Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+                return;
+            }
+            // get file content of format title:url
+            string[] sdfContent = File.ReadAllLines(pathToSDFFile);
+
+            // !!!!  File.Delete(pathToSDFFile); !!!!!!!!!
+            List<string[]> linkList = null;
+
+            foreach (var line in sdfContent)
+            {
+                string[] SDFline = line.Split(';');
+                linkList.Add(SDFline);
+
+            }
+
+
             GameObject modelParent = null;
             string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
-            foreach (List<string[]> linkList in sdfContentList)
+            foreach (string[] line in sdfContent)
             {
-                foreach (string[] line in linkList)
-                {
                     if (line[0] == "model_name")
                     {
                         //Create GameObject where everything will be attached
                         modelParent = new GameObject(line[1]);
                         //linkList.Remove(line);
-                        continue;
+                        //continue;
                     }
                 }
             }
@@ -268,7 +258,7 @@ public class MeshUpdater : MonoBehaviour
 
             foreach (string name in visMeshList)
             {   
-
+                
                 GameObject meshPrefab = null;
                 string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
                 // import Mesh
