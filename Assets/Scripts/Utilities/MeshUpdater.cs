@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -128,7 +129,7 @@ public class MeshUpdater : MonoBehaviour
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
-        {   
+        {
             string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, m_URLDictionary[urlEntry.Key] };
             CommandlineUtility.RunCommandLine(scanArguments);
             //Debug.Log(m_URLDictionary[urlEntry.Key]);
@@ -230,17 +231,17 @@ public class MeshUpdater : MonoBehaviour
 
             GameObject modelParent = null;
             string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
-            foreach (string[] line in sdfContent)
+            foreach (string[] line in linkList)
             {
-                    if (line[0] == "model_name")
-                    {
-                        //Create GameObject where everything will be attached
-                        modelParent = new GameObject(line[1]);
-                        //linkList.Remove(line);
-                        //continue;
-                    }
+                if (line[0] == "model_name")
+                {
+                    //Create GameObject where everything will be attached
+                    modelParent = new GameObject(line[1]);
+                    linkList.Remove(line);
+                    //continue;
                 }
             }
+
 
             //List for all downloaded visuals
             List<string> visMeshList = new List<string>();
@@ -257,12 +258,31 @@ public class MeshUpdater : MonoBehaviour
             }
 
             foreach (string name in visMeshList)
-            {   
-                
+            {
+                string[] currentLine = null;
+                foreach (string[] line in linkList)
+                {
+                    for (int j = 0; j <= line.Length; j++)
+                    {
+                        if (line[j].Contains(name))
+                        {
+                            currentLine = line;
+                        }
+                                                 
+                    }
+                }
+                string[] pose = null;
+                for (int i = 0; i <= currentLine.Length; i++) {
+                    if (currentLine[i].Contains("link_pose")) {
+                        pose = currentLine[i + 1].Split(' ');
+                    }
+                }
+
+
                 GameObject meshPrefab = null;
                 string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
                 // import Mesh
-                meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + @"visual/" + name, typeof(Object));
+                meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + @"visual/" + name, typeof(UnityEngine.Object));
                 //StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
                 if (meshPrefab == null)
                 {
@@ -273,6 +293,9 @@ public class MeshUpdater : MonoBehaviour
                 GameObject meshCopy = Instantiate(meshPrefab);
 
                 meshCopy.tag = "RoboyPart";
+                meshCopy.transform.position = new Vector3(Convert.ToDouble(pose[0]), Convert.ToDouble(pose[1]), Convert.ToDouble(pose[2]));
+                
+
                 UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
 
                 var regex1 = new Regex(Regex.Escape("(Clone)"));
@@ -292,13 +315,14 @@ public class MeshUpdater : MonoBehaviour
             modelParent.tag = "Roboy";
 
             //Create Prefab of existing GO
-            Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
+            UnityEngine.Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
             PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
             //Destroy GO after prefab is created
             DestroyImmediate(modelParent);
         }
         m_ModelNames.Clear();
     }
+}
 
 
     ///// <summary>
@@ -326,4 +350,4 @@ public class MeshUpdater : MonoBehaviour
     //        yield return new WaitForSeconds(0.1f);
     //    }
     //}
-}
+
