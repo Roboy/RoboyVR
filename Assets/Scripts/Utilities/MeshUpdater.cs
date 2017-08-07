@@ -293,7 +293,7 @@ public class MeshUpdater : MonoBehaviour
                 GameObject meshCopy = Instantiate(meshPrefab);
 
                 meshCopy.tag = "RoboyPart";
-                meshCopy.transform.position = new Vector3(Convert.ToDouble(pose[0]), Convert.ToDouble(pose[1]), Convert.ToDouble(pose[2]));
+                meshCopy.transform.position = new Vector3((float)Convert.ToDouble(pose[0]), (float)Convert.ToDouble(pose[1]), (float)Convert.ToDouble(pose[2]));
                 
 
                 UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
