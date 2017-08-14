@@ -104,7 +104,7 @@ public class UpdaterUtility : MonoBehaviour {
         List<MeshFilter> collRenderers = colliderPrefab.GetComponentsInChildren<MeshFilter>().ToList();
 
         foreach (MeshFilter collRenderer in collRenderers)
-        {
+        {   
             MeshCollider meshCollider = meshGO.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = collRenderer.sharedMesh;
         }

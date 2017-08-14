@@ -219,10 +219,10 @@ public class MeshUpdater : MonoBehaviour
             // get file content of format title:url
             string[] sdfContent = File.ReadAllLines(pathToSDFFile);
 
-            // !!!!  File.Delete(pathToSDFFile); !!!!!!!!!
-            List<string[]> linkList = null;
+            File.Delete(pathToSDFFile);
+            List<string[]> linkList = new List<string[]>();
 
-            foreach (var line in sdfContent)
+            foreach (string line in sdfContent)
             {
                 string[] SDFline = line.Split(';');
                 linkList.Add(SDFline);
@@ -232,13 +232,14 @@ public class MeshUpdater : MonoBehaviour
 
             GameObject modelParent = null;
             string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
-            foreach (string[] line in linkList)
+            for (int i = 0; i < linkList.Count; i++)
+            //foreach (string[] line in linkList)
             {
-                if (line[0] == "model_name")
+                if (linkList[i][0] == "model_name")
                 {
                     //Create GameObject where everything will be attached
-                    modelParent = new GameObject(line[1]);
-                    linkList.Remove(line);
+                    modelParent = new GameObject(linkList[i][1]);
+                    linkList.Remove(linkList[i]);
                     //continue;
                 }
             }
@@ -263,22 +264,33 @@ public class MeshUpdater : MonoBehaviour
                 string[] currentLine = null;
                 foreach (string[] line in linkList)
                 {
-                    for (int j = 0; j <= line.Length; j++)
+                    for (int j = 0; j < line.Length; j++)
                     {
-                        if (line[j].Contains(name))
+                        string name1 = name.Replace(".fbx", "");
+                        Debug.Log(name1 +" : " + name);
+                        if (line[j].Contains(name1))
                         {
                             currentLine = line;
+                            Debug.Log(currentLine.Length);
                         }
                                                  
                     }
                 }
                 string[] pose = null;
-                for (int i = 0; i <= currentLine.Length; i++) {
+                string[] VIS_scale = null;
+                //string[] COL_scale = null;
+                for (int i = 0; i < currentLine.Length; i++) {
                     if (currentLine[i].Contains("link_pose")) {
                         pose = currentLine[i + 1].Split(' ');
                     }
+                    if (currentLine[i].Contains("VIS_mesh_scale")) {
+                        VIS_scale = currentLine[i + 1].Split(' ');
+                    }
+                    //if (currentLine[i].Contains("COL_mesh_scale"))
+                    //{
+                    //    COL_scale = currentLine[i + 1].Split(' ');
+                    //}
                 }
-
 
                 GameObject meshPrefab = null;
                 string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
@@ -292,13 +304,24 @@ public class MeshUpdater : MonoBehaviour
                 }
 
                 GameObject meshCopy = Instantiate(meshPrefab);
-
+                Debug.Log(pose.Length);
                 meshCopy.tag = "RoboyPart";
-                meshCopy.transform.position = new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat));
-                meshCopy.transform.eulerAngles = new Vector3(float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat));
-                meshCopy.transform.localScale = new Vector3(float.Parse(pose[6], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[7], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[8], CultureInfo.InvariantCulture.NumberFormat));
+
+                meshCopy.transform.position = GazeboUtility.GazeboPositionToUnity(new Vector3(  float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat), 
+                                                                                                float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
+                meshCopy.transform.eulerAngles = GazeboUtility.GazeboPositionToUnity(new Vector3(   Mathf.Rad2Deg*float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
+                if (VIS_scale != null) {
+                    meshCopy.transform.localScale = GazeboUtility.GazeboPositionToUnity(new Vector3(100 * float.Parse(VIS_scale[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    100 * float.Parse(VIS_scale[1], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    100 * float.Parse(VIS_scale[2], CultureInfo.InvariantCulture.NumberFormat)));
+                }
 
                 UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
+                
+                
 
                 var regex1 = new Regex(Regex.Escape("(Clone)"));
                 meshCopy.name = regex1.Replace(meshCopy.name, "", 1);
