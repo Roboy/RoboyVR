@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using System.Globalization;
 
 [ExecuteInEditMode]
 public class MeshUpdater : MonoBehaviour
@@ -293,8 +294,9 @@ public class MeshUpdater : MonoBehaviour
                 GameObject meshCopy = Instantiate(meshPrefab);
 
                 meshCopy.tag = "RoboyPart";
-                meshCopy.transform.position = new Vector3(Convert.ToDouble(pose[0]), Convert.ToDouble(pose[1]), Convert.ToDouble(pose[2]));
-                
+                meshCopy.transform.position = new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat));
+                meshCopy.transform.eulerAngles = new Vector3(float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat));
+                meshCopy.transform.localScale = new Vector3(float.Parse(pose[6], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[7], CultureInfo.InvariantCulture.NumberFormat), float.Parse(pose[8], CultureInfo.InvariantCulture.NumberFormat));
 
                 UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
 
