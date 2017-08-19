@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
@@ -31,14 +28,6 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
     void Awake()
     {
         VRUILogic.Instance.SubscribeNotifications(this);
-    }
-
-    /// <summary>
-    /// Called once every frame
-    /// </summary>
-    void Update()
-    {
-
     }
     #endregion
 
@@ -72,9 +61,9 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
             //TODO: BUGGY; NOT WORKING
             if (scroll)
             {
-                if (Mathf.Abs(temp) < 0.0001f) 
+                if (Mathf.Abs(temp) < 0.0001f)
                 {
-                    Debug.Log("Forcing 1");
+                    //Debug.Log("Forcing 1");
                     Canvas.ForceUpdateCanvases();  //TODO: needed?
                     scroll.verticalNormalizedPosition = 0;
                 }
@@ -82,9 +71,6 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
         }
     }
     #endregion
-    #endregion
-
-    #region PRIVATE_METHODS
     #endregion
 }
 

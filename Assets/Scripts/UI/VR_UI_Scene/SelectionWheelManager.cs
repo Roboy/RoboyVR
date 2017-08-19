@@ -194,7 +194,6 @@ public class SelectionWheelManager : MonoBehaviour
             return;
         }
         m_SelectedTextIndex = tmp;
-        VRUILogic.Instance.SelectedModeChanged(m_SelectedTextIndex);
         Text[] texts = GetComponentsInChildren<Text>();
         for (int i = 0; i < texts.Length; i++)
         {
