@@ -99,22 +99,23 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     /// <returns></returns>
     private IEnumerator test()
     {
-        yield return new WaitForSeconds(2);
-        Notification note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
+        
+        yield return new WaitForSeconds(2);/*
+        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
         //Debug.Log("Added Warning");
 
         yield return new WaitForSeconds(4);
-        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "hip", 5);
+        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "hip", 5);
         //Debug.Log("Added Error");
 
         yield return new WaitForSeconds(2);
-        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
+        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
         //Debug.Log("Added Debug");
 
         yield return new WaitForSeconds(2);
-        note = VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
+        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
         // Debug.Log("Added debug");
-        testing = false;
+        testing = false;*/
 
     }
 

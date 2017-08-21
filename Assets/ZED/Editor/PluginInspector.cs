@@ -12,6 +12,7 @@ public class PluginInspector : EditorWindow
     private static string errorMessage = "";
     static void Init()
     {
+        return;
         window = GetWindow<PluginInspector>(true);
         
         window.Show();
@@ -24,7 +25,7 @@ public class PluginInspector : EditorWindow
 
     static void Update()
     {
-
+        return;
         errorMessage = sl.ZEDCamera.CheckPlugin();
 
         if (errorMessage != "")

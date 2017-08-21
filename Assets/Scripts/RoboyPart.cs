@@ -204,7 +204,6 @@ public class RoboyPart : MonoBehaviour
     {
         UpdateHalos();
         UpdateIcon();
-
     }
 
     /// <summary>

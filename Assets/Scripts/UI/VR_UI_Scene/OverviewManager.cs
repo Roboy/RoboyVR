@@ -17,17 +17,12 @@ public class OverviewManager : MonoBehaviour
     /// graph displaying a heartbeat, linked to the screen
     /// </summary>
     private GraphObject heart;
-    /// <summary>
-    /// screen of this mode
-    /// </summary>
-    [SerializeField]
-    private Canvas screen;
 
     /// <summary>
-    /// link to tabs on screen
+    /// link to tab on screen where heartbeat is to be displayed
     /// </summary>
     [SerializeField]
-    private GameObject[] tabs;
+    private GameObject m_HearbeatTab;
     /// <summary>
     /// for continuously testing graphrenderer
     /// </summary>
@@ -56,8 +51,7 @@ public class OverviewManager : MonoBehaviour
 
         GameObject obj = new GameObject();
         obj.name = "heartbeat";
-        obj.transform.parent = tabs[1].transform.Find("Panel"); //linked to screen
-        tabs[0].GetComponentInChildren<Button>().onClick.Invoke(); //set tab 0 as default display
+        obj.transform.parent = m_HearbeatTab.transform.Find("Panel"); //linked to screen
         /*Working well for gameobject to fit parent*/
         AspectRatioFitter test = obj.AddComponent<AspectRatioFitter>();
         test.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
@@ -123,7 +117,7 @@ public class OverviewManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator test()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(3);/*
         if (heart.isActiveAndEnabled)
         {
             heart.DisplayForNumberOfSeconds(1);
@@ -152,7 +146,7 @@ public class OverviewManager : MonoBehaviour
         //{
         //    //heart.SetAutomaticAdjust();
         //}
-        testing = false;
+        testing = false;*/
     }
 
 

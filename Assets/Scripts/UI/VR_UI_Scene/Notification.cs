@@ -11,12 +11,6 @@ using UnityEngine;
 public class Notification : MonoBehaviour
 {
     #region PRIVATE_MEMBER_VARIABLES
-
-    /// <summary>
-    /// Time of creation of notification
-    /// </summary>
-    private float timestamp;
-
     /// <summary>
     /// The reason/issue why this message was created. 
     /// </summary>
@@ -56,14 +50,22 @@ public class Notification : MonoBehaviour
         /// <summary>
         /// provides Information in form of a string.
         /// </summary>
-        public string m_information;
+        private string m_information;
 
         /// <summary>
         /// Backlog/ Callstack or sth like that? Still changing....
         /// new lines wiht \n supposed to be supported but might not work out
         /// </summary>
-        public string m_Origin;
+        private string m_Origin;
 
+        /// <summary>
+        /// Sets additional content
+        /// </summary>
+        /// <param name="content"></param>
+        public void SetContent(string content)
+        {
+            m_information = content;
+        }
         public string GetContent()
         {
             if (m_information.Equals(string.Empty))
@@ -110,13 +112,13 @@ public class Notification : MonoBehaviour
     /// <returns>additonal info, everything in one line</returns>
     public string GetAdditionalInfo()
     {
-        if (m_content != null)
+        if (m_content != null && !m_content.GetContent().Equals(string.Empty))
         {
-            return m_content.GetContent();
+            return m_timestamp.ToString() + ": " + m_content.GetContent();
         }
         else
         {
-            return "No additional information given";
+            return m_timestamp.ToString();
         }
     }
 
@@ -135,8 +137,8 @@ public class Notification : MonoBehaviour
     /// <returns> [bodypart name]: [state]</returns>
     public string GetBasicInfo()
     {
-        if(m_bodyPart) 
-        return m_bodyPart.name.ToString() + ":\t" + m_state.ToString();
+        if (m_bodyPart)
+            return m_bodyPart.name.ToString() + ":\t" + m_state.ToString();
         return "[General]:\t" + m_state.ToString();
     }
 
@@ -151,6 +153,7 @@ public class Notification : MonoBehaviour
         {
             Debug.Log("no Roboy body part found!");
         }
+        Debug.Log("ROBOY PART FOUND! " + m_bodyPart);
         return m_bodyPart;
     }
     #endregion
@@ -162,21 +165,29 @@ public class Notification : MonoBehaviour
     /// <param name="state">What state is the notification depicting</param>
     /// <param name="objName">The name of the concerned body part</param>
     /// <param name="timeFrame">time this notification is valid in seconds</param>
-    public void SetupNotification(DummyStates.MessageType type, DummyStates.State state, string objName, double timeFrame)
+    public void Initialize(DummyStates.MessageType type, DummyStates.State state, string objName, double timeFrame)
     {
         m_state = state;
         m_type = type;
-        m_content = null;
+        m_content = new Content();
         SetConcernedRoboyPart(objName);
         if (m_bodyPart)
+        {
+            Debug.Log("Roboy Body Part found!!!!!");
             m_bodyPart.GetComponent<RoboyPart>().AddNotification(this);
+            m_bodyPart.GetComponent<RoboyPart>().UpdateNotificationsDisplay();
+        }
         m_timestamp = DateTime.Now;
         m_timeFrame = timeFrame;
         //TODO: small time difference might occure
         //get rid of this notification after specified amount of time
         Invoke("DeleteNotification", (float)m_timeFrame);
     }
-   
+
+    public void AddAdditionalContent(string extra)
+    {
+        m_content.SetContent(extra);
+    }
     /// <summary>
     /// Displays Halo around concerned GameObject. Colour is chosen according to notification type
     /// </summary>
@@ -231,12 +242,20 @@ public class Notification : MonoBehaviour
     /// <param name="s">Roboy body part name</param>
     private void SetConcernedRoboyPart(string s)
     {
+
+        Debug.Log(s);
         //TODO find roboy body part according to obj id
         if (s.Equals(string.Empty))
         {
             Debug.Log("[Notification] No body part to attach notification to!");
         }
-        m_bodyPart = GameObject.Find(s);
+        Transform obj = VRUILogic.Instance.GetRoboy().transform.Find(s);
+        if (obj)
+        {
+            m_bodyPart = obj.gameObject;
+            Debug.Log("Found obj: " + m_bodyPart.name);
+        }
+        else Debug.Log(" NOTHING FOUND");
     }
     #endregion
 }

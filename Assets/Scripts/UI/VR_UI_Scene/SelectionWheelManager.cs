@@ -270,7 +270,7 @@ public class SelectionWheelManager : MonoBehaviour
 
         if (touched)
         {
-            if (curPos != null && !curPos.Equals(m_PrevPos))
+            if (!curPos.Equals(m_PrevPos))
             {
                 // Debug.Log("Calculating spin");
                 m_CurSpin = Vector2.Distance(curPos, m_PrevPos) * Speed;

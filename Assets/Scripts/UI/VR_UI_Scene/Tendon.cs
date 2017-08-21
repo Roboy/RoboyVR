@@ -196,6 +196,7 @@ public class Tendon : MonoBehaviour
         Color c;
         float normalizedForce = m_Force / m_MaxForce;
         if (normalizedForce > 1) normalizedForce = 1;
+        if (normalizedForce < 0) normalizedForce = 0;
         normalizedForce *= normalizedForce; //stretch curve in a way where higher values make more difference
         if (normalizedForce <= 0.5f)
         {

@@ -1,4 +1,9 @@
 ﻿#if !__LINE__ // if C# Usage
+/// <summary>
+/// This class is a prototype providing c# and c++ support. 
+/// This is to be shared by control team / the UI 
+/// Control defines and keeps this updated
+/// </summary>
 public class DummyStates
 
 {

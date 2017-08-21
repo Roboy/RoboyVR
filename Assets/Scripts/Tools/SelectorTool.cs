@@ -26,8 +26,6 @@ public class SelectorTool : ControllerTool
     [SerializeField]
     private float m_RayDistance = 7f;
 
-    private bool m_Is_released = false;
-
     /// <summary>
     /// Holds reference to object where eventtrigger GetHairTriggerDown() was invoked.
     /// Reference needed to call Reverse event.

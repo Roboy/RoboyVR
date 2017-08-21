@@ -11,10 +11,8 @@ public class MiddlewareManager : MonoBehaviour
 
     #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
-    /// if testing
+    /// For testing purposes
     /// </summary>
-    private bool m_testing;
-
     private int tendonID;
     #endregion
 
@@ -24,11 +22,10 @@ public class MiddlewareManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        Vector3[] points = { new Vector3(0, 0, 0), new Vector3(0, 1, 0) };
+        Vector3[] points = { new Vector3(0, -1, 0), new Vector3(0.2f, 0, 0.2f) };
         string[] names = { "hip", "thigh_right"};
         tendonID = 1;
         VRUILogic.Instance.AddTendon(tendonID, points, names, 1f);
-        m_testing = true;
     }
 
     /// <summary>

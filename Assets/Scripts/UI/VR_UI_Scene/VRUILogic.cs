@@ -54,6 +54,12 @@ public class VRUILogic : Singleton<VRUILogic>
     /// </summary>
     [SerializeField]
     private GameObject[] m_modes;
+
+    /// <summary>
+    /// Reference to Roboy for position references
+    /// </summary>
+    [SerializeField]
+    private GameObject m_Roboy;
     #endregion
 
     #region userInpur Related
@@ -289,6 +295,10 @@ public class VRUILogic : Singleton<VRUILogic>
         return m_headset;
     }
 
+    public GameObject GetRoboy()
+    {
+        return m_Roboy;
+    }
     /// <summary>
     /// Function displays mode with index i and disables previous mode.
     /// </summary>
@@ -334,13 +344,15 @@ public class VRUILogic : Singleton<VRUILogic>
     }
 
     /// <summary>
-    /// The specified notification note is added to the respective list of existing notifications (warning, debug or error as of now)
+    /// The specified notification note is added to the respective list of existing notifications (warning, debug or error as of now).
+    /// It is added to the NotificationContainer (as child obj)
     /// </summary>
     /// <param name="note">Notification which is to be added</param>
     public void AddNotification(Notification note)
     {
         if (note != null)
         {
+            note.transform.parent = m_NotificationsContainer.transform;
             //Debug.Log("New notification in VRUILogic");
             switch (note.GetNotificationType())
             {
@@ -360,6 +372,7 @@ public class VRUILogic : Singleton<VRUILogic>
                     Debug.Log("[VRUILogic]This notification type is not implemented yet!" + note.GetNotificationType().ToString());
                     break;
             }
+            Debug.Log("Informing subscribers");
             InformNotificationSubscribers(note);
         }
     }
@@ -375,12 +388,14 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns></returns>
     public Notification AddNewNotification(DummyStates.MessageType messageType, DummyStates.State state, string objectName, float timeFrame)
     {
+        Debug.Log("AddNewNotification called");
         GameObject obj = new GameObject();
         obj.name = "Notification"; //unity automatically changes name if multiple instances occure -> e.g. "Notification(3)" 
         Notification note = obj.AddComponent<Notification>();
-        note.SetupNotification(messageType, state, objectName, timeFrame);
+        note.Initialize(messageType, state, objectName, timeFrame);
         AddNotification(note);
         note.transform.SetParent(m_NotificationsContainer.transform);
+        Debug.Log("Through VRUI Logic");
         return note;
     }
 
@@ -501,6 +516,10 @@ public class VRUILogic : Singleton<VRUILogic>
         tendonObj.name = "Tendon " + tendonID;
         tendonObj.transform.SetParent(m_TendonContainer.transform);
         Tendon tendon = tendonObj.AddComponent<Tendon>();
+        for(int i = 0; i < positions.Length; i++)
+        {//assume Roboy in simulation around (0,0,0) since this roboy here is transformed to fit in the cave -> adapt
+            positions[i] += m_Roboy.transform.position; 
+        }
         tendon.Initialize(tendonID, positions, objectNames, maxforce);
         AddTendon(tendon);
     }
