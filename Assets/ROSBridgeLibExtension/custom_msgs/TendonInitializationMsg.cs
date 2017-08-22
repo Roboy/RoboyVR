@@ -48,10 +48,12 @@ namespace ROSBridgeLib
                 //maxForce
                 _maxForce = float.Parse(msg["maxForce"]);
                 //wirepoints
+                _wirepoints = new List<Vector3>();
+                _roboyparts = new List<string>();
                 JSONArray values = msg["wirepoints"].AsArray;
                 for (int i = 0; i < values.Count; i += 3)
                 {
-                    _wirepoints.Add(new Vector3(values[i].AsFloat, values[i + 1].AsFloat, values[i + 2].AsFloat));
+                    _wirepoints.Add(new Vector3(float.Parse(values[i]), float.Parse(values[i+1]), float.Parse(values[i+2])));
                 }
                 //roboyparts
                 values = msg["roboyParts"].AsArray;

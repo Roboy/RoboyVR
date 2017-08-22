@@ -7602,11 +7602,11 @@ Prefab:
     - target: {fileID: 114001897084291692, guid: 737c63ce825e391479b4b1eb311ca213,
         type: 2}
       propertyPath: ROSCoreIP
-      value: 10.177.255.182
+      value: 10.183.82.119
       objectReference: {fileID: 0}
     - target: {fileID: 1125562277477006, guid: 737c63ce825e391479b4b1eb311ca213, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 737c63ce825e391479b4b1eb311ca213, type: 2}

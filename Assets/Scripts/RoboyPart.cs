@@ -118,7 +118,7 @@ public class RoboyPart : MonoBehaviour
                 obj.transform.localPosition = Vector3.zero;
             else
             {
-                Debug.Log("Using closest point on collider from center");
+                //Debug.Log("Using closest point on collider from center");
                 obj.transform.position = c.ClosestPoint(obj.transform.position);
             }
         }

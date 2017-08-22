@@ -1,6 +1,5 @@
 ﻿using SimpleJSON;
 using ROSBridgeLib.custom_msgs;
-using UnityEngine;
 
 namespace ROSBridgeLib
 {
@@ -15,7 +14,7 @@ namespace ROSBridgeLib
         public new static string GetMessageTopic()
         { //no clue yet
             //throw new Exception("NO TOPIC DEFINED YET");
-            return "/roboy/init_tendons";
+            return "/roboy/simulation/init_tendons";
         }
 
         public new static string GetMessageType()
@@ -37,9 +36,9 @@ namespace ROSBridgeLib
         public new static void CallBack(ROSBridgeMsg msg)
         {
             TendonInitializationMsg tendon = (TendonInitializationMsg)msg;
-            Debug.Log("tendon cread: " + tendon.ToString());
-            VRUILogic.Instance.AddTendon(tendon.GetTendonID(), tendon.GetWirepoints(),
-                tendon.GetRoboyParts(), tendon.GetMaxForce());
+            if (tendon != null)
+                VRUILogic.Instance.AddTendon(tendon.GetTendonID(), tendon.GetWirepoints(),
+                    tendon.GetRoboyParts(), tendon.GetMaxForce());
         }
 
         #endregion //PUBLIC_METHODS

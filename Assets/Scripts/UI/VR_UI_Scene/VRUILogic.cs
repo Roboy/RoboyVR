@@ -535,7 +535,8 @@ public class VRUILogic : Singleton<VRUILogic>
     {
         if (m_Tendons.Count - 1 >= tendonID && tendonID >= 0)
         {
-            m_Tendons[tendonID].UpdateTendonForce(newForce);
+            if (m_Tendons[tendonID])
+                m_Tendons[tendonID].UpdateTendonForce(newForce);
         }
     }
     #endregion

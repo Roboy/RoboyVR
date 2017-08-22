@@ -11,7 +11,7 @@ namespace ROSBridgeLib
         public new static string GetMessageTopic()
         { //no clue yet -> different messages on this topic... should be alright?
             //throw new Exception("NO TOPIC DEFINED YET");
-            return "/roboy/update_tendons";
+            return "/roboy/simulation/update_tendons";
         }
 
         public new static string GetMessageType()
