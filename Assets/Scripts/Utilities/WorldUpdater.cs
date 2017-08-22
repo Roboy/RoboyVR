@@ -153,6 +153,17 @@ public class WorldUpdater : MonoBehaviour
         List<KeyValuePair<string, bool>> tempURLList = WorldChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
         {   //replace this with real data from .world files
+            string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/temp" + urlEntry + "SDFs.txt";
+            if (!File.Exists(pathToSDFFile))
+            {
+                Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+                return;
+            }
+            // get file content of format title:url
+            string[] sdfContent = File.ReadAllLines(pathToSDFFile);
+
+            File.Delete(pathToSDFFile);
+
             for (int i = 0; i <= 3; i++) {
                 ModelTransformation testModel = new ModelTransformation();
                 testModel.worldname = urlEntry.Key;

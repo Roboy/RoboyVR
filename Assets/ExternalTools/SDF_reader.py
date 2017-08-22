@@ -25,7 +25,7 @@ localfile.write(robot.name + "\n")
 #i = 1
 for i in range(0, len(links)):
 #while i <= len(robot.link)
-	print(i)
+	#print(i)
 	# VIUSAL
 	VIS_model = links[i].visual[0]
 	VIS_geometry = VIS_model.geometry[0]

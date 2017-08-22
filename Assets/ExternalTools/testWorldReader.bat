@@ -1,0 +1,1 @@
+python "D:\Unity Projects\RoboyVR\Assets\ExternalTools\world_reader.py" "D:\Unity Projects\RoboyVR\Assets\SimulationWorlds\TestWorld2\TestWorld2.world"
