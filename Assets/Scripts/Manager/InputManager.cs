@@ -6,12 +6,14 @@ using System.Linq;
 /// <summary>
 /// InputManager holds a reference of every tool. On top of that it listens to button events from these tools and forwards touchpad input to the respective classes.
 /// </summary>
-public class InputManager : Singleton<InputManager> {
+public class InputManager : Singleton<InputManager>
+{
 
     /// <summary>
     /// Public GUIController reference.
     /// </summary>
-    public GUIController GUI_Controller {
+    public GUIController GUI_Controller
+    {
         get { return m_GUIController; }
     }
 
@@ -61,7 +63,8 @@ public class InputManager : Singleton<InputManager> {
     /// <summary>
     /// Private ShootingTool reference. Is serialized so it can be dragged in the editor.
     /// </summary>
-    [SerializeField] private ShootingTool m_ShootingTool;
+    [SerializeField]
+    private ShootingTool m_ShootingTool;
 
     /// <summary>
     /// Private TimeTool reference. Is serialized so it can be dragged in the editor.
@@ -118,7 +121,7 @@ public class InputManager : Singleton<InputManager> {
         Top,
         Bottom,
         None
-    } 
+    }
 
     /// <summary>
     /// Calls the ray cast from the selector tool if it is active.
@@ -132,14 +135,17 @@ public class InputManager : Singleton<InputManager> {
         if (m_SelectorTool.gameObject.activeInHierarchy)
         {
             m_SelectorTool.GetRayFromController();
-           
+
         }
 
         Valve.VR.EVRButtonId mask = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
         VRUILogic.Instance.SetTouchPosition(0, m_SelectorTool.Controller.GetAxis(mask));
-        VRUILogic.Instance.SetTouchPosition(1, m_GUIController.Controller.GetAxis(mask));
         VRUILogic.Instance.SetTouchedInfo(0, m_SelectorTool.Controller.GetTouch(mask));
-        VRUILogic.Instance.SetTouchedInfo(1, m_GUIController.Controller.GetTouch(mask));
+        if (m_GUIController)
+        {
+            VRUILogic.Instance.SetTouchPosition(1, m_GUIController.Controller.GetAxis(mask));
+            VRUILogic.Instance.SetTouchedInfo(1, m_GUIController.Controller.GetTouch(mask));
+        }
     }
 
     /// <summary>
@@ -158,7 +164,7 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="e"></param>
     public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
     {
-        if (m_ViewController != null)
+        if (m_ViewController != null && m_GUIController)
         {
             if (m_GUIController.gameObject.activeSelf)
             {
@@ -222,13 +228,13 @@ public class InputManager : Singleton<InputManager> {
         if (e.controllerIndex.Equals(m_SelectorTool.Controller.index))
         {
             SelectorTool_TouchpadStatus = result;
-        }        
+        }
         else if (e.controllerIndex.Equals(m_GUIController.Controller.index))
-        {         
+        {
             GUIController_TouchpadStatus = result;
             m_GUIController.CheckTouchPad(result);
         }
-            
+
     }
 
     /// <summary>
@@ -279,7 +285,7 @@ public class InputManager : Singleton<InputManager> {
             m_ToolWheel.Initialize(toolWheelParts, 0);
             m_ToolWheel.gameObject.SetActive(false);
         }
-            
+
     }
 
     /// <summary>
@@ -311,14 +317,15 @@ public class InputManager : Singleton<InputManager> {
         {
             m_HandTool.gameObject.SetActive(false);
         }
-
-        while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
+        while (m_SelectorTool.ControllerEventListener == null)
             yield return Time.fixedDeltaTime;
 
         m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
-        m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
-
-        m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
+        if (m_GUIController)
+        {
+            m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
+            m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
+        }
 
         //CHANGE THIS
         m_SelectorTool.ControllerEventListener.Gripped += ToolControllerSideButtons;

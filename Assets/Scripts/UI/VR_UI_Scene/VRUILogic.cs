@@ -196,7 +196,11 @@ public class VRUILogic : Singleton<VRUILogic>
         //tendons
         m_TendonContainer = new GameObject();
         m_TendonContainer.name = "TendonContainer";
-        m_TendonContainer.transform.SetParent(m_modes[(int)UIMode.Middleware].transform);
+        if (m_modes != null && m_modes.Length > ((int)UIMode.Middleware))
+        {
+            Debug.Log("Tendoncontainer set as child obj");
+            m_TendonContainer.transform.SetParent(m_modes[(int)UIMode.Middleware].transform);
+        }
     }
     #endregion
 
@@ -309,7 +313,7 @@ public class VRUILogic : Singleton<VRUILogic>
         {
             i += m_selectIndex;
             i %= m_modes.Length;
-            //Debug.Log("New mode: " + i);
+            Debug.Log("New mode: " + i);
             if (i < m_modes.Length && i >= 0)
             {
                 m_modes[m_selectedMode].gameObject.SetActive(false);
@@ -372,7 +376,7 @@ public class VRUILogic : Singleton<VRUILogic>
                     Debug.Log("[VRUILogic]This notification type is not implemented yet!" + note.GetNotificationType().ToString());
                     break;
             }
-            Debug.Log("Informing subscribers");
+            //Debug.Log("Informing subscribers");
             InformNotificationSubscribers(note);
         }
     }
@@ -388,14 +392,12 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns></returns>
     public Notification AddNewNotification(DummyStates.MessageType messageType, DummyStates.State state, string objectName, float timeFrame)
     {
-        Debug.Log("AddNewNotification called");
         GameObject obj = new GameObject();
         obj.name = "Notification"; //unity automatically changes name if multiple instances occure -> e.g. "Notification(3)" 
         Notification note = obj.AddComponent<Notification>();
         note.Initialize(messageType, state, objectName, timeFrame);
         AddNotification(note);
         note.transform.SetParent(m_NotificationsContainer.transform);
-        Debug.Log("Through VRUI Logic");
         return note;
     }
 
@@ -516,9 +518,9 @@ public class VRUILogic : Singleton<VRUILogic>
         tendonObj.name = "Tendon " + tendonID;
         tendonObj.transform.SetParent(m_TendonContainer.transform);
         Tendon tendon = tendonObj.AddComponent<Tendon>();
-        for(int i = 0; i < positions.Length; i++)
+        for (int i = 0; i < positions.Length; i++)
         {//assume Roboy in simulation around (0,0,0) since this roboy here is transformed to fit in the cave -> adapt
-            positions[i] += m_Roboy.transform.position; 
+            positions[i] += m_Roboy.transform.position;
         }
         tendon.Initialize(tendonID, positions, objectNames, maxforce);
         AddTendon(tendon);
@@ -531,7 +533,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="newForce">updated value</param>
     public void UpdateTendon(int tendonID, float newForce)
     {
-        if (m_Tendons.Count -1 >= tendonID && tendonID >= 0)
+        if (m_Tendons.Count - 1 >= tendonID && tendonID >= 0)
         {
             m_Tendons[tendonID].UpdateTendonForce(newForce);
         }

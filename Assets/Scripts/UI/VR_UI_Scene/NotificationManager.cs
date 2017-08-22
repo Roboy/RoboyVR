@@ -100,7 +100,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     private IEnumerator test()
     {
         
-        yield return new WaitForSeconds(2);/*
+        yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
         //Debug.Log("Added Warning");
 
@@ -115,7 +115,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
         yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
         // Debug.Log("Added debug");
-        testing = false;*/
+        testing = false;
 
     }
 

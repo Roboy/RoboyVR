@@ -12,10 +12,11 @@ using ROSBridgeLib.custom_msgs;
 ///     -# send a service call for a world reset.
 ///     -# FUTURE: receive motor msg and forward it to the according motors.
 /// </summary>
-public class RoboyManager : Singleton<RoboyManager> {
+public class RoboyManager : Singleton<RoboyManager>
+{
 
     #region PUBLIC_MEMBER_VARIABLES
-    
+
     /// <summary>
     /// Public variable so that all classes can access the roboy object.
     /// </summary>
@@ -118,7 +119,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     {
         //Debug.Log("Received message");
         adjustPose(msg);
-        
+
         //Use additional data to adjust motor values
 
     }
@@ -132,7 +133,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// <param name="duration">The duration for which the force should be applied.</param>
     public void ReceiveExternalForce(RoboyPart roboyPart, Vector3 position, Vector3 force, int duration)
     {
-        ROSBridgeLib.custom_msgs.ExternalForceMsg msg = 
+        ROSBridgeLib.custom_msgs.ExternalForceMsg msg =
             new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, GazeboUtility.UnityPositionToGazebo(position), GazeboUtility.UnityPositionToGazebo(force), duration);
 
         ROSBridge.Instance.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
@@ -141,7 +142,7 @@ public class RoboyManager : Singleton<RoboyManager> {
     }
 
     public void ResetSimulation()
-    {     
+    {
         ROSBridge.Instance.CallService("/roboy/reset_world", "");
     }
 
@@ -217,7 +218,12 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// </summary>
     void getRoboy()
     {
-        if ((m_Roboy = GameObject.FindGameObjectWithTag("Roboy").transform) == null)
+        GameObject roboy = GameObject.FindGameObjectWithTag("Roboy");
+        if (roboy)
+        {
+            m_Roboy = roboy.transform;
+        }
+        else
         {
             Debug.LogWarning("Roboy could not be found!");
             return;
@@ -227,7 +233,8 @@ public class RoboyManager : Singleton<RoboyManager> {
     /// <summary>
     /// Searches for roboy and all roboy parts.
     /// </summary>
-    void getRoboyParts() {
+    void getRoboyParts()
+    {
 
         if (m_Roboy == null)
         {

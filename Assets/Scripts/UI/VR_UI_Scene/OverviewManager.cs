@@ -93,12 +93,12 @@ public class OverviewManager : MonoBehaviour
     void Update()
     {
         //test graph renderer behaviour
-        if (!testing)
+        /*if (!testing)
         {
             testing = true;
             StartCoroutine(test());
             Debug.Log("new test"); 
-        }
+        }*/
         heart.AddValue(GetBeat());
         //this comment counts frames per sec.... some issues here. this update is only called 10 times per sec 
         // (might be hardware related...)

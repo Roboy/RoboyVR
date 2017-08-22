@@ -68,9 +68,9 @@ public class Notification : MonoBehaviour
         }
         public string GetContent()
         {
-            if (m_information.Equals(string.Empty))
+            if (m_information == null || m_information.Equals(string.Empty))
             {
-                if (m_Origin.Equals(string.Empty))
+                if (m_Origin == null || m_Origin.Equals(string.Empty))
                 {
                     return string.Empty;
                 }
@@ -81,7 +81,7 @@ public class Notification : MonoBehaviour
             }
             else
             {
-                if (m_Origin.Equals(string.Empty))
+                if (m_Origin == null || m_Origin.Equals(string.Empty))
                 {
                     return m_information;
                 }
@@ -153,7 +153,6 @@ public class Notification : MonoBehaviour
         {
             Debug.Log("no Roboy body part found!");
         }
-        Debug.Log("ROBOY PART FOUND! " + m_bodyPart);
         return m_bodyPart;
     }
     #endregion
@@ -173,7 +172,6 @@ public class Notification : MonoBehaviour
         SetConcernedRoboyPart(objName);
         if (m_bodyPart)
         {
-            Debug.Log("Roboy Body Part found!!!!!");
             m_bodyPart.GetComponent<RoboyPart>().AddNotification(this);
             m_bodyPart.GetComponent<RoboyPart>().UpdateNotificationsDisplay();
         }
@@ -242,8 +240,6 @@ public class Notification : MonoBehaviour
     /// <param name="s">Roboy body part name</param>
     private void SetConcernedRoboyPart(string s)
     {
-
-        Debug.Log(s);
         //TODO find roboy body part according to obj id
         if (s.Equals(string.Empty))
         {
@@ -253,7 +249,6 @@ public class Notification : MonoBehaviour
         if (obj)
         {
             m_bodyPart = obj.gameObject;
-            Debug.Log("Found obj: " + m_bodyPart.name);
         }
         else Debug.Log(" NOTHING FOUND");
     }

@@ -53,6 +53,11 @@ public class SelectionWheelManager : MonoBehaviour
     private Canvas Canvas;
 
     /// <summary>
+    /// Rawimage representing background. if linked it will be rotated
+    /// </summary>
+    [SerializeField]
+    private RawImage m_Background;
+    /// <summary>
     /// This is used to calculate the spin after touch input stopped.
     /// </summary>
     private Vector2 m_PrevPos = Vector2.zero;
@@ -80,7 +85,7 @@ public class SelectionWheelManager : MonoBehaviour
     /// <summary>
     /// Overall angle of rotation around z axis, needed for selection.
     /// </summary>
-    private float m_CurAngle = 0;
+    private float m_CurAngle = 180; //value chosen so that 0 degrees resemble 12o'clock / top part of the selection wheel
 
     /// <summary>
     /// number of text elems in selection wheel.
@@ -101,7 +106,6 @@ public class SelectionWheelManager : MonoBehaviour
     void Start()
     {
         Component[] children = GetComponentsInChildren(typeof(RectTransform));
-        m_CurAngle = 0;
         // assuming width and height identical 
         m_Radius = GetComponent<RectTransform>().rect.width;
         // ignore this element
@@ -167,14 +171,14 @@ public class SelectionWheelManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator disableCanvasCoroutine()
     {
-        Debug.Log("disable gunction called...");
+        //Debug.Log("disable gunction called...");
         yield return new WaitForSeconds(0.5f);
 
         if (m_Disabling) //if disable still desired (whilst waiting further user input might have changed that)
         {
             if (Canvas)
             {
-                Debug.Log("Disabling...");
+                //Debug.Log("Disabling...");
                 Canvas.GetComponent<Canvas>().enabled = false;
                 m_IsVisible = false;
             }
@@ -194,6 +198,8 @@ public class SelectionWheelManager : MonoBehaviour
             return;
         }
         m_SelectedTextIndex = tmp;
+        //inform of selection change
+        VRUILogic.Instance.SetSelectedIndex(m_SelectedTextIndex);
         Text[] texts = GetComponentsInChildren<Text>();
         for (int i = 0; i < texts.Length; i++)
         {
@@ -297,6 +303,9 @@ public class SelectionWheelManager : MonoBehaviour
                 children[i].transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
             }
         }
+        //rotate background
+        if (m_Background)
+            m_Background.rectTransform.localRotation = Quaternion.Euler(0, 0, - m_CurAngle);
     }
 
     #endregion

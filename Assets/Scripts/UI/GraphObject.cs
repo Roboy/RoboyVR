@@ -140,7 +140,7 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     public void Resume()
     {
-        Debug.Log("Resuming graph");
+        //Debug.Log("Resuming graph");
         if (m_Values == null) //if empty list found
         {
             m_Values = new List<float>();
@@ -168,7 +168,7 @@ public class GraphObject : MonoBehaviour
     /// </summary>
     public void Pause()
     {
-        Debug.Log("Pausing graph");
+        //Debug.Log("Pausing graph");
         m_GraphRenderer.Pause();
     }
 

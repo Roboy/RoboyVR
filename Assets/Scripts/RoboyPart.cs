@@ -32,11 +32,6 @@ public class RoboyPart : MonoBehaviour
     /// </summary>
     static private GameObject m_IconPrefab;
 
-    /// <summary>
-    /// reference to parent object containing all bones / body parts, needed for position calculation
-    /// </summary>
-    static private GameObject m_Roboy;
-
 
     /// <summary>
     /// List containing all received error notifications
@@ -118,7 +113,14 @@ public class RoboyPart : MonoBehaviour
             GameObject obj = Instantiate(Resources.Load("UI/Error")) as GameObject;
             obj.name = "Error";
             obj.transform.parent = transform;
-            obj.transform.localPosition = Vector3.zero;
+            Collider c = gameObject.GetComponent<Collider>();
+            if (!c)
+                obj.transform.localPosition = Vector3.zero;
+            else
+            {
+                Debug.Log("Using closest point on collider from center");
+                obj.transform.position = c.ClosestPoint(obj.transform.position);
+            }
         }
     }
 
@@ -319,11 +321,13 @@ public class RoboyPart : MonoBehaviour
         float iconWidth = GetIconImage().rectTransform.rect.width;
         float iconHeight = GetIconImage().rectTransform.rect.height;
         Collider collider = GetComponent<Collider>();
+        if (!collider) return transform.position;
         //transform.position returns 
         componentpos = transform.position;
-        //worldspace roboy pos
-        roboyPos = GetRoboy().transform.position;
-
+        //worldspace roboy pos 
+        if (VRUILogic.Instance.GetRoboy())
+            roboyPos = VRUILogic.Instance.GetRoboy().transform.position;
+        else roboyPos = Vector3.zero;
         //moving object in respective direction
         direction = (componentpos - roboyPos).normalized;
         direction.z = 0; // we don't want icons in front of Roboy -> set axis = 0
@@ -360,24 +364,6 @@ public class RoboyPart : MonoBehaviour
         }
 
         return worldScale;
-    }
-
-    /// <summary>
-    /// returns GameObject with whole roboy
-    /// </summary>
-    /// <returns></returns>
-    private GameObject GetRoboy()
-    {
-        if (!m_Roboy)
-        {
-            Transform current = transform;
-            while (current.transform.parent)
-            {
-                current = current.parent;
-            }
-            m_Roboy = current.gameObject;
-        }
-        return m_Roboy;
     }
     #endregion
 }

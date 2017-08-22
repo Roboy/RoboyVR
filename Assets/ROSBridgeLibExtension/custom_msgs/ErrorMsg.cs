@@ -50,16 +50,13 @@ namespace ROSBridgeLib
                 //These need to match names of externally defined msgs 
                 //-> https://github.com/CapChrisCap/roboy_communication/tree/feature/error-detection-msgs/roboy_communication_control/msg
                 _code = int.Parse(msg["code"]);
-                _object = msg["object"].ToString();
-                _msg = msg["msg"].ToString();
-                _extra = msg["extra"].ToString();
-
-                _object = _object.Replace("\"", string.Empty);
-                _msg = _msg.Replace("\"", string.Empty);
-                _extra = _extra.Replace("\"", string.Empty);
+                _object = GazeboUtility.RemoveQuotationMarks(msg["object"].ToString()); //parse string and remove ""
+                _msg = GazeboUtility.RemoveQuotationMarks(msg["msg"].ToString());
+                _extra = GazeboUtility.RemoveQuotationMarks(msg["extra"].ToString());
                 //_timeFrame = float.parse(msg["timeFrame"]);
                 _timeFrame = 4f;
             }
+
             /// <summary>
             /// Constructor
             /// </summary>
