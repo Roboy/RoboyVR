@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 114022029694747646}
   - component: {fileID: 114778028280695628}
   - component: {fileID: 114302660598588258}
+  - component: {fileID: 114961534127841338}
   m_Layer: 5
   m_Name: ViewController
   m_TagString: ViewController
@@ -1119,6 +1120,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114961534127841338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1179112628678274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298d2ebab930f7146bdeb2e7a96b0185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 79071f3f4257c984792d78d1c9a027b4, type: 3}
 --- !u!114 &114963367050803500
 MonoBehaviour:
   m_ObjectHideFlags: 1

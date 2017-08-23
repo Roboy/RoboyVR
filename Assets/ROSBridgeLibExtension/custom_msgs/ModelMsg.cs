@@ -12,7 +12,11 @@ namespace ROSBridgeLib
     {
         public class ModelMsg : ROSBridgeMsg
         {
-            public std_msgs.StringMsg Operation
+            /// <summary>
+            /// 0 stands for Removal of models
+            /// 1 stands for Insertions of models
+            /// </summary>
+            public std_msgs.Int32Msg Operation
             {
                 get
                 {
@@ -20,7 +24,11 @@ namespace ROSBridgeLib
                 }
             }
 
-            public std_msgs.StringMsg Type
+            /// <summary>
+            /// 0 stands for World insertion/removal
+            /// 1 stands for Model insertion/removal
+            /// </summary>
+            public std_msgs.Int32Msg Type
             {
                 get
                 {
@@ -28,7 +36,9 @@ namespace ROSBridgeLib
                 }
             }
 
-
+            /// <summary>
+            /// Objects which you want to remove/insert
+            /// </summary>
             public custom_msgs.StringArrayMsg Objects
             {
                 get
@@ -37,9 +47,21 @@ namespace ROSBridgeLib
                 }
             }
 
-            private std_msgs.StringMsg _Operation;
-            private std_msgs.StringMsg _Type;
+            /// <summary>
+            /// The corresponding positions
+            /// </summary>
+            public custom_msgs.FloatArrayMsg Positions
+            {
+                get
+                {
+                    return _Positions;
+                }
+            }
+
+            private std_msgs.Int32Msg _Operation;
+            private std_msgs.Int32Msg _Type;
             private custom_msgs.StringArrayMsg _Objects;
+            private custom_msgs.FloatArrayMsg _Positions;
             
 
             public ModelMsg(JSONNode msg)
@@ -47,12 +69,20 @@ namespace ROSBridgeLib
             //TODO implement in the future
             }
 
-            public ModelMsg(string operation, string type, List<string> objects)
+            public ModelMsg(int operation, int type, List<string> objects, List<Vector3> positions)
             {
-                _Operation = new StringMsg(operation);
-                _Type = new StringMsg(type);
+                _Operation = new Int32Msg("operation", operation);
+                _Type = new Int32Msg("type", type);
                 _Objects = new StringArrayMsg("objects", objects);
-                
+                List<float> values = new List<float>();                
+                foreach (var pos in positions)
+                {
+                    values.Add(pos.x);
+                    values.Add(pos.y);
+                    values.Add(pos.z);
+                }
+                _Positions = new FloatArrayMsg("positions", values);
+
             }
 
             public static string GetMessageType()
@@ -62,12 +92,13 @@ namespace ROSBridgeLib
 
             public override string ToString()
             {
-                return "roboy_communication_simulation/Model [name=";
+                return "roboy_communication_simulation/model [name=";
             }
 
             public override string ToYAMLString()
             {
-                return "{" + _Operation.ToYAMLString() + ", " + _Type.ToYAMLString() + ", " + _Objects.ToYAMLString() + "}";
+                //return string.Format("{{{0}, {1}, {2}, {3}}}", _Operation.ToYAMLString(), _Type.ToYAMLString(), _Objects.ToYAMLString(), _Positions.ToYAMLString());
+                return "{" + _Operation.ToYAMLString() + ", " + _Type.ToYAMLString() + ", " + _Objects.ToYAMLString() + ", " + _Positions.ToYAMLString() + "}";
             }
         }
     }

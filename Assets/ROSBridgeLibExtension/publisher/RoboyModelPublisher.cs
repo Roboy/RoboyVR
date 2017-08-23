@@ -6,7 +6,7 @@ namespace ROSBridgeLib
     {
         public new static string GetMessageTopic()
         {
-            return "/roboy/simulation/Model";
+            return "/roboy/simulation/model";
         }
 
         public new static string GetMessageType()

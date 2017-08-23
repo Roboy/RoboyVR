@@ -57,7 +57,7 @@ public class SelectorTool : ControllerTool
             SelectableObject hittedObject;
 
             // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
-            if (ModeManager.Instance.CurrentGUIMode != ModeManager.GUIMode.Selection)
+            if (ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
                 return;
             //Depending on the tag (== UI elem type), call different fcts 
             switch (hit.transform.tag)

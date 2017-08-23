@@ -26,6 +26,14 @@ public class InputManager : Singleton<InputManager>
     }
 
     /// <summary>
+    /// Public ModelSpawnController reference.
+    /// </summary>
+    public ModelSpawnController ModelSpawn_Controller
+    {
+        get { return m_ModelSpawnController; }
+    }
+
+    /// <summary>
     /// Public SelectorTool reference.
     /// </summary>
     public SelectorTool Selector_Tool
@@ -89,6 +97,12 @@ public class InputManager : Singleton<InputManager>
     /// </summary>
     [SerializeField]
     private ViewController m_ViewController;
+
+    /// <summary>
+    /// Private ModelSpawn reference. Is serialized so it can be dragged in the editor.
+    /// </summary>
+    [SerializeField]
+    private ModelSpawnController m_ModelSpawnController;
 
     /// <summary>
     /// Selection wheel to select tools.
@@ -162,7 +176,7 @@ public class InputManager : Singleton<InputManager>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
+    public void OnChangeGUITool(object sender, ClickedEventArgs e)
     {
         if (m_ViewController != null && m_GUIController)
         {
@@ -185,7 +199,7 @@ public class InputManager : Singleton<InputManager>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void ToolControllerSideButtons(object sender, ClickedEventArgs e)
+    public void OnChangeTool(object sender, ClickedEventArgs e)
     {
         if (m_ToolWheel == null)
             ModeManager.Instance.ChangeToolMode();
@@ -324,11 +338,11 @@ public class InputManager : Singleton<InputManager>
         if (m_GUIController)
         {
             m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
-            m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
+            m_GUIController.ControllerEventListener.Gripped += OnChangeGUITool;
         }
 
         //CHANGE THIS
-        m_SelectorTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
+        m_SelectorTool.ControllerEventListener.Gripped += OnChangeTool;
         //m_ShootingTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
 
         m_Initialized = true;
