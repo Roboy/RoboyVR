@@ -1,0 +1,200 @@
+fileFormatVersion: 2
+guid: 0c142374dd4e3ce4b8f22486a6d2244d
+timeCreated: 1503309282
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Bone
+    100004: eye.L
+    100006: eye.R
+    100008: jalka.L
+    100010: jalka.L_end
+    100012: jalka.R
+    100014: jalka.R_end
+    100016: jalkaIK.L
+    100018: jalkaIK.R
+    100020: kammen.L
+    100022: kammen.R
+    100024: kasiIK.L
+    100026: kasiIK.L_end
+    100028: kasiIK.R
+    100030: kasiIK.R_end
+    100032: kieli1
+    100034: kieli2
+    100036: kieli3
+    100038: kieli3_end
+    100040: kyynar.L
+    100042: kyynar.R
+    100044: kyynarkohti.L
+    100046: kyynarkohti.L_end
+    100048: kyynarkohti.R
+    100050: kyynarkohti.R_end
+    100052: mr
+    100054: //RootNode
+    100056: olka.L
+    100058: olka.R
+    100060: paa
+    100062: peukalo.L
+    100064: peukalo.L_end
+    100066: peukalo.R
+    100068: peukalo.R_end
+    100070: polvi.L
+    100072: polvi.R
+    100074: polvikohti.L
+    100076: polvikohti.L_end
+    100078: polvikohti.R
+    100080: polvikohti.R_end
+    100082: reisi.L
+    100084: reisi.L_end
+    100086: reisi.R
+    100088: reisi.R_end
+    100090: selka1
+    100092: selka2
+    100094: selka3
+    100096: silmat
+    100098: silmat_end
+    100100: sormet.L
+    100102: sormet.L_end
+    100104: sormet.R
+    100106: sormet.R_end
+    400000: Armature
+    400002: Bone
+    400004: eye.L
+    400006: eye.R
+    400008: jalka.L
+    400010: jalka.L_end
+    400012: jalka.R
+    400014: jalka.R_end
+    400016: jalkaIK.L
+    400018: jalkaIK.R
+    400020: kammen.L
+    400022: kammen.R
+    400024: kasiIK.L
+    400026: kasiIK.L_end
+    400028: kasiIK.R
+    400030: kasiIK.R_end
+    400032: kieli1
+    400034: kieli2
+    400036: kieli3
+    400038: kieli3_end
+    400040: kyynar.L
+    400042: kyynar.R
+    400044: kyynarkohti.L
+    400046: kyynarkohti.L_end
+    400048: kyynarkohti.R
+    400050: kyynarkohti.R_end
+    400052: mr
+    400054: //RootNode
+    400056: olka.L
+    400058: olka.R
+    400060: paa
+    400062: peukalo.L
+    400064: peukalo.L_end
+    400066: peukalo.R
+    400068: peukalo.R_end
+    400070: polvi.L
+    400072: polvi.R
+    400074: polvikohti.L
+    400076: polvikohti.L_end
+    400078: polvikohti.R
+    400080: polvikohti.R_end
+    400082: reisi.L
+    400084: reisi.L_end
+    400086: reisi.R
+    400088: reisi.R_end
+    400090: selka1
+    400092: selka2
+    400094: selka3
+    400096: silmat
+    400098: silmat_end
+    400100: sormet.L
+    400102: sormet.L_end
+    400104: sormet.R
+    400106: sormet.R_end
+    4300000: eye.L
+    4300002: eye.R
+    4300004: mr
+    7400000: Armature|ArmatureAction
+    7400002: Armature|kavely
+    7400004: mr|kavely
+    9500000: //RootNode
+    13700000: eye.L
+    13700002: eye.R
+    13700004: mr
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

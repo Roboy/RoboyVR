@@ -26,6 +26,7 @@ TagManager:
   - VSM
   - ViewController
   - Halo
+  - Floor
   layers:
   - Default
   - TransparentFX
