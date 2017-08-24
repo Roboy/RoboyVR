@@ -48,7 +48,7 @@ public class SelectorTool : ControllerTool
     /// </summary>
     public void GetRayFromController()
     {
-        if (ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.InsertPreview && CurrentPreviewModel != null && m_SteamVRDevice.GetHairTriggerDown())
+        if (InputManager.Instance.ModelSpawn_Controller.Operating && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null && m_SteamVRDevice.GetHairTriggerDown())
         {
             CurrentPreviewModel.CreateSimulationModel();
         }
@@ -108,7 +108,7 @@ public class SelectorTool : ControllerTool
                     }
                     break;
                 case "Floor":
-                    if (ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.InsertPreview && CurrentPreviewModel != null)
+                    if (InputManager.Instance.ModelSpawn_Controller.Operating && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null)
                     {
                         // move the current insert model above the point where we point on the floor
                         CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 0.5f, 0);
@@ -123,6 +123,24 @@ public class SelectorTool : ControllerTool
             //if object found
             if (hittedObject != null)
             {
+                // if we hit an object on the model layer and are currently in removing state of spawn model controller
+                if (hittedObject.gameObject.layer == LayerMask.NameToLayer("ModelLayer")
+                    /* && InputManager.Instance.ModelSpawn_Controller.Operating */
+                    && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Remove)
+                {
+                    if (m_SteamVRDevice.GetHairTriggerDown())
+                    {
+                        Transform rootParent = hittedObject.transform;
+                        // replace this with a handler function in selectionmanager/modelmanager
+                        // get the root parent
+                        while (rootParent.transform.parent != null)
+                        {
+                            rootParent = rootParent.transform.parent;
+                        }
+                        Destroy(rootParent.gameObject);
+                    }
+                    return;
+                }
                 // if the ray hits something different than last frame, then reset the last roboy part
                 if (m_LastSelectedObject != hittedObject)
                 {

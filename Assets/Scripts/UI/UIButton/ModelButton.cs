@@ -35,6 +35,8 @@ public class ModelButton : MonoBehaviour {
     /// </summary>
     private void createPreviewModel()
     {
+        if (ModeManager.Instance.CurrentSpawnViewerMode != ModeManager.SpawnViewerMode.Insert)
+            return;
         StartCoroutine(createPreviewModelCoroutine());
     }
 
@@ -43,13 +45,15 @@ public class ModelButton : MonoBehaviour {
     /// </summary>
     private IEnumerator createPreviewModelCoroutine()
     {
-        if (ModeManager.Instance.CurrentSpawnViewerMode != ModeManager.SpawnViewerMode.Idle)
+        // do nothing if model spawn controller is already in removing/add state
+        if (InputManager.Instance.ModelSpawn_Controller.Operating == true)
             yield break;
         if (PreviewModel == null)
             yield break;
 
         m_SpawnedModel = Instantiate(PreviewModel, Vector3.zero, Quaternion.identity);
-        ModeManager.Instance.CurrentSpawnViewerMode = ModeManager.SpawnViewerMode.InsertPreview;
+        m_SpawnedModel.gameObject.name = PreviewModel.gameObject.name;
+        InputManager.Instance.ModelSpawn_Controller.Operating = true;
         yield return null;
         InputManager.Instance.Selector_Tool.CurrentPreviewModel = m_SpawnedModel;
     }

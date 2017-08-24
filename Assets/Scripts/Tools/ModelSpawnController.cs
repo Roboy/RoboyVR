@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class ModelSpawnController : ControllerTool {
 
+    public bool Operating { get; set; }
 	
 }

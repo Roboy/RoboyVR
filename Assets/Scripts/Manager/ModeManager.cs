@@ -52,13 +52,13 @@ public class ModeManager : Singleton<ModeManager> {
     public enum SpawnViewerMode
     {
         /// <summary>
-        /// Standard mode of the spawn viewer controller
+        /// Insert mode to add a preview model
         /// </summary>
-        Idle,
+        Insert,
         /// <summary>
-        /// Preview mode of the selected model by the user via pointer
+        /// Delete a model via pointer
         /// </summary>
-        InsertPreview
+        Remove,
     }
 
     public enum GUIMode
@@ -146,7 +146,7 @@ public class ModeManager : Singleton<ModeManager> {
     /// <summary>
     /// Private variable for the current mode of the model spawn controller.
     /// </summary>
-    private SpawnViewerMode m_CurrentSpawnViewerMode = SpawnViewerMode.Idle;
+    private SpawnViewerMode m_CurrentSpawnViewerMode = SpawnViewerMode.Insert;
 
     /// <summary>
     /// Private variable for current Tool mode.

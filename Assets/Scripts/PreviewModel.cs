@@ -71,7 +71,7 @@ public class PreviewModel : MonoBehaviour {
         if (m_Colliding)
             return;
         Instantiate(SimulationModel, transform.position, transform.rotation);
-        ModeManager.Instance.CurrentSpawnViewerMode = ModeManager.SpawnViewerMode.Idle;
+        InputManager.Instance.ModelSpawn_Controller.Operating = false;
         Destroy(InputManager.Instance.Selector_Tool.CurrentPreviewModel.gameObject);
         InputManager.Instance.Selector_Tool.CurrentPreviewModel = null;
     }
