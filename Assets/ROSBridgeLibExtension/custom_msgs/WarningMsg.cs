@@ -53,10 +53,10 @@ namespace ROSBridgeLib
                 _object = GazeboUtility.RemoveQuotationMarks(msg["object"].ToString()); //parse string and remove ""
                 _msg = GazeboUtility.RemoveQuotationMarks(msg["msg"].ToString());
                 _extra = GazeboUtility.RemoveQuotationMarks(msg["extra"].ToString());
-                //_timeFrame = float.parse(msg["timeFrame"]);
-                _timeFrame = 4f;
+                _timeFrame = ((float)int.Parse(msg["validityDuration"])) / 1000;
+                //_timeFrame = 4f;  
             }
-            
+
             /// <summary>
             /// Constructor
             /// </summary>

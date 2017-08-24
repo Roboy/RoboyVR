@@ -543,7 +543,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1921337967574828, guid: 0517942e67e10bd48afb06594544fbb7, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0517942e67e10bd48afb06594544fbb7, type: 2}
@@ -5860,7 +5860,7 @@ MonoBehaviour:
   - {fileID: 856796837}
   m_Roboy: {fileID: 1143570618}
   m_headset: {fileID: 842172256}
-  m_selectIndex: 0
+  m_selectIndex: 3
   m_error: {fileID: 2800000, guid: 43bbebe6117a5cb4ab2f778735aff88c, type: 3}
   m_warning: {fileID: 2800000, guid: 47e9b45c1cd308a4ebfc3a9c4e47cdd1, type: 3}
   m_info: {fileID: 2800000, guid: 33d4e669d3851194cb6f1dd4c1b204ec, type: 3}
@@ -8461,7 +8461,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4025536198625924, guid: 81a5bae583615da4c85e81904d7d79f0, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.869
+      value: 0.84
       objectReference: {fileID: 0}
     - target: {fileID: 4025536198625924, guid: 81a5bae583615da4c85e81904d7d79f0, type: 2}
       propertyPath: m_LocalPosition.z
@@ -10783,7 +10783,7 @@ RectTransform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 196859479}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.00199, y: 0.00127, z: 0.00199}
   m_Children:
@@ -10791,7 +10791,7 @@ RectTransform:
   - {fileID: 1292157972}
   m_Father: {fileID: 328096876}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 1.612, y: -0.527}

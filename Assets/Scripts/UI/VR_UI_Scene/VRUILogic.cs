@@ -539,6 +539,35 @@ public class VRUILogic : Singleton<VRUILogic>
                 m_Tendons[tendonID].UpdateTendonForce(newForce);
         }
     }
+
+    /// <summary>
+    /// Returns tendon with respective ID. If not existant, null returned
+    /// </summary>
+    /// <param name="tendonID">ID of tendon in question</param>
+    /// <returns></returns>
+    public Tendon GetTendon(int tendonID)
+    {
+        if (m_Tendons.Count - 1 >= tendonID && tendonID >= 0)
+        {
+            return m_Tendons[tendonID];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Returns gameobject with specified name which is child obj of Roboy. null if not found
+    /// </summary>
+    /// <param name="bodypartname">name of the part in question</param>
+    /// <returns></returns>
+    public GameObject GetBodyPart(string bodypartname)
+    {
+        if (m_Roboy)
+        {
+            Transform temp = m_Roboy.transform.Find(bodypartname);
+            if (temp) return temp.gameObject;
+        }
+        return null;
+    }
     #endregion
 
     #endregion

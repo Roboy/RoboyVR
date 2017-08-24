@@ -116,7 +116,7 @@ public class Tendon : MonoBehaviour
         for (int i = 0; i < pointPositions.Length; i++)
         {
             GameObject p = new GameObject();
-            p.name = "Tendon " + i + ": Wirepoint";
+            p.name = "Tendon " + tendonID + ": Wirepoint";
             p.transform.position = pointPositions[i];
             Transform parent = FindParent(objectNames[i]);
             if (!parent)
