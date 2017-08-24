@@ -54,9 +54,14 @@ public class UpdaterUtility : MonoBehaviour {
     public static string PathToScanScript;
 
     /// <summary>
-    /// This should be the path to the "MeshScanner". It is located in the ExternalTools directory.
+    /// This should be the path to the "SDFreader". It is located in the ExternalTools directory.
     /// </summary>
     public static string PathToSDFreader;
+
+    /// <summary>
+    /// This should be the path to the "MeshScanner". It is located in the ExternalTools directory.
+    /// </summary>
+    public static string PathToWorldReader;
 
     /// <summary>
     /// Cached variable of the projects assets directory.
@@ -142,5 +147,16 @@ public class UpdaterUtility : MonoBehaviour {
         {
             Debug.LogWarning("SDF_Reader script not found!");
         }
+
+        if (File.Exists(PathToWorldReader))
+        {
+            Debug.Log("World_Reader script found!");
+        }
+        else
+        {
+            Debug.LogWarning("World_Reader script not found!");
+        }
+
+
     }
 }

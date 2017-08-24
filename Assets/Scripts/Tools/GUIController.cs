@@ -99,7 +99,8 @@ public class GUIController : ControllerTool {
                 changepanelsToNextMode();
                 break;
             case InputManager.TouchpadStatus.Top:
-                StartCoroutine(changeGUIMode());
+                if(ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer)
+                    StartCoroutine(changeGUIViewerMode());
                 break;
             case InputManager.TouchpadStatus.Bottom:
                 changePageOfPanel();
@@ -226,10 +227,10 @@ public class GUIController : ControllerTool {
         }
     }
     /// <summary>
-    /// Changes GUI mode between selection and panel mode.
+    /// Changes GUIViewer mode between selection and panel mode.
     /// </summary>
     /// <returns></returns>
-    private IEnumerator changeGUIMode()
+    private IEnumerator changeGUIViewerMode()
     {
         // get the selectet parts
         List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;

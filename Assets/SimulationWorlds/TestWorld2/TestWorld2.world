@@ -1,4 +1,4 @@
-<world name='default'>
+<world name='TestWorld2'>
     <model name='Construction Cone'>
       <link name='link'>
         <collision name='collision'>
@@ -14,6 +14,8 @@
               <ode/>
             </contact>
             <bounce/>
+            <friction>
+            </friction>
           </surface>
         </collision>
         <visual name='visual'>

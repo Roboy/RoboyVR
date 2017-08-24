@@ -12,10 +12,11 @@ root = CreateFromDocument(open(world_location).read())
 
 world = root
 
+print(world.name)
 print(len(world.model))
 
 # create a text file
-localfile = open("//Assets//temp" + world.name + "World.txt" ,'w')
+localfile = open("Assets//temp" + world.name + "World.txt" ,'w')
 
 models = world.model
 
@@ -24,8 +25,8 @@ localfile.write(world.name + "\n")
 
 
 for i in range(0, len(models)):
+	currentmodel = models[i]
 	for j in range(0, len(currentmodel.link)):
-		currentmodel = models[i]
 		localfile.write("model_name;")
 		localfile.write(currentmodel.name + ";")
 		if(len(currentmodel.pose) > 0):

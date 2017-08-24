@@ -111,6 +111,12 @@ public class InputManager : Singleton<InputManager>
     private SelectionWheel m_ToolWheel;
 
     /// <summary>
+    /// Selection wheel to select different GUI modes.
+    /// </summary>
+    [SerializeField]
+    private SelectionWheel m_GUIWheel;
+
+    /// <summary>
     /// Controllers initialized or not.
     /// </summary>
     private bool m_Initialized = false;
@@ -178,7 +184,11 @@ public class InputManager : Singleton<InputManager>
     /// <param name="e"></param>
     public void OnChangeGUITool(object sender, ClickedEventArgs e)
     {
-        if (m_ViewController != null && m_GUIController)
+        if (m_GUIWheel != null)
+        {
+            m_GUIWheel.gameObject.SetActive(!m_GUIWheel.gameObject.activeSelf);
+        }
+        else if (m_ViewController != null && m_GUIController)
         {
             if (m_GUIController.gameObject.activeSelf)
             {
@@ -258,11 +268,16 @@ public class InputManager : Singleton<InputManager>
     private void setTools(List<ControllerTool> toolList)
     {
         List<SelectionWheelPart> toolWheelParts = new List<SelectionWheelPart>();
+        List<SelectionWheelPart> guiWheelParts = new List<SelectionWheelPart>();
         foreach (ControllerTool tool in toolList)
         {
             if (tool is GUIController)
             {
                 m_GUIController = (GUIController)tool;
+            }
+            else if (tool is ModelSpawnController)
+            {
+                m_ModelSpawnController = (ModelSpawnController)tool;
             }
             else if (tool is SelectorTool)
             {
@@ -287,9 +302,17 @@ public class InputManager : Singleton<InputManager>
 
             if (m_ToolWheel)
             {
-                SelectionWheelPart wheelPart;
-                if ((wheelPart = tool.gameObject.GetComponent<SelectionWheelPart>()) != null)
-                    toolWheelParts.Add(wheelPart);
+                SelectionWheelPart toolWheelPart;
+                if ((toolWheelPart = tool.gameObject.GetComponent<SelectionWheelPartTool>()) != null)
+                    toolWheelParts.Add(toolWheelPart);
+            }
+            if (m_GUIWheel)
+            {
+                SelectionWheelPart GUIWheelPart;
+                if ((GUIWheelPart = tool.gameObject.GetComponent<SelectionWheelPartGUITool>()) != null)
+                {
+                    guiWheelParts.Add(GUIWheelPart);
+                }
             }
         }
 
@@ -298,6 +321,12 @@ public class InputManager : Singleton<InputManager>
             m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
             m_ToolWheel.Initialize(toolWheelParts, 0);
             m_ToolWheel.gameObject.SetActive(false);
+        }
+        if (m_GUIWheel)
+        {
+            m_GUIWheel.BindController(m_GUIController.ControllerObject);
+            m_GUIWheel.Initialize(guiWheelParts, 0);
+            m_GUIWheel.gameObject.SetActive(false);
         }
 
     }

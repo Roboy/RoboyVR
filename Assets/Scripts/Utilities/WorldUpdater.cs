@@ -79,6 +79,7 @@ public class WorldUpdater : MonoBehaviour
         UpdaterUtility.ProjectFolder = Application.dataPath;
         UpdaterUtility.PathToDownloadScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelDownloader.py";
         UpdaterUtility.PathToScanScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelScanner.py";
+        UpdaterUtility.PathToWorldReader = UpdaterUtility.ProjectFolder + @"/ExternalTools/world_reader.py";
 
         UpdaterUtility.showWarnings();
     }
@@ -163,23 +164,38 @@ public class WorldUpdater : MonoBehaviour
 
     public void Magic()
     {
+
         List<KeyValuePair<string, bool>> tempURLList = WorldChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
         {   //replace this with real data from .world files
-            string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/temp" + urlEntry + "SDFs.txt";
-            if (!File.Exists(pathToSDFFile))
+
+            if (File.Exists(UpdaterUtility.ProjectFolder + @"/SimulationWorlds/" + urlEntry.Key + @"/" + urlEntry.Key + ".world"))
             {
+                Debug.Log(".world file found!");
+                // read .sdf file
+                string[] argumentsSDFreader = { "python \"" + UpdaterUtility.PathToWorldReader + "\" \"" + UpdaterUtility.ProjectFolder + @"/SimulationWorlds/" + urlEntry.Key + @"/" + urlEntry.Key + ".world\"" };
+                CommandlineUtility.RunCommandLine(argumentsSDFreader);
+            }
+            else
+            {
+                Debug.LogWarning(".world file not found!");
+            }
+
+            string pathToWorldFile = UpdaterUtility.ProjectFolder + @"/temp" + urlEntry.Key + @"World.txt";
+            if (!File.Exists(pathToWorldFile))
+            {
+                //Debug.LogWarning(UpdaterUtility.ProjectFolder + @"/temp" + urlEntry.Key + @"World.txt");
                 Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
                 return;
             }
             // get file content of format title:url
-            string[] sdfContent = File.ReadAllLines(pathToSDFFile);
+            string[] WorldContent = File.ReadAllLines(pathToWorldFile);
 
-            File.Delete(pathToSDFFile);
+            //File.Delete(pathToWorldFile);
 
             List<string[]> modelList = new List<string[]>();
 
-            foreach (string line in sdfContent)
+            foreach (string line in WorldContent)
             {
                 string[] SDFline = line.Split(';');
                 modelList.Add(SDFline);
@@ -207,27 +223,33 @@ public class WorldUpdater : MonoBehaviour
                     for (int j = 0; j < line.Length; j++)
                     {
                         testModel.link = new LinkTransformation();
-                        if (modelList[i][j] == "world_name")
-                        {
-                            testModel.name = modelList[i][j + 1];
-                        }
+                        //if (modelList[i][j] == "model_name")
+                        //{
+                        //    testModel.name = modelList[i][j + 1];
+                        //    Debug.Log(modelList[i][j + 1]);
+                        //}
                         string[] pose = null;
                         if (modelList[i][j] == "model_pose")
                         {
                             pose = modelList[i][j + 1].Split(' ');
-                        }
-                        testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
+                            testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
                                                                                                 float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat),
                                                                                                 float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
-                        testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                    Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                    Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
+                            testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                        Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                        Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
+                        }
+                        
                         if (modelList[i][j] == "model_link")
                         {
                             testModel.link.name = modelList[i][j + 1];
                         }
-                        if (modelList[i][j] == "VIS_mesh_uri")
+                        if (modelList[i][j] == "VIS_mesh_uri") {
                             testModel.link.VIS_meshName = modelList[i][j + 1];
+                            var regex = new Regex(Regex.Escape(""));
+                            titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
+                            testModel.name =
+                        }
 
                         if (modelList[i][j] == "COL_mesh_uri")
                             testModel.link.COL_meshName = modelList[i][j + 1];
@@ -273,6 +295,7 @@ public class WorldUpdater : MonoBehaviour
             if (!names.Contains(model.name))
             {
                 names.Add(model.name);
+                Debug.Log(model.name);
             }
         }
         foreach (string name in names)
