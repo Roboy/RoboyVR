@@ -223,11 +223,7 @@ public class WorldUpdater : MonoBehaviour
                     for (int j = 0; j < line.Length; j++)
                     {
                         testModel.link = new LinkTransformation();
-                        //if (modelList[i][j] == "model_name")
-                        //{
-                        //    testModel.name = modelList[i][j + 1];
-                        //    Debug.Log(modelList[i][j + 1]);
-                        //}
+
                         string[] pose = null;
                         if (modelList[i][j] == "model_pose")
                         {
@@ -236,19 +232,21 @@ public class WorldUpdater : MonoBehaviour
                                                                                                 float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat),
                                                                                                 float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
                             testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                        Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                        Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
-                        }
-                        
+                                                                                                 Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                 Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
+                        }                        
+
                         if (modelList[i][j] == "model_link")
                         {
                             testModel.link.name = modelList[i][j + 1];
                         }
                         if (modelList[i][j] == "VIS_mesh_uri") {
                             testModel.link.VIS_meshName = modelList[i][j + 1];
-                            var regex = new Regex(Regex.Escape(""));
-                            titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
-                            testModel.name =
+                            //string name1 = modelList[i][j + 1];
+                            string name1 = Regex.Replace(modelList[i][j + 1], ".*?//", "");
+                            string name2 = Regex.Replace(name1, "/.*", "");
+                            testModel.name = name2;
+                            Debug.Log(testModel.link.VIS_meshName);
                         }
 
                         if (modelList[i][j] == "COL_mesh_uri")
@@ -279,10 +277,11 @@ public class WorldUpdater : MonoBehaviour
                                                                                                  Mathf.Rad2Deg * float.Parse(linkpose[4], CultureInfo.InvariantCulture.NumberFormat),
                                                                                                  Mathf.Rad2Deg * float.Parse(linkpose[5], CultureInfo.InvariantCulture.NumberFormat)));
                         }
+                        
                     }
-
-
                     modellist.Add(testModel);
+
+
                 }
             }
 
@@ -295,7 +294,7 @@ public class WorldUpdater : MonoBehaviour
             if (!names.Contains(model.name))
             {
                 names.Add(model.name);
-                Debug.Log(model.name);
+                //Debug.Log(model.name);
             }
         }
         foreach (string name in names)
@@ -359,24 +358,25 @@ public class WorldUpdater : MonoBehaviour
                 }
                 meshCopy.transform.localScale = Vector3.one;
 
-                foreach (ModelTransformation model in modellist)
-                {
-                    if (model.link.VIS_meshName.Contains(name))
-                    {
-                        if (model.link.position != null)
-                        {
-                            meshCopy.transform.position = model.link.position;
-                        }
-                        if (model.link.rotation != null)
-                        {
-                            meshCopy.transform.eulerAngles = model.link.rotation;
-                        }
-                        if (model.link.VIS_scale != null)
-                        {
-                            meshCopy.transform.localScale = model.link.VIS_scale;
-                        }
-                    }
-                }
+                //foreach (ModelTransformation model in modellist)
+                //{
+                //    string name1 = name.Replace(".fbx", "");
+                //    if (model.link.VIS_meshName.Contains(name1))
+                //    {
+                //        if (model.link.position != null)
+                //        {
+                //            meshCopy.transform.position = model.link.position;
+                //        }
+                //        if (model.link.rotation != null)
+                //        {
+                //            meshCopy.transform.eulerAngles = model.link.rotation;
+                //        }
+                //        if (model.link.VIS_scale != null)
+                //        {
+                //            meshCopy.transform.localScale = model.link.VIS_scale;
+                //        }
+                //    }
+                //}
 
                 //meshCopy.tag = "WorldPart";
                 // !!!! the following part could be shortened if we change folder structure of roboy_worlds/models

@@ -669,9 +669,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2078176773}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71bf75698ecdd0f41ab10a6702b8454b, type: 3}
+  m_Script: {fileID: 11500000, guid: 245c2044e25d0174c96bf36de15d10e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Github_Repository: https://github.com/Roboy/roboy_models/
-  Branch: VRTeam
-  ModelsCurrentState: 4
+  Github_Repository: https://github.com/Roboy/roboy_worlds/
+  Branch: master
+  WorldsCurrentState: 4
