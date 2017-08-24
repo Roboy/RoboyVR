@@ -214,8 +214,8 @@ public class WorldUpdater : MonoBehaviour
                 }
             }
 
-            for (int i = 0; i < modelList.Count; i++)
-            {
+            //for (int i = 0; i < modelList.Count; i++)
+            //{
                 foreach (string[] line in modelList)
                 {
                     ModelTransformation testModel = new ModelTransformation();
@@ -225,9 +225,9 @@ public class WorldUpdater : MonoBehaviour
                         testModel.link = new LinkTransformation();
 
                         string[] pose = null;
-                        if (modelList[i][j] == "model_pose")
+                        if (line[j] == "model_pose")
                         {
-                            pose = modelList[i][j + 1].Split(' ');
+                            pose = line[j + 1].Split(' ');
                             testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
                                                                                                 float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat),
                                                                                                 float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
@@ -236,26 +236,26 @@ public class WorldUpdater : MonoBehaviour
                                                                                                  Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
                         }                        
 
-                        if (modelList[i][j] == "model_link")
+                        if (line[j] == "model_link")
                         {
-                            testModel.link.name = modelList[i][j + 1];
+                            testModel.link.name = line[j + 1];
                         }
-                        if (modelList[i][j] == "VIS_mesh_uri") {
-                            testModel.link.VIS_meshName = modelList[i][j + 1];
+                        if (line[j] == "VIS_mesh_uri") {
+                            testModel.link.VIS_meshName = line[j + 1];
                             //string name1 = modelList[i][j + 1];
-                            string name1 = Regex.Replace(modelList[i][j + 1], ".*?//", "");
+                            string name1 = Regex.Replace(line[j + 1], ".*?//", "");
                             string name2 = Regex.Replace(name1, "/.*", "");
                             testModel.name = name2;
                             Debug.Log(testModel.link.VIS_meshName);
                         }
 
-                        if (modelList[i][j] == "COL_mesh_uri")
-                            testModel.link.COL_meshName = modelList[i][j + 1];
+                        if (line[j] == "COL_mesh_uri")
+                            testModel.link.COL_meshName = line[j + 1];
 
                         string[] VIS_Scale = null;
-                        if (modelList[i][j] == "VIS_mesh_scale")
+                        if (line[j] == "VIS_mesh_scale")
                         {
-                            VIS_Scale = modelList[i][j + 1].Split(' ');
+                            VIS_Scale = line[j + 1].Split(' ');
                         }
                         if (VIS_Scale != null)
                         {
@@ -264,9 +264,9 @@ public class WorldUpdater : MonoBehaviour
                                                                                                            100 * float.Parse(VIS_Scale[2], CultureInfo.InvariantCulture.NumberFormat)));
                         }
                         string[] linkpose = null;
-                        if (modelList[i][j] == "link_pose")
+                        if (line[j] == "link_pose")
                         {
-                            pose = modelList[i][j + 1].Split(' ');
+                            pose = line[j + 1].Split(' ');
                         }
                         if (linkpose != null)
                         {
@@ -282,7 +282,7 @@ public class WorldUpdater : MonoBehaviour
                     modellist.Add(testModel);
 
 
-                }
+                //}
             }
 
 
