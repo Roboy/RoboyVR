@@ -24,13 +24,13 @@ localfile.write(world.name + "\n")
 
 
 for i in range(0, len(models)):
-	currentmodel = models[i]
-	localfile.write("model_name;")
-	localfile.write(currentmodel.name + ";")
-	if(len(currentmodel.pose) > 0):
-		localfile.write("model_pose;")
-		localfile.write(currentmodel.pose[0] + ";")
 	for j in range(0, len(currentmodel.link)):
+		currentmodel = models[i]
+		localfile.write("model_name;")
+		localfile.write(currentmodel.name + ";")
+		if(len(currentmodel.pose) > 0):
+			localfile.write("model_pose;")
+			localfile.write(currentmodel.pose[0] + ";")
 		links = currentmodel.link
 		
 		# VIUSAL
