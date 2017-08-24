@@ -9,7 +9,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(LineRenderer))]
 public class SelectorTool : ControllerTool
 {
-
+    /// <summary>
+    /// Current preview model which holds a reference to the real simulation model.
+    /// </summary>
+    public PreviewModel CurrentPreviewModel;
     /// <summary>
     /// LineRenderer to draw the laser for selection.
     /// </summary>
@@ -54,7 +57,7 @@ public class SelectorTool : ControllerTool
         {
             // set the end position to the hit point
             m_LineRenderer.SetPosition(1, hit.point);
-            SelectableObject hittedObject;
+            SelectableObject hittedObject = null;
 
             // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
             if (ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
@@ -66,7 +69,6 @@ public class SelectorTool : ControllerTool
                     hittedObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
                     break;
                 case "UIButton":
-                    hittedObject = null;
                     Button b_pressed = hit.collider.GetComponent<Button>();
                     //TODO: WOrk in progress
                     //for scroll option
@@ -84,7 +86,6 @@ public class SelectorTool : ControllerTool
                     }
                     break;
                 case "UISlider": //slider elem in BeRoboy
-                    hittedObject = null;
                     Slider slid = hit.collider.GetComponent<Slider>();
 
                     //If the trigger is pressed(even gently), the slider fills up, the value increases until it reaches it's maximum.
@@ -101,12 +102,23 @@ public class SelectorTool : ControllerTool
                         { slid.value -= 0.01f; }
                     }
                     break;
+                case "Floor":
+                    if (ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.InsertPreview && CurrentPreviewModel != null)
+                    {
+                        // move the current insert model above the point where we point on the floor
+                        CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 2, 0);
+                        if (m_SteamVRDevice.GetHairTriggerDown())
+                        {
+
+                        }
+                    }
+                    break;
                 default: //not UI -> Roboy parts
                     hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
                     break;
             }
             //if object found
-            if (hittedObject)
+            if (hittedObject != null)
             {
                 // if the ray hits something different than last frame, then reset the last roboy part
                 if (m_LastSelectedObject != hittedObject)

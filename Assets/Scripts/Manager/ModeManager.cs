@@ -49,6 +49,18 @@ public class ModeManager : Singleton<ModeManager> {
         MotorValues
     }
 
+    public enum SpawnViewerMode
+    {
+        /// <summary>
+        /// Standard mode of the spawn viewer controller
+        /// </summary>
+        Idle,
+        /// <summary>
+        /// Preview mode of the selected model by the user via pointer
+        /// </summary>
+        InsertPreview
+    }
+
     public enum GUIMode
     {
         GUIViewer,
@@ -94,6 +106,12 @@ public class ModeManager : Singleton<ModeManager> {
         get { return m_CurrentGUIViewerMode; }
     }
 
+    public SpawnViewerMode CurrentSpawnViewerMode
+    {
+        get { return m_CurrentSpawnViewerMode; }
+        set { m_CurrentSpawnViewerMode = value; }
+    }
+
     /// <summary>
     /// Current Tool mode, READ ONLY.
     /// </summary>
@@ -124,6 +142,11 @@ public class ModeManager : Singleton<ModeManager> {
     /// Private variable for current GUIViewer mode.
     /// </summary>
     private GUIViewerMode m_CurrentGUIViewerMode = GUIViewerMode.Selection;
+
+    /// <summary>
+    /// Private variable for the current mode of the model spawn controller.
+    /// </summary>
+    private SpawnViewerMode m_CurrentSpawnViewerMode = SpawnViewerMode.Idle;
 
     /// <summary>
     /// Private variable for current Tool mode.

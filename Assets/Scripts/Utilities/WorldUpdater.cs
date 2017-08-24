@@ -244,12 +244,12 @@ public class WorldUpdater : MonoBehaviour
                         {
                             testModel.link.name = modelList[i][j + 1];
                         }
-                        if (modelList[i][j] == "VIS_mesh_uri") {
-                            testModel.link.VIS_meshName = modelList[i][j + 1];
-                            var regex = new Regex(Regex.Escape(""));
-                            titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
-                            testModel.name =
-                        }
+                        //if (modelList[i][j] == "VIS_mesh_uri") {
+                        //    testModel.link.VIS_meshName = modelList[i][j + 1];
+                        //    var regex = new Regex(Regex.Escape(""));
+                        //    titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
+                        //    testModel.name =
+                        //}
 
                         if (modelList[i][j] == "COL_mesh_uri")
                             testModel.link.COL_meshName = modelList[i][j + 1];
