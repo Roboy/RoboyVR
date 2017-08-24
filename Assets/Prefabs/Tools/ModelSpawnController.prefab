@@ -207,7 +207,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 250, y: 25, z: 1}
+  m_Size: {x: 170, y: 63, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65281195383508344
 BoxCollider:
@@ -219,7 +219,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 250, y: 25, z: 1}
+  m_Size: {x: 170, y: 63, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65345209483511928
 BoxCollider:
@@ -231,7 +231,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 250, y: 25, z: 1}
+  m_Size: {x: 170, y: 63, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65367716141360966
 BoxCollider:
@@ -243,7 +243,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 250, y: 25, z: 1}
+  m_Size: {x: 170, y: 63, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114057220538013958
 MonoBehaviour:
@@ -800,7 +800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 298d2ebab930f7146bdeb2e7a96b0185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Icon: {fileID: 21300000, guid: 79071f3f4257c984792d78d1c9a027b4, type: 3}
+  Icon: {fileID: 21300000, guid: 314d7ac5ac02f564b9f73b44b9ce7986, type: 3}
 --- !u!114 &114998341158060664
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1014,7 +1014,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 46.4, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.851}
+  m_AnchoredPosition: {x: 0, y: -0.353}
   m_SizeDelta: {x: 170, y: 55}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224721554791235760

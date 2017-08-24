@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4690415661875646}
   - component: {fileID: 33659769022162444}
   - component: {fileID: 23631552737454510}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4055685510348214}
   - component: {fileID: 33875529183283986}
   - component: {fileID: 23698071754714146}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4866531310168604}
   - component: {fileID: 33721449964647338}
   - component: {fileID: 23327970406190282}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 4354959529527066}
   - component: {fileID: 33225260987127068}
   - component: {fileID: 23674416651610768}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 4926527712075822}
   - component: {fileID: 33668395572623246}
   - component: {fileID: 23559469044848574}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4607182252580018}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 4819455632777932}
   - component: {fileID: 33116021545240370}
   - component: {fileID: 23950518262531380}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 4386525293866830}
   - component: {fileID: 33336538817658302}
   - component: {fileID: 23528931054847280}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 4292420950994520}
   - component: {fileID: 33065788879480246}
   - component: {fileID: 23340757913156054}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 4868718053814294}
   - component: {fileID: 33333219361326670}
   - component: {fileID: 23640801025694626}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 4490285146312294}
   - component: {fileID: 33173212663522510}
   - component: {fileID: 23235569785364422}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 4560771976844580}
   - component: {fileID: 33690173226165870}
   - component: {fileID: 23846066657656400}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: foot left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 4365794756174700}
   - component: {fileID: 33448253620844836}
   - component: {fileID: 23465203409362858}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4819995366166546}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 4304952664173686}
   - component: {fileID: 33794553930348486}
   - component: {fileID: 23321992360479360}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,7 +272,7 @@ GameObject:
   - component: {fileID: 4508249594854848}
   - component: {fileID: 33768899502909512}
   - component: {fileID: 23798587160219752}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 4041865915106718}
   - component: {fileID: 33740291491198594}
   - component: {fileID: 23993634699336086}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: foot right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 4150494977191448}
   - component: {fileID: 33477904238661794}
   - component: {fileID: 23585025395614606}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 4122177672057814}
   - component: {fileID: 33252412469643776}
   - component: {fileID: 23301670416466738}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 4769468810555732}
   - component: {fileID: 33909697610743170}
   - component: {fileID: 23544120390067088}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 4181841146830790}
   - component: {fileID: 33584133427476600}
   - component: {fileID: 23011854871436564}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +372,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4859335306844670}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -389,7 +389,7 @@ GameObject:
   - component: {fileID: 4478789861086154}
   - component: {fileID: 33660711560962088}
   - component: {fileID: 23512335574337566}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 4594666636984830}
   - component: {fileID: 33138686602221474}
   - component: {fileID: 23125360273467336}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4750543672328876}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 4466054691645274}
   - component: {fileID: 33771238941757934}
   - component: {fileID: 23652650229663974}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 4056194682016906}
   - component: {fileID: 33489894718170824}
   - component: {fileID: 23683386632751612}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart30
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,7 +472,7 @@ GameObject:
   - component: {fileID: 4208734202791764}
   - component: {fileID: 33551748242915414}
   - component: {fileID: 23534676125085968}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +487,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4630354959089212}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 4993452005360396}
   - component: {fileID: 33641104186426058}
   - component: {fileID: 23478545157027906}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +521,7 @@ GameObject:
   - component: {fileID: 4507563283884428}
   - component: {fileID: 33915881311593748}
   - component: {fileID: 23973467094405412}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 4939093273471866}
   - component: {fileID: 33813624904103090}
   - component: {fileID: 23997985195357872}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 4357117102083712}
   - component: {fileID: 33342648480515172}
   - component: {fileID: 23690428256491948}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 4395613417047750}
   - component: {fileID: 33928510468380978}
   - component: {fileID: 23500225200036352}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -589,7 +589,7 @@ GameObject:
   - component: {fileID: 4862301444298742}
   - component: {fileID: 33830114995045594}
   - component: {fileID: 23598265913894764}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm right_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -606,7 +606,7 @@ GameObject:
   - component: {fileID: 4819679164508026}
   - component: {fileID: 33990331023852462}
   - component: {fileID: 23984165734480714}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 4910795688242196}
   - component: {fileID: 33360684087207402}
   - component: {fileID: 23744962786586942}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   - component: {fileID: 4556585978202168}
   - component: {fileID: 33820272135530650}
   - component: {fileID: 23379237262026674}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,7 +657,7 @@ GameObject:
   - component: {fileID: 4033981361033742}
   - component: {fileID: 33639552289280668}
   - component: {fileID: 23554509695444408}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 4257310657801482}
   - component: {fileID: 33941832837014250}
   - component: {fileID: 23974953933572542}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -691,7 +691,7 @@ GameObject:
   - component: {fileID: 4233831067531476}
   - component: {fileID: 33575295307257998}
   - component: {fileID: 23020483925503924}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -708,7 +708,7 @@ GameObject:
   - component: {fileID: 4390136953362832}
   - component: {fileID: 33107715925881722}
   - component: {fileID: 23981499441590436}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -725,7 +725,7 @@ GameObject:
   - component: {fileID: 4096738441138352}
   - component: {fileID: 33567732386058592}
   - component: {fileID: 23425432112962626}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -742,7 +742,7 @@ GameObject:
   - component: {fileID: 4113249498364552}
   - component: {fileID: 33434541204488674}
   - component: {fileID: 23346789595473638}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart26
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -757,7 +757,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4776315995808740}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -774,7 +774,7 @@ GameObject:
   - component: {fileID: 4058503687294800}
   - component: {fileID: 33181312817290792}
   - component: {fileID: 23092827249218926}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 4263970813875546}
   - component: {fileID: 33485661989215140}
   - component: {fileID: 23531159767658528}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -806,7 +806,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4290187779666480}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -823,7 +823,7 @@ GameObject:
   - component: {fileID: 4181737169766390}
   - component: {fileID: 33676635464462048}
   - component: {fileID: 23658894938959722}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,7 +840,7 @@ GameObject:
   - component: {fileID: 4473116633952172}
   - component: {fileID: 33781630630578546}
   - component: {fileID: 23448333609324704}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm right_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -857,7 +857,7 @@ GameObject:
   - component: {fileID: 4528219082947294}
   - component: {fileID: 33825798763279230}
   - component: {fileID: 23170512699688068}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -874,7 +874,7 @@ GameObject:
   - component: {fileID: 4914516904085404}
   - component: {fileID: 33219213071006342}
   - component: {fileID: 23953433424501882}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -891,7 +891,7 @@ GameObject:
   - component: {fileID: 4002521069531656}
   - component: {fileID: 33873376619153598}
   - component: {fileID: 23146071597697676}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -908,7 +908,7 @@ GameObject:
   - component: {fileID: 4691647334224742}
   - component: {fileID: 33390999808044418}
   - component: {fileID: 23463394477299446}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -925,7 +925,7 @@ GameObject:
   - component: {fileID: 4371289860350924}
   - component: {fileID: 33248430452783890}
   - component: {fileID: 23611409379868712}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -942,7 +942,7 @@ GameObject:
   - component: {fileID: 4248223107556674}
   - component: {fileID: 33028293523154174}
   - component: {fileID: 23135694725376394}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -959,7 +959,7 @@ GameObject:
   - component: {fileID: 4354641409470646}
   - component: {fileID: 33128326244611144}
   - component: {fileID: 23009357743073914}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -976,7 +976,7 @@ GameObject:
   - component: {fileID: 4921580510234386}
   - component: {fileID: 33873356131202168}
   - component: {fileID: 23498239697310602}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -993,7 +993,7 @@ GameObject:
   - component: {fileID: 4369804224498476}
   - component: {fileID: 33347112896976746}
   - component: {fileID: 23022050181256058}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm right_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,7 +1010,7 @@ GameObject:
   - component: {fileID: 4161085188654874}
   - component: {fileID: 33325313979615882}
   - component: {fileID: 23666432383831898}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 4214223165883574}
   - component: {fileID: 33321060080117104}
   - component: {fileID: 23075865747800016}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1044,7 +1044,7 @@ GameObject:
   - component: {fileID: 4397462026321858}
   - component: {fileID: 33122658903016614}
   - component: {fileID: 23995133697321524}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1059,7 +1059,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4192268269919310}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1076,7 +1076,7 @@ GameObject:
   - component: {fileID: 4851475283831674}
   - component: {fileID: 33740014231836244}
   - component: {fileID: 23475153498939868}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1093,7 +1093,7 @@ GameObject:
   - component: {fileID: 4278721092868524}
   - component: {fileID: 33225482476688792}
   - component: {fileID: 23418798652643522}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1110,7 +1110,7 @@ GameObject:
   - component: {fileID: 4212596091729452}
   - component: {fileID: 33228966536047186}
   - component: {fileID: 23193684871989272}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1127,7 +1127,7 @@ GameObject:
   - component: {fileID: 4939797792628886}
   - component: {fileID: 33600472091026612}
   - component: {fileID: 23364099866187904}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1144,7 +1144,7 @@ GameObject:
   - component: {fileID: 4224047738157452}
   - component: {fileID: 33988583170177568}
   - component: {fileID: 23006098484312914}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1161,7 +1161,7 @@ GameObject:
   - component: {fileID: 4145196274965822}
   - component: {fileID: 33893927148139482}
   - component: {fileID: 23815136325689120}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm left_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1178,7 +1178,7 @@ GameObject:
   - component: {fileID: 4998219325169848}
   - component: {fileID: 33896534010545056}
   - component: {fileID: 23566458870735402}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm right_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1195,7 +1195,7 @@ GameObject:
   - component: {fileID: 4379597847456488}
   - component: {fileID: 33451591844314658}
   - component: {fileID: 23036888270907556}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1212,7 +1212,7 @@ GameObject:
   - component: {fileID: 4986991461696996}
   - component: {fileID: 33514007380589218}
   - component: {fileID: 23343183462898536}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1227,7 +1227,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4772668489071910}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1244,7 +1244,7 @@ GameObject:
   - component: {fileID: 4985895411708256}
   - component: {fileID: 33376842679137722}
   - component: {fileID: 23451598913794700}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1261,7 +1261,7 @@ GameObject:
   - component: {fileID: 4338665837156364}
   - component: {fileID: 33142800345374292}
   - component: {fileID: 23272945157062036}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1278,7 +1278,7 @@ GameObject:
   - component: {fileID: 4519618052008344}
   - component: {fileID: 33986424942249322}
   - component: {fileID: 23898381511710580}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1295,7 +1295,7 @@ GameObject:
   - component: {fileID: 4427568016052704}
   - component: {fileID: 33251662432070862}
   - component: {fileID: 23708043201061176}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1312,7 +1312,7 @@ GameObject:
   - component: {fileID: 4881432457826356}
   - component: {fileID: 33685677385188390}
   - component: {fileID: 23715992673901126}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm left_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1329,7 +1329,7 @@ GameObject:
   - component: {fileID: 4739561893326920}
   - component: {fileID: 33702820457906156}
   - component: {fileID: 23715098422390826}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1346,7 +1346,7 @@ GameObject:
   - component: {fileID: 4046088180119490}
   - component: {fileID: 33285918334924486}
   - component: {fileID: 23789826032258434}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1363,7 +1363,7 @@ GameObject:
   - component: {fileID: 4687877035834138}
   - component: {fileID: 33846518121030534}
   - component: {fileID: 23398989156308108}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1380,7 +1380,7 @@ GameObject:
   - component: {fileID: 4461324319972844}
   - component: {fileID: 33759643829984642}
   - component: {fileID: 23797866476531544}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1395,7 +1395,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4602286799430054}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1412,7 +1412,7 @@ GameObject:
   - component: {fileID: 4876891374194614}
   - component: {fileID: 33059542552141676}
   - component: {fileID: 23025417394539374}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1429,7 +1429,7 @@ GameObject:
   - component: {fileID: 4898913132178740}
   - component: {fileID: 33164401224532814}
   - component: {fileID: 23082475711797438}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1446,7 +1446,7 @@ GameObject:
   - component: {fileID: 4304942892316214}
   - component: {fileID: 33153018904217138}
   - component: {fileID: 23615804526507406}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1463,7 +1463,7 @@ GameObject:
   - component: {fileID: 4409918352126332}
   - component: {fileID: 33442036677113248}
   - component: {fileID: 23948563393960932}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1480,7 +1480,7 @@ GameObject:
   - component: {fileID: 4713048435196474}
   - component: {fileID: 33778456925120276}
   - component: {fileID: 23838253756888794}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: foot left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1497,7 +1497,7 @@ GameObject:
   - component: {fileID: 4622285778581906}
   - component: {fileID: 33703820079805198}
   - component: {fileID: 23381713397736740}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1514,7 +1514,7 @@ GameObject:
   - component: {fileID: 4439918299747596}
   - component: {fileID: 33971444897729876}
   - component: {fileID: 23785721181751874}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1531,7 +1531,7 @@ GameObject:
   - component: {fileID: 4882781026737254}
   - component: {fileID: 33809684611107712}
   - component: {fileID: 23165619187249770}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm right_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1546,7 +1546,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4586557572849104}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1563,7 +1563,7 @@ GameObject:
   - component: {fileID: 4262983699431420}
   - component: {fileID: 33187271431533060}
   - component: {fileID: 23291971905163590}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1580,7 +1580,7 @@ GameObject:
   - component: {fileID: 4131524194881836}
   - component: {fileID: 33881513077441366}
   - component: {fileID: 23019171619917942}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1597,7 +1597,7 @@ GameObject:
   - component: {fileID: 4320592638047654}
   - component: {fileID: 33525508737244466}
   - component: {fileID: 23129935218430066}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1612,7 +1612,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4787389952341796}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1627,7 +1627,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4765703304753708}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1642,7 +1642,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4870386052533674}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1659,7 +1659,7 @@ GameObject:
   - component: {fileID: 4272980748921878}
   - component: {fileID: 33557377717430294}
   - component: {fileID: 23162762698689042}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1676,7 +1676,7 @@ GameObject:
   - component: {fileID: 4577698076795312}
   - component: {fileID: 33901887081013064}
   - component: {fileID: 23929171577342450}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1693,7 +1693,7 @@ GameObject:
   - component: {fileID: 4581506029440950}
   - component: {fileID: 33480275562200174}
   - component: {fileID: 23278623992124908}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1710,7 +1710,7 @@ GameObject:
   - component: {fileID: 4952433522239586}
   - component: {fileID: 33654685679167114}
   - component: {fileID: 23199370364063564}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1725,7 +1725,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4517095350732370}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: foot_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1742,7 +1742,7 @@ GameObject:
   - component: {fileID: 4599525166031974}
   - component: {fileID: 33572557824888810}
   - component: {fileID: 23981174843490534}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank left_MeshPart8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1759,7 +1759,7 @@ GameObject:
   - component: {fileID: 4377058027403072}
   - component: {fileID: 33739629222352516}
   - component: {fileID: 23871587688047340}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm left_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1776,7 +1776,7 @@ GameObject:
   - component: {fileID: 4094237414211996}
   - component: {fileID: 33945849342842266}
   - component: {fileID: 23610683890650278}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1791,7 +1791,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4570467941228024}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1806,7 +1806,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4958512882538992}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: foot_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1823,7 +1823,7 @@ GameObject:
   - component: {fileID: 4065031189325680}
   - component: {fileID: 33335794003541196}
   - component: {fileID: 23308163991559118}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1840,7 +1840,7 @@ GameObject:
   - component: {fileID: 4041874096211524}
   - component: {fileID: 33262133216163028}
   - component: {fileID: 23264867677137868}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1855,7 +1855,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4659693570091332}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1872,7 +1872,7 @@ GameObject:
   - component: {fileID: 4482366486694202}
   - component: {fileID: 33375456483769312}
   - component: {fileID: 23438690950243814}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1889,7 +1889,7 @@ GameObject:
   - component: {fileID: 4258582530805454}
   - component: {fileID: 33990177162670248}
   - component: {fileID: 23199178113512692}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart28
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1906,7 +1906,7 @@ GameObject:
   - component: {fileID: 4452451446993728}
   - component: {fileID: 33542563978727856}
   - component: {fileID: 23478032263586204}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart27
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1923,7 +1923,7 @@ GameObject:
   - component: {fileID: 4974947306985710}
   - component: {fileID: 33524802594860918}
   - component: {fileID: 23336988495093054}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1938,7 +1938,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4182628456375916}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1953,7 +1953,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4455913234886876}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1970,7 +1970,7 @@ GameObject:
   - component: {fileID: 4682565969940982}
   - component: {fileID: 33227776185517542}
   - component: {fileID: 23653665355041726}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1987,7 +1987,7 @@ GameObject:
   - component: {fileID: 4972100724588644}
   - component: {fileID: 33775399387274308}
   - component: {fileID: 23926328790378144}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2004,7 +2004,7 @@ GameObject:
   - component: {fileID: 4436676814578314}
   - component: {fileID: 33212333206323030}
   - component: {fileID: 23670476826050602}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2021,7 +2021,7 @@ GameObject:
   - component: {fileID: 4311091029144454}
   - component: {fileID: 33660728348277158}
   - component: {fileID: 23322234910718412}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2038,7 +2038,7 @@ GameObject:
   - component: {fileID: 4773182529951924}
   - component: {fileID: 33602549010625584}
   - component: {fileID: 23483024915384898}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: foot right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2055,7 +2055,7 @@ GameObject:
   - component: {fileID: 4171345108014340}
   - component: {fileID: 33250219548877566}
   - component: {fileID: 23932528668994306}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2072,7 +2072,7 @@ GameObject:
   - component: {fileID: 4692002693202096}
   - component: {fileID: 33692919491405988}
   - component: {fileID: 23036460449031622}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2089,7 +2089,7 @@ GameObject:
   - component: {fileID: 4610144674607012}
   - component: {fileID: 33081717250559512}
   - component: {fileID: 23367347883150304}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2106,7 +2106,7 @@ GameObject:
   - component: {fileID: 4147936430458644}
   - component: {fileID: 33543212102938840}
   - component: {fileID: 23796837823589810}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2123,7 +2123,7 @@ GameObject:
   - component: {fileID: 4637685493080324}
   - component: {fileID: 33443596913936278}
   - component: {fileID: 23108685790412176}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2140,7 +2140,7 @@ GameObject:
   - component: {fileID: 4625462405072274}
   - component: {fileID: 33300298318510140}
   - component: {fileID: 23126984940245984}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2157,7 +2157,7 @@ GameObject:
   - component: {fileID: 4217054111078230}
   - component: {fileID: 33653259253844892}
   - component: {fileID: 23542164208065146}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2174,7 +2174,7 @@ GameObject:
   - component: {fileID: 4807308711536404}
   - component: {fileID: 33612010290395522}
   - component: {fileID: 23564396809357400}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2191,7 +2191,7 @@ GameObject:
   - component: {fileID: 4251533693317212}
   - component: {fileID: 33141470205442206}
   - component: {fileID: 23889985833608752}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2208,7 +2208,7 @@ GameObject:
   - component: {fileID: 4309731123447946}
   - component: {fileID: 33088033678985118}
   - component: {fileID: 23046133570089280}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2223,7 +2223,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4586173370585240}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -2240,7 +2240,7 @@ GameObject:
   - component: {fileID: 4176085919083662}
   - component: {fileID: 33988564762566726}
   - component: {fileID: 23700778034385384}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2257,7 +2257,7 @@ GameObject:
   - component: {fileID: 4014610364012944}
   - component: {fileID: 33736635123594400}
   - component: {fileID: 23081301901610954}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2274,7 +2274,7 @@ GameObject:
   - component: {fileID: 4952476062823168}
   - component: {fileID: 33097626095824628}
   - component: {fileID: 23074378680472116}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2291,7 +2291,7 @@ GameObject:
   - component: {fileID: 4201646811110988}
   - component: {fileID: 33179931281890016}
   - component: {fileID: 23623146457756464}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh left_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2308,7 +2308,7 @@ GameObject:
   - component: {fileID: 4048555607356884}
   - component: {fileID: 33954817172602242}
   - component: {fileID: 23599490463353660}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2325,7 +2325,7 @@ GameObject:
   - component: {fileID: 4143752682992328}
   - component: {fileID: 33918462463436960}
   - component: {fileID: 23076797331682588}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm left_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2342,7 +2342,7 @@ GameObject:
   - component: {fileID: 4454971175078544}
   - component: {fileID: 33799661510454278}
   - component: {fileID: 23986687846019246}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: unterarm left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2357,7 +2357,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4623809666516220}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2372,7 +2372,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4972746002572156}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: oberarm_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -2389,7 +2389,7 @@ GameObject:
   - component: {fileID: 4995865810780870}
   - component: {fileID: 33247215054125708}
   - component: {fileID: 23914900360284778}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2406,7 +2406,7 @@ GameObject:
   - component: {fileID: 4791037292527334}
   - component: {fileID: 33550488454192128}
   - component: {fileID: 23366362315553856}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip_MeshPart29
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2424,7 +2424,7 @@ GameObject:
   - component: {fileID: 65693198898441550}
   - component: {fileID: 54299016079198622}
   - component: {fileID: 114403171553754556}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: PreviewModel_OldRoboy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2441,7 +2441,7 @@ GameObject:
   - component: {fileID: 4955287252936768}
   - component: {fileID: 33777670567340338}
   - component: {fileID: 23323625478871962}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh right_MeshPart15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2458,7 +2458,7 @@ GameObject:
   - component: {fileID: 4064352652397788}
   - component: {fileID: 33808877973231170}
   - component: {fileID: 23095130000226186}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2475,8 +2475,7 @@ GameObject:
   - component: {fileID: 4993906060030010}
   - component: {fileID: 33647580654910500}
   - component: {fileID: 23525187796780872}
-  - component: {fileID: 135138124049493764}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: head
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -2493,7 +2492,7 @@ GameObject:
   - component: {fileID: 4046560883570492}
   - component: {fileID: 33324642157907868}
   - component: {fileID: 23130760786019924}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank right_MeshPart7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2508,7 +2507,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4714502380767100}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9529,15 +9528,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SimulationModel: {fileID: 1806410940888764, guid: 81a5bae583615da4c85e81904d7d79f0,
     type: 2}
---- !u!135 &135138124049493764
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1991199698609104}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.18434307
-  m_Center: {x: -0.00064837927, y: -0.016019614, z: -0.207632}

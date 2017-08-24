@@ -369,6 +369,10 @@ public class InputManager : Singleton<InputManager>
             m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
             m_GUIController.ControllerEventListener.Gripped += OnChangeGUITool;
         }
+        if (m_ModelSpawnController)
+        {
+            m_ModelSpawnController.gameObject.SetActive(false);
+        }
 
         //CHANGE THIS
         m_SelectorTool.ControllerEventListener.Gripped += OnChangeTool;

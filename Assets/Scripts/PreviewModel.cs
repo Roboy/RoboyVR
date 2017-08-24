@@ -14,6 +14,9 @@ public class PreviewModel : MonoBehaviour {
     [SerializeField]
     private GameObject SimulationModel;
 
+    [SerializeField]
+    private float CollisionRadius = 1f;
+
     /// <summary>
     /// We need this boolean to avoid spawning models which collide and therefore trigger a collision in ROS and making boom boom.
     /// </summary>
@@ -27,11 +30,13 @@ public class PreviewModel : MonoBehaviour {
     /// <summary>
     /// We need this list so we can cache all materials to indicate whether the model can be inserted or not.
     /// </summary>
-    private Material[] m_Materials;
+    private List<Renderer> m_Renderers = new List<Renderer>();
 
     private Material m_Material_True;
 
     private Material m_Material_Fail;
+
+    private LayerMask m_LayerMask;
 
     void Start()
     {
@@ -44,8 +49,16 @@ public class PreviewModel : MonoBehaviour {
         {
             // get the renderer and copy all materials of the current child to the cached array
             Renderer renderer = child.gameObject.GetComponent<Renderer>();
-            Array.Copy(renderer.materials, m_Materials, renderer.materials.Length);
+            if (renderer != null)
+            {
+                m_Renderers.Add(renderer);
+            }
+                
         }
+        // at the start set the state to non colliding
+        changeMaterials(false);
+
+        m_LayerMask = 1 << LayerMask.NameToLayer("ModelLayer");
     }
 
     public void FixedUpdate()
@@ -59,6 +72,8 @@ public class PreviewModel : MonoBehaviour {
             return;
         Instantiate(SimulationModel, transform.position, transform.rotation);
         ModeManager.Instance.CurrentSpawnViewerMode = ModeManager.SpawnViewerMode.Idle;
+        Destroy(InputManager.Instance.Selector_Tool.CurrentPreviewModel.gameObject);
+        InputManager.Instance.Selector_Tool.CurrentPreviewModel = null;
     }
 
     /// <summary>
@@ -66,8 +81,9 @@ public class PreviewModel : MonoBehaviour {
     /// </summary>
     private void checkCollision()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2.0f);
-        if (hitColliders.Length == 0)
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, CollisionRadius, m_LayerMask);
+        // this means we only collide with ourself
+        if (hitColliders.Length == 1)
         {
             m_Colliding = false;
         }
@@ -80,6 +96,11 @@ public class PreviewModel : MonoBehaviour {
             m_LastCollidingValue = m_Colliding;
             changeMaterials(m_Colliding);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, CollisionRadius);
     }
 
     /// <summary>
@@ -98,11 +119,14 @@ public class PreviewModel : MonoBehaviour {
         {
             stateMaterial = m_Material_True;
         }
-        foreach (var material in m_Materials)
+        foreach (var renderer in m_Renderers)
         {
-            material.color = stateMaterial.color;
+            renderer.material = stateMaterial;
+            for (int i = 0; i < renderer.materials.Length; i++)
+            {
+                renderer.materials[i] = stateMaterial;
+            }
         }
+        
     }
-
-
 }

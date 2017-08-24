@@ -517,7 +517,7 @@ GameObject:
   - component: {fileID: 98321180}
   - component: {fileID: 98321179}
   - component: {fileID: 98321178}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Right_eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -600,7 +600,7 @@ GameObject:
   - component: {fileID: 102278727}
   - component: {fileID: 102278726}
   - component: {fileID: 102278725}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Left_eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -771,7 +771,7 @@ GameObject:
   - component: {fileID: 147856605}
   - component: {fileID: 147856607}
   - component: {fileID: 147856606}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS thigh left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -948,6 +948,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1496416105005138, guid: a46c9aa5487ab33488921e547d38c856, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a46c9aa5487ab33488921e547d38c856, type: 2}
   m_IsPrefabParent: 0
@@ -968,7 +972,7 @@ GameObject:
   - component: {fileID: 189078331}
   - component: {fileID: 189078330}
   - component: {fileID: 189078332}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hand_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1044,7 +1048,7 @@ GameObject:
   - component: {fileID: 227831607}
   - component: {fileID: 227831609}
   - component: {fileID: 227831608}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS torso_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1295,7 +1299,7 @@ GameObject:
   - component: {fileID: 249376152}
   - component: {fileID: 249376151}
   - component: {fileID: 249376153}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: spine
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1360,6 +1364,134 @@ CapsuleCollider:
   m_Height: 2.0671136
   m_Direction: 2
   m_Center: {x: -0.8910921, y: -1.7792602, z: -9.231783}
+--- !u!43 &270928558
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 24
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0.01, z: 0}
+      m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 13
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 28
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 288
+    _typelessdata: 0000c03f0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0.01, z: 0}
+    m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0
 --- !u!1 &271234630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,7 +1500,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 271234631}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso_pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1409,7 +1541,7 @@ GameObject:
   - component: {fileID: 331690339}
   - component: {fileID: 331690338}
   - component: {fileID: 331690340}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1488,7 +1620,7 @@ GameObject:
   - component: {fileID: 359830719}
   - component: {fileID: 359830718}
   - component: {fileID: 359830720}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: fuss_links
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -1608,7 +1740,7 @@ GameObject:
   - component: {fileID: 360341420}
   - component: {fileID: 360341427}
   - component: {fileID: 360341422}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Roboy_pivot_corrected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1830,116 +1962,6 @@ MonoBehaviour:
   Github_Repository: https://github.com/Roboy/roboy_models/
   Branch: master
   ModelsCurrentState: 0
---- !u!1001 &393230785
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1460067809}
-    m_Modifications:
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.08203925
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.34385166
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.15318276
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.004537699
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.99998975
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100008, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100012, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -180.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -180
-      objectReference: {fileID: 0}
-    - target: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300002, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300006, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300012, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300010, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300004, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300008, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300000, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 100014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-  m_IsPrefabParent: 0
---- !u!4 &393230786 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400014, guid: a842219d5e956d34d89183e78ff4de6f, type: 3}
-  m_PrefabInternal: {fileID: 393230785}
 --- !u!1 &396839979
 GameObject:
   m_ObjectHideFlags: 0
@@ -1969,7 +1991,7 @@ Transform:
   - {fileID: 973413418}
   - {fileID: 1104540006}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &425150486
 Prefab:
@@ -2129,77 +2151,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &451852680
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1460067809}
-    m_Modifications:
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.08203925
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.23585165
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.15218276
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_Name
-      value: MrMeeseeks
-      objectReference: {fileID: 0}
-    - target: {fileID: 100054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9500000, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9500000, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-      propertyPath: m_UpdateMode
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 9500000, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-  m_ParentPrefab: {fileID: 100100000, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-  m_IsPrefabParent: 0
 --- !u!1 &457609246
 GameObject:
   m_ObjectHideFlags: 0
@@ -2291,7 +2242,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1911175592}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Roboy_simplified
   m_TagString: Roboy
   m_Icon: {fileID: 0}
@@ -2456,7 +2407,7 @@ GameObject:
   - component: {fileID: 579394554}
   - component: {fileID: 579394556}
   - component: {fileID: 579394555}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS shank left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2529,7 +2480,7 @@ GameObject:
   - component: {fileID: 591251643}
   - component: {fileID: 591251645}
   - component: {fileID: 591251644}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS hip_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2654,7 +2605,7 @@ GameObject:
   - component: {fileID: 625411137}
   - component: {fileID: 625411136}
   - component: {fileID: 625411138}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: upper_arm_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -2769,7 +2720,7 @@ GameObject:
   - component: {fileID: 647184176}
   - component: {fileID: 647184178}
   - component: {fileID: 647184177}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS thigh left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2840,7 +2791,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 654935357}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: head pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2895,7 +2846,7 @@ GameObject:
   - component: {fileID: 687111936}
   - component: {fileID: 687111938}
   - component: {fileID: 687111937}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS hand right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3137,7 +3088,7 @@ GameObject:
   - component: {fileID: 713285614}
   - component: {fileID: 713285613}
   - component: {fileID: 713285612}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: head
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -3239,7 +3190,7 @@ GameObject:
   - component: {fileID: 725253255}
   - component: {fileID: 725253254}
   - component: {fileID: 725253256}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: torso
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -3316,7 +3267,7 @@ GameObject:
   - component: {fileID: 780898549}
   - component: {fileID: 780898551}
   - component: {fileID: 780898550}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS torso_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3395,7 +3346,7 @@ GameObject:
   - component: {fileID: 822383273}
   - component: {fileID: 822383272}
   - component: {fileID: 822383274}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -3471,7 +3422,7 @@ GameObject:
   - component: {fileID: 836828475}
   - component: {fileID: 836828477}
   - component: {fileID: 836828476}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS hip_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3545,7 +3496,7 @@ GameObject:
   - component: {fileID: 844455431}
   - component: {fileID: 844455430}
   - component: {fileID: 844455429}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: vertebrae_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4049,7 +4000,7 @@ GameObject:
   - component: {fileID: 877290128}
   - component: {fileID: 877290130}
   - component: {fileID: 877290129}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS lower arm left_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4321,7 +4272,7 @@ GameObject:
   - component: {fileID: 898156529}
   - component: {fileID: 898156531}
   - component: {fileID: 898156530}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS shank left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4401,7 +4352,7 @@ GameObject:
   - component: {fileID: 919459209}
   - component: {fileID: 919459208}
   - component: {fileID: 919459210}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: fuss_rechts
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -4519,7 +4470,7 @@ GameObject:
   - component: {fileID: 971730899}
   - component: {fileID: 971730898}
   - component: {fileID: 971730900}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: upper_arm_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -4718,7 +4669,7 @@ GameObject:
   - component: {fileID: 1057874240}
   - component: {fileID: 1057874238}
   - component: {fileID: 1057874239}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: gelenkhuelse_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4904,7 +4855,7 @@ GameObject:
   - component: {fileID: 1139655572}
   - component: {fileID: 1139655571}
   - component: {fileID: 1139655573}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: lower_arm_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -5021,7 +4972,7 @@ GameObject:
   - component: {fileID: 1170622147}
   - component: {fileID: 1170622145}
   - component: {fileID: 1170622146}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: neck_cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5127,6 +5078,39 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.063244924, y: 0.0016115803, z: 0.06324494}
   m_Center: {x: 0, y: -0.0027292774, z: -0.0016171861}
+--- !u!21 &1187171605
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1192137905
 GameObject:
   m_ObjectHideFlags: 0
@@ -5138,7 +5122,7 @@ GameObject:
   - component: {fileID: 1192137906}
   - component: {fileID: 1192137908}
   - component: {fileID: 1192137907}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS hip_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5283,10 +5267,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1219059243 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400054, guid: 0c142374dd4e3ce4b8f22486a6d2244d, type: 3}
-  m_PrefabInternal: {fileID: 451852680}
 --- !u!114 &1239441633 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114487222037550552, guid: a68e06c74e136c744b4ab136403c85a0,
@@ -5304,7 +5284,7 @@ GameObject:
   - component: {fileID: 1266361994}
   - component: {fileID: 1266361996}
   - component: {fileID: 1266361995}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS lower arm left_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5509,7 +5489,7 @@ GameObject:
   - component: {fileID: 1347321417}
   - component: {fileID: 1347321416}
   - component: {fileID: 1347321415}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: vertebrae_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5598,7 +5578,7 @@ GameObject:
   - component: {fileID: 1356106848}
   - component: {fileID: 1356106847}
   - component: {fileID: 1356106849}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shank_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -5736,7 +5716,7 @@ GameObject:
   - component: {fileID: 1377023428}
   - component: {fileID: 1377023430}
   - component: {fileID: 1377023429}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS thigh right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5810,7 +5790,7 @@ GameObject:
   - component: {fileID: 1424733043}
   - component: {fileID: 1424733042}
   - component: {fileID: 1424733044}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: hip
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -5888,7 +5868,7 @@ GameObject:
   - component: {fileID: 1440043883}
   - component: {fileID: 1440043885}
   - component: {fileID: 1440043884}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS shank right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5963,7 +5943,7 @@ GameObject:
   - component: {fileID: 1456507612}
   - component: {fileID: 1456507610}
   - component: {fileID: 1456507611}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: gelenkhuelse_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6064,7 +6044,7 @@ GameObject:
   - component: {fileID: 1457110932}
   - component: {fileID: 1457110934}
   - component: {fileID: 1457110933}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS hip_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6126,37 +6106,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1457110931}
   m_Mesh: {fileID: 4300000, guid: 107bb50d5b90da843b2f1c60bc47f00e, type: 3}
---- !u!1 &1460067808
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1460067809}
-  m_Layer: 0
-  m_Name: EasterEggs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1460067809
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1460067808}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.08203925, y: 0.23585165, z: 0.15218276}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1780816268}
-  - {fileID: 393230786}
-  - {fileID: 1219059243}
-  m_Father: {fileID: 0}
-  m_RootOrder: 18
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1464673231
 GameObject:
   m_ObjectHideFlags: 0
@@ -6293,7 +6242,7 @@ RectTransform:
   - {fileID: 896472203}
   - {fileID: 564367808}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6355,7 +6304,7 @@ GameObject:
   - component: {fileID: 1544554401}
   - component: {fileID: 1544554400}
   - component: {fileID: 1544554399}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: vertebrae_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6501,7 +6450,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1638522077}
-  m_Mesh: {fileID: 1688752832}
+  m_Mesh: {fileID: 270928558}
 --- !u!23 &1638522081
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6516,7 +6465,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 1881063951}
+  - {fileID: 1187171605}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6562,7 +6511,7 @@ GameObject:
   - component: {fileID: 1648276774}
   - component: {fileID: 1648276776}
   - component: {fileID: 1648276775}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS spine_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9997,134 +9946,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
---- !u!43 &1688752832
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 8
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 24
-    topology: 0
-    firstVertex: 0
-    vertexCount: 8
-    localAABB:
-      m_Center: {x: 0, y: 0.01, z: 0}
-      m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
-  m_Skin: []
-  m_VertexData:
-    m_CurrentChannels: 13
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 28
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 288
-    _typelessdata: 0000c03f0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0.01, z: 0}
-    m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshOptimized: 0
 --- !u!1 &1694427463
 GameObject:
   m_ObjectHideFlags: 0
@@ -10137,7 +9958,7 @@ GameObject:
   - component: {fileID: 1694427466}
   - component: {fileID: 1694427465}
   - component: {fileID: 1694427467}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: lower_arm_left
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -10219,7 +10040,7 @@ GameObject:
   - component: {fileID: 1707148006}
   - component: {fileID: 1707148008}
   - component: {fileID: 1707148007}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS hand right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10294,7 +10115,7 @@ GameObject:
   - component: {fileID: 1735672910}
   - component: {fileID: 1735672908}
   - component: {fileID: 1735672909}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10477,7 +10298,7 @@ GameObject:
   - component: {fileID: 1767975828}
   - component: {fileID: 1767975830}
   - component: {fileID: 1767975829}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS spine_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10555,7 +10376,7 @@ GameObject:
   - component: {fileID: 1778414403}
   - component: {fileID: 1778414405}
   - component: {fileID: 1778414404}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS shank right_MeshPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10617,100 +10438,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1778414402}
   m_Mesh: {fileID: 4300002, guid: da71d79c9d2f4ce4f9ed8532f3efc9d2, type: 3}
---- !u!1001 &1780816267
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1460067809}
-    m_Modifications:
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.339
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.23585165
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.15218276
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.19999994
-      objectReference: {fileID: 0}
-    - target: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.19999994
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300014, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300012, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300000, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300004, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300008, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300010, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300002, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 2300006, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f5a180e78cba3b64d9cffa9c458a391d, type: 2}
-    - target: {fileID: 100016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-  m_IsPrefabParent: 0
---- !u!4 &1780816268 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400016, guid: c48495c981eb3c54aa470e6099b4adde, type: 3}
-  m_PrefabInternal: {fileID: 1780816267}
 --- !u!1 &1783014340
 GameObject:
   m_ObjectHideFlags: 0
@@ -10722,7 +10449,7 @@ GameObject:
   - component: {fileID: 1783014341}
   - component: {fileID: 1783014343}
   - component: {fileID: 1783014342}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS torso_MeshPart2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10959,7 +10686,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 0.726
@@ -10973,7 +10700,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_FalloffTable:
@@ -11007,39 +10734,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 72.5, y: 441.4, z: 0}
---- !u!21 &1881063951
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!224 &1902235939 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224348773602752846, guid: a68e06c74e136c744b4ab136403c85a0,
@@ -11084,7 +10778,7 @@ GameObject:
   - component: {fileID: 1920687562}
   - component: {fileID: 1920687564}
   - component: {fileID: 1920687563}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS torso_MeshPart3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11158,7 +10852,7 @@ GameObject:
   - component: {fileID: 1922071704}
   - component: {fileID: 1922071703}
   - component: {fileID: 1922071705}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: thigh_right
   m_TagString: RoboyPart
   m_Icon: {fileID: 0}
@@ -11363,7 +11057,7 @@ GameObject:
   - component: {fileID: 2049847134}
   - component: {fileID: 2049847136}
   - component: {fileID: 2049847135}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: VIS thigh right_MeshPart0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

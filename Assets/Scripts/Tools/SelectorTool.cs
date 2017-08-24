@@ -48,6 +48,11 @@ public class SelectorTool : ControllerTool
     /// </summary>
     public void GetRayFromController()
     {
+        if (ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.InsertPreview && CurrentPreviewModel != null && m_SteamVRDevice.GetHairTriggerDown())
+        {
+            CurrentPreviewModel.CreateSimulationModel();
+        }
+
         // Start a ray from the controller
         RaycastHit hit;
         m_LineRenderer.SetPosition(0, transform.position);
@@ -60,7 +65,7 @@ public class SelectorTool : ControllerTool
             SelectableObject hittedObject = null;
 
             // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
-            if (ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
+            if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer && ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
                 return;
             //Depending on the tag (== UI elem type), call different fcts 
             switch (hit.transform.tag)
@@ -106,17 +111,15 @@ public class SelectorTool : ControllerTool
                     if (ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.InsertPreview && CurrentPreviewModel != null)
                     {
                         // move the current insert model above the point where we point on the floor
-                        CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 2, 0);
-                        if (m_SteamVRDevice.GetHairTriggerDown())
-                        {
-
-                        }
+                        CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 0.5f, 0);
+                        CurrentPreviewModel.transform.LookAt(transform);
                     }
                     break;
                 default: //not UI -> Roboy parts
                     hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
                     break;
             }
+           
             //if object found
             if (hittedObject != null)
             {

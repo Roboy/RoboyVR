@@ -31,14 +31,26 @@ public class ModelButton : MonoBehaviour {
 	}
 
     /// <summary>
-    /// Instantiate the preview model and change the current spawn viewer mode in the ModeManager.
+    /// Intermediary function so we can wait in the coroutine one frame between changing the spawn viewer mode and setting the preview model in selectorTool.
     /// </summary>
     private void createPreviewModel()
     {
+        StartCoroutine(createPreviewModelCoroutine());
+    }
+
+    /// <summary>
+    /// Instantiate the preview model and change the current spawn viewer mode in the ModeManager.
+    /// </summary>
+    private IEnumerator createPreviewModelCoroutine()
+    {
         if (ModeManager.Instance.CurrentSpawnViewerMode != ModeManager.SpawnViewerMode.Idle)
-            return;
+            yield break;
+        if (PreviewModel == null)
+            yield break;
 
         m_SpawnedModel = Instantiate(PreviewModel, Vector3.zero, Quaternion.identity);
         ModeManager.Instance.CurrentSpawnViewerMode = ModeManager.SpawnViewerMode.InsertPreview;
+        yield return null;
+        InputManager.Instance.Selector_Tool.CurrentPreviewModel = m_SpawnedModel;
     }
 }
