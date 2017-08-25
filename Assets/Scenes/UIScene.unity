@@ -5853,7 +5853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936e9a2dccccf15459925edf6f95ce4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skybox: {fileID: 2100000, guid: 02b0f53515f3bd94fbda23503c81ef5d, type: 2}
+  skybox: {fileID: 2100000, guid: dc4b3d2c2cccd5d4fab7ea72f7406a9c, type: 2}
   m_modes:
   - {fileID: 1931244425}
   - {fileID: 328096875}
