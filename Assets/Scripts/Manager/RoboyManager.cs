@@ -215,10 +215,12 @@ public class RoboyManager : Singleton<RoboyManager>
         Dictionary<string, float> qzRotationsDictionary = m_RoboyPoseMessage.QzDic;
         Dictionary<string, float> qwRotationsDictionary = m_RoboyPoseMessage.QwDic;
 
-
+        Debug.Log(name);
 
         foreach (KeyValuePair<string, RoboyPart> roboyPart in m_RoboyPartsList[name])
         {
+            Debug.Log(roboyPart.Key);
+            Debug.Log(roboyPart.Value);
             string index = roboyPart.Key;
             Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
             Quaternion originRotation = new Quaternion(qxRotationsDictionary[index], qyRotationsDictionary[index], qzRotationsDictionary[index], qwRotationsDictionary[index]);
