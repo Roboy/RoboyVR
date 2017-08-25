@@ -37,12 +37,18 @@ public class ExampleFunctions : MonoBehaviour {
                               new Vector3(0.2204f, 0.1817f, -0.0833f), //lower arm left
                               new Vector3(0.2109f, 0.1362f, -0.1178f), //lower arm left
                               new Vector3(0.2109f, 0.1193f, -0.134f)}; //lower arm left
+
+        Vector3[] points4 = { new Vector3(0.1814f, 0.274f, -0.047f), //upper arm left
+                              new Vector3(0.1814f, 0.164f, -0.072f), //lower arm left
+                              new Vector3(0.1814f, 0.1287f, -0.102f), //lower arm left
+                              new Vector3(0.1814f, 0.0947f, -0.157f)}; //lower arm left
         string[] names = { "oberarm_left", "torso" };
 
         string[] names3 = { "oberarm_left", "unterarm_left", "unterarm_left", "unterarm_left" };
         VRUILogic.Instance.AddTendon(0, points1, names, 1f);
         VRUILogic.Instance.AddTendon(1, points2, names, 1f);
         VRUILogic.Instance.AddTendon(2, points3, names3, 1f);
+        VRUILogic.Instance.AddTendon(3, points4, names3, 1f);
         m_Arm = VRUILogic.Instance.GetBodyPart("unterarm_left");
 
     }
@@ -57,6 +63,8 @@ public class ExampleFunctions : MonoBehaviour {
         VRUILogic.Instance.UpdateTendon(0, x);
         VRUILogic.Instance.UpdateTendon(1, x);
         VRUILogic.Instance.UpdateTendon(2, 1-x);
+        VRUILogic.Instance.UpdateTendon(3, 1 - x);
+
         if (m_Arm)
         {
             Vector3 temp = m_Arm.transform.position;
