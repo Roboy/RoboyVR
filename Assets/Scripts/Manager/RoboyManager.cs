@@ -59,6 +59,8 @@ public class RoboyManager : Singleton<RoboyManager>
     [SerializeField]
     private Transform m_Roboy;
 
+    private Dictionary<string, Transform> m_Roboys = new Dictionary<string, Transform>();
+
     /// <summary>
     /// Pose message of roboy in ou r build in class
     /// </summary>
@@ -69,6 +71,8 @@ public class RoboyManager : Singleton<RoboyManager>
     /// </summary>
     private Dictionary<string, RoboyPart> m_RoboyParts
         = new Dictionary<string, RoboyPart>();
+
+    private Dictionary<string, Dictionary<string, RoboyPart>> m_RoboyPartsList = new Dictionary<string, Dictionary<string, RoboyPart>>();
 
     #endregion //PRIVATE_MEMBER_VARIABLES
 
@@ -81,7 +85,7 @@ public class RoboyManager : Singleton<RoboyManager>
     {
         getRoboy();
 
-        getRoboyParts();
+        //getRoboyParts();
 
         InitializeRoboyParts();
     }
@@ -98,6 +102,15 @@ public class RoboyManager : Singleton<RoboyManager>
     #endregion //MONOBEHAVIOR_METHODS
 
     #region PUBLIC_METHODS
+
+    public void AddRoboy(Transform roboy)
+    {
+        if (!m_Roboys.ContainsKey(roboy.name))
+        {
+            m_Roboys.Add(roboy.name, roboy);
+            getRoboyParts(roboy.name);
+        }
+    }
 
     /// <summary>
     /// Initializes the roboy parts with a random count of motors => WILL BE CHANGED IN THE FUTURE, for now just a template
@@ -118,7 +131,7 @@ public class RoboyManager : Singleton<RoboyManager>
     public void ReceiveMessage(RoboyPoseMsg msg)
     {
         //Debug.Log("Received message");
-        adjustPose(msg);
+        adjustPose(msg.Name, msg);
 
         //Use additional data to adjust motor values
 
@@ -189,7 +202,7 @@ public class RoboyManager : Singleton<RoboyManager>
     /// Adjusts roboy pose for all parts with the values from the simulation.
     /// </summary>
     /// <param name="msg">JSON msg containing the roboy pose.</param>
-    void adjustPose(RoboyPoseMsg msg)
+    void adjustPose(string name, RoboyPoseMsg msg)
     {
         m_RoboyPoseMessage = msg;
 
@@ -202,7 +215,9 @@ public class RoboyManager : Singleton<RoboyManager>
         Dictionary<string, float> qzRotationsDictionary = m_RoboyPoseMessage.QzDic;
         Dictionary<string, float> qwRotationsDictionary = m_RoboyPoseMessage.QwDic;
 
-        foreach (KeyValuePair<string, RoboyPart> roboyPart in m_RoboyParts)
+
+
+        foreach (KeyValuePair<string, RoboyPart> roboyPart in m_RoboyPartsList[name])
         {
             string index = roboyPart.Key;
             Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
@@ -233,26 +248,25 @@ public class RoboyManager : Singleton<RoboyManager>
     /// <summary>
     /// Searches for roboy and all roboy parts.
     /// </summary>
-    void getRoboyParts()
+    void getRoboyParts(string name)
     {
-
-        if (m_Roboy == null)
-        {
-            getRoboy();
-        }
-
-        foreach (Transform trans in m_Roboy)
+        if (!m_Roboys.ContainsKey(name))
+            return;
+        //if (m_Roboy == null)
+        //{
+        //    getRoboy();
+        //}
+        m_RoboyPartsList.Add(name, new Dictionary<string, RoboyPart>());
+        foreach (Transform trans in m_Roboys[name])
         {
             foreach (Transform t in trans.GetComponentsInChildren<Transform>())
             {
                 if (t == null | !t.CompareTag("RoboyPart"))
                     continue;
-                m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
+                m_RoboyPartsList[name].Add(t.name, t.GetComponent<RoboyPart>());
+                //m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
             }
         }
-
-
-
     }
     #endregion //PRIVATE_METHODS
 }

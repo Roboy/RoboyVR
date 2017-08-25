@@ -51,7 +51,7 @@ public class ModelButton : MonoBehaviour {
         if (PreviewModel == null)
             yield break;
 
-        m_SpawnedModel = Instantiate(PreviewModel, Vector3.zero, Quaternion.identity);
+        m_SpawnedModel = Instantiate(PreviewModel, Vector3.zero, PreviewModel.transform.rotation);
         m_SpawnedModel.gameObject.name = PreviewModel.gameObject.name;
         InputManager.Instance.ModelSpawn_Controller.Operating = true;
         yield return null;

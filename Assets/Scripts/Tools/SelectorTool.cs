@@ -112,7 +112,7 @@ public class SelectorTool : ControllerTool
                     {
                         // move the current insert model above the point where we point on the floor
                         CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 0.5f, 0);
-                        CurrentPreviewModel.transform.LookAt(transform);
+                        //CurrentPreviewModel.transform.LookAt(transform);
                     }
                     break;
                 default: //not UI -> Roboy parts

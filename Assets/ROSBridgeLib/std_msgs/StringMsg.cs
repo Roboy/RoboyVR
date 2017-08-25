@@ -6,6 +6,7 @@ namespace ROSBridgeLib {
 	namespace std_msgs {
 		public class StringMsg : ROSBridgeMsg {
 			private string _data;
+            private string _identifier;
 			
 			public StringMsg(JSONNode msg) {
 				_data = msg["data"];
@@ -14,6 +15,12 @@ namespace ROSBridgeLib {
 			public StringMsg(string data) {
 				_data = data;
 			}
+
+            public StringMsg(string identifier, string data)
+            {
+                _identifier = identifier;
+                _data = data;
+            }
 			
 			public static string GetMessageType() {
 				return "std_msgs/String";
@@ -28,7 +35,9 @@ namespace ROSBridgeLib {
 			}
 			
 			public override string ToYAMLString() {
-				return "{\"data\" : " + _data + "}";
+                if (!string.IsNullOrEmpty(_identifier))
+                    return "\"" + _identifier + "\" : " + _data;
+                return "{\"data\" : " + _data + "}";
 			}
 		}
 	}

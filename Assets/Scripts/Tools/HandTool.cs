@@ -78,7 +78,7 @@ public class HandTool : ControllerTool {
         qzDic.Add(linkName, gazeboRotation.z);
         qwDic.Add(linkName, gazeboRotation.w);
 
-        ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg(linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
+        ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
         ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
     }
 }

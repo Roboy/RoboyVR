@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using ROSBridgeLib.custom_msgs;
+using ROSBridgeLib;
 
 /// <summary>
 /// Interface class to spawn a simulation model in Unity and a ROS node.
@@ -70,10 +72,21 @@ public class PreviewModel : MonoBehaviour {
     {
         if (m_Colliding)
             return;
-        Instantiate(SimulationModel, transform.position, transform.rotation);
+        GameObject simModel = Instantiate(SimulationModel, transform.position, transform.rotation);
+        simModel.name = SimulationModel.name;
         InputManager.Instance.ModelSpawn_Controller.Operating = false;
         Destroy(InputManager.Instance.Selector_Tool.CurrentPreviewModel.gameObject);
         InputManager.Instance.Selector_Tool.CurrentPreviewModel = null;
+        if (SimulationModel.GetComponent<ROSObject>() == null)
+            return;
+        // publish a message to add the object to ros node
+        List<string> objects = new List<string>();
+        objects.Add(SimulationModel.name);
+        List<Vector3> positions = new List<Vector3>();
+        positions.Add(GazeboUtility.UnityPositionToGazebo(transform.position));
+        ModelMsg msg = new ModelMsg(1, 1, objects, positions);
+        ROSBridge.Instance.Publish(RoboyModelPublisher.GetMessageTopic(), msg);
+        RoboyManager.Instance.AddRoboy(simModel.transform);
     }
 
     /// <summary>
@@ -83,7 +96,7 @@ public class PreviewModel : MonoBehaviour {
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, CollisionRadius, m_LayerMask);
         // this means we only collide with ourself
-        if (hitColliders.Length == 1)
+        if (hitColliders.Length == 0)
         {
             m_Colliding = false;
         }

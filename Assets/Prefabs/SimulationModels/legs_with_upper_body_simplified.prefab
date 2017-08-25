@@ -2104,8 +2104,12 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4025536198625924}
+  - component: {fileID: 114785458165587182}
+  - component: {fileID: 114651810895397034}
+  - component: {fileID: 114625007022615704}
+  - component: {fileID: 114383367531827754}
   m_Layer: 14
-  m_Name: Roboy_Complete
+  m_Name: legs_with_upper_body_simplified
   m_TagString: Roboy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9802,6 +9806,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
+--- !u!114 &114383367531827754
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1806410940888764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0070c7f673da6ba47af8ff4d151d2d33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114390065438934920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9857,6 +9872,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetedMaterial: {fileID: 2100000, guid: 6fce591514621d141a38697f61760e02, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 72b11838c3881074d967d207e327dc1c, type: 2}
+--- !u!114 &114625007022615704
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1806410940888764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a76df4b456f67469e54c531379b4c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114651810895397034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1806410940888764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b3f423d7a727945897dd38e26f72ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114780417543606758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9871,6 +9908,17 @@ MonoBehaviour:
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 0}
   MotorCount: 0
+--- !u!114 &114785458165587182
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1806410940888764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 768a524c48909a4409e39094364ae478, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114803352519603770
 MonoBehaviour:
   m_ObjectHideFlags: 1

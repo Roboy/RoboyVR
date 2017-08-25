@@ -10,6 +10,11 @@ namespace ROSBridgeLib
         {
 
             #region PUBLIC_MEMBER_VARIABLES
+            public string Name
+            {
+                get { return _roboyName; }
+            }
+
             public Dictionary<string, float> XDic
             {
                 get
@@ -71,9 +76,11 @@ namespace ROSBridgeLib
             #region PRIVATE_MEMBER_VARIABLES
 
             // TO DO MSG SO WE CAN PUBLISH IT
+            private std_msgs.StringMsg _roboyNameMsg;
             private StringArrayMsg _linkNames;
             private FloatArrayMsg _xArray, _yArray, _zArray, _qxArray, _qyArray, _qzArray, _qwArray;
 
+            private string _roboyName;
             private Dictionary<string, int> _nameIndexDic;
             private Dictionary<string, float> _xDic, _yDic, _zDic, _qxDic, _qyDic, _qzDic, _qwDic;
 
@@ -83,6 +90,7 @@ namespace ROSBridgeLib
 
             public RoboyPoseMsg(JSONNode msg)
             {
+                _roboyName = msg["roboyName"]; 
                 //Parse names to indeces so we know which name corresponds to which value
                 JSONArray nameArray = msg["name"].AsArray;
                 _nameIndexDic = new Dictionary<string, int>();
@@ -165,9 +173,10 @@ namespace ROSBridgeLib
             }
 
             // TO DO: PARSE THE DICS SO THEY ARE IN FLOAT ARRAY MSGS IN THE RIGHT ORDER
-            public RoboyPoseMsg(List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
+            public RoboyPoseMsg(string roboyName, List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
                 Dictionary<string, float> qyDic, Dictionary<string, float> qzDic, Dictionary<string, float> qwDic)
             {
+                _roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
                 _linkNames = new StringArrayMsg("name", linkNames);
 
                 List<float> xValues = new List<float>();
@@ -244,7 +253,7 @@ namespace ROSBridgeLib
 
             public override string ToYAMLString()
             {
-                return "{" + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
+                return "{" + _roboyNameMsg.ToYAMLString() + ", " + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
                     ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() +
                     "}";
             }
