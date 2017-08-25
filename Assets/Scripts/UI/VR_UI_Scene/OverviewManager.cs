@@ -66,7 +66,7 @@ public class OverviewManager : MonoBehaviour
         heart.SetNumberOfPoints(200);
         heart.SetNoAdjustment();
         heart.SetManualAdjust(new Vector2(0, 4));
-        heart.SetGraphColour(Color.green);
+        heart.SetGraphColour(Color.black);
         heart.Play();
     }
 

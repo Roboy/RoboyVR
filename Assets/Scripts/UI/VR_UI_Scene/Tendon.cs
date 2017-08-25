@@ -55,6 +55,11 @@ public class Tendon : MonoBehaviour
     /// Line Renderer used for this tendon
     /// </summary>
     private LineRenderer m_LineRenderer;
+
+    /// <summary>
+    /// Needed to color tendons individually
+    /// </summary>
+    MaterialPropertyBlock block;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -112,6 +117,8 @@ public class Tendon : MonoBehaviour
         m_Force = 0;
         m_WirePointParents = new GameObject[pointPositions.Length];
         m_Wirepoints = new Transform[pointPositions.Length];
+        block = new MaterialPropertyBlock();
+
         //create points in worldspace and connect to parents
         for (int i = 0; i < pointPositions.Length; i++)
         {
@@ -136,6 +143,7 @@ public class Tendon : MonoBehaviour
         m_LineRenderer.material = GetGraphMaterial();
         m_LineRenderer.endWidth = 0.006f;
         m_LineRenderer.startWidth = 0.006f;
+
         if (m_MaxForce == 0)
         {
             m_MaxForce = 5; //TODO: guess for now!!
@@ -198,6 +206,7 @@ public class Tendon : MonoBehaviour
         if (normalizedForce > 1) normalizedForce = 1;
         if (normalizedForce < 0) normalizedForce = 0;
         normalizedForce *= normalizedForce; //stretch curve in a way where higher values make more difference
+        //calculate color
         if (normalizedForce <= 0.5f)
         {
             normalizedForce *= 2;
@@ -209,13 +218,20 @@ public class Tendon : MonoBehaviour
             normalizedForce *= 2;
             c = m_TendonColors[1] * (1 - normalizedForce) + m_TendonColors[2] * (normalizedForce);
         }
+        //apply color
+        /* TODO: not sure whether needed or not, works fine without these lines of code as well
+        m_LineRenderer.GetPropertyBlock(block);
+        block.SetColor("Color", c);
+        m_LineRenderer.SetPropertyBlock(block);*/
         GetGraphMaterial().color = c;
     }
 
     private Material GetGraphMaterial()
     {
-        if (!m_GraphMaterial)
-            m_GraphMaterial = new Material(Shader.Find("Standard"));
+        if (!m_GraphMaterial) {
+            //edit->projectsettings->graphics->always included shader must contain elem
+            m_GraphMaterial = new Material(Shader.Find("Custom/TendonShader"));
+        }
         return m_GraphMaterial;
     }
     #endregion

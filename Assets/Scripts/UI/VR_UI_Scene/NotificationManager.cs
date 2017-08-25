@@ -57,13 +57,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     /// </summary>
     void Update()
     {
-        //test notifications display
-        if (!testing)
-        {
-            testing = true;
-            StartCoroutine(test());
-        }
-
+        
         VRUILogic.UIMode newMode = VRUILogic.Instance.GetCurrentMode();
         if (newMode != m_currentModeSetting)
         {
@@ -71,7 +65,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
             //only in control mode warnings are displayed
             if (m_currentModeSetting == VRUILogic.UIMode.Control)
             {
-                //TODO: Display warnings
+                //TODO: Display warnings in this mode
                 foreach (Notification warning in VRUILogic.Instance.GetAllWarnings())
                 {
                     warning.DisplayHalo();
@@ -79,10 +73,10 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
             }
             else
             {
-                //TODO: hide warnings-> not working yet
+                //TODO: hide warnings-> not working yet ...not needed?
                 foreach (Notification warning in VRUILogic.Instance.GetAllWarnings())
                 {
-                    warning.DisplayHalo();
+                    //warning.DisableHalo();
                 }
             }
         }
@@ -93,31 +87,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
 
 
     #region PRIVATE_METHODS
-    /// <summary>
-    /// used for testing of notifications display
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator test()
-    {
-        
-        yield return new WaitForSeconds(2);
-        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
-        //Debug.Log("Added Warning");
 
-        yield return new WaitForSeconds(4);
-        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "hip", 5);
-        //Debug.Log("Added Error");
-
-        yield return new WaitForSeconds(2);
-        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
-        //Debug.Log("Added Debug");
-
-        yield return new WaitForSeconds(2);
-        VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
-        // Debug.Log("Added debug");
-        testing = false;
-
-    }
 
     /// <summary>
     /// shows 
