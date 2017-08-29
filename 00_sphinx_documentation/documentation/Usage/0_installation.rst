@@ -47,7 +47,7 @@ Part 3: Unity Setup
 -----------------------
 
 1. Download Unity
-  - (latest working version with roboyVR is 5.6.1: https://unity3d.com/de/get-unity/download/archive)
+  - (latest working version with roboyVR is 2017.1.0: https://unity3d.com/de/get-unity/download/archive)
 
 2. Install Unity
   - During the install process make sure to check also the standalone build option.  
