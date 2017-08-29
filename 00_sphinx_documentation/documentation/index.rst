@@ -90,6 +90,14 @@ Contents:
 
   Usage/*
   
+.. _CoreFeatures:
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: Core Features
+  
+  BeRoboy/*  
+  
 .. _ModelUpdate:
 .. toctree::
   :maxdepth: 1
@@ -97,15 +105,7 @@ Contents:
   :caption: Automatic Model Update Pipeline
   
   ModelUpdate/*
-  
-.. _BeRoboy:
-.. toctree::
-  :maxdepth: 1
-  :glob:
-  :caption: Be Roboy
-  
-  BeRoboy/*
-  
+    
 .. _Pabi:
 .. toctree::
   :maxdepth: 1
