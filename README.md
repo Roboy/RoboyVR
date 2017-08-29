@@ -22,3 +22,4 @@ With the help of a VR-Headset you can watch roboy move around in a virtual space
 Follow the installation instructions in the [documentation](http://roboyvr-experience.readthedocs.io/en/develop/Usage/0_installation.html)
 
 
+![roboyVR™](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/MMBackground.jpg?raw=true "roboyVR™")
