@@ -55,8 +55,8 @@ Part 3: Unity Setup
     MonoDevelop (standard option).
 	
 3. Download this project
-  - Clone this github repository (master branch) to your system: https://github.com/sheveg/roboyVR.git
-  - Command: git clone -b master https://github.com/sheveg/roboyVR.git
+  - Clone this github repository (master branch) to your system: https://github.com/roboy/roboyVR.git
+  - Command: git clone -b master https://github.com/roboy/roboyVR.git
 
 Part 4: Blender & Python
 ------------------------
