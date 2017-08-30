@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Object that represents one tendon.
@@ -13,7 +11,11 @@ public class Tendon : MonoBehaviour
 
     #region PRIVATE_MEMBER_VARIABLES
 
+    /// <summary>
+    /// Tendon colors to interpolate between (only/exactly 3 used)
+    /// </summary>
     private static Color[] m_TendonColors = { Color.green, Color.yellow, Color.red };
+
     /// <summary>
     /// Material for each linerenderer (no static one possible since color changes shall only affect one tendon).
     /// Call GetGraphMaterial for reference.
@@ -59,13 +61,13 @@ public class Tendon : MonoBehaviour
     /// <summary>
     /// Needed to color tendons individually
     /// </summary>
-    MaterialPropertyBlock block;
+    MaterialPropertyBlock m_Block;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
 
     /// <summary>
-    /// Called once every frame
+    /// Updates tendons as soon as position(or other attributes) of tendons changed
     /// </summary>
     void Update()
     {
@@ -93,6 +95,7 @@ public class Tendon : MonoBehaviour
     {
         return m_TendonID;
     }
+
     /// <summary>
     /// sets Maximum force (reference value) for one tendon
     /// </summary>
@@ -117,7 +120,7 @@ public class Tendon : MonoBehaviour
         m_Force = 0;
         m_WirePointParents = new GameObject[pointPositions.Length];
         m_Wirepoints = new Transform[pointPositions.Length];
-        block = new MaterialPropertyBlock();
+        m_Block = new MaterialPropertyBlock();
 
         //create points in worldspace and connect to parents
         for (int i = 0; i < pointPositions.Length; i++)
@@ -226,9 +229,14 @@ public class Tendon : MonoBehaviour
         GetGraphMaterial().color = c;
     }
 
+    /// <summary>
+    /// Returns material, instantiates new TendonShader if none existing yet.
+    /// </summary>
+    /// <returns>material that graph uses to render</returns>
     private Material GetGraphMaterial()
     {
-        if (!m_GraphMaterial) {
+        if (!m_GraphMaterial)
+        {
             //edit->projectsettings->graphics->always included shader must contain elem
             m_GraphMaterial = new Material(Shader.Find("Custom/TendonShader"));
         }

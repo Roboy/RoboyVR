@@ -1,15 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ScreenTabManager : MonoBehaviour {
+/// <summary>
+/// Script manages order and displayed content of tabs.
+/// Attached to screen. Methods should be called once one tab selected.
+/// </summary>
+public class ScreenTabManager : MonoBehaviour
+{
 
     #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
     /// All tabs belonging to the screen
     /// </summary>
     [SerializeField]
-    private GameObject[] tabs;
+    private GameObject[] m_Tabs;
     #endregion
 
     /// <summary>
@@ -19,19 +22,22 @@ public class ScreenTabManager : MonoBehaviour {
     {
         OnTabOrderChanged();
     }
+
     /// <summary>
     /// can be called by tabs when OnClick Event triggered, adjusts the displayed elements
+    /// Relies on the fact that clicked tab set its SiblingIndex to last one (be rendered last, displayed over all)
     /// </summary>
     #region PUBLIC_METHODS
     public void OnTabOrderChanged()
     {
-        foreach (GameObject tab in tabs)
+        foreach (GameObject tab in m_Tabs)
         {
             GameObject panel = tab.transform.Find("Panel").gameObject;
-            if (tab.transform.GetSiblingIndex() < tabs.Length-1)
+            if (tab.transform.GetSiblingIndex() < m_Tabs.Length - 1)
             {
                 panel.SetActive(false);
-            }else
+            }
+            else
             {
                 panel.SetActive(true);
             }

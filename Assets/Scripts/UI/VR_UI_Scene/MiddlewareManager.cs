@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Provides all functionalities and manages Middleware mode
+/// (For now no functionalites)
 /// </summary>
 public class MiddlewareManager : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class MiddlewareManager : MonoBehaviour
     /// Called once by Unity during startup
     /// </summary>
     void Start()
-    { 
+    {
     }
 
     /// <summary>

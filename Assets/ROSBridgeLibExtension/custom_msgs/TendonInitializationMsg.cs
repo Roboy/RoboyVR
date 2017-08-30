@@ -8,7 +8,7 @@ namespace ROSBridgeLib
     namespace custom_msgs
     {
         /// <summary>
-        /// Message for initialization of one tendon
+        /// Message for initialization of one tendon (defined by tendonID)
         /// </summary>
         public class TendonInitializationMsg : ROSBridgeMsg
         {

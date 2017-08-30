@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// This class is attached to  the canvas, which is always displayed, as some notifications are always displayed.
-/// Depending on some modes, additional / less information is shown. 
+/// This class is attached to the canvas, which is always displayed, as some notifications (their icons and halos) are always displayed.
+/// Different settings depending on the mode are considered (for now no changes)
+/// Subscriber Interface needed to be notified of updates. 
 /// </summary>
 public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
 {
@@ -13,33 +13,26 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
-    /// <summary>
-    /// Screen Overlay canvas on which to display the notifications
-    /// </summary>
-    private Canvas canvas;
 
     /// <summary>
     /// Icon(rawimage) slot
     /// Image must contain child text object
     /// </summary>
     [SerializeField]
-    private RawImage[] m_imageSlots;
+    private RawImage[] m_ImageSlots;
 
     /// <summary>
     /// reference to screen which displays slots. If attached, it is enabled upon start
     /// </summary>
     [SerializeField]
     private Canvas m_Screen;
+
     /// <summary>
     /// saves the current mode setting, in which the notification manager is
     /// </summary>
-    private VRUILogic.UIMode m_currentModeSetting;
-
-    /// <summary>
-    /// boolean if test coroutine running
-    /// </summary>
-    private bool testing = false;
+    private VRUILogic.UIMode m_CurrentModeSetting;
     #endregion
+
     #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
     /// sets and manages stuff that is always displayed 
@@ -53,17 +46,17 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     }
 
     /// <summary>
-    /// updates displayed notifications if changes occured
+    /// updates displayed notifications if changes in mode occured
     /// </summary>
     void Update()
     {
-        
+
         VRUILogic.UIMode newMode = VRUILogic.Instance.GetCurrentMode();
-        if (newMode != m_currentModeSetting)
+        if (newMode != m_CurrentModeSetting)
         {
-            m_currentModeSetting = newMode;
+            m_CurrentModeSetting = newMode;
             //only in control mode warnings are displayed
-            if (m_currentModeSetting == VRUILogic.UIMode.Control)
+            if (m_CurrentModeSetting == VRUILogic.UIMode.Control)
             {
                 //TODO: Display warnings in this mode
                 foreach (Notification warning in VRUILogic.Instance.GetAllWarnings())
@@ -82,12 +75,12 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
         }
     }
     #endregion
+
     #region PUBLIC_METHODS
     #endregion
 
 
     #region PRIVATE_METHODS
-
 
     /// <summary>
     /// shows 
@@ -114,30 +107,30 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
         {
             if (counts[i] > 0)
             {
-                RawImage currentSlot = m_imageSlots[slotIndex];
+                RawImage currentSlot = m_ImageSlots[slotIndex];
                 if (!currentSlot.enabled) currentSlot.enabled = true;
                 if (!currentSlot.texture.Equals(textures[i]))
                 {
                     currentSlot.texture = textures[i];
                 }
                 Text slotText = currentSlot.GetComponentInChildren<Text>();
-                slotText.text = SlotText(counts[i]); //update displayed counts with respective number
+                slotText.text = GetSlotText(counts[i]); //update displayed counts with respective number
 
                 slotIndex++; //work with next slot, this one filled
             }
         }
         //clear rest of the slots
-        for (; slotIndex < m_imageSlots.Length; slotIndex++)
+        for (; slotIndex < m_ImageSlots.Length; slotIndex++)
         {
-            m_imageSlots[slotIndex].enabled = false;
-            m_imageSlots[slotIndex].GetComponentInChildren<Text>().text = "";
+            m_ImageSlots[slotIndex].enabled = false;
+            m_ImageSlots[slotIndex].GetComponentInChildren<Text>().text = "";
         }
     }
     /// <summary>
     /// sets respective text for slot depending on count 
     /// </summary>
     /// <param name="count">count which is to be transformed into text form</param>
-    private string SlotText(int count)
+    private string GetSlotText(int count)
     {
         if (count == 0)
         {
@@ -152,7 +145,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     }
 
     /// <summary>
-    /// receives changes to notifications
+    /// receives updates on notifications (from database)
     /// </summary>
     /// <param name="info"></param>
     public void BeInformed(object info)
@@ -165,7 +158,7 @@ public class NotificationManager : MonoBehaviour, VRUILogic.ISubscriber
     }
 
     /// <summary>
-    /// called when notifications deleted. if no arguments passed, no halos will be created
+    /// called when notifications deleted. if no arguments passed, elems were deleted -> update
     /// </summary>
     public void BeInformed()
     {

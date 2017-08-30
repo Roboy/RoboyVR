@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
-using System;
 using UnityEngine.UI;
 
 /// <summary>
@@ -66,15 +64,15 @@ public class GraphObject : MonoBehaviour
     /// <summary>
     /// default value to fill list with if elems missing
     /// </summary>
-    private float defaultVal = 0f;
+    private float m_DefaultValue = 0f;
     /// <summary>
     /// List that saves further values if graph is being paused, replaces (parts of) current list as soon as continuing
     /// </summary>
-    private List<float> m_buffered;
+    private List<float> m_Buffer;
     /// <summary>
     /// this restricts the addvalue function to only add when one fixed update frame is waited (for appropriate time representation)
     /// </summary>
-    private bool m_update_possible = true;
+    private bool m_UpdatePossible = true;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -85,11 +83,11 @@ public class GraphObject : MonoBehaviour
     {
         //fixed update faster than update or no new values --> for correct time behaviour, fill list with additional values
         //might result in step like behaviour.... TODO
-        if (m_update_possible)
+        if (m_UpdatePossible)
         {
-            AddValue(m_Values[m_Values.Count -1]);
+            AddValue(m_Values[m_Values.Count - 1]);
         }
-        m_update_possible = true;
+        m_UpdatePossible = true;
     }
     #endregion
 
@@ -118,7 +116,7 @@ public class GraphObject : MonoBehaviour
         if (values.Count < m_DisplayedPointsCount)
         {
             m_Values = values;
-            m_Values.AddRange(Enumerable.Repeat(defaultVal, m_DisplayedPointsCount).ToList());
+            m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, m_DisplayedPointsCount).ToList());
         }
         // init values
         m_Values = values;
@@ -144,21 +142,21 @@ public class GraphObject : MonoBehaviour
         if (m_Values == null) //if empty list found
         {
             m_Values = new List<float>();
-            if (m_buffered == null)
+            if (m_Buffer == null)
             {
-                m_Values.AddRange(Enumerable.Repeat(defaultVal, (m_DisplayedPointsCount)).ToList());
+                m_Values.AddRange(Enumerable.Repeat(m_DefaultValue, (m_DisplayedPointsCount)).ToList());
             }
         }
         //update list if buffered values found
-        if (m_buffered != null && m_buffered.Count > 0)
+        if (m_Buffer != null && m_Buffer.Count > 0)
         {
             //operate on this list (setting it to buffer list will not set list of graphrenderer)
-            int numchanges = m_buffered.Count;
+            int numchanges = m_Buffer.Count;
             m_Values.RemoveRange(0, numchanges);
-            m_Values.AddRange(m_buffered);
+            m_Values.AddRange(m_Buffer);
 
             //delete buffer (praise the garbage collection)
-            m_buffered = null;
+            m_Buffer = null;
         }
         m_GraphRenderer.Play();
     }
@@ -180,11 +178,11 @@ public class GraphObject : MonoBehaviour
     public void AddValue(float value)
     {
         //this is used to visualise graph in right time frame
-        if (!m_update_possible)
+        if (!m_UpdatePossible)
         {
             return;
         }
-        m_update_possible = false;
+        m_UpdatePossible = false;
         ///Debug.Log("List addition: Update (FPS info)" + (int)Time.time);
 
         if (m_GraphRenderer.IsPlaying()) // update displayed values list
@@ -194,15 +192,15 @@ public class GraphObject : MonoBehaviour
         }
         else //insert in buffered list
         {
-            if (m_buffered == null)
+            if (m_Buffer == null)
             {
-                m_buffered = new List<float>();
+                m_Buffer = new List<float>();
             }
             //Debug.Log("buffering");
-            m_buffered.Add(value);
-            if (m_buffered.Count > m_DisplayedPointsCount) //keep list cropped to max_size
+            m_Buffer.Add(value);
+            if (m_Buffer.Count > m_DisplayedPointsCount) //keep list cropped to max_size
             {
-                m_buffered.RemoveAt(0);
+                m_Buffer.RemoveAt(0);
             }
         }
 
@@ -215,11 +213,11 @@ public class GraphObject : MonoBehaviour
     /// <param name="values">Set of float values.</param>
     public void AddValues(List<float> values)
     {
-        if (!m_update_possible)
+        if (!m_UpdatePossible)
         {
             return;
         }
-        m_update_possible = false;
+        m_UpdatePossible = false;
         /*TODO
         if (!m_WaitingOver) return;
         m_WaitingOver = false;*/
@@ -230,11 +228,11 @@ public class GraphObject : MonoBehaviour
         }
         else //update buffer if not
         {
-            if (m_buffered == null)
+            if (m_Buffer == null)
             {
-                m_buffered = new List<float>();
+                m_Buffer = new List<float>();
             }
-            change = m_buffered;
+            change = m_Buffer;
         }
         change.AddRange(values);
         int delta = change.Count - m_DisplayedPointsCount;
@@ -323,7 +321,7 @@ public class GraphObject : MonoBehaviour
     /// <param name="val">any desired val</param>
     public void SetDefaultValue(float val)
     {
-        defaultVal = val;
+        m_DefaultValue = val;
         m_GraphRenderer.SetDefaultValue(val);
     }
 
@@ -394,7 +392,6 @@ public class GraphObject : MonoBehaviour
         text.enabled = true;
         return text;
     }
-
     #endregion
 }
 

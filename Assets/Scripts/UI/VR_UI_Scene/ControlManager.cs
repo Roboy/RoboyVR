@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This class manages the functionalities provided in the control mode.
+/// It manages the display of certain datasets like notifications.
+/// </summary>
 public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
 {
     #region PUBLIC_MEMBER_VARIABLES
@@ -11,7 +15,7 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
     /// Holds reference to prefab which will be used to create new items in Notification list
     /// </summary>
     [SerializeField]
-    private GameObject m_itemPrefab;
+    private GameObject m_ItemPrefab;
 
     /// <summary>
     /// Reference to the item container of the notification list. 
@@ -34,7 +38,7 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
     #region PUBLIC_METHODS
     #region subscriber methods    
     /// <summary>
-    /// when notification deleted, it will automatically delete the respective item -> do nothing
+    /// when a notification is deleted, it will automatically delete the respective item -> do nothing
     /// </summary>
     public void BeInformed()
     {
@@ -52,7 +56,7 @@ public class ControlManager : MonoBehaviour, VRUILogic.ISubscriber
             ScrollRect scroll = GetComponentInChildren<ScrollRect>();
             if (scroll)
                 temp = scroll.verticalNormalizedPosition;
-            GameObject newItem = Instantiate(m_itemPrefab);
+            GameObject newItem = Instantiate(m_ItemPrefab);
             newItem.GetComponent<NotificationListButton>().SetupItem((Notification)info);
             newItem.transform.SetParent(m_ListContentContainer.transform);
             newItem.transform.localScale = Vector3.one;

@@ -8,7 +8,6 @@ using UnityEngine;
 /// </summary>
 public class VRUILogic : Singleton<VRUILogic>
 {
-
     #region PUBLIC_MEMBER_VARIABLES
     /// <summary>
     /// Current mode in enum type, helps different entities differ cases for display purposes
@@ -46,14 +45,14 @@ public class VRUILogic : Singleton<VRUILogic>
     /// skybox connected to camera
     /// </summary>
     [SerializeField]
-    private Material skybox;
+    private Material m_Skybox;
 
     /// <summary>
     /// All modes from which can be chosen in this UI
     /// Names need to match the string representations in the UIMode Enumeration
     /// </summary>
     [SerializeField]
-    private GameObject[] m_modes;
+    private GameObject[] m_Modes;
 
     /// <summary>
     /// Reference to Roboy for position references
@@ -66,28 +65,29 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <summary>
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
-    private bool[] m_touchedPad;
+    private bool[] m_TouchedPad;
+
     /// <summary>
     /// Array containing the current finger position on the touchpad if touched
     /// </summary>
-    private Vector2[] m_touchData;
+    private Vector2[] m_TouchData;
 
     /// <summary>
     /// VR Headset camera, for position and rotation information
     /// </summary>
     [SerializeField]
-    private Camera m_headset;
+    private Camera m_Headset;
 
     /// <summary>
     /// This value specifies the currently selected mode
     /// </summary>
-    private int m_selectedMode = 0;
+    private int m_SelectedMode = 0;
 
     /// <summary>
     /// For the main selection wheel, set which mode is default (offset)
     /// </summary>
     [SerializeField]
-    private int m_selectIndex = 0;
+    private int m_SelectIndex = 0;
     #endregion
 
     #region notifications
@@ -124,29 +124,28 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <summary>
     /// List containing all received error notifications
     /// </summary>
-    private List<Notification> m_errorsList = new List<Notification>();
+    private List<Notification> m_ErrorsList = new List<Notification>();
 
     /// <summary>
     /// List containing all received warnings
     /// </summary>
-    private List<Notification> m_warningsList = new List<Notification>();
+    private List<Notification> m_WarningsList = new List<Notification>();
 
     /// <summary>
     /// List containing all received debug or similar additional information
     /// </summary>
-    private List<Notification> m_debugsList = new List<Notification>();
+    private List<Notification> m_DebugsList = new List<Notification>();
 
     /// <summary>
     /// List containing all information sent as notifications
     /// </summary>
-    private List<Notification> m_infosList = new List<Notification>();
+    private List<Notification> m_InfosList = new List<Notification>();
 
     /// <summary>
     /// Container to set as parent of notifications
     /// </summary>
     private GameObject m_NotificationsContainer;
     #endregion
-
 
     #region tendons
     /// <summary>
@@ -159,36 +158,35 @@ public class VRUILogic : Singleton<VRUILogic>
     /// </summary>
     private List<Tendon> m_Tendons = new List<Tendon>();
     #endregion
-
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
-    /// Starts UI by disabling all except for specified modes.
+    /// Starts UI by disabling all except for specified modes. Sets / Initializes further values
     /// </summary>
     private void Awake()
     {
         //general
-        if (m_modes != null && m_modes.Length > 0)
+        if (m_Modes != null && m_Modes.Length > 0)
         {
-            foreach (GameObject obj in m_modes)
+            foreach (GameObject obj in m_Modes)
             {
                 obj.SetActive(false);
             }
-            m_modes[m_selectIndex % m_modes.Length].gameObject.SetActive(true);
+            m_Modes[m_SelectIndex % m_Modes.Length].gameObject.SetActive(true);
         }
-        m_selectedMode = m_selectIndex;
+        m_SelectedMode = m_SelectIndex;
 
-        m_touchData = new Vector2[2];
-        m_touchData[0] = Vector2.zero;
-        m_touchData[1] = Vector2.zero;
-        m_touchedPad = new bool[2];
-        m_touchedPad[0] = false;
-        m_touchedPad[1] = false;
-        if (skybox)
+        m_TouchData = new Vector2[2];
+        m_TouchData[0] = Vector2.zero;
+        m_TouchData[1] = Vector2.zero;
+        m_TouchedPad = new bool[2];
+        m_TouchedPad[0] = false;
+        m_TouchedPad[1] = false;
+        if (m_Skybox)
         {
-            Skybox box = m_headset.gameObject.AddComponent<Skybox>();
-            box.material = skybox;
+            Skybox box = m_Headset.gameObject.AddComponent<Skybox>();
+            box.material = m_Skybox;
         }
         //notifications
         m_NotificationsContainer = new GameObject();
@@ -196,10 +194,10 @@ public class VRUILogic : Singleton<VRUILogic>
         //tendons
         m_TendonContainer = new GameObject();
         m_TendonContainer.name = "TendonContainer";
-        if (m_modes != null && m_modes.Length > ((int)UIMode.Middleware))
+        if (m_Modes != null && m_Modes.Length > ((int)UIMode.Middleware))
         {
             Debug.Log("Tendoncontainer set as child obj");
-            m_TendonContainer.transform.SetParent(m_modes[(int)UIMode.Middleware].transform);
+            m_TendonContainer.transform.SetParent(m_Modes[(int)UIMode.Middleware].transform);
         }
     }
     #endregion
@@ -224,7 +222,7 @@ public class VRUILogic : Singleton<VRUILogic>
     public UIMode GetCurrentMode()
     {
         //TODO: really doggy..... hopefully not higher index than uimode-entities
-        return (UIMode)m_selectedMode;
+        return (UIMode)m_SelectedMode;
     }
 
     /// <summary>
@@ -234,9 +232,9 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns>touched yes/no</returns>
     public bool GetTouchedInfo(int i)
     {
-        if (i < m_touchedPad.Length && i >= 0)
+        if (i < m_TouchedPad.Length && i >= 0)
         {
-            return m_touchedPad[i];
+            return m_TouchedPad[i];
         }
         return false;
     }
@@ -248,9 +246,9 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns>Current position on touchpad with max length == 1</returns>
     public Vector2 GetTouchPosition(int i)
     {
-        if (i < m_touchData.Length && i >= 0)
+        if (i < m_TouchData.Length && i >= 0)
         {
-            return m_touchData[i];
+            return m_TouchData[i];
         }
         return Vector2.zero;
     }
@@ -262,9 +260,9 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="newPos">Vector containing new position.</param>
     public void SetTouchPosition(int i, Vector2 newPos)
     {
-        if (i < m_touchData.Length && i >= 0)
+        if (i < m_TouchData.Length && i >= 0)
         {
-            m_touchData[i] = newPos;
+            m_TouchData[i] = newPos;
         }
     }
 
@@ -275,9 +273,9 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="touched"></param>
     public void SetTouchedInfo(int i, bool touched)
     {
-        if (i < m_touchedPad.Length && i >= 0)
+        if (i < m_TouchedPad.Length && i >= 0)
         {
-            m_touchedPad[i] = touched;
+            m_TouchedPad[i] = touched;
         }
     }
 
@@ -287,7 +285,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns>Current rotation in quaternion</returns>
     public Quaternion GetCameraRotation()
     {
-        return m_headset.transform.rotation;
+        return m_Headset.transform.rotation;
     }
 
     /// <summary>
@@ -296,7 +294,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns>main camera</returns>
     public Camera GetCamera()
     {
-        return m_headset;
+        return m_Headset;
     }
 
     public GameObject GetRoboy()
@@ -309,16 +307,16 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="i">index of mode</param>
     public void SetSelectedIndex(int i)
     {
-        if (m_modes != null)
+        if (m_Modes != null)
         {
-            i += m_selectIndex;
-            i %= m_modes.Length;
+            i += m_SelectIndex;
+            i %= m_Modes.Length;
             Debug.Log("New mode: " + i);
-            if (i < m_modes.Length && i >= 0)
+            if (i < m_Modes.Length && i >= 0)
             {
-                m_modes[m_selectedMode].gameObject.SetActive(false);
-                m_modes[i].gameObject.SetActive(true);
-                m_selectedMode = i;
+                m_Modes[m_SelectedMode].gameObject.SetActive(false);
+                m_Modes[i].gameObject.SetActive(true);
+                m_SelectedMode = i;
             }
         }
     }
@@ -361,16 +359,16 @@ public class VRUILogic : Singleton<VRUILogic>
             switch (note.GetNotificationType())
             {
                 case DummyStates.MessageType.DEBUG:
-                    m_debugsList.Add(note);
+                    m_DebugsList.Add(note);
                     break;
                 case DummyStates.MessageType.WARNING:
-                    m_warningsList.Add(note);
+                    m_WarningsList.Add(note);
                     break;
                 case DummyStates.MessageType.ERROR:
-                    m_errorsList.Add(note);
+                    m_ErrorsList.Add(note);
                     break;
                 case DummyStates.MessageType.INFO:
-                    m_infosList.Add(note);
+                    m_InfosList.Add(note);
                     break;
                 default:
                     Debug.Log("[VRUILogic]This notification type is not implemented yet!" + note.GetNotificationType().ToString());
@@ -413,16 +411,16 @@ public class VRUILogic : Singleton<VRUILogic>
         switch (note.GetNotificationType())
         {
             case DummyStates.MessageType.INFO:
-                m_infosList.Remove(note);
+                m_InfosList.Remove(note);
                 break;
             case DummyStates.MessageType.DEBUG:
-                m_debugsList.Remove(note);
+                m_DebugsList.Remove(note);
                 break;
             case DummyStates.MessageType.WARNING:
-                m_warningsList.Remove(note);
+                m_WarningsList.Remove(note);
                 break;
             case DummyStates.MessageType.ERROR:
-                m_errorsList.Remove(note);
+                m_ErrorsList.Remove(note);
                 break;
             default:
                 break;
@@ -435,21 +433,21 @@ public class VRUILogic : Singleton<VRUILogic>
     /// </summary>
     public void ClearAllNotifications()
     {
-        foreach (Notification note in m_errorsList)
+        foreach (Notification note in m_ErrorsList)
         {
             note.DeleteNotification();
         }
-        foreach (Notification note in m_warningsList)
+        foreach (Notification note in m_WarningsList)
         {
             note.DeleteNotification();
         }
-        foreach (Notification note in m_debugsList)
+        foreach (Notification note in m_DebugsList)
         {
             note.DeleteNotification();
         }
-        m_errorsList = new List<Notification>();
-        m_warningsList = new List<Notification>();
-        m_debugsList = new List<Notification>();
+        m_ErrorsList = new List<Notification>();
+        m_WarningsList = new List<Notification>();
+        m_DebugsList = new List<Notification>();
         InformNotificationSubscribers(null);
     }
 
@@ -459,7 +457,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns></returns>
     public List<Notification> GetAllErrors()
     {
-        return m_errorsList;
+        return m_ErrorsList;
     }
 
     /// <summary>
@@ -468,7 +466,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns></returns>
     public List<Notification> GetAllWarnings()
     {
-        return m_warningsList;
+        return m_WarningsList;
     }
 
     /// <summary>
@@ -477,7 +475,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns></returns>
     public List<Notification> GetAllDebugs()
     {
-        return m_debugsList;
+        return m_DebugsList;
     }
 
     /// <summary>
@@ -486,7 +484,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <returns></returns>
     public List<Notification> GetAllInfos()
     {
-        return m_infosList;
+        return m_InfosList;
     }
 
     /// <summary>
@@ -507,6 +505,7 @@ public class VRUILogic : Singleton<VRUILogic>
 
     /// <summary>
     /// Adds new tendon to list of existing tendons. Sets all references and sets all references
+    /// If tendon with this id already exists, nothing happens.
     /// </summary>
     /// <param name="tendonID">ID of new tendon</param>
     /// <param name="positions">position of wirepoints in world space</param>
@@ -574,8 +573,8 @@ public class VRUILogic : Singleton<VRUILogic>
 
     #region PRIVATE_METHODS
     /// <summary>
-    /// Adds tendon to list of existing tendons in case no tendon with this id exists so far.
-    /// Removes dublicates if detected
+    /// Adds tendon to list of existing tendons in case no tendon with this id
+    /// exists so far and it's not in the list already.
     /// </summary>
     /// <param name="tendon"></param>
     private void AddTendon(Tendon tendon)

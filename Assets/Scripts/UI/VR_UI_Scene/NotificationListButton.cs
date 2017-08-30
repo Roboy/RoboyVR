@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This script manages functionalities / content of one notification list item (which is a button)
+/// Used only in Control mode so far. 
+/// </summary>
 public class NotificationListButton : MonoBehaviour
 {
     #region PUBLIC_MEMBER_VARIABLES
@@ -35,20 +39,16 @@ public class NotificationListButton : MonoBehaviour
     /// <summary>
     /// reference needed to display additional information
     /// </summary>
-    private Notification m_note;
+    private Notification m_Note;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
-
-    void OnButtonClick()
-    {
-
-    }
     #endregion
 
     #region PUBLIC_METHODS
     /// <summary>
     /// This function sets all values and references according to the notification it is supposed to represent. 
+    /// No scaling happening as of now (might not fit properly)
     /// </summary>
     /// <param name="note">The notification this listItem will represent</param>
     public void SetupItem(Notification note)
@@ -58,7 +58,7 @@ public class NotificationListButton : MonoBehaviour
         //links this item to notification
         //ensures that this list item is deleted as soon as notification is outdated
         note.AddRelatedObject(gameObject);
-        m_note = note;
+        m_Note = note;
 
 
         //TODO: must be set, but rect.width is zero due to automatic scaling scripts... 
@@ -81,7 +81,7 @@ public class NotificationListButton : MonoBehaviour
             infoScreen = Instantiate(m_AdditionalNotificationInfoPrefab);
             infoScreen.name = "AdditionalInfoScreen";
         }
-        infoScreen.GetComponentInChildren<AdditionalInfoScreenManager>().Setup(m_note);
+        infoScreen.GetComponentInChildren<AdditionalInfoScreenManager>().Setup(m_Note);
     }
     #endregion
 }

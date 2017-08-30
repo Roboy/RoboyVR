@@ -9,7 +9,6 @@ namespace ROSBridgeLib
         /// Message updating force of specified tendon
         /// </summary>
         public class TendonUpdateMsg : ROSBridgeMsg
-
         {
             #region PRIVATE_MEMBER_VARIABLES
             /// <summary>
@@ -33,7 +32,7 @@ namespace ROSBridgeLib
                 //tendonID
                 //These need to match names of externally defined msgs 
                 //-> https://github.com/Roboy/roboy_communication/tree/master/simulation/msgs
-                _tendonID = int.Parse(msg["tendonID"]); 
+                _tendonID = int.Parse(msg["tendonID"]);
                 //force
                 _force = float.Parse(msg["force"]);
             }

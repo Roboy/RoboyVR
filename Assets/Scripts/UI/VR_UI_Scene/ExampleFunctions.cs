@@ -1,8 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ExampleFunctions : MonoBehaviour {
+/// <summary>
+/// This class created examplary data.
+/// This includes 4 tendons and a continuous notification feed.
+/// </summary>
+public class ExampleFunctions : MonoBehaviour
+{
 
     #region PUBLIC_MEMBER_VARIABLES
     #endregion
@@ -16,13 +20,14 @@ public class ExampleFunctions : MonoBehaviour {
     /// <summary>
     /// Boolean managing continuous notification spawn (for coroutine management)
     /// </summary>
-    private bool testing = false;
+    private bool m_Testing = false;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
 
     /// <summary>
-    /// initializes tendons and so on
+    /// initializes tendons and it relations.
+    /// Tendons dependent on current model (Names)!
     /// </summary>
     void Start()
     {
@@ -54,7 +59,7 @@ public class ExampleFunctions : MonoBehaviour {
     }
 
     /// <summary>
-    /// Called once every frame
+    /// Called once every frame, updates tendon color,arm position and keeps notification feed going
     /// </summary>
     void Update()
     {
@@ -62,7 +67,7 @@ public class ExampleFunctions : MonoBehaviour {
         float x = Mathf.Cos(Time.realtimeSinceStartup * 8 / (2 * 3.14159f)) * 0.5f + 0.5f; //amplitude: 0-1, period length = 8
         VRUILogic.Instance.UpdateTendon(0, x);
         VRUILogic.Instance.UpdateTendon(1, x);
-        VRUILogic.Instance.UpdateTendon(2, 1-x);
+        VRUILogic.Instance.UpdateTendon(2, 1 - x);
         VRUILogic.Instance.UpdateTendon(3, 1 - x);
 
         if (m_Arm)
@@ -82,9 +87,9 @@ public class ExampleFunctions : MonoBehaviour {
         }
         //NOTIFICATIONS
         //test notifications display
-        if (!testing)
+        if (!m_Testing)
         {
-            testing = true;
+            m_Testing = true;
             StartCoroutine(test());
         }
 
@@ -96,13 +101,12 @@ public class ExampleFunctions : MonoBehaviour {
 
     #region PRIVATE_METHODS
     /// <summary>
-    /// used for testing of notifications display
+    /// used for testing of notifications display.
+    /// Automatically spawns new notifications.
     /// </summary>
     /// <returns></returns>
     private IEnumerator test()
     {
-
-
         yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
         //Debug.Log("Added Warning");
@@ -118,7 +122,7 @@ public class ExampleFunctions : MonoBehaviour {
         yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
         // Debug.Log("Added debug");
-        testing = false;
+        m_Testing = false;
     }
     #endregion
 }

@@ -1,11 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// INSERT CLASS NAME. 
-/// This is the long description separated from the short description with a .
+/// Manages functionalities provided in overview mode (e.g. heartbeat function)
 /// </summary>
 public class OverviewManager : MonoBehaviour
 {
@@ -13,20 +11,23 @@ public class OverviewManager : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBER_VARIABLES
-    /// <summary>
-    /// graph displaying a heartbeat, linked to the screen
-    /// </summary>
-    private GraphObject heart;
 
     /// <summary>
     /// link to tab on screen where heartbeat is to be displayed
     /// </summary>
     [SerializeField]
     private GameObject m_HearbeatTab;
+
     /// <summary>
-    /// for continuously testing graphrenderer
+    /// graph displaying a heartbeat, linked to the screen
     /// </summary>
-    private bool testing = false;
+    private GraphObject m_Heart;
+
+    /// <summary>
+    /// for continuously testing  (managing coroutines)
+    /// </summary>
+    private bool m_Testing = false;
+
     /* For test purposes to adjust heartbeat
      *  #region heartbeat values
      [SerializeField]
@@ -44,7 +45,7 @@ public class OverviewManager : MonoBehaviour
 
     #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
-    /// Called once by Unity during startup
+    /// Initializes heartbeat
     /// </summary>
     void Awake()
     {
@@ -60,35 +61,40 @@ public class OverviewManager : MonoBehaviour
 
         //add graph
         obj.AddComponent<GraphObject>();
-        heart = obj.GetComponent<GraphObject>();
-        heart.Initialize(null, 3);
-        heart.SetDefaultValue(2);
-        heart.SetNumberOfPoints(200);
-        heart.SetNoAdjustment();
-        heart.SetManualAdjust(new Vector2(0, 4));
-        heart.SetGraphColour(Color.black);
-        heart.Play();
+        m_Heart = obj.GetComponent<GraphObject>();
+        m_Heart.Initialize(null, 3);
+        m_Heart.SetDefaultValue(2);
+        m_Heart.SetNumberOfPoints(200);
+        m_Heart.SetNoAdjustment();
+        m_Heart.SetManualAdjust(new Vector2(0, 4));
+        m_Heart.SetGraphColour(Color.black);
+        m_Heart.Play();
     }
 
     /// <summary>
-    /// do stuff as soon as enabled again
+    /// continue heartbeat as soon as enabled again
     /// </summary>
     void OnEnable()
     {
-        if (heart)
+        if (m_Heart)
         {
-            heart.Resume();
+            m_Heart.Resume();
         }
     }
+
+    /// <summary>
+    /// disable heartbeat as soon as disabled
+    /// </summary>
     void OnDisable()
     {
-        if (heart)
+        if (m_Heart)
         {
-            heart.Pause();
+            m_Heart.Pause();
         }
     }
+
     /// <summary>
-    /// Called once every frame
+    /// Update heartbeat value (and manage test function)
     /// </summary>
     void Update()
     {
@@ -99,7 +105,7 @@ public class OverviewManager : MonoBehaviour
             StartCoroutine(test());
             Debug.Log("new test"); 
         }*/
-        heart.AddValue(GetBeat());
+        m_Heart.AddValue(GetBeat());
         //this comment counts frames per sec.... some issues here. this update is only called 10 times per sec 
         // (might be hardware related...)
         //Debug.Log("heart update: " + (int)Time.time);
@@ -107,12 +113,11 @@ public class OverviewManager : MonoBehaviour
     #endregion
 
     #region PUBLIC_METHODS
-
     #endregion
 
     #region PRIVATE_METHODS
     /// <summary>
-    /// coroutine to test graph pause and resume functions / behaviour. pauses and restarts after short amount of waiting time
+    /// coroutine to test graph pause ,resume and scale functions / behaviour. pauses and restarts after short amount of waiting time
     /// </summary>
     /// <returns></returns>
     private IEnumerator test()
@@ -149,14 +154,12 @@ public class OverviewManager : MonoBehaviour
         testing = false;*/
     }
 
-
     /// <summary>
     /// returns heartbeat value of current time step
     /// </summary>
     /// <returns></returns>
     private float GetBeat()
     {
-
         //create heartbeat function
         float L = 3f; // factor when to loop function again
         float x = Time.time;
@@ -180,7 +183,6 @@ public class OverviewManager : MonoBehaviour
         float y = y_1 + y_2 + y_3;
 
         return y;
-
     }
     #endregion
 }

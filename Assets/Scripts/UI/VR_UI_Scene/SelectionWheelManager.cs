@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Implements a selectionwheel using the child objects as options.
-/// This class is attached to a gameobject part of a canvas. It displays a selection wheel, checks for user input and updates the current selection saved in GameManager.
+/// Implements a selectionwheel using the child objects (with RectTransforms) as options.
+/// It enables and disables the respective Canvas depending on user input.
+/// It displays a selection wheel, checks for user input and updates the current selection.
 /// </summary>
 public class SelectionWheelManager : MonoBehaviour
 {
@@ -20,43 +21,44 @@ public class SelectionWheelManager : MonoBehaviour
     /// Threshold for display, if spin is below this value, DisableCanvas() will be called.
     /// </summary>
     [SerializeField]
-    private float Threshold = 0.1f;
+    private float m_Threshold = 0.1f;
 
     /// <summary>
     /// Multiplied when calculating friction, scales friction effect.
     /// </summary>
     [SerializeField]
-    private float Friction = 3;
+    private float m_Friction = 3;
 
     /// <summary>
     /// Scales speed  that is applied to turn the wheel after touch input.
     /// </summary>
     [SerializeField]
-    private float Speed = 20;
+    private float m_Speed = 20;
 
     /// <summary>
     /// Index of controller to use for selection wheel (0/1).
     /// </summary>
     [SerializeField]
-    private int ControllerIndex = 0;
+    private int m_ControllerIndex = 0;
 
     /// <summary>
     /// Specify where selected item should be positioned (clockwise, index in range of number of elem on circle).
     /// </summary>
     [SerializeField]
-    private int SelectIndex = 0;
+    private int m_SelectIndex = 0;
 
     /// <summary>
     /// Canvas with selection wheel, en- and disabled depending on wheel.
     /// </summary>
     [SerializeField]
-    private Canvas Canvas;
+    private Canvas m_Canvas;
 
     /// <summary>
     /// Rawimage representing background. if linked it will be rotated
     /// </summary>
     [SerializeField]
     private RawImage m_Background;
+
     /// <summary>
     /// This is used to calculate the spin after touch input stopped.
     /// </summary>
@@ -111,7 +113,7 @@ public class SelectionWheelManager : MonoBehaviour
         // ignore this element
         m_ElemCount = children.Length - 1;
         // stay within boundaries, not necessarily needed though
-        if (SelectIndex > m_ElemCount) SelectIndex = SelectIndex % m_ElemCount;
+        if (m_SelectIndex > m_ElemCount) m_SelectIndex = m_SelectIndex % m_ElemCount;
         for (int i = 0; i < children.Length; i++)
         {
             RectTransform t = (RectTransform)children[i];
@@ -126,12 +128,12 @@ public class SelectionWheelManager : MonoBehaviour
             }
         }
         // counter turn elem to keep text straight
-        if (Canvas)
+        if (m_Canvas)
         {
             // canvas.GetComponent<Canvas>().enabled = false;
             m_IsVisible = false;
         }
-        highlightSelection();
+        HighlightSelection();
     }
 
     /// <summary>
@@ -140,8 +142,8 @@ public class SelectionWheelManager : MonoBehaviour
     void Update()
     {
         //SpinOnTouch(false);
-        spinWithInertia();
-        highlightSelection();
+        SpinWithInertia();
+        HighlightSelection();
     }
     #endregion
 
@@ -153,15 +155,14 @@ public class SelectionWheelManager : MonoBehaviour
 
     #region PRIVATE_METHODS
 
-
     /// <summary>
     /// Enables canvas containing wheel to be displayed
     /// </summary>
-    private void enableCanvas()
+    private void EnableCanvas()
     {
-        if (Canvas)
+        if (m_Canvas)
         {
-            Canvas.GetComponent<Canvas>().enabled = true;
+            m_Canvas.GetComponent<Canvas>().enabled = true;
             m_IsVisible = true;
         }
     }
@@ -169,17 +170,17 @@ public class SelectionWheelManager : MonoBehaviour
     /// Coroutine to wait shortly (0.5s) and disable canvas if user did not give new input meanwhile.
     /// </summary>
     /// <returns></returns>
-    private IEnumerator disableCanvasCoroutine()
+    private IEnumerator DisableCanvasCoroutine()
     {
         //Debug.Log("disable gunction called...");
         yield return new WaitForSeconds(0.5f);
 
         if (m_Disabling) //if disable still desired (whilst waiting further user input might have changed that)
         {
-            if (Canvas)
+            if (m_Canvas)
             {
                 //Debug.Log("Disabling...");
-                Canvas.GetComponent<Canvas>().enabled = false;
+                m_Canvas.GetComponent<Canvas>().enabled = false;
                 m_IsVisible = false;
             }
         }
@@ -188,11 +189,11 @@ public class SelectionWheelManager : MonoBehaviour
     /// <summary>
     /// Detects the currently selected item fom the selection wheel using the current angle and highlights it.
     /// </summary>
-    private void highlightSelection()
+    private void HighlightSelection()
     {
         int step = (360 / m_ElemCount);
         int tmp = m_ElemCount - (int)(m_CurAngle + step / 2) / step - 1;// map selection from 0 - (elems -1)
-        tmp = MathUtility.Mod((tmp + SelectIndex - 1), m_ElemCount); // select the desired item clockwise, start at the top (-1)
+        tmp = MathUtility.Mod((tmp + m_SelectIndex - 1), m_ElemCount); // select the desired item clockwise, start at the top (-1)
         if (tmp == m_SelectedTextIndex)
         {
             return;
@@ -222,16 +223,16 @@ public class SelectionWheelManager : MonoBehaviour
     /// The angle is set with respect to the previous angle and the distance the finger tracked. 
     /// </summary>
     /// <param name="spin">should the wheel spin after touch input</param>
-    private void spinOnTouch(bool spin)
+    private void SpinOnTouch(bool spin)
     {
 
-        bool touched = VRUILogic.Instance.GetTouchedInfo(ControllerIndex);
-        Vector2 curPos = VRUILogic.Instance.GetTouchPosition(ControllerIndex);
+        bool touched = VRUILogic.Instance.GetTouchedInfo(m_ControllerIndex);
+        Vector2 curPos = VRUILogic.Instance.GetTouchPosition(m_ControllerIndex);
 
         if (touched) // if input found
         {
             m_Disabling = false; // if change (input) occured whilst waiting for disable, do not disable
-            if (!m_IsVisible) enableCanvas();
+            if (!m_IsVisible) EnableCanvas();
             if (!m_PrevPos.Equals(Vector2.zero)) // angle does not change if new input just arrived
             {
                 m_CurAngle += MathUtility.VectorToAngle(m_PrevPos) - MathUtility.VectorToAngle(curPos);
@@ -245,30 +246,31 @@ public class SelectionWheelManager : MonoBehaviour
             m_PrevPos = Vector2.zero;
             if (m_IsVisible && !m_Disabling && !spin) // prevent from calling multiple disable canvases if we're already disabling
             {
-                StartCoroutine(disableCanvasCoroutine());
+                StartCoroutine(DisableCanvasCoroutine());
                 m_Disabling = true;
             }
         }
     }
+
     /// <summary>
     /// Updates the position of the spinning wheel based on the touch input
     /// </summary>
-    private void spinWithInertia()
+    private void SpinWithInertia()
     {
         // update the current spin with the mouse wheel
         Component[] children;
         Vector3 newPos;
 
-        bool touched = VRUILogic.Instance.GetTouchedInfo(ControllerIndex);
-        Vector2 curPos = VRUILogic.Instance.GetTouchPosition(ControllerIndex);
+        bool touched = VRUILogic.Instance.GetTouchedInfo(m_ControllerIndex);
+        Vector2 curPos = VRUILogic.Instance.GetTouchPosition(m_ControllerIndex);
 
         // Visibility settings for spin effect
-        if (!touched && m_CurSpin > -Threshold && m_CurSpin < Threshold) // if too slow and no input
+        if (!touched && m_CurSpin > -m_Threshold && m_CurSpin < m_Threshold) // if too slow and no input
         {
             m_CurSpin = 0;
             if (m_IsVisible && !m_Disabling) // prevent from calling multiple disable canvases if we're already disabling
             {
-                StartCoroutine(disableCanvasCoroutine());
+                StartCoroutine(DisableCanvasCoroutine());
                 m_Disabling = true;
                 return;
             }
@@ -279,15 +281,15 @@ public class SelectionWheelManager : MonoBehaviour
             if (!curPos.Equals(m_PrevPos))
             {
                 // Debug.Log("Calculating spin");
-                m_CurSpin = Vector2.Distance(curPos, m_PrevPos) * Speed;
+                m_CurSpin = Vector2.Distance(curPos, m_PrevPos) * m_Speed;
                 if (!MathUtility.TurningClockwise(m_PrevPos, curPos)) m_CurSpin *= -1;
             }
-            spinOnTouch(true);
+            SpinOnTouch(true);
         }
         else
         {
             m_PrevPos = Vector2.zero;
-            m_CurSpin -= m_CurSpin * Time.deltaTime * Friction;
+            m_CurSpin -= m_CurSpin * Time.deltaTime * m_Friction;
             // Debug.Log("applying spin and friction to angle");
             m_CurAngle = MathUtility.WrapAngle(m_CurAngle + (float)m_CurSpin);
         }
@@ -305,7 +307,7 @@ public class SelectionWheelManager : MonoBehaviour
         }
         //rotate background
         if (m_Background)
-            m_Background.rectTransform.localRotation = Quaternion.Euler(0, 0, - m_CurAngle);
+            m_Background.rectTransform.localRotation = Quaternion.Euler(0, 0, -m_CurAngle);
     }
 
     #endregion

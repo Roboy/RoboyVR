@@ -1,8 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Provides scroll functionalities for a specified scrollView component.
+/// These include toTop, toBottom, scrollUp, scrollDown.
+/// the latter are either performed itemwise or using a certain percentage.
+/// </summary>
 public class ScrollViewFunctionalities : MonoBehaviour
 {
 
@@ -11,18 +15,19 @@ public class ScrollViewFunctionalities : MonoBehaviour
     /// scroll Rectangle, adjusts content
     /// </summary>
     [SerializeField]
-    private ScrollRect m_scroll;
+    private ScrollRect m_Scroll;
+
     /// <summary>
     /// Reference to item, needed for size considerations
     /// </summary>
     [SerializeField]
-    private RectTransform m_content;
+    private RectTransform m_Content;
 
     /// <summary>
     /// RectTransform of the actual viewPort, used for percentage wise scrolling
     /// </summary>
     [SerializeField]
-    private RectTransform m_viewPort;
+    private RectTransform m_ViewPort;
 
     /// <summary>
     /// if set to true, one scroll action equals one item(Button), otherwise whole page is skipped / moved
@@ -34,18 +39,24 @@ public class ScrollViewFunctionalities : MonoBehaviour
     /// If scroll for a certain amount instead of itemwise, this value is used. 
     /// This value describes percentage of viewedContentbox to be scrolled down. 
     /// </summary>
-    private float m_percentage = 0.1f;
-    private bool m_buttonHeld = false;
+    private float m_Percentage = 0.1f;
+
+    /// <summary>
+    /// is trigger currently pressed? Scrollfunctionalities depending on this. 
+    /// </summary>
+    private bool m_ButtonHeld = false;
     #endregion
 
+    //this region contains all events which can be accessed from outside
     #region PUBLIC_METHODS
+
     /// <summary>
     /// Displays top part of the linked content canvas
     /// </summary>
     public void ObButtonTopClick()
     {
         Debug.Log("Scroll to top");
-        m_scroll.verticalNormalizedPosition = 1;
+        m_Scroll.verticalNormalizedPosition = 1;
     }
 
     /// <summary>
@@ -54,8 +65,9 @@ public class ScrollViewFunctionalities : MonoBehaviour
     public void OnButtonBottomClick()
     {
         Debug.Log("Scroll to bottom");
-        m_scroll.verticalNormalizedPosition = 0;
+        m_Scroll.verticalNormalizedPosition = 0;
     }
+
     /// <summary>
     /// moves content canvas to scroll up
     /// </summary>
@@ -67,6 +79,7 @@ public class ScrollViewFunctionalities : MonoBehaviour
         else
             ScrollPercentage(true);
     }
+
     /// <summary>
     /// displays bottom part of linked content canvas
     /// </summary>
@@ -78,13 +91,13 @@ public class ScrollViewFunctionalities : MonoBehaviour
         else
             ScrollPercentage(false);
     }
-    #endregion
+
     /// <summary>
     /// when trigger is held (over button up), this function is called
     /// </summary>
     public void OnButtonUpHold()
     {
-        m_buttonHeld = true;
+        m_ButtonHeld = true;
         StartCoroutine(OnButtonUpHolding());
     }
 
@@ -93,7 +106,7 @@ public class ScrollViewFunctionalities : MonoBehaviour
     /// </summary>
     public void OnButtonDownHold()
     {
-        m_buttonHeld = true;
+        m_ButtonHeld = true;
         StartCoroutine(OnButtonDownHolding());
     }
 
@@ -102,9 +115,11 @@ public class ScrollViewFunctionalities : MonoBehaviour
     /// </summary>
     public void OnButtonNotHeldAnymore()
     {
-        m_buttonHeld = false;
+        m_ButtonHeld = false;
         Debug.Log("Up registered");
     }
+    #endregion
+
     #region PRIVATE_METHODS
     /// <summary>
     /// Scrolling up or down, factor specifies which direction
@@ -112,47 +127,47 @@ public class ScrollViewFunctionalities : MonoBehaviour
     /// <param name="up">scrolling up or down?</param>
     private void ScrollItemwise(bool up)
     {
-        Button[] buttons = m_content.gameObject.GetComponentsInChildren<Button>();
+        Button[] buttons = m_Content.gameObject.GetComponentsInChildren<Button>();
 
         float itemheight = buttons[0].GetComponent<RectTransform>().rect.height;
-        float contentheight = m_content.gameObject.GetComponent<RectTransform>().rect.height;
+        float contentheight = m_Content.gameObject.GetComponent<RectTransform>().rect.height;
         if (buttons.Length > 0)
         {
             //how many pages would be necessary to fit all items in the content rect 
             float step = (itemheight * buttons.Length) / contentheight;
             if (step < 1) //if no scrolling needed
             {//TODO: might not be necessary to set
-                m_scroll.verticalNormalizedPosition = 1;
+                m_Scroll.verticalNormalizedPosition = 1;
             }
             else
-            { 
+            {
                 // adapt scrolling 
-                float temp = m_scroll.verticalNormalizedPosition;
+                float temp = m_Scroll.verticalNormalizedPosition;
 
                 if (up) temp += 1 / (float)buttons.Length;
                 else temp -= 1 / (float)buttons.Length;
                 //clamp
                 if (temp > 1) temp = 1;
                 if (temp < 0) temp = 0;
-                m_scroll.verticalNormalizedPosition = temp;
+                m_Scroll.verticalNormalizedPosition = temp;
                 //adapt to 1
             }
         }
     }
 
     /// <summary>
-    ///  scrolls up or down a certain amount which is set in the editor
+    ///  scrolls up or down a certain amount which is set in the editor (or default)
     /// </summary>
     /// <param name="up">scrolling up ?</param>
     private void ScrollPercentage(bool up)
     {
         float factor = 1;
         if (!up) factor = -1;
-        float contentheight = m_content.gameObject.GetComponent<RectTransform>().rect.height;
-        float displayedHeight = m_viewPort.rect.height;
+        float contentheight = m_Content.gameObject.GetComponent<RectTransform>().rect.height;
+        float displayedHeight = m_ViewPort.rect.height;
         //scroll up or down (changed by factor) for a given percentage 
         //(scaled to fit normalized values by multiplying with last factor)
-        m_scroll.verticalNormalizedPosition += factor * m_percentage * (displayedHeight / contentheight);
+        m_Scroll.verticalNormalizedPosition += factor * m_Percentage * (displayedHeight / contentheight);
 
 
     }
@@ -163,10 +178,10 @@ public class ScrollViewFunctionalities : MonoBehaviour
     private IEnumerator OnButtonUpHolding()
     {
         Debug.Log("While holding up");
-        while (m_buttonHeld)
+        while (m_ButtonHeld)
         {
             yield return new WaitForSeconds(0.1f);
-            if (m_buttonHeld)
+            if (m_ButtonHeld)
                 OnButtonUpClick();
         }
     }
@@ -178,10 +193,10 @@ public class ScrollViewFunctionalities : MonoBehaviour
     private IEnumerator OnButtonDownHolding()
     {
         Debug.Log("While holding down");
-        while (m_buttonHeld)
+        while (m_ButtonHeld)
         {
             yield return new WaitForSeconds(0.1f);
-            if (m_buttonHeld)
+            if (m_ButtonHeld)
                 OnButtonDownClick();
         }
     }

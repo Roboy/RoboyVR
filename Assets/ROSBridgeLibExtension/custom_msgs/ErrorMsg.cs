@@ -6,7 +6,7 @@ namespace ROSBridgeLib
     namespace custom_msgs
     {
         /// <summary>
-        /// Warning notification 
+        /// Error notification 
         /// Adapt to externally defined msgs 
         ///-> https://github.com/CapChrisCap/roboy_communication/tree/feature/error-detection-msgs/roboy_communication_control/msg
         /// </summary>

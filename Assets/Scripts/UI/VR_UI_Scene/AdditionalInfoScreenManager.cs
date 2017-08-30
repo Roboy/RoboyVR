@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This script manages the functionality of the additional screen.
+/// It is attached to the gameobject and sets all text and image components and reacts to click events. 
+/// </summary>
 public class AdditionalInfoScreenManager : MonoBehaviour
 {
     #region PUBLIC_MEMBER_VARIABLES
@@ -27,13 +29,13 @@ public class AdditionalInfoScreenManager : MonoBehaviour
     /// text displaying  the body part
     /// </summary>
     [SerializeField]
-    private Text m_bodyPartText;
+    private Text m_BodyPartText;
 
     /// <summary>
     /// text displaying the state
     /// </summary>
     [SerializeField]
-    private Text m_stateText;
+    private Text m_StateText;
 
     /// <summary>
     /// text displaying more content if existing
@@ -66,10 +68,10 @@ public class AdditionalInfoScreenManager : MonoBehaviour
             m_Headline.text = note.GetNotificationType().ToString();
             GameObject part = note.GetConcernedRoboyPart();
             if (part)
-                m_bodyPartText.text = part.name;
+                m_BodyPartText.text = part.name;
             else
-                m_bodyPartText.text = "[General]";
-            m_stateText.text = note.GetState().ToString();
+                m_BodyPartText.text = "[General]";
+            m_StateText.text = note.GetState().ToString();
             m_MoreContent.text = note.GetAdditionalInfo();
         }
         GetComponent<Canvas>().worldCamera = VRUILogic.Instance.GetCamera();

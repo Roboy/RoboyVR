@@ -1001,9 +1001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9559facacb9b749880b65b4195f378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabs:
-  - {fileID: 1292157971}
-  - {fileID: 1349354625}
+  m_Tabs: []
 --- !u!114 &196859481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2184,12 +2182,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83a4d73ad68b1e14991fb9487ade297f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Threshold: 0.1
-  Friction: 3
-  Speed: 20
-  ControllerIndex: 0
-  SelectIndex: 0
-  Canvas: {fileID: 612915072}
+  m_Threshold: 0.1
+  m_Friction: 3
+  m_Speed: 20
+  m_ControllerIndex: 0
+  m_SelectIndex: 0
+  m_Canvas: {fileID: 0}
   m_Background: {fileID: 1405367069}
 --- !u!1 &470733611
 GameObject:
@@ -5853,15 +5851,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936e9a2dccccf15459925edf6f95ce4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skybox: {fileID: 2100000, guid: dc4b3d2c2cccd5d4fab7ea72f7406a9c, type: 2}
-  m_modes:
-  - {fileID: 1931244425}
-  - {fileID: 328096875}
-  - {fileID: 1447976724}
-  - {fileID: 856796837}
+  m_Skybox: {fileID: 0}
+  m_Modes: []
   m_Roboy: {fileID: 1143570618}
-  m_headset: {fileID: 842172256}
-  m_selectIndex: 0
+  m_Headset: {fileID: 0}
+  m_SelectIndex: 0
   m_error: {fileID: 2800000, guid: 43bbebe6117a5cb4ab2f778735aff88c, type: 3}
   m_warning: {fileID: 2800000, guid: 47e9b45c1cd308a4ebfc3a9c4e47cdd1, type: 3}
   m_info: {fileID: 2800000, guid: 33d4e669d3851194cb6f1dd4c1b204ec, type: 3}
@@ -5889,12 +5883,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1186947577}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d2c4b2ac7b93a54a8f9a4ffdffa7cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam2: {fileID: 842172256}
+  Camera2: {fileID: 0}
 --- !u!114 &1186947581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7481,8 +7475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c0bf29c9d9b3c458518d457213f5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_itemPrefab: {fileID: 1473126923615388, guid: 1d339595e8a8168469463bfa89951f84,
-    type: 2}
+  m_ItemPrefab: {fileID: 0}
   m_ListContentContainer: {fileID: 2001327584}
 --- !u!223 &1478141327
 Canvas:
@@ -7610,11 +7603,6 @@ Prefab:
     - target: {fileID: 4180122861176292, guid: 737c63ce825e391479b4b1eb311ca213, type: 2}
       propertyPath: m_RootOrder
       value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 114001897084291692, guid: 737c63ce825e391479b4b1eb311ca213,
-        type: 2}
-      propertyPath: ROSCoreIP
-      value: 10.183.82.119
       objectReference: {fileID: 0}
     - target: {fileID: 1125562277477006, guid: 737c63ce825e391479b4b1eb311ca213, type: 2}
       propertyPath: m_IsActive
@@ -8331,9 +8319,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fb0bbcd01a85d346899b9bf1c6a6463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fixedScreen: 0
-  rotationOffset: 35
-  pivot: {x: 0, y: 0, z: 0}
+  m_ScreenFixed: 0
+  m_RotationOffset: 35
+  m_Pivot: {x: 0, y: 0, z: 0}
 --- !u!114 &1637459644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8345,9 +8333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9559facacb9b749880b65b4195f378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabs:
-  - {fileID: 209818049}
-  - {fileID: 92739730}
+  m_Tabs: []
 --- !u!1 &1655586918
 GameObject:
   m_ObjectHideFlags: 0
@@ -8559,11 +8545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 467b2864c43209d418fc9c9335a64e0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_imageSlots:
-  - {fileID: 1992728083}
-  - {fileID: 1655586920}
-  - {fileID: 1840182560}
-  - {fileID: 2002399156}
+  m_ImageSlots: []
   m_Screen: {fileID: 82132128}
 --- !u!1 &1688830408
 GameObject:
@@ -9803,7 +9785,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1864607304}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.816, y: 0.77, z: -1.1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 812510291}
