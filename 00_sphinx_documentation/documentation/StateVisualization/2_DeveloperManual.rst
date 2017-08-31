@@ -153,7 +153,15 @@ This layer covers the UI logic and certain modemanager. It displays the selected
 ..
     
  VRUILogic: This script operates as a database for important game values. Due to its Singleton_ implementation, there are no dublicates, the data is not concurrent, it is always accessible and all functions can use it as a data platform. It is designed to act passively, it does not contain an Update() function and does not actively request data. Other functions and instances can set and get the desired data. This design choice was made because it assures modularity of the respective elements, both front and back-end. This way, in case parts of the front- or back-end are no longer necessary or fail, no other components are affected. This design proved to be challenging when considering the age of the given data when later used. Functions requesting data are not presented with changes, only the current stage, which makes updates rather tedious. Therefore, the Observer-Pattern was used to inform components which need to be updated on changes. These previously added themselves to a list of subscribers. 
+ Additionally, other values such as user input and textures for notifications are provided to all other components. The textures are user-defined as can be seen in the following picture.
   
+.. figure:: images/database.*
+   :align: center
+   :alt: Image could not be loaded
+   
+   VRUILogic script with all fields defined
+..
+
  DummyStates: This class provides the enumerations used for notifications. This needs to be synchronized with the Control team and their error detection states and types. 
  
  .. _Singleton: https://en.wikipedia.org/wiki/Singleton_pattern
