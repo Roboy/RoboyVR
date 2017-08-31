@@ -31,3 +31,10 @@ As every type of ROSBridgeMsg should derive from this class, here is an example 
 .. doxygenclass:: ROSBridgeLib::turtlesim::PoseMsg
   :members:
   :private-members:
+  
+ROSBridgeActors
+***************
+
+.. doxygenclass:: ROSBridgeLib::ROSBridgePublisher
+  :members:
+  :private-members:
