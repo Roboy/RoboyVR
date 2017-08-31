@@ -49,6 +49,7 @@ In this layer, objects, modes, and their respective items covering screens, labe
    :alt: Image could not be loaded
    
    Display message
+..
 
  ModeManager: Four different scripts manage the displayed data in the respective mode. They are attached to the respective game object which represents the mode and contains all mode-related elements. The scripts are: 
  
@@ -63,7 +64,8 @@ In this layer, objects, modes, and their respective items covering screens, labe
    :alt: Image could not be loaded
    
    List of notifications
-   
+..
+  
   CognitionManager: Since no data type, which this mode would handle, is implemented yet, no functionalities are provided. 
  
  ScreenTabManager: This script manages the correct display of the tab contents, since the objects may overlap or be covered or interfer with each other. It deactivates all content, that is not rendered last, the last tab page is fully activated. 
@@ -87,7 +89,7 @@ In this layer, objects, modes, and their respective items covering screens, labe
    :alt: Image could not be loaded
    
    Additional screen displaying extended information about a notification
-   
+..
 
  Tendon: This script is attached to a gameobject and together they represent a tendon object. It contains all needed attributes and function. 
   
@@ -112,7 +114,8 @@ In this layer, objects, modes, and their respective items covering screens, labe
    :alt: Image could not be loaded
    
    Canvas size in blue and view frustrum in green
-   
+..
+  
 
  Notifications: Theses are stored in a notification container. Notification visualization is managed for each body part in the BodyPart.cs script, as multiple errors, warnings and so on can be linked to one gameobject. 
  
@@ -121,7 +124,7 @@ In this layer, objects, modes, and their respective items covering screens, labe
    :alt: Image could not be loaded
    
    Notification visualized using a halo and icon near concerned area
-   
+..
    
  Tendons: These are visualized using a lineRenderer. All tendons are stored in one container object, which itself is  a child of the middleware mode. 
 
@@ -130,6 +133,7 @@ In this layer, objects, modes, and their respective items covering screens, labe
    :alt: Image could not be loaded
    
    Four exemplary tendons with different forces applied
+..
    
  Skyboxes: Two different skyboxes were created to be used as the background: the Roboy skybox containing Roboy as a constellation in the night sky, RoboyAngels contains the faces of all Roboy angels. They can be set in the VRUILogic.  
  
@@ -141,11 +145,12 @@ This layer covers the UI logic and certain modemanager. It displays the selected
 **Scripts:** 
  SelectionWheelScript: This script is attached to a gameobject within a canvas, which will be disabled in the beginning. Additionally, all the children of the component are realigned to fill the selection wheel according to the number of elements. The script constantly checks for input when activated. As soon as input is detected, it enables the canvas to display the wheel and all the child objects. These are rotated on a circle according to the position of the sensed input on the controller. The controller can be set in the public variable Controllerindex. The placement on the circle, where the element should be selected, can be changed in the public variable selectionIndex. This index specifies the index within the number of game objects, which shall be selected. It starts at 12 o'clock and rotates clockwise. Since the script is general in implementation and usage, it can be used multiple times under different occasions.
 
-   .. figure:: images/selection_wheel.*
+.. figure:: images/selection_wheel.*
     :align: center
     :alt: Image could not be loaded
     
     Selection wheel with four options and Overview selected
+..
     
  VRUILogic: This script operates as a database for important game values. Due to its Singleton_ implementation, there are no dublicates, the data is not concurrent, it is always accessible and all functions can use it as a data platform. It is designed to act passively, it does not contain an Update() function and does not actively request data. Other functions and instances can set and get the desired data. This design choice was made because it assures modularity of the respective elements, both front and back-end. This way, in case parts of the front- or back-end are no longer necessary or fail, no other components are affected. This design proved to be challenging when considering the age of the given data when later used. Functions requesting data are not presented with changes, only the current stage, which makes updates rather tedious. Therefore, the Observer-Pattern was used to inform components which need to be updated on changes. These previously added themselves to a list of subscribers. 
   
@@ -160,6 +165,7 @@ This layer covers the UI logic and certain modemanager. It displays the selected
    :alt: Image could not be loaded
    
    Component hierarchy in object view
+..
    
  UILogic: This empty game object is not displayed, but contains all relevant UI components as child objects. 
  
@@ -193,6 +199,7 @@ For all subscribers to work properly, they needed to be attached to a game objec
    :alt: Image could not be loaded
    
    Game Object containing all subscribers and a ROS Object component
+..
 
  BackendSubscriber: This component containas all subscribers as well as the ROS Object component mentioned beforehand.
  
