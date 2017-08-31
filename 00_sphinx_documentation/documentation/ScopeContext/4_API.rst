@@ -30,20 +30,7 @@ As every type of ROSBridgeMsg should derive from this class, here is an example 
 
 .. doxygenclass:: ROSBridgeLib::turtlesim::PoseMsg
   :members:
-  :private-members:
-  
-ROSBridgeLibExtension
-^^^^^^^^^^^^^^^^^^^^^
-
-We extended the library in the form that we implemented a singleton class to handle all ROSActors in the scene.
-
-.. doxygenclass:: ROSBridge
-  :members:
-  :private-members:
-  
-.. doxygenclass:: ROSObject
-  :members:
-  :private-members:  
+  :private-members: 
 
 Managers
 ^^^^^^^^
