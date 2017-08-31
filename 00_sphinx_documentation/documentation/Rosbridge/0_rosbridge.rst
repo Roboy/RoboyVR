@@ -132,4 +132,4 @@ Then attach to the gameObject which should receive/send data a ROSObject script 
 	
 	ROSObject
 
-Congrutalations, you finished the setup!
+Congratulations, you finished the setup!
