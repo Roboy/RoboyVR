@@ -76,3 +76,34 @@ ViewSelectionManager
 .. doxygenclass:: ViewSelectionManager
   :members:
   :private-members:
+
+Tools
+^^^^^
+
+ControllerTool
+**************
+
+.. doxygenclass:: ControllerTool
+  :members:
+  :private-members:
+  
+SelectorTool
+************
+
+.. doxygenclass:: SelectorTool
+  :members:
+  :private-members:
+  
+ShootingTool
+************
+
+.. doxygenclass:: ShootingTool
+  :members:
+  :private-members:
+
+GUIController
+*************
+
+.. doxygenclass:: GUIController
+  :members:
+  :private-members:
