@@ -96,7 +96,7 @@ Contents:
   :glob:
   :caption: Core Features
   
-  BeRoboy/*  
+  CoreFeatures/*  
   
 .. _ModelUpdate:
 .. toctree::

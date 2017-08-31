@@ -265,6 +265,7 @@ public class RoboyManager : Singleton<RoboyManager>
             {
                 if (t == null | !t.CompareTag("RoboyPart"))
                     continue;
+                m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
                 m_RoboyPartsList[name].Add(t.name, t.GetComponent<RoboyPart>());
                 //m_RoboyParts.Add(t.name, t.GetComponent<RoboyPart>());
             }
