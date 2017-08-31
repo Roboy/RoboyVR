@@ -104,7 +104,7 @@ Contents:
   :glob:
   :caption: Automatic Update Pipeline
   
-  _ModelWorldLoader/*
+  ModelWorldLoader/*
     
 .. _Pabi:
 .. toctree::
