@@ -98,13 +98,13 @@ Contents:
   
   CoreFeatures/*  
   
-.. _ModelUpdate:
+.. _ModelWorldUpdater:
 .. toctree::
   :maxdepth: 1
   :glob:
-  :caption: Automatic Model Update Pipeline
+  :caption: Automatic Update Pipeline
   
-  ModelUpdate/*
+  _ModelWorldUpdater/*
     
 .. _Pabi:
 .. toctree::
