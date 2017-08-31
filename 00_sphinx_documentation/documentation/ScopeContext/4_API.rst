@@ -30,4 +30,49 @@ As every type of ROSBridgeMsg should derive from this class, here is an example 
 
 .. doxygenclass:: ROSBridgeLib::turtlesim::PoseMsg
   :members:
-  :private-members: 
+  :private-members:
+
+Managers
+^^^^^^^^
+
+RoboyManager
+************
+
+.. doxygenclass:: RoboyManager
+  :members:
+  :private-members:
+  
+InputManager
+************
+
+.. doxygenclass:: InputManager
+  :members:
+  :private-members:
+
+ModeManager
+***********
+
+.. doxygenclass:: ModeManager
+  :members:
+  :private-members:
+  
+SelectorManager
+***************
+
+.. doxygenclass:: SelectorManager
+  :members:
+  :private-members:
+  
+BeRoboyManager
+**************
+
+.. doxygenclass:: BeRoboyManager
+  :members:
+  :private-members:
+  
+ViewSelectionManager
+********************
+
+.. doxygenclass:: ViewSelectionManager
+  :members:
+  :private-members:
