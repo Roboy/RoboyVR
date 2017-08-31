@@ -32,9 +32,130 @@ As every type of ROSBridgeMsg should derive from this class, here is an example 
   :members:
   :private-members:
   
-ROSBridgeActors
+ROSBridgeLibExtension
+^^^^^^^^^^^^^^^^^^^^^
+
+We extended the library in the form that we implemented a singleton class to handle all ROSActors in the scene.
+
+.. doxygenclass:: ROSBridge
+  :members:
+  :private-members:
+  
+.. doxygenclass:: ROSObject
+  :members:
+  :private-members:  
+
+Managers
+^^^^^^^^
+
+RoboyManager
+************
+
+.. doxygenclass:: RoboyManager
+  :members:
+  :private-members:
+  
+InputManager
+************
+
+.. doxygenclass:: InputManager
+  :members:
+  :private-members:
+
+ModeManager
+***********
+
+.. doxygenclass:: ModeManager
+  :members:
+  :private-members:
+  
+SelectorManager
 ***************
 
-.. doxygenclass:: ROSBridgeLib::ROSBridgePublisher
+.. doxygenclass:: SelectorManager
+  :members:
+  :private-members:
+  
+BeRoboyManager
+**************
+
+.. doxygenclass:: BeRoboyManager
+  :members:
+  :private-members:
+  
+ViewSelectionManager
+********************
+
+.. doxygenclass:: ViewSelectionManager
+  :members:
+  :private-members:
+
+  
+Tools
+^^^^^
+
+ControllerTool
+**************
+
+.. doxygenclass:: ControllerTool
+  :members:
+  :private-members:
+  
+SelectorTool
+************
+
+.. doxygenclass:: SelectorTool
+  :members:
+  :private-members:
+  
+ShootingTool
+************
+
+.. doxygenclass:: ShootingTool
+  :members:
+  :private-members:
+
+GUIController
+*************
+
+.. doxygenclass:: GUIController
+  :members:
+  :private-members:
+
+Additional classes
+^^^^^^^^^^^^^^^^^^
+
+SelectableObject
+****************
+
+.. doxygenclass:: SelectableObject
+  :members:
+  :private-members:
+
+SelectionPanel
+**************
+
+.. doxygenclass:: SelectionPanel
+  :members:
+  :private-members:  
+
+Projectile
+**********
+
+.. doxygenclass:: Projectile
+  :members:
+  :private-members:
+  
+MeshUpdater
+***********
+
+.. doxygenclass:: MeshUpdater
+  :members:
+  :private-members:
+  
+MeshUpdaterEditor
+*****************
+
+.. doxygenclass:: MeshUpdaterEditor
   :members:
   :private-members:
