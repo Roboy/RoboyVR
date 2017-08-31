@@ -18,6 +18,13 @@ Start your Ubuntu machine and open a terminal.
 
   roslaunch roboy_simulation roboy_camera.launch  
 
+If yout want the insert/remove feature to work, also launch this in a seperate terminal,
+source the same path as before though.
+
+.. code:: bash
+
+  rosrun roboy_simulation VRRoboy  
+
 
 Starting Unity
 --------------
@@ -88,28 +95,4 @@ You can choose between the following four view scenarios, each of them offering 
          
    Slip into the role of the true VR Roboy, cause mayhem or look cute, you decide.
 
-
-
-Troubleshooting
----------------
-
-If gazebo encounters problems loading the Model into the world or starting the server,
-these commands could be useful.
-
-1. Kill the gazebo server and restart it.
-
-.. code:: bash
-
-  killall gzserver
-  killall gzclient
-
-2. Export the gazebo paths to the model
-
-.. code:: bash
-
-  source /usr/share/gazebo-7/setup.sh
-  export GAZEBO_MODEL_PATH=/path/to/roboy-ros-control/src/roboy_models:$GAZEBO_MODEL_PATH
-
-3. If you are still having trouble, please contact roboyvr@gmail.com.
-We will glady help you to enjoy your RoboyVR experience.
 
