@@ -25,3 +25,9 @@ ROSBridgeMsg
 .. doxygenclass:: ROSBridgeLib::ROSBridgeMsg
   :members:
   :private-members:
+  
+As every type of ROSBridgeMsg should derive from this class, here is an example how an actual implementation looks like.
+
+.. doxygenclass:: ROSBridgeLib::turtlesim::PoseMsg
+  :members:
+  :private-members:
