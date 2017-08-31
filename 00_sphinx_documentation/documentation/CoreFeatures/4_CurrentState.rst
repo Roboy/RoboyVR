@@ -9,7 +9,7 @@ in the gazebo simulation. In the future it is planned to control also the real c
 
 Besides controlling Roboy it is possible to insert and remove numerous models from the virtual world
 simply by point and click. For this purpose we designed and implemented a seperate tool which you can
-selected from the left hand controller (selectionwheel is activated by the gripped button).
+selected from the left hand controller (selectionwheel is activated by the side button).
 
 .. figure:: images/controller_layout.*
   :alt: Controller layout
