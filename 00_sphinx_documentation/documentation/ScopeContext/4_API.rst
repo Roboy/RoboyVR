@@ -76,13 +76,3 @@ ViewSelectionManager
 .. doxygenclass:: ViewSelectionManager
   :members:
   :private-members:
-
-Tools
-^^^^^
-
-ControllerTool
-**************
-
-.. doxygenclass:: ControllerTool
-  :members:
-  :private-members:
