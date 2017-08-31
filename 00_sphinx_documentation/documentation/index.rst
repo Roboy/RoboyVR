@@ -128,7 +128,7 @@ Contents:
   :glob:
   :caption: ROSBridge
   
-  Rosbrdige/*
+  Rosbridge/*
   
 
 .. _ScopeContext:
