@@ -18,3 +18,10 @@ ROSBridgeWebSocketConnection
 .. doxygenclass:: ROSBridgeLib::ROSBridgeWebSocketConnection
   :members:
   :private-members:
+
+ROSBridgeMsg
+************
+
+.. doxygenclass:: ROSBridgeLib::ROSBridgeMsg
+  :members:
+  :private-members:
