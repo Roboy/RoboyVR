@@ -65,4 +65,6 @@ Part 4: Blender & Python
 
 - Install the latest version of `Python <https://www.python.org/downloads/>`_
 
+- Install the `PyXB: Python XML Schema Bindings <https://sourceforge.net/projects/pyxb/>`_
+
 - After installation, add the Python executable directories to the environment variable PATH in order to run Python. (Windows 10: http://www.anthonydebarros.com/2015/08/16/setting-up-python-in-windows-10/)

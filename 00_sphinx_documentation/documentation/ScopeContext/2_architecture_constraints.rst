@@ -25,6 +25,7 @@ Architecture Constraints
   "ROSBridge", "It connects the simulation on Ubuntu with Unity on Windows."
   "steamVR", "We use this interface to use the API of the HTC Vive."
   "ZED", "This interface connects the ZED (Roboy's Eyes) with Unity."
+  "PyXB", "This is used for reading XML files in the Model/World Updater."
 
 .. csv-table:: Operating System Constraints
   :header: "Constraint Name", "Description"
