@@ -46,16 +46,3 @@ ROSBridgeActors
 .. doxygenclass:: ROSBridgeLib::ROSBridgeService
   :members:
   :private-members:
-  
-ROSBridgeLibExtension
-^^^^^^^^^^^^^^^^^^^^^
-
-We extended the library in the form that we implemented a singleton class to handle all ROSActors in the scene.
-
-.. doxygenclass:: ROSBridge
-  :members:
-  :private-members:
-  
-.. doxygenclass:: ROSObject
-  :members:
-  :private-members:
