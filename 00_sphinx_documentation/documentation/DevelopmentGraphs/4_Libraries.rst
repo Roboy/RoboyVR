@@ -5,8 +5,6 @@ Libraries and external Software
 
 Contains a list of the libraries and external software used by this system.
 
-.. todo::
-  List libraries you are using
 
 .. csv-table:: Libraries and external Software
   :header: "Name", "URL/Author", "License", Description
