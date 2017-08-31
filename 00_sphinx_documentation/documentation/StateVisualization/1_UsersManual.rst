@@ -27,7 +27,6 @@ The user interface as of now implements different modes focussing on certain dat
 - In Control mode, additional information about notifications is given. A list provides all currently detected status messages, which display additional information when clicked. 
 - The cognition mode does not contain any visualizations of specific data types. Only template screens are provided in this sceen. 
 
-
 The user can initially decide, which controller is his main controller by using the trigger at the underside of the controller. Controllers are used to help the user navigate and control the environment as well as interact with the data sets. A selection wheel is used to change between modes, all other interaction methods only include point-and-click and click-and-hold using a raycaster displazing a red beam. Not all UI elements are interactive just yet, but this is to be changed in future updates. 
 The main controller touchpad can then be used to change between different modes (Cognition, Overview, Middleware and Control). By turning the head with the headset, the camera can be rotated. By moving around the room, the camera position can be changed. Beware of possible obstacles and boundaries given by the physical surroundings. 
 
