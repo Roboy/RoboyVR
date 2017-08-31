@@ -59,7 +59,7 @@ In this layer, objects, modes, and their respective items covering screens, labe
   
   ControlManager: This Manager provides a list of notifications on one of the panels and adds new list items as soon as it is notified of new notifications.
   
-.. figure:: images/notificationlist.*
+.. figure:: images/notificationslist.*
    :align: center
    :alt: Image could not be loaded
    

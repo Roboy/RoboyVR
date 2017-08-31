@@ -20,9 +20,9 @@ In general, the Scene contains two types of objects:
 
 The UI has three main layers:
 
-- Front-end: Containing all UI objects
+- Front-end: Containing all UI objects and displaying data
 - Core: Containing logic, updating methods and operating on given data set
-- Back-end: Provider of data through a connection to ROS (or method dummies sending fake data)
+- Back-end: Provider of data through a connection to ROS
 
 Current Implementation
 ----------------------
