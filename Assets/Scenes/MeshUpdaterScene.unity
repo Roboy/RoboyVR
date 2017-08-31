@@ -625,8 +625,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2078176774}
-  - component: {fileID: 2078176775}
   - component: {fileID: 2078176776}
+  - component: {fileID: 2078176775}
   m_Layer: 0
   m_Name: Updater
   m_TagString: Untagged
@@ -660,7 +660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Github_Repository: https://github.com/Roboy/roboy_worlds/
   Branch: master
-  WorldsCurrentState: 4
+  WorldsCurrentState: 0
 --- !u!114 &2078176776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -674,4 +674,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Github_Repository: https://github.com/Roboy/roboy_models/
   Branch: VRTeam
-  ModelsCurrentState: 4
+  ModelsCurrentState: 0
