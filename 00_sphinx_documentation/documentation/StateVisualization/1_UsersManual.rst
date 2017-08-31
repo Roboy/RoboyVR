@@ -21,6 +21,14 @@ The hardware of the computer needs to support Virtual Reality applications, addi
 UI Features
 -----------
 
-The user can initially decide, which controller is his main controller by using the trigger at the underside of the controller. The main controller touchpad can then be used to change between different modes (Cognition, Overview, Middleware and Control). By turning the head with the headset, the camera can be rotated. By moving around the room, the camera position can be changed. Beware of possible obstacles and boundaries given by the physical surroundings. 
+The user interface as of now implements different modes focussing on certain data sets. 
+- The Overview provides general information about Roboy, a graph plotting a heartbeat-like function and displays notifications concerning the state of roboy. These relate to a cretain body part, which is highlighted using a halo and a warning sign near the respective area. Different types include error, warning, debug and information notifications. 
+- The Middleware mode visualizes tendons as colored lines which change color depending on the applied force and update their positions depending on the movement of the robot. 
+- In Control mode, additional information about notifications is given. A list provides all currently detected status messages, which display additional information when clicked. 
+- The cognition mode does not contain any visualizations of specific data types. Only template screens are provided in this sceen. 
 
-With the raycaster - seen as a red beam -  different body parts of Roboy can be selected and information can be displayed. This is the current state of implementation, further changes and updates will be made in the future. 
+
+The user can initially decide, which controller is his main controller by using the trigger at the underside of the controller. Controllers are used to help the user navigate and control the environment as well as interact with the data sets. A selection wheel is used to change between modes, all other interaction methods only include point-and-click and click-and-hold using a raycaster displazing a red beam. Not all UI elements are interactive just yet, but this is to be changed in future updates. 
+The main controller touchpad can then be used to change between different modes (Cognition, Overview, Middleware and Control). By turning the head with the headset, the camera can be rotated. By moving around the room, the camera position can be changed. Beware of possible obstacles and boundaries given by the physical surroundings. 
+
+. 

@@ -1,6 +1,10 @@
 Introduction
 ============  
 
+.. figure:: images/thinner.*
+   :align: center
+   :alt: Image could not be loaded
+   
 Usage
 -------
 
@@ -22,5 +26,4 @@ The UI has three main layers:
 
 Current Implementation
 ----------------------
-
-The user interface as of now does only contain basic front-end elements such as screens, panels and camera overlay canvases, as well as parts of the basic Core area. These include basic support of the Vive Controllers, the display of all elements, both in the scene and part of the UI on the SteamVR glasses. Many UI elements are not interactive as of now, but this will be changed in future updates. 
+See the user manual for further information. 
