@@ -16,8 +16,8 @@ In the future it will be possible to control time, so to rewind the simulation a
    
    Press any of the controller to set it respectively.
    
-Switching tools
----------------
+**Switching tools**
+
 
 .. figure:: images/selectionwheel_a.*
    :alt: Selectionwheel left
@@ -29,8 +29,7 @@ Switching tools
    
    Change tools on the right controller.
    
-Tools
------
+**Tools**
    
 .. figure:: images/tool_selector.*
    :alt: Selector Tool
@@ -62,8 +61,8 @@ Tools
    
    You want to push Roboy around? But be gentle.
    
-Insert and remove models
-------------------------
+**Insert and remove models**
+
 
 .. figure:: images/tool_insertinger.*
    :alt: Insertinger tool
@@ -85,8 +84,8 @@ Insert and remove models
    
    Produce your own squad of Roboys in a few seconds!
    
-Nice to know
------------- 
+**Nice to know**
+
  
 **Too tired to walk? Just teleport!**
 
