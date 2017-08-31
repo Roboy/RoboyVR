@@ -9,7 +9,14 @@ in the gazebo simulation. In the future it is planned to control also the real c
 
 Besides controlling Roboy it is possible to insert and remove numerous models from the virtual world
 simply by point and click. For this purpose we designed and implemented a seperate tool which you can
-selected from the left hand controller (selectionwheel is activated by the `gripped <images/controller_layout.png>`_ button).
+selected from the left hand controller (selectionwheel is activated by the gripped button).
+
+.. figure:: images/controller_layout.*
+  :alt: Controller layout
+  
+  Overview of the button mapping for the Vive controllers.
+
+
 Just choose the model you want to insert and click on a free space on the ground. This model will be inserted
 in the world of Unity, but in the simulation PaBi will not be inserted as well as the surprise model.
 This is due to missing content in the gazebo model structure on the simulation side.
