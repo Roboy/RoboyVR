@@ -79,7 +79,7 @@ In the future it will be possible to control time, so to rewind the simulation a
    
    Remove a model from the world by clicking on it.
    
-.. figure:: images/tool_army.*
+.. figure:: images/tool_insertinger_army.*
    :alt: Roboys everywhere
    
    Produce your own squad of Roboys in a few seconds!
