@@ -128,9 +128,9 @@ Contents:
   :glob:
   :caption: ROSBridge
   
-  ZEDWrapper/*
+  Rosbridge/*
   
-  .. _ZEDWrapper
+.. _ZEDWrapper
 .. toctree::
   :maxdepth: 1
   :glob:
