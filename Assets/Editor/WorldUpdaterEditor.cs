@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections.Generic;
 
 /// <summary>
-/// Custom editor script to be able to call functions from MeshUpdater at edit time through buttons.
+/// Custom editor script to be able to call functions from WorldUpdater at edit time through buttons.
 /// </summary>
 [CustomEditor(typeof(WorldUpdater))]
 class WorldUpdaterEditor : Editor
@@ -44,7 +44,7 @@ class WorldUpdaterEditor : Editor
             }
         }
 
-        // Do not show Scan, Download and Create Prefab button if blender path is not set
+        // Do not show Scan, Download and Create World button if blender path is not set
         if (worldUpdater.WorldsCurrentState < UpdaterUtility.State.BlenderPathSet)
             return;
 
@@ -53,7 +53,7 @@ class WorldUpdaterEditor : Editor
             worldUpdater.Scan();
         }
 
-        // stop here if meshupdater did not scan yet
+        // stop here if WorldUpdater did not scan yet
         if (worldUpdater.WorldsCurrentState < UpdaterUtility.State.Scanned)
             return;
 
@@ -65,10 +65,12 @@ class WorldUpdaterEditor : Editor
             worldUpdater.WorldChoiceDictionary[modelEntryKey] = EditorGUILayout.Toggle(modelEntryKey, worldUpdater.WorldChoiceDictionary[modelEntryKey]);
         }
 
-        // downloads models and converts them to .fbx (models will also be imported into unity)
+        
         if (GUILayout.Button("Download .world files"))
-        {
+        {   
+            //Download .world file
             worldUpdater.LoadWorlds();
+            //Use .world file to download models
             worldUpdater.Magic();
         }
 

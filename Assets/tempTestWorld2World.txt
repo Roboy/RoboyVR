@@ -1,5 +1,0 @@
-world_name;TestWorld2
-model_name;Construction Cone;model_pose;0.319539 -1.57605 0 0 -0 0;model_link;link;VIS_mesh_uri;model://construction_cone/meshes/construction_cone.dae;VIS_mesh_scale;10 10 10;COL_mesh_uri;model://construction_cone/meshes/construction_cone.dae;COL_mesh_scale;10 10 10;
-model_name;Construction Cone_0;model_pose;-0.9199 -0.30899 0 0 -0 0;model_link;link;VIS_mesh_uri;model://construction_cone/meshes/construction_cone.dae;VIS_mesh_scale;10 10 10;COL_mesh_uri;model://construction_cone/meshes/construction_cone.dae;COL_mesh_scale;10 10 10;
-model_name;Construction Cone_1;model_pose;1.91781 -1.45023 0 0 -0 0;model_link;link;VIS_mesh_uri;model://construction_cone/meshes/construction_cone.dae;VIS_mesh_scale;10 10 10;COL_mesh_uri;model://construction_cone/meshes/construction_cone.dae;COL_mesh_scale;10 10 10;
-model_name;Construction Cone_2;model_pose;0.884241 1.80632 0 0 -0 0;model_link;link;VIS_mesh_uri;model://construction_cone/meshes/construction_cone.dae;VIS_mesh_scale;10 10 10;COL_mesh_uri;model://construction_cone/meshes/construction_cone.dae;COL_mesh_scale;10 10 10;

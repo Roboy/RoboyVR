@@ -145,7 +145,9 @@ public class WorldUpdater : MonoBehaviour
         WorldsCurrentState = UpdaterUtility.State.Scanned;
     }
 
-
+    /// <summary>
+    /// Downloads the .world files from the scan dictionary which were selected by the user.
+    /// </summary>
     public void LoadWorlds()
     {
         string pathToOriginWorlds = UpdaterUtility.ProjectFolder + @"/SimulationWorlds/";
@@ -162,17 +164,21 @@ public class WorldUpdater : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Downloads models given in the .world files and saves their pose in a struct.
+    /// </summary>
     public void Magic()
     {
 
         List<KeyValuePair<string, bool>> tempURLList = WorldChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
-        {   //replace this with real data from .world files
+        {   
 
             if (File.Exists(UpdaterUtility.ProjectFolder + @"/SimulationWorlds/" + urlEntry.Key + @"/" + urlEntry.Key + ".world"))
             {
                 Debug.Log(".world file found!");
-                // read .sdf file
+                // read .world file
                 string[] argumentsSDFreader = { "python \"" + UpdaterUtility.PathToWorldReader + "\" \"" + UpdaterUtility.ProjectFolder + @"/SimulationWorlds/" + urlEntry.Key + @"/" + urlEntry.Key + ".world\"" };
                 CommandlineUtility.RunCommandLine(argumentsSDFreader);
             }
@@ -184,106 +190,111 @@ public class WorldUpdater : MonoBehaviour
             string pathToWorldFile = UpdaterUtility.ProjectFolder + @"/temp" + urlEntry.Key + @"World.txt";
             if (!File.Exists(pathToWorldFile))
             {
-                //Debug.LogWarning(UpdaterUtility.ProjectFolder + @"/temp" + urlEntry.Key + @"World.txt");
+                
                 Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
                 return;
             }
-            // get file content of format title:url
+            
+            //save content of temp file
             string[] WorldContent = File.ReadAllLines(pathToWorldFile);
 
-            //File.Delete(pathToWorldFile);
+            //delete temp file
+            File.Delete(pathToWorldFile);
 
             List<string[]> modelList = new List<string[]>();
 
             foreach (string line in WorldContent)
-            {
+            {   
+                //each line contains of a model link with pose, scale, model_link
                 string[] SDFline = line.Split(';');
                 modelList.Add(SDFline);
 
             }
             string worldName = null;
             for (int i = 0; i < modelList.Count; i++)
-            //foreach (string[] line in linkList)
             {
                 if (modelList[i][0] == "world_name")
-                {
-                    //Create GameObject where everything will be attached
+                {   
+                    //get world name
                     worldName = modelList[i][1];
                     modelList.Remove(modelList[i]);
-                    //continue;
                 }
             }
 
-            for (int i = 0; i < modelList.Count; i++)
-            {
-                foreach (string[] line in modelList)
-                {
-                    ModelTransformation testModel = new ModelTransformation();
-                    testModel.worldname = worldName;
-                    for (int j = 0; j < line.Length; j++)
-                    {
-                        testModel.link = new LinkTransformation();
-                        //if (modelList[i][j] == "model_name")
-                        //{
-                        //    testModel.name = modelList[i][j + 1];
-                        //    Debug.Log(modelList[i][j + 1]);
-                        //}
-                        string[] pose = null;
-                        if (modelList[i][j] == "model_pose")
-                        {
-                            pose = modelList[i][j + 1].Split(' ');
-                            testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
-                            testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                        Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                        Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
-                        }
-                        
-                        if (modelList[i][j] == "model_link")
-                        {
-                            testModel.link.name = modelList[i][j + 1];
-                        }
-                        //if (modelList[i][j] == "VIS_mesh_uri") {
-                        //    testModel.link.VIS_meshName = modelList[i][j + 1];
-                        //    var regex = new Regex(Regex.Escape(""));
-                        //    titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
-                        //    testModel.name =
-                        //}
+            foreach (string[] line in modelList)
+            {   
+                //each model will be saved in a struct, so we can apply pose and scale later on
+                ModelTransformation testModel = new ModelTransformation();
+                testModel.worldname = worldName;
 
-                        if (modelList[i][j] == "COL_mesh_uri")
-                            testModel.link.COL_meshName = modelList[i][j + 1];
+                //check which attributes are set by the .world file and set them in the struct
+                for (int j = 0; j < line.Length; j++)
+                {   
+                    testModel.link = new LinkTransformation();
 
-                        string[] VIS_Scale = null;
-                        if (modelList[i][j] == "VIS_mesh_scale")
-                        {
-                            VIS_Scale = modelList[i][j + 1].Split(' ');
-                        }
-                        if (VIS_Scale != null)
-                        {
-                            testModel.link.VIS_scale = GazeboUtility.GazeboPositionToUnity(new Vector3(100 * float.Parse(VIS_Scale[0], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                            100 * float.Parse(VIS_Scale[1], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                           100 * float.Parse(VIS_Scale[2], CultureInfo.InvariantCulture.NumberFormat)));
-                        }
-                        string[] linkpose = null;
-                        if (modelList[i][j] == "link_pose")
-                        {
-                            pose = modelList[i][j + 1].Split(' ');
-                        }
-                        if (linkpose != null)
-                        {
-                            testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(linkpose[0], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                 float.Parse(linkpose[1], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                 float.Parse(linkpose[2], CultureInfo.InvariantCulture.NumberFormat)));
-                            testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(linkpose[3], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                 Mathf.Rad2Deg * float.Parse(linkpose[4], CultureInfo.InvariantCulture.NumberFormat),
-                                                                                                 Mathf.Rad2Deg * float.Parse(linkpose[5], CultureInfo.InvariantCulture.NumberFormat)));
-                        }
+                    string[] pose = null;
+
+                    
+                    if (line[j] == "model_pose")
+                    {   //saving model_pose
+                        pose = line[j + 1].Split(' ');
+                        testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                            float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                            float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
+                        testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                             Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                             Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
                     }
 
+                    if (line[j] == "model_link")
+                    {   //saving model_link name
+                        testModel.link.name = line[j + 1];
+                    }
+                    if (line[j] == "VIS_mesh_uri")
+                    {   // saving VIS_mesh_link and model.name
+                        testModel.link.VIS_meshName = line[j + 1];
+                        string name1 = Regex.Replace(line[j + 1], ".*?//", "");
+                        string name2 = Regex.Replace(name1, "/.*", "");
+                        testModel.name = name2;
+                        Debug.Log(testModel.link.VIS_meshName);
+                    }
 
-                    modellist.Add(testModel);
+                    //saving COL_mesh_link
+                    if (line[j] == "COL_mesh_uri")
+                        testModel.link.COL_meshName = line[j + 1];
+
+                    string[] VIS_Scale = null;
+                    if (line[j] == "VIS_mesh_scale")
+                    {
+                        //saving model scale
+                        VIS_Scale = line[j + 1].Split(' ');
+                    }
+                    if (VIS_Scale != null)
+                    {   //converting model scale
+                        testModel.link.VIS_scale = GazeboUtility.GazeboPositionToUnity(new Vector3(100 * float.Parse(VIS_Scale[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                        100 * float.Parse(VIS_Scale[1], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                       100 * float.Parse(VIS_Scale[2], CultureInfo.InvariantCulture.NumberFormat)));
+                    }
+                    string[] linkpose = null;
+                    if (line[j] == "link_pose")
+                    {
+                        pose = line[j + 1].Split(' ');
+                    }
+                    if (linkpose != null)
+                    {
+                        testModel.position = GazeboUtility.GazeboPositionToUnity(new Vector3(float.Parse(linkpose[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                             float.Parse(linkpose[1], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                             float.Parse(linkpose[2], CultureInfo.InvariantCulture.NumberFormat)));
+                        testModel.rotation = GazeboUtility.GazeboPositionToUnity(new Vector3(Mathf.Rad2Deg * float.Parse(linkpose[3], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                             Mathf.Rad2Deg * float.Parse(linkpose[4], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                             Mathf.Rad2Deg * float.Parse(linkpose[5], CultureInfo.InvariantCulture.NumberFormat)));
+                    }
+
                 }
+                modellist.Add(testModel);
+
+
+                //}
             }
 
 
@@ -295,7 +306,7 @@ public class WorldUpdater : MonoBehaviour
             if (!names.Contains(model.name))
             {
                 names.Add(model.name);
-                Debug.Log(model.name);
+                //Debug.Log(model.name);
             }
         }
         foreach (string name in names)
@@ -310,7 +321,9 @@ public class WorldUpdater : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Creates a GameObject for each .world file and attaches related models, with their given pose.
+    /// </summary>
     public void CreateWorld()
     {
         //stores every individual model in a list, to later create prefabs
@@ -359,24 +372,25 @@ public class WorldUpdater : MonoBehaviour
                 }
                 meshCopy.transform.localScale = Vector3.one;
 
-                foreach (ModelTransformation model in modellist)
-                {
-                    if (model.link.VIS_meshName.Contains(name))
-                    {
-                        if (model.link.position != null)
-                        {
-                            meshCopy.transform.position = model.link.position;
-                        }
-                        if (model.link.rotation != null)
-                        {
-                            meshCopy.transform.eulerAngles = model.link.rotation;
-                        }
-                        if (model.link.VIS_scale != null)
-                        {
-                            meshCopy.transform.localScale = model.link.VIS_scale;
-                        }
-                    }
-                }
+                //foreach (ModelTransformation model in modellist)
+                //{
+                //    string name1 = name.Replace(".fbx", "");
+                //    if (model.link.VIS_meshName.Contains(name1))
+                //    {
+                //        if (model.link.position != null)
+                //        {
+                //            meshCopy.transform.position = model.link.position;
+                //        }
+                //        if (model.link.rotation != null)
+                //        {
+                //            meshCopy.transform.eulerAngles = model.link.rotation;
+                //        }
+                //        if (model.link.VIS_scale != null)
+                //        {
+                //            meshCopy.transform.localScale = model.link.VIS_scale;
+                //        }
+                //    }
+                //}
 
                 //meshCopy.tag = "WorldPart";
                 // !!!! the following part could be shortened if we change folder structure of roboy_worlds/models
