@@ -160,7 +160,7 @@ public class MeshUpdater : MonoBehaviour
                 {
                     Debug.Log("Link does not have the github repository!");
                     continue;
-                }
+                } 
 
                 //replace "tree" with "raw" in URL
                 var regex = new Regex(Regex.Escape("tree"));

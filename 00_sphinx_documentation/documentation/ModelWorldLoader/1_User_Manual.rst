@@ -1,67 +1,94 @@
 User's Manual
 =============
 
+MeshUpdater
+-----------
 
 .. figure:: images/UnityScene.*
    :target: https://www.youtube.com/watch?v=nNV-3x-7Jho
    :align: center
    :alt: https://www.youtube.com/watch?v=nNV-3x-7Jho
          
-   Video showing the MeshUpdater
+   Video showing the MeshUpdater in previous Version
 
 
-Part 1: Getting started
------------------------
+**Getting started**
 
-Open the Unity project RoboyVR. Open the RoboyViveScene, and select the RoboyMananger in the hierarchy tab.
-The RoboyManager has a script called Mesh Updater. The following instructions all are entered here.
+Open the Unity project RoboyVR. Open the ModelUpdaterScene, and select the Updater in the hierarchy tab.
+The Updater has a script called Mesh Updater. The following instructions all are entered here.
 
-.. figure:: images/RoboyManager.*
+.. figure:: images/UpdaterModel.*
    :align: center
-   :alt: RoboyManager GUI
+   :alt: Updater MeshUpdater.cs GUI
          
    Mesh Updater GUI
 
 
-Part 2: Github Repository
--------------------------
+**Github Repository**
 
 Enter the link of the Github Repository where the models are located, which you want to download.
 Make sure the link ends with a slash. Also you can set here, which branch you want to download the models from.
-As of right now you may need to change the branch to "VRTEAM", since we overhauled the folder structure and model.sdf files.
 
 Default:
 
 - Github_Repository = https://github.com/Roboy/roboy_models/
 
-- Branch = master
+- Branch = VRTeam
 
 
-Part 3: Set Blender.exe
------------------------
+**Set Blender.exe**
 
 Click on "Open Blender directory" and choose the blender.exe.
 
 i.e.: C:\\Program Files\\Blender Foundation\\Blender\\blender.exe
 
 
-Part 4: Scanning
-----------------
+**Scanning**
 
 Click "Scan" and wait until UnityEditor shows you every model in the Github_Repository.
 
 
-Part 5: Downloading
--------------------
+**Downloading**
 
 Select the models you want save as prefab and press "Download". You can select more than one model.
 This may take a while, since the downloaded models will also automatically be imported into Unity.
 
 
-Part 6: Create the Prefab
--------------------------
+**Create the Prefab**
 
 After importing the files, press "Create Prefab".
 You can now find the created prefab in Assets\/SimulationModels\/...
 
 
+WorldUpdater
+------------
+
+Troubleshooting
+---------------
+
+Please take a look at !INSERT LINK CURRENT STATE!
+
+
+**State not set correctly**
+
+If the Editor looks like this, without a blender path set: 
+
+.. figure:: images/Error1.*
+   :align: center
+   :alt: MeshUpdaterEditor state not correct
+         
+   state not correct
+
+Try removing the script and adding it again.
+
+.. figure:: images/Solution1.*
+   :align: center
+   :alt: Removing script
+         
+   Removing the Updater script
+
+.. figure:: images/Solution1,1.*
+   :align: center
+   :alt: Adding script
+         
+   Reloading the Updater script
