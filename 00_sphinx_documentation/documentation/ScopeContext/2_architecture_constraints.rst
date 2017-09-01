@@ -6,8 +6,7 @@ Architecture Constraints
   :header: "Constraint Name", "Description"
   :widths: 20, 60
 
-  "HTC Vive", "We need user position tracking and movement tracking."
-  
+  "HTC Vive", "We need user position tracking and movement tracking."  
   "ZED", "For spatial mapping and a live stream of the environment."
 
 .. csv-table:: Software Constraints

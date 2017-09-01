@@ -128,8 +128,15 @@ Contents:
   :glob:
   :caption: ROSBridge
   
-  Rosbridge/*
+  ZEDWrapper/*
   
+  .. _ZEDWrapper
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: ZEDWrapper
+  
+  ZEDWrapper/*
 
 .. _ScopeContext:
 .. toctree::
