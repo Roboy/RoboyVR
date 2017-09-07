@@ -5851,10 +5851,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936e9a2dccccf15459925edf6f95ce4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Skybox: {fileID: 0}
-  m_Modes: []
+  m_Skybox: {fileID: 2100000, guid: 02b0f53515f3bd94fbda23503c81ef5d, type: 2}
+  m_Modes:
+  - {fileID: 1931244425}
+  - {fileID: 328096875}
+  - {fileID: 1447976724}
+  - {fileID: 856796837}
   m_Roboy: {fileID: 1143570618}
-  m_Headset: {fileID: 0}
+  m_Headset: {fileID: 842172256}
   m_SelectIndex: 0
   m_error: {fileID: 2800000, guid: 43bbebe6117a5cb4ab2f778735aff88c, type: 3}
   m_warning: {fileID: 2800000, guid: 47e9b45c1cd308a4ebfc3a9c4e47cdd1, type: 3}
@@ -5883,7 +5887,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1186947577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d2c4b2ac7b93a54a8f9a4ffdffa7cbc, type: 3}
   m_Name: 
@@ -8519,7 +8523,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1679838084
 Transform:
   m_ObjectHideFlags: 0
