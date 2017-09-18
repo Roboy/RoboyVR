@@ -5,8 +5,6 @@ Libraries and external Software
 
 Contains a list of the libraries and external software used by this system.
 
-.. todo::
-  List libraries you are using
 
 .. csv-table:: Libraries and external Software
   :header: "Name", "URL/Author", "License", Description
@@ -17,3 +15,4 @@ Contains a list of the libraries and external software used by this system.
   "Blender", "https://www.blender.org/", "Creative Commens Attribution license.", "Tool for modeling and animating."
   "Oracle Virtual Machine", "https://www.oracle.com", "Creative Commens Attribution license.", "Tool to run a virtual machine."
   "arc42", "http://www.arc42.de/template/", "Creative Commens Attribution license.", "Template for documenting and developing software"
+  "PyXB", "https://sourceforge.net/projects/pyxb/", "Apache License V2.0", "Python package that generates Python source code for classes that correspond to data structures defined by XMLSchema."

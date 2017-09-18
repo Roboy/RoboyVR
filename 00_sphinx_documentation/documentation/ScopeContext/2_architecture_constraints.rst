@@ -6,7 +6,8 @@ Architecture Constraints
   :header: "Constraint Name", "Description"
   :widths: 20, 60
 
-  "HTC Vive", "We need user position tracking and movement tracking."
+  "HTC Vive", "We need user position tracking and movement tracking."  
+  "ZED", "For spatial mapping and a live stream of the environment."
 
 .. csv-table:: Software Constraints
   :header: "Constraint Name", "Description"
@@ -25,6 +26,7 @@ Architecture Constraints
   "ROSBridge", "It connects the simulation on Ubuntu with Unity on Windows."
   "steamVR", "We use this interface to use the API of the HTC Vive."
   "ZED", "This interface connects the ZED (Roboy's Eyes) with Unity."
+  "PyXB", "This is used for reading XML files in the Model/World Updater."
 
 .. csv-table:: Operating System Constraints
   :header: "Constraint Name", "Description"

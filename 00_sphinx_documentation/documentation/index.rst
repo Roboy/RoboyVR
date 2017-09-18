@@ -9,29 +9,29 @@ Welcome to the RoboyVR documentation!
 **What is it?**
 
 RoboyVR is a virtual reality experience in which the user can watch, 
-but also interact with roboy (a humanoid robot) while he performs specific tasks, e.g. walking, waving, etc.
-A virtual environment opens up a whole new set of perspectives for the user to enjoy and spectate roboy from all kinds of POVs.
-In addition to the rendering of the virtual roboy a mobile HUD shows detailed information about various roboy components,
-for example displaying the powerconsuption of particular motors. As the user chooses to take a more active part, roboy's pose 
+but also interact with Roboy (a humanoid robot) while he performs specific tasks, e.g. walking, waving, etc.
+A virtual environment opens up a whole new set of perspectives for the user to enjoy and spectate Roboy from all kinds of POVs.
+In addition to the rendering of the virtual Roboy a mobile Head-Up-Display(HUD) shows detailed information about various Roboy components,
+for example displaying the powerconsuption of particular motors. As the user chooses to take a more active part, Roboy's pose 
 can be influenced and altered by physical contact, e.g. shooting a projectile at the virtual model.
 
 **How does it work?**
 
 Roboy and its behavior is simulated on a virtual machine via Gazebo/ROS. Important information
-regarding roboy's movement are then sent through a ROSbridge(e.g. messages) towards Unity.
-In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.
+regarding Roboy's movement are then sent through a ROSBridge(e.g. messages) towards Unity.
+In Unity Roboy is rendered and constantly updated concerning positions, rotations, etc.
 On top of that detailed data (time lapsed) about components is displayed via graph rendering on different UI panels.
-With the help of a VR-Headset you can watch roboy move around in a virtual space.
+With the help of a VR-Headset you can watch Roboy move around in a virtual space.
 
 **Current status of the project and goals**
 
-Currently the project can render roboy with his pose and generate random data about his motors to visualize them.
+Currently the project can render Roboy with his pose and generate random data about his motors to visualize them.
 Our next tasks are as follow:
 
 - Use real motor data and visualize that.
 - Implement an interface to track the newest models and automate the process of creating the model in Unity.
 - Implement an interface to record a simulation with all the data and save/ load it on runtime.
-- Make the project completely Plug&Play meaning that you can send all kinds of data with a given format.
+- Enable the project to be completely Plug&Play meaning that you can send all kinds of data with a given format.
 
 
 .. _background_prerequisits:
@@ -41,12 +41,12 @@ Relevant Background Information and Pre-Requisits
 
 **For the user:**
 
-One of roboyVR design goals is to be as user friendly and intuitively as possible. 
+One of RoboyVR design goals is to be as user friendly and intuitively as possible. 
 Therefore the explorer in the virtual reality does not need to be familiar with explicit requirements.
 Yet it does no harm to have a basic understanding of how the HTC Vive and its tracking mechanism work.
 
 Putting on the head mounted display in a way that fits the user is important for a frust-free experience,
-you can adjust the distance from the lenses to your eyes as well as the distance between the lenses itself, these tweaks
+you can adjust the distance from the lenses to your eyes as well as the distance between the lenses itself. These tweaks
 help immensely when it comes to maintaining a sharp field of view. 
 
 Apart from that the tracking system needs
@@ -59,10 +59,10 @@ For additional information take a look at this guide `HTC Vive setup <https://ww
 RoboyVR uses Unity3D to create an immersive and exciting virtual environment. Extensive expierence with Unity is recommended. 
 Unity natively relies on C#, so advanced knowledge in this field is highly advised. Otherwise see `Unity3D <https://unity3d.com/>`_.
 
-The roboy simulation which runs on Gazebo/ROS is written in C++, for this section 
+The Roboy simulation which runs on Gazebo/ROS is written in C++, for this section 
 a basic overview is sufficient to be able to understand/construct messages which are then
 sent via a ROSbridge. For starting the simulation you should be familiar with Linux/Ubuntu.
-Further it is useful to have some understanding of python in order to transform the roboy
+Further it is useful to have some understanding of python in order to transform the Roboy
 models via the Blender-api(an early python script already exists for this purpose).
   
 The following links can be seen as a guideline, of course you can do
@@ -75,7 +75,7 @@ the research by yourself.
   are really basic, so bear that in mind: http://answers.unity3d.com/
 - As we use ROS and our own custom messages, it is important to understand how ROS works and how ROS messages are built: http://wiki.ros.org/
 
-If you have any further questions about the project, feel free to contact us via email: roboyvr@gmail.com
+If you have any further questions about the project, feel free to contact us via email: Roboyvr@gmail.com
 
 .. _requirements_overview:
 
@@ -90,22 +90,22 @@ Contents:
 
   Usage/*
   
-.. _ModelUpdate:
+.. _CoreFeatures:
 .. toctree::
   :maxdepth: 1
   :glob:
-  :caption: Automatic Model Update Pipeline
+  :caption: Core Features
   
-  ModelUpdate/*
+  CoreFeatures/*  
   
-.. _BeRoboy:
+.. _ModelWorldLoader:
 .. toctree::
   :maxdepth: 1
   :glob:
-  :caption: Be Roboy
+  :caption: Automatic Update Pipeline
   
-  BeRoboy/*
-  
+  ModelWorldLoader/*
+    
 .. _Pabi:
 .. toctree::
   :maxdepth: 1
@@ -122,6 +122,21 @@ Contents:
   
   StateVisualization/*
   
+.. _Rosbridge
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: ROSBridge
+  
+  Rosbridge/*
+  
+.. _ZEDWrapper
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: ZEDWrapper
+  
+  ZEDWrapper/*
 
 .. _ScopeContext:
 .. toctree::

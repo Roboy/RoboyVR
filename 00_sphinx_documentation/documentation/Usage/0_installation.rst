@@ -47,7 +47,7 @@ Part 3: Unity Setup
 -----------------------
 
 1. Download Unity
-  - (latest working version with roboyVR is 5.6.1: https://unity3d.com/de/get-unity/download/archive)
+  - (latest working version with roboyVR is 2017.1.0: https://unity3d.com/de/get-unity/download/archive)
 
 2. Install Unity
   - During the install process make sure to check also the standalone build option.  
@@ -55,8 +55,8 @@ Part 3: Unity Setup
     MonoDevelop (standard option).
 	
 3. Download this project
-  - Clone this github repository (master branch) to your system: https://github.com/sheveg/roboyVR.git
-  - Command: git clone -b master https://github.com/sheveg/roboyVR.git
+  - Clone this github repository (master branch) to your system: https://github.com/roboy/roboyVR.git
+  - Command: git clone -b master https://github.com/roboy/roboyVR.git
 
 Part 4: Blender & Python
 ------------------------
@@ -65,4 +65,13 @@ Part 4: Blender & Python
 
 - Install the latest version of `Python <https://www.python.org/downloads/>`_
 
+- Install the `PyXB: Python XML Schema Bindings <https://sourceforge.net/projects/pyxb/>`_
+
 - After installation, add the Python executable directories to the environment variable PATH in order to run Python. (Windows 10: http://www.anthonydebarros.com/2015/08/16/setting-up-python-in-windows-10/)
+
+Part 5: ZED API and Unity Plugin
+--------------------------------
+
+- Install the latest verstion of the `API <https://www.stereolabs.com/developers/>`_
+
+- If the Unity plugin in the project is outdated then download the plugin from the same page and import it into the project to update it
