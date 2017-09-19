@@ -1001,7 +1001,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9559facacb9b749880b65b4195f378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Tabs: []
+  m_Tabs:
+  - {fileID: 1349354625}
+  - {fileID: 1292157971}
 --- !u!114 &196859481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2187,7 +2189,7 @@ MonoBehaviour:
   m_Speed: 20
   m_ControllerIndex: 0
   m_SelectIndex: 0
-  m_Canvas: {fileID: 0}
+  m_Canvas: {fileID: 612915072}
   m_Background: {fileID: 1405367069}
 --- !u!1 &470733611
 GameObject:
@@ -3594,6 +3596,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 725142624}
+--- !u!1 &734661825 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1302537741412762, guid: 9d45e36486083194db011dcb6089b28b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1363296570}
 --- !u!114 &789633516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5740,6 +5747,21 @@ Prefab:
       propertyPath: m_content
       value: 
       objectReference: {fileID: 2001327585}
+    - target: {fileID: 114530231782205148, guid: c8451874e3a1b9f4f9caf67e2044d7ec,
+        type: 2}
+      propertyPath: m_ViewPort
+      value: 
+      objectReference: {fileID: 1363296573}
+    - target: {fileID: 114530231782205148, guid: c8451874e3a1b9f4f9caf67e2044d7ec,
+        type: 2}
+      propertyPath: m_Content
+      value: 
+      objectReference: {fileID: 2001327585}
+    - target: {fileID: 114530231782205148, guid: c8451874e3a1b9f4f9caf67e2044d7ec,
+        type: 2}
+      propertyPath: m_Scroll
+      value: 
+      objectReference: {fileID: 932947296}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8451874e3a1b9f4f9caf67e2044d7ec, type: 2}
   m_IsPrefabParent: 0
@@ -5892,7 +5914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2c4b2ac7b93a54a8f9a4ffdffa7cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera2: {fileID: 0}
+  Camera2: {fileID: 842172256}
 --- !u!114 &1186947581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6606,6 +6628,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1447976725}
     m_Modifications:
+    - target: {fileID: 114694284283045256, guid: 9d45e36486083194db011dcb6089b28b,
+        type: 2}
+      propertyPath: m_Tabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 224584892239830894, guid: 9d45e36486083194db011dcb6089b28b,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -6830,6 +6857,16 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114694284283045256, guid: 9d45e36486083194db011dcb6089b28b,
+        type: 2}
+      propertyPath: m_Tabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 734661825}
+    - target: {fileID: 114694284283045256, guid: 9d45e36486083194db011dcb6089b28b,
+        type: 2}
+      propertyPath: m_Tabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1763637053}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9d45e36486083194db011dcb6089b28b, type: 2}
   m_IsPrefabParent: 0
@@ -7479,7 +7516,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c0bf29c9d9b3c458518d457213f5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemPrefab: {fileID: 0}
+  m_ItemPrefab: {fileID: 1473126923615388, guid: 1d339595e8a8168469463bfa89951f84,
+    type: 2}
   m_ListContentContainer: {fileID: 2001327584}
 --- !u!223 &1478141327
 Canvas:
@@ -8337,7 +8375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9559facacb9b749880b65b4195f378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Tabs: []
+  m_Tabs:
+  - {fileID: 92739730}
+  - {fileID: 209818049}
 --- !u!1 &1655586918
 GameObject:
   m_ObjectHideFlags: 0
@@ -9315,6 +9355,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1d339595e8a8168469463bfa89951f84, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1763637053 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1754810816190952, guid: 9d45e36486083194db011dcb6089b28b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1363296570}
 --- !u!1001 &1765138014
 Prefab:
   m_ObjectHideFlags: 0
