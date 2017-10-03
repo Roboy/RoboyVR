@@ -1,7 +1,7 @@
 ![roboyVR™](https://github.com/Roboy/RoboyVR/blob/develop/Assets/Resources/channel_art.png?raw=true "roboyVR™")
 
-RoboyVR™ is THE ultimate chance to experience what it's like to operate like a humanoid clever sarcastic robot.
-Put on light, nimble and immersive googles to look through the eyes of an adorable, cute and clever robot.
+RoboyVR™ is THE ultimate chance to experience what it's like to operate a humanoid, clever and sarcastic robot.
+Put on light, nimble and immersive googles to look through the eyes of an adorable, cute and humorous robot.
 
 
 Check out the whole large-scale documentation of roboyVR here:
