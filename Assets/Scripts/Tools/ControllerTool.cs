@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class ControllerTool : MonoBehaviour {
 
+    public SteamVR_TrackedObject ControllerObject { get { return m_SteamVRController; } }
+
     /// <summary>
     /// Returns the controller identity for verification purposes for outside classes.
     /// </summary>
@@ -32,6 +34,11 @@ public class ControllerTool : MonoBehaviour {
     /// Protected controller for event tracking in classes deriving from this class like SelectorTool or ShootingTool.
     /// </summary>
     protected SteamVR_TrackedController m_SteamVRTrackedController;
+
+    /// <summary>
+    /// As we use a Coroutine to initialize we need this so we can check whether all steam vr controller scripts are found and initialized.
+    /// </summary>
+    protected bool m_Initialized = false;
 
     /// <summary>
     /// Calls initialize for all controller members.
@@ -89,5 +96,6 @@ public class ControllerTool : MonoBehaviour {
 
         m_SteamVRDevice = SteamVR_Controller.Input((int)m_SteamVRController.index);
         m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
+        m_Initialized = true;
     }
 }

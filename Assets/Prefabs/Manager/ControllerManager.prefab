@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1062616903415982}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.17750895, y: 0.6678887, z: 0.2717024}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -59,10 +59,12 @@ MonoBehaviour:
   ControllerForGUI: {fileID: 0}
   ControllerForTools: {fileID: 0}
   LeftHandTools:
-  - {fileID: 114609119370523480, guid: d897e6775590a744bb62c8386587ab73, type: 2}
+  - {fileID: 114980795771180604, guid: 16f55a4a3aa2d50458444a109133e361, type: 2}
+  - {fileID: 114302660598588258, guid: 0e5d81c9d92a93a489ac6968df02ec69, type: 2}
   RightHandTools:
   - {fileID: 114467179743085454, guid: 1baadf29f3bbec746b17a3cb97b6cc45, type: 2}
   - {fileID: 114113150556837000, guid: be0f4130bee078f43ac33254bb487081, type: 2}
   - {fileID: 114822237521219808, guid: 8d3be6913ebd3104881dd158b0163572, type: 2}
+  - {fileID: 114432301365730798, guid: 5fd66f0755ed9764786895e0f0631e8e, type: 2}
   m_ControllerGUISet: 0
   m_ControllerToolsSet: 0

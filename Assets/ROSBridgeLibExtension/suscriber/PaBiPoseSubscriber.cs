@@ -7,7 +7,7 @@ namespace ROSBridgeLib
     {
         public new static string GetMessageTopic()
         {
-            return "roboy/pabi_pose";
+            return "roboy/simulation/pabi_pose";
         }
 
         public new static string GetMessageType()

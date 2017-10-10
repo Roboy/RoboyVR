@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -8,7 +9,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(LineRenderer))]
 public class SelectorTool : ControllerTool
 {
-
+    /// <summary>
+    /// Current preview model which holds a reference to the real simulation model.
+    /// </summary>
+    public PreviewModel CurrentPreviewModel;
     /// <summary>
     /// LineRenderer to draw the laser for selection.
     /// </summary>
@@ -22,9 +26,14 @@ public class SelectorTool : ControllerTool
     /// <summary>
     /// Maximum ray length for selection.
     /// </summary>
-    private float m_RayDistance = 3f;
+    [SerializeField]
+    private float m_RayDistance = 7f;
 
-    private bool m_Is_released = false;
+    /// <summary>
+    /// Holds reference to object where eventtrigger GetHairTriggerDown() was invoked.
+    /// Reference needed to call Reverse event.
+    /// </summary>
+    EventTrigger m_LastHeldObject = null;
 
     /// <summary>
     /// Initializes the lineRenderer component.
@@ -39,6 +48,11 @@ public class SelectorTool : ControllerTool
     /// </summary>
     public void GetRayFromController()
     {
+        if (InputManager.Instance.ModelSpawn_Controller!=null &&InputManager.Instance.ModelSpawn_Controller.Operating && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null && m_SteamVRDevice.GetHairTriggerDown())
+        {
+            CurrentPreviewModel.CreateSimulationModel();
+        }
+
         // Start a ray from the controller
         RaycastHit hit;
         m_LineRenderer.SetPosition(0, transform.position);
@@ -48,10 +62,10 @@ public class SelectorTool : ControllerTool
         {
             // set the end position to the hit point
             m_LineRenderer.SetPosition(1, hit.point);
-            SelectableObject hittedObject;
+            SelectableObject hittedObject = null;
 
             // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
-            if (ModeManager.Instance.CurrentGUIMode != ModeManager.GUIMode.Selection)
+            if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer && ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
                 return;
             //Depending on the tag (== UI elem type), call different fcts 
             switch (hit.transform.tag)
@@ -60,15 +74,23 @@ public class SelectorTool : ControllerTool
                     hittedObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
                     break;
                 case "UIButton":
-                    hittedObject = null;
                     Button b_pressed = hit.collider.GetComponent<Button>();
+                    //TODO: WOrk in progress
+                    //for scroll option
+                    EventTrigger eventsystem = b_pressed.GetComponent<EventTrigger>();
+
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
-                        b_pressed.onClick.Invoke();                    
+                        b_pressed.onClick.Invoke();
+                        /*TODO: work in progress ctd.*/
+                        if (eventsystem)
+                        {
+                            eventsystem.OnPointerDown(null);
+                            m_LastHeldObject = eventsystem;
+                        }
                     }
                     break;
                 case "UISlider": //slider elem in BeRoboy
-                    hittedObject = null;
                     Slider slid = hit.collider.GetComponent<Slider>();
 
                     //If the trigger is pressed(even gently), the slider fills up, the value increases until it reaches it's maximum.
@@ -85,13 +107,40 @@ public class SelectorTool : ControllerTool
                         { slid.value -= 0.01f; }
                     }
                     break;
+                case "Floor":
+                    if (InputManager.Instance.ModelSpawn_Controller != null && InputManager.Instance.ModelSpawn_Controller.Operating && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null)
+                    {
+                        // move the current insert model above the point where we point on the floor
+                        CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 0.5f, 0);
+                        //CurrentPreviewModel.transform.LookAt(transform);
+                    }
+                    break;
                 default: //not UI -> Roboy parts
                     hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
                     break;
             }
+           
             //if object found
-            if (hittedObject)
+            if (hittedObject != null)
             {
+                // if we hit an object on the model layer and are currently in removing state of spawn model controller
+                if (InputManager.Instance.ModelSpawn_Controller != null && hittedObject.gameObject.layer == LayerMask.NameToLayer("ModelLayer")
+                    /* && InputManager.Instance.ModelSpawn_Controller.Operating */
+                    && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Remove)
+                {
+                    if (m_SteamVRDevice.GetHairTriggerDown())
+                    {
+                        Transform rootParent = hittedObject.transform;
+                        // replace this with a handler function in selectionmanager/modelmanager
+                        // get the root parent
+                        while (rootParent.transform.parent != null)
+                        {
+                            rootParent = rootParent.transform.parent;
+                        }
+                        Destroy(rootParent.gameObject);
+                    }
+                    return;
+                }
                 // if the ray hits something different than last frame, then reset the last roboy part
                 if (m_LastSelectedObject != hittedObject)
                 {
@@ -125,10 +174,16 @@ public class SelectorTool : ControllerTool
 
             m_LastSelectedObject = null;
         }
+
+        //for grabbing and holding updates:
+        if (m_LastHeldObject) //check if object thinks it's still held (no matter of ray hit sth)
+        {
+            if (m_SteamVRDevice.GetHairTriggerUp()) //if trigger not held anymore
+            {
+                m_LastHeldObject.OnPointerUp(null);
+                m_LastHeldObject = null;
+            }
+        }
     }
-
-
-
-
 }
 

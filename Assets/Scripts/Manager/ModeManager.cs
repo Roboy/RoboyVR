@@ -37,10 +37,36 @@ public class ModeManager : Singleton<ModeManager> {
     /// <summary>
     /// Enum for current GUI mode.
     /// </summary>
+    public enum GUIViewerMode
+    {
+        /// <summary>
+        /// Panel of all selectable mesh parts of the current roboy model
+        /// </summary>
+        Selection,
+        /// <summary>
+        /// Graphs for each motor for each type of information
+        /// </summary>
+        MotorValues
+    }
+
+    public enum SpawnViewerMode
+    {
+        /// <summary>
+        /// Insert mode to add a preview model
+        /// </summary>
+        Insert,
+        /// <summary>
+        /// Delete a model via pointer
+        /// </summary>
+        Remove,
+    }
+
     public enum GUIMode
     {
-        Selection,
-        GUIPanels
+        GUIViewer,
+        BeRoboyViewer,
+        SpawnViewer,
+        Undefined
     }
 
     /// <summary>
@@ -51,8 +77,10 @@ public class ModeManager : Singleton<ModeManager> {
     public enum ToolMode
     {
         SelectorTool,
-        ShooterTool,
-        TimeTool
+        ShootingTool,
+        TimeTool,
+        HandTool,
+        Undefined
     }
 
     /// <summary>
@@ -71,11 +99,17 @@ public class ModeManager : Singleton<ModeManager> {
     }
 
     /// <summary>
-    /// Current GUI mode, READ ONLY.
+    /// Current GUIViewer mode, READ ONLY.
     /// </summary>
-    public GUIMode CurrentGUIMode
+    public GUIViewerMode CurrentGUIViewerMode
     {
-        get { return m_CurrentGUIMode; }
+        get { return m_CurrentGUIViewerMode; }
+    }
+
+    public SpawnViewerMode CurrentSpawnViewerMode
+    {
+        get { return m_CurrentSpawnViewerMode; }
+        set { m_CurrentSpawnViewerMode = value; }
     }
 
     /// <summary>
@@ -84,6 +118,14 @@ public class ModeManager : Singleton<ModeManager> {
     public ToolMode CurrentToolMode
     {
         get { return m_CurrentToolMode;}
+    }
+
+    /// <summary>
+    /// Current GUI Mode. READ ONLY.
+    /// </summary>
+    public GUIMode CurrentGUIMode
+    {
+        get { return m_CurrentGUIMode; }
     }
 
     /// <summary>
@@ -97,14 +139,24 @@ public class ModeManager : Singleton<ModeManager> {
     private Panelmode m_CurrentPanelmode = Panelmode.Motor_Force;
 
     /// <summary>
-    /// Private variable for current GUI mode.
+    /// Private variable for current GUIViewer mode.
     /// </summary>
-    private GUIMode m_CurrentGUIMode = GUIMode.Selection;
+    private GUIViewerMode m_CurrentGUIViewerMode = GUIViewerMode.Selection;
+
+    /// <summary>
+    /// Private variable for the current mode of the model spawn controller.
+    /// </summary>
+    private SpawnViewerMode m_CurrentSpawnViewerMode = SpawnViewerMode.Insert;
 
     /// <summary>
     /// Private variable for current Tool mode.
     /// </summary>
     private ToolMode m_CurrentToolMode = ToolMode.SelectorTool;
+
+    /// <summary>
+    /// Current view mode of the GUI tools
+    /// </summary>
+    private GUIMode m_CurrentGUIMode = GUIMode.GUIViewer;
 
     /// <summary>
     /// Changes between single and comparison view.
@@ -128,15 +180,15 @@ public class ModeManager : Singleton<ModeManager> {
     /// <summary>
     /// Switches between selection and panels GUI mode.
     /// </summary>
-    public void ChangeGUIMode()
+    public void ChangeGUIViewerMode()
     {
-        if (m_CurrentGUIMode == GUIMode.Selection)
+        if (m_CurrentGUIViewerMode == GUIViewerMode.Selection)
         {
-            m_CurrentGUIMode = GUIMode.GUIPanels;
+            m_CurrentGUIViewerMode = GUIViewerMode.MotorValues;
         }
-        else if (m_CurrentGUIMode == GUIMode.GUIPanels)
+        else if (m_CurrentGUIViewerMode == GUIViewerMode.MotorValues)
         {
-            m_CurrentGUIMode = GUIMode.Selection;
+            m_CurrentGUIViewerMode = GUIViewerMode.Selection;
         }
     }
 
@@ -153,9 +205,9 @@ public class ModeManager : Singleton<ModeManager> {
             InputManager.Instance.ShootingTool.enabled = true;
             InputManager.Instance.Selector_Tool.gameObject.SetActive(false);
             InputManager.Instance.ShootingTool.gameObject.SetActive(true);
-            m_CurrentToolMode = ToolMode.ShooterTool;
+            m_CurrentToolMode = ToolMode.ShootingTool;
         }
-        else if (m_CurrentToolMode == ToolMode.ShooterTool)
+        else if (m_CurrentToolMode == ToolMode.ShootingTool)
         {
             //Debug.Log("toolmode to time");
             InputManager.Instance.TimeTool.enabled = true;
@@ -166,13 +218,48 @@ public class ModeManager : Singleton<ModeManager> {
         }
         else if (m_CurrentToolMode == ToolMode.TimeTool)
         {
+            //Debug.Log("toolmode to hand");
+            InputManager.Instance.HandTool.enabled = true;
+            InputManager.Instance.TimeTool.enabled = false;
+            InputManager.Instance.HandTool.gameObject.SetActive(true);
+            InputManager.Instance.TimeTool.gameObject.SetActive(false);
+            m_CurrentToolMode = ToolMode.HandTool;
+        }
+        else if (m_CurrentToolMode == ToolMode.HandTool)
+        {
             //Debug.Log("toolmode to select");
             InputManager.Instance.Selector_Tool.enabled = true;
-            InputManager.Instance.TimeTool.enabled = false;
+            InputManager.Instance.HandTool.enabled = false;
             InputManager.Instance.Selector_Tool.gameObject.SetActive(true);
-            InputManager.Instance.TimeTool.gameObject.SetActive(false);
+            InputManager.Instance.HandTool.gameObject.SetActive(false);
             m_CurrentToolMode = ToolMode.SelectorTool;
         }
+
+    }
+
+    /// <summary>
+    /// Changes the tool mode based on the enum to the new one and turns off the old tool.
+    /// </summary>
+    /// <param name="mode"></param>
+    public void ChangeToolMode(ToolMode mode)
+    {
+        changeToolStatus(m_CurrentToolMode, false);
+        m_CurrentToolMode = mode;
+        changeToolStatus(m_CurrentToolMode, true);
+    }
+
+    public void ChangeToolMode(ControllerTool tool)
+    {
+        changeToolStatus(m_CurrentToolMode, false);
+        m_CurrentToolMode = mapToolTypeToEnum(tool);
+        changeToolStatus(m_CurrentToolMode, true);
+    }
+
+    public void ChangeGUIToolMode(ControllerTool tool)
+    {
+        changeGUIToolStatus(m_CurrentGUIMode, false);
+        m_CurrentGUIMode = mapGUIToolToEnum(tool);
+        changeGUIToolStatus(m_CurrentGUIMode, true);
     }
 
     /// <summary>
@@ -204,5 +291,101 @@ public class ModeManager : Singleton<ModeManager> {
     public void ResetPanelMode()
     {
         m_CurrentPanelmode = Panelmode.Motor_Force;
+    }
+
+    /// <summary>
+    /// Changes the tool based on the enum to the new state.
+    /// </summary>
+    /// <param name="tool"></param>
+    /// <param name="state"></param>
+    private void changeToolStatus(ToolMode tool, bool state)
+    {
+        switch (tool)
+        {
+            case ToolMode.SelectorTool:
+                InputManager.Instance.Selector_Tool.enabled = state;
+                InputManager.Instance.Selector_Tool.gameObject.SetActive(state);
+                break;
+            case ToolMode.ShootingTool:
+                InputManager.Instance.ShootingTool.enabled = state;
+                InputManager.Instance.ShootingTool.gameObject.SetActive(state);
+                break;
+            case ToolMode.TimeTool:
+                InputManager.Instance.TimeTool.enabled = state;
+                InputManager.Instance.TimeTool.gameObject.SetActive(state);
+                break;
+            case ToolMode.HandTool:
+                InputManager.Instance.HandTool.enabled = state;
+                InputManager.Instance.HandTool.gameObject.SetActive(state);
+                break;
+            default:
+                Debug.Log("Tool mode: " + tool + " not implemented!");
+                break;
+        }
+    }
+
+    private void changeGUIToolStatus(GUIMode mode, bool state)
+    {
+        switch (mode)
+        {
+            case GUIMode.GUIViewer:
+                InputManager.Instance.GUI_Controller.enabled = state;
+                InputManager.Instance.GUI_Controller.gameObject.SetActive(state);
+                break;
+            case GUIMode.BeRoboyViewer:
+                InputManager.Instance.View_Controller.enabled = state;
+                InputManager.Instance.View_Controller.gameObject.SetActive(state);
+                break;
+            case GUIMode.SpawnViewer:
+                InputManager.Instance.ModelSpawn_Controller.enabled = state;
+                InputManager.Instance.ModelSpawn_Controller.gameObject.SetActive(state);
+                break;
+        }
+    }
+
+    private ToolMode mapToolTypeToEnum(ControllerTool tool)
+    {
+        if (tool is SelectorTool)
+        {
+            return ToolMode.SelectorTool;
+        }
+        else if (tool is ShootingTool)
+        {
+            return ToolMode.ShootingTool;
+        }
+        else if (tool is TimeTool)
+        {
+            return ToolMode.TimeTool;
+        }
+        else if (tool is HandTool)
+        {
+            return ToolMode.HandTool;
+        }
+        else
+        {
+            Debug.Log("Tool mode: " + tool + " not implemented!");
+            return ToolMode.Undefined;
+        }
+    }
+
+    private GUIMode mapGUIToolToEnum(ControllerTool tool)
+    {
+        if (tool is GUIController)
+        {
+            return GUIMode.GUIViewer;
+        }
+        else if (tool is ViewController)
+        {
+            return GUIMode.BeRoboyViewer;
+        }
+        else if (tool is ModelSpawnController)
+        {
+            return GUIMode.SpawnViewer;
+        }
+        else
+        {
+            Debug.Log("GUI mode: " + tool + " not implemented!");
+            return GUIMode.Undefined;
+        }
     }
 }

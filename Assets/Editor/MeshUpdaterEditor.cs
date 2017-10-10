@@ -16,11 +16,11 @@ class MeshUpdaterEditor : Editor
         MeshUpdater meshUpdater = (MeshUpdater)target;
 
         // Show the blender path if it is set
-        if (meshUpdater.CurrentState >= MeshUpdater.State.BlenderPathSet )
+        if (meshUpdater.ModelsCurrentState >= UpdaterUtility.State.BlenderPathSet )
         {   
             //Disable GUI so it can't be edited in UnityEditor
             GUI.enabled = false;
-            EditorGUILayout.TextField("Blender Path: ", meshUpdater.PathToBlender);
+            EditorGUILayout.TextField("Blender Path: ", UpdaterUtility.PathToBlender);
             GUI.enabled = true;
         }
 
@@ -37,12 +37,13 @@ class MeshUpdaterEditor : Editor
             // Else update blender path
             else
             {
-                meshUpdater.PathToBlender = blenderpath;
+                UpdaterUtility.PathToBlender = blenderpath;
+                meshUpdater.ModelsCurrentState = (UpdaterUtility.State)Mathf.Max((int)UpdaterUtility.State.BlenderPathSet, (int)meshUpdater.ModelsCurrentState);
             }
         }
 
         // Do not show Scan, Download and Create Prefab button if blender path is not set
-        if (meshUpdater.CurrentState < MeshUpdater.State.BlenderPathSet)
+        if (meshUpdater.ModelsCurrentState < UpdaterUtility.State.BlenderPathSet)
             return;
 
         if (GUILayout.Button("Scan"))
@@ -51,7 +52,7 @@ class MeshUpdaterEditor : Editor
         }
 
         // stop here if meshupdater did not scan yet
-        if (meshUpdater.CurrentState < MeshUpdater.State.Scanned)
+        if (meshUpdater.ModelsCurrentState < UpdaterUtility.State.Scanned)
             return;
 
         // ? THIS WON'T RESET WHEN DICTIONARY CLEARS ?
@@ -69,7 +70,7 @@ class MeshUpdaterEditor : Editor
         }
 
         // don't show "Create Prefab" before models are imported
-        if (meshUpdater.CurrentState < MeshUpdater.State.Downloaded)
+        if (meshUpdater.ModelsCurrentState < UpdaterUtility.State.Downloaded)
             return;
 
         // create prefab

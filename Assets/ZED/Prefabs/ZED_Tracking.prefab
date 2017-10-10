@@ -117,8 +117,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b2a3ff7b847ca4490808f4c0432cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoMode: 2
+  resolution: 2
   depthMode: 1
+  sensingMode: 1
   videoOverlay: 0
+  depthStabilizer: 1
   multithreading: 1
   tracking: 1

@@ -23,6 +23,10 @@ TagManager:
   - ZedImg
   - HtcImg
   - VRUI
+  - VSM
+  - ViewController
+  - Halo
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -38,7 +42,7 @@ TagManager:
   - MazeTurretBullet
   - Bg
   - FPSWeapon
-  - 
+  - ModelLayer
   - 
   - 
   - 
@@ -65,4 +69,7 @@ TagManager:
     locked: 0
   - name: GUI Overlay
     uniqueID: 4137188381
+    locked: 0
+  - name: Ray
+    uniqueID: 4223661285
     locked: 0

@@ -37,8 +37,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4979374518171668}
   - component: {fileID: 20601934564663844}
-  - component: {fileID: 114378084258363314}
-  - component: {fileID: 114957022718365134}
+  - component: {fileID: 114672925502382804}
+  - component: {fileID: 114949237780401958}
+  - component: {fileID: 114778412821553782}
   m_Layer: 0
   m_Name: Camera_Left
   m_TagString: Untagged
@@ -55,8 +56,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4829096614632822}
   - component: {fileID: 114684879225796312}
-  - component: {fileID: 114949000689393000}
-  - component: {fileID: 114056588007265552}
+  - component: {fileID: 114220791637821710}
+  - component: {fileID: 114744794460108136}
   m_Layer: 0
   m_Name: ZED_GreenScreen
   m_TagString: Untagged
@@ -83,7 +84,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1886245529942436}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -114,7 +115,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.5, g: 0.5019608, b: 0.5019608, a: 0}
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -130,7 +131,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 0
@@ -180,7 +181,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1066271739911124}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114056588007265552
+--- !u!114 &114220791637821710
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -188,14 +189,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1886245529942436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d533f8f5ad2836d459869909806be714, type: 3}
+  m_Script: {fileID: 11500000, guid: f6e37f9a7dba18f489fce17f647b73a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  record: 0
-  read: 0
-  videoFile: 
-  loop: 0
---- !u!114 &114378084258363314
+  padManager: {fileID: 0}
+--- !u!114 &114672925502382804
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -203,27 +201,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1323528551725558}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c07afb560883dd4d9ebf7d8f8ef0341, type: 3}
+  m_Script: {fileID: 11500000, guid: 007667cd43ff53f458c306e67e706e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-    color: {r: 0, g: 0, b: 0, a: 0}
-    smoothness: 0
-    range: 0
-  keyColors: {r: 0, g: 1, b: 0, a: 1}
-  smoothness: 0.08
-  range: 0.4
-  spill: 0.1
-  current_numberColors: 1
-  finalMat: {fileID: 0}
-  canal: 4
-  erosion: 0
-  whiteClip: 1
-  blackClip: 0
-  pathFileShader: Config_greenscreen.json
-  numberBlurIterations: 5
-  sigma_: 0.1
-  matYUV: {fileID: 0}
+  canvas: {fileID: 1066271739911124}
+  camZedLeft: {fileID: 0}
+  numberPointLights: 0
+  numberSpotLights: 0
 --- !u!114 &114684879225796312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -235,12 +219,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b2a3ff7b847ca4490808f4c0432cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoMode: 2
+  resolution: 1
   depthMode: 1
+  sensingMode: 1
   videoOverlay: 1
+  depthStabilizer: 1
   multithreading: 1
   tracking: 0
---- !u!114 &114949000689393000
+--- !u!114 &114744794460108136
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -248,10 +234,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1886245529942436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6e37f9a7dba18f489fce17f647b73a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f89810446ed6804f87f97c69e89de13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114957022718365134
+--- !u!114 &114778412821553782
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -259,8 +245,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 1323528551725558}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e9159ae01db924ca00f8cdff713a15, type: 3}
+  m_Script: {fileID: 11500000, guid: 9aeccf01bf7bd3144b4b3ec13d2ef2f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 1066271739911124}
-  camZedLeft: {fileID: 0}
+  garbageMattePath: garbageMatte.cfg
+  editMode: 0
+  loadAtStart: 0
+--- !u!114 &114949237780401958
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1323528551725558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f764233cdca02140a49fbe2d778754c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keys:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    smoothness: 0
+    range: 0
+  keyColors: {r: 0, g: 1, b: 0, a: 1}
+  smoothness: 0.08
+  range: 0.42
+  spill: 0.1
+  current_numberColors: 1
+  finalMat: {fileID: 0}
+  canal: 4
+  erosion: 0
+  whiteClip: 1
+  blackClip: 0
+  pathFileConfig: Config_greenscreen.json
+  numberBlurIterations: 5
+  sigma_: 0.1
+  matYUV: {fileID: 0}

@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f96e7b1a8965a4a9af98b191535fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  multithreading: 1
   trackingTranslation: 1
   cameraHeadOffset: {x: 0.06, y: -0.12, z: -0.15}
 --- !u!136 &136958823139815706

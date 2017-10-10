@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 
 
@@ -16,6 +15,7 @@ public class GreenScreenManager : MonoBehaviour
     /// </summary>
     private TextureOverlay screenManager = null;
 
+    private bool toUpdateConfig = false;
     /// <summary>
     /// Chroma key settings
     /// </summary>
@@ -41,10 +41,7 @@ public class GreenScreenManager : MonoBehaviour
         public float blackClip;
         public float spill;
     }
-    /// <summary>
-    /// Max number of colors available
-    /// </summary>
-    private const uint numberColorMax = 1;
+
     /// <summary>
     /// Array of available chroma key settings
     /// </summary>
@@ -57,20 +54,19 @@ public class GreenScreenManager : MonoBehaviour
     /// <summary>
     /// Array of available similarity
     /// </summary>
-    /// 
-     [SerializeField]
+    [SerializeField]
     public float smoothness;
     /// <summary>
     /// Array of available blend
     /// </summary>
-    /// 
-     [SerializeField]
+
+    [SerializeField]
     public float range;
     /// <summary>
     /// Array of available blend
     /// </summary>
     /// 
-     [SerializeField]
+    [SerializeField]
     public float spill = 0.2f;
     /// <summary>
     /// Default color for chroma key
@@ -79,13 +75,11 @@ public class GreenScreenManager : MonoBehaviour
     /// <summary>
     /// DEfault similarity
     /// </summary>
-    /// 
-
     private const float defaultSmoothness = 0.08f;
     /// <summary>
     /// Default blend
     /// </summary>
-    private const float defaultRange = 0.4f;
+    private const float defaultRange = 0.42f;
     /// <summary>
     /// Default blend
     /// </summary>
@@ -129,7 +123,10 @@ public class GreenScreenManager : MonoBehaviour
     /// Alpha texture for blending
     /// </summary>
     private RenderTexture finalTexture;
-
+    public RenderTexture FinalTexture
+    {
+        get { return finalTexture; }
+    }
     /// <summary>
     /// Available canals for display chroma key effect
     /// </summary>
@@ -168,7 +165,7 @@ public class GreenScreenManager : MonoBehaviour
     /// Green screen shader name
     /// </summary>
     [SerializeField]
-    public string pathFileShader = "Config_greenscreen.json";
+    public string pathFileConfig = "Config_greenscreen.json";
 
 
     /// <summary>
@@ -212,7 +209,15 @@ public class GreenScreenManager : MonoBehaviour
         sigma_ = defaultSigma;
     }
 
+    private void OnEnable()
+    {
+        Shader.SetGlobalInt("ZEDGreenScreenActivated", 1);
+    }
 
+    private void OnDisable()
+    {
+        Shader.SetGlobalInt("ZEDGreenScreenActivated", 0);
+    }
 
     private void Awake()
     {
@@ -222,19 +227,29 @@ public class GreenScreenManager : MonoBehaviour
             finalMat = screen.GetComponent<Renderer>().material;
             screenManager = GetComponent<TextureOverlay>();
         }
+      
 #if !UNITY_EDITOR
         Debug.Log("Load Chroma keys");
         LoadChromaKeys();
         UpdateShader();
+        CreateFileWatcher("");
 #endif
     }
+
+    private void Update()
+    {
+        if(toUpdateConfig)
+        {
+            toUpdateConfig = false;
+            LoadChromaKeys();
+        }
+    }
+
 
     private void Start()
     {
         finalTexture = new RenderTexture(sl.ZEDCamera.GetInstance().ImageWidth, sl.ZEDCamera.GetInstance().ImageHeight, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
-
-        //alphaTexture.wrapMode = TextureWrapMode.Clamp;
-
+        finalTexture.SetGlobalShaderProperty("ZEDMaskTexGreenScreen");
         finalMat.SetTexture("_MaskTex", finalTexture);
         greenScreenMat = Resources.Load("Materials/Mat_ZED_Compute_GreenScreen") as Material;
         blurMaterial = Resources.Load("Materials/Mat_ZED_Blur") as Material;
@@ -250,9 +265,16 @@ public class GreenScreenManager : MonoBehaviour
         blurMaterial.SetFloatArray("offset2", offsets_);
         greenScreenMat.SetTexture("_CameraTex", screenManager.camZedLeft);
 
-        UpdateNumberColors();
         UpdateShader();
         UpdateCanal();
+#if !UNITY_EDITOR
+        if (System.IO.File.Exists("ZED_Settings.conf"))
+        {
+            sl.ZEDCamera.GetInstance().LoadCameraSettings("ZED_Settings.conf");
+            sl.ZEDCamera.GetInstance().SetCameraSettings();
+        }
+#endif
+
     }
 
 
@@ -292,7 +314,6 @@ public class GreenScreenManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        UpdateNumberColors();
         UpdateShader();
     }
 #endif
@@ -304,16 +325,30 @@ public class GreenScreenManager : MonoBehaviour
 
     public void Reset()
     {
-            ZEDManager zedManager = null;
-            zedManager = transform.parent.gameObject.GetComponent<ZEDManager>();
-            if (zedManager != null)
-                zedManager.videoMode = sl.RESOLUTION.HD1080;
-            SetDefaultValues();
+
+        ZEDManager zedManager = null;
+        zedManager = transform.parent.gameObject.GetComponent<ZEDManager>();
+        if (zedManager != null)
+        {
+            zedManager.resolution = sl.RESOLUTION.HD1080;
+            Debug.Log("Resolution set to HD1080 for better result");
+        }
+        SetDefaultValues();
     }
 
-    private void OnEnable()
+    Vector3 RGBtoYUV(Color rgb, bool clamped = true)
     {
+        double Y = 0.299f * rgb.r + .587 * rgb.g + .114 * rgb.b; // Luma
+        double U = -.147 * rgb.r - .289 * rgb.g + .436 * rgb.b + 0.5; // Delta Blue
+        double V = .615 * rgb.r - .515 * rgb.g - .100 * rgb.b + 0.5; // Delta Red
+        if (!clamped)
+        {
+            U = -.147 * rgb.r - .289 * rgb.g + .436 * rgb.b; // Delta Blue
+            V = .615 * rgb.r - .515 * rgb.g - .100 * rgb.b; // Delta Red
+        }
+        return new Vector3((float)Y, (float)U, (float)V);
     }
+
 
     /// <summary>
     /// Update all the data to the shader
@@ -323,10 +358,17 @@ public class GreenScreenManager : MonoBehaviour
     {
         if (greenScreenMat != null)
         {
-            greenScreenMat.SetColor("_keyColor", keyColors);
+            greenScreenMat.SetVector("_keyColor", RGBtoYUV(keyColors));
             greenScreenMat.SetFloat("_range", range);
 
-            preprocessMat.SetFloat("_erosion", erosion + offsets_[2]);
+            if (sigma_ == 0.1f)
+            {
+                preprocessMat.SetFloat("_erosion", erosion);
+            }
+            else
+            {
+                preprocessMat.SetFloat("_erosion", erosion + offsets_[2] / 2.0f);
+            }
 
             preprocessMat.SetFloat("_smoothness", smoothness);
             preprocessMat.SetFloat("_whiteClip", whiteClip);
@@ -342,9 +384,9 @@ public class GreenScreenManager : MonoBehaviour
     /// <returns></returns>
     private ChromaKeyData LoadData()
     {
-        if (File.Exists(pathFileShader))
+        if (File.Exists(pathFileConfig))
         {
-            string dataAsJson = File.ReadAllText(pathFileShader);
+            string dataAsJson = File.ReadAllText(pathFileConfig);
             return JsonUtility.FromJson<ChromaKeyData>(dataAsJson);
         }
         else
@@ -393,7 +435,7 @@ public class GreenScreenManager : MonoBehaviour
     {
         string dataAsJson = JsonUtility.ToJson(chromaKeyData);
 
-        File.WriteAllText(pathFileShader, dataAsJson);
+        File.WriteAllText(pathFileConfig, dataAsJson);
     }
 
     /// <summary>
@@ -420,14 +462,6 @@ public class GreenScreenManager : MonoBehaviour
 
     }
 
-    // Update the current number of colors used in the shader 
-    public void UpdateNumberColors()
-    {
-        if (greenScreenMat != null)
-        {
-            greenScreenMat.SetInt("_numberColors", current_numberColors);
-        }
-    }
 
     private void ComputeWeights(float sigma)
     {
@@ -435,26 +469,39 @@ public class GreenScreenManager : MonoBehaviour
         float[] offsets = { 0.0f, 1.0f, 2.0f, 3.0f, 4.0f };
         // Calculate the weights 
         weights[0] = Gaussian(0, sigma);
-        float sum = weights[0];
-        for (int i = 1; i < 5; ++i)
+        if (sigma != 0)
         {
-            weights[i] = Gaussian(i, sigma);
-            sum += 2.0f * weights[i];
-        }
+            float sum = weights[0];
+            for (int i = 1; i < 5; ++i)
+            {
+                weights[i] = Gaussian(offsets[i], sigma);
+                sum += 2.0f * weights[i];
+            }
 
-        for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 5; ++i)
+            {
+                weights[i] /= sum;
+            }
+
+            // fix for just 3 fetches 
+            weights_[0] = weights[0];
+            weights_[1] = weights[1] + weights[2];
+            weights_[2] = weights[3] + weights[4];
+
+            offsets_[0] = 0.0f;
+            offsets_[1] = ((weights[1] * offsets[1]) + (weights[2] * offsets[2])) / weights_[1];
+            offsets_[2] = ((weights[3] * offsets[3]) + (weights[4] * offsets[4])) / weights_[2];
+        }
+        else
         {
-            weights[i] /= sum;
+            //weights_[0] = 1.0f;
+            //weights_[1] = 0.0f;
+            //weights_[2] = 0.0f;
+            //
+            //offsets_[0] = 0.0f;
+            //offsets_[1] = 0.0f;
+            //offsets_[2] = 3.0f;
         }
-
-        // fix for just 3 fetches 
-        weights_[0] = weights[0];
-        weights_[1] = weights[1] + weights[2];
-        weights_[2] = weights[3] + weights[4];
-
-        offsets_[0] = 0.0f;
-        offsets_[1] = ((weights[1] * offsets[1]) + (weights[2] * offsets[2])) / weights_[1];
-        offsets_[2] = ((weights[3] * offsets[3]) + (weights[4] * offsets[4])) / weights_[2];
     }
 
     private void Blur(RenderTexture source, RenderTexture dest, Material mat, int pass, int numberIterations = -1, int downscale = 2)
@@ -506,18 +553,22 @@ public class GreenScreenManager : MonoBehaviour
     {
         if (screenManager.camZedLeft == null || screenManager.camZedLeft.width == 0) return;
         if (canal.Equals(CANAL.FOREGROUND)) return;
-        
-		RenderTexture tempYUV = RenderTexture.GetTemporary(screenManager.camZedLeft.width, screenManager.camZedLeft.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
-		RenderTexture tempYUVBlur = RenderTexture.GetTemporary(screenManager.camZedLeft.width, screenManager.camZedLeft.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
 
-		RenderTexture tempAlpha = RenderTexture.GetTemporary(finalTexture.width, finalTexture.height, 0, RenderTextureFormat.RFloat, RenderTextureReadWrite.Linear);
+        RenderTexture tempYUV = RenderTexture.GetTemporary(screenManager.camZedLeft.width, screenManager.camZedLeft.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+        RenderTexture tempYUVBlur = RenderTexture.GetTemporary(screenManager.camZedLeft.width, screenManager.camZedLeft.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+
+        RenderTexture tempAlpha = RenderTexture.GetTemporary(finalTexture.width, finalTexture.height, 0, RenderTextureFormat.RFloat, RenderTextureReadWrite.Linear);
         RenderTexture tempFinalAlpha = RenderTexture.GetTemporary(finalTexture.width, finalTexture.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
 
         Graphics.Blit(screenManager.camZedLeft, tempYUV, matYUV);
+
+        //Graphics.Blit(screenManager.camZedLeft, tempYUVBlur, matYUV);
         Blur(tempYUV, tempYUVBlur, blurMaterial, 1, 2, 1);
+
 
         Graphics.Blit(tempYUVBlur, tempAlpha, greenScreenMat);
         preprocessMat.SetTexture("_MaskTex", tempAlpha);
+
         Graphics.Blit(screenManager.camZedLeft, tempFinalAlpha, preprocessMat);
 
         //If the sigma has changed recompute the weights and offsets used by the blur
@@ -540,7 +591,6 @@ public class GreenScreenManager : MonoBehaviour
         {
             Graphics.Blit(tempFinalAlpha, finalTexture);
         }
-        
 
         //Destroy all the temporary buffers
         RenderTexture.ReleaseTemporary(tempYUVBlur);
@@ -553,7 +603,30 @@ public class GreenScreenManager : MonoBehaviour
     {
         return (1.0f / (2.0f * Mathf.PI * sigma)) * Mathf.Exp(-((x * x) / (2.0f * sigma)));
     }
+
+    public void CreateFileWatcher(string path)
+    {
+        // Create a new FileSystemWatcher and set its properties.
+        FileSystemWatcher watcher = new FileSystemWatcher();
+        watcher.Path = path;
+        /* Watch for changes in LastAccess and LastWrite times, and 
+           the renaming of files or directories. */
+        watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+           | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+        // Only watch text files.
+        watcher.Filter = pathFileConfig;
+
+        // Add event handlers.
+        watcher.Changed += new FileSystemEventHandler(OnChanged);
+
+        // Begin watching.
+        watcher.EnableRaisingEvents = true;
+    }
+
+    // Define the event handlers.
+    private void OnChanged(object source, FileSystemEventArgs e)
+    {
+        toUpdateConfig = true;
+
+    }
 }
-
-
-

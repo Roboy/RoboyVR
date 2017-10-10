@@ -9,15 +9,24 @@ public class ZEDEditor : EditorWindow
     private const int csaturation = 4;
     private const int cwhiteBalance = 2600;
 
+    private const string ZEDSettingsPath = "ZED_Settings.conf";
+
     static private int brightness = 4;
     static private int contrast = 4;
     static private int hue = 0;
     static private int saturation = 4;
 
-    static private int gain;
-    static private int exposure;
+    [SerializeField]
+    public int gain;
+    [SerializeField]
+    public int exposure;
     static private int whiteBalance = cwhiteBalance;
-    static private bool groupAuto = true;
+    [SerializeField]
+    public bool groupAuto = true;
+    [SerializeField]
+    public bool loaded = false;
+    [SerializeField]
+    public bool resetWanted = false;
 
     private const int refreshRate = 10;
     static private int refreshCount = 0;
@@ -36,23 +45,24 @@ public class ZEDEditor : EditorWindow
     static private GUILayoutOption[] optionsButton = { GUILayout.MaxWidth(100) };
 
     static sl.CameraInformations parameters = new sl.CameraInformations();
+    private bool launched = false;
 
     public ZEDEditor()
     {
-        zedCamera = sl.ZEDCamera.GetInstance();
-        EditorApplication.playmodeStateChanged += Draw;
+
     }
 
     void Draw()
     {
         if (zedCamera != null && Application.isPlaying)
-            parameters = zedCamera.GetCameraInformation ();
+            parameters = zedCamera.GetCameraInformation();
         this.Repaint();
     }
 
     [MenuItem("Window/ZED Camera")]
     static void Init()
     {
+
         // Get existing open window or if none, make a new one:
         ZEDEditor window = (ZEDEditor)EditorWindow.GetWindow(typeof(ZEDEditor), false, "ZED Camera");
 
@@ -65,25 +75,18 @@ public class ZEDEditor : EditorWindow
 
     }
 
-    void GetAllSettingsCamera()
-    {
-        brightness = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.BRIGHTNESS);
-        contrast = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.CONTRAST);
-        hue = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.HUE);
-        saturation = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.SATURATION);
-        gain = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.GAIN);
-        exposure = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE);
-        whiteBalance = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE);
-    }
+
 
     void OnFocus()
     {
-
         if (zedCamera != null && zedCamera.CameraIsReady)
         {
             parameters = zedCamera.GetCameraInformation();
-
-            GetAllSettingsCamera();
+            if (!loaded)
+            {
+                zedCamera.RetrieveCameraSettings();
+                UpdateValuesCameraSettings();
+            }
         }
     }
 
@@ -93,15 +96,43 @@ public class ZEDEditor : EditorWindow
     {
         if (!isInit)
         {
+            zedCamera = sl.ZEDCamera.GetInstance();
+            EditorApplication.playmodeStateChanged += Draw;
             if (zedCamera != null && zedCamera.CameraIsReady)
             {
                 isInit = true;
 
-                GetAllSettingsCamera();
+                if (!loaded)
+                {
 
-                zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, true);
-                zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, true);
-                zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, -1, false);
+                    if (resetWanted)
+                    {
+                        ResetValues(groupAuto);
+                        resetWanted = false;
+                    }
+                    zedCamera.RetrieveCameraSettings();
+                    ZEDCameraSettingsManager.CameraSettings settings = zedCamera.GetCameraSettings();
+
+                    hue = settings.Hue;
+                    brightness = settings.Brightness;
+                    contrast = settings.Contrast;
+                    saturation = settings.Saturation;
+                    if (groupAuto)
+                    {
+                        exposure = settings.Exposure;
+                        gain = settings.Gain;
+
+                        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, true);
+                        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, true);
+                        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, -1, false);
+                    }
+
+                }
+                else
+                {
+                    LoadCameraSettings();
+                    //loaded = false;
+                }
                 parameters = zedCamera.GetCameraInformation();
             }
         }
@@ -120,6 +151,7 @@ public class ZEDEditor : EditorWindow
         {
             EditorGUILayout.LabelField("Resolution ", zedCamera.ImageWidth + " x " + zedCamera.ImageHeight);
             EditorGUILayout.LabelField("FPS ", zedCamera.GetCameraFPS().ToString());
+            launched = true;
         }
         else
         {
@@ -165,13 +197,14 @@ public class ZEDEditor : EditorWindow
         groupAuto = EditorGUILayout.Toggle("Automatic", groupAuto, EditorStyles.toggle);
         if (!groupAuto && setManualValue)
         {
-            //zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, whiteBalance, false);
             zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, false);
             zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, false);
             setManualValue = false;
         }
         if (groupAuto)
         {
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, true);
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, true);
             setManualValue = true;
         }
         EditorStyles.label.fontStyle = origFontStyle;
@@ -184,11 +217,11 @@ public class ZEDEditor : EditorWindow
         {
             if (!groupAuto)
             {
-                Debug.Log(whiteBalance);
                 zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, whiteBalance, false);
             }
         }
         gain = EditorGUILayout.IntSlider("Gain", gain, 0, 100);
+
         if (EditorGUI.EndChangeCheck())
         {
             if (!groupAuto)
@@ -220,7 +253,6 @@ public class ZEDEditor : EditorWindow
         GUI.enabled = true;
         EditorGUI.indentLevel = 0;
 
-        GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Reset", optionsButton))
@@ -231,14 +263,27 @@ public class ZEDEditor : EditorWindow
             saturation = csaturation;
 
             groupAuto = true;
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.BRIGHTNESS, cbrightness, true);
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.CONTRAST, ccontrast, true);
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.HUE, hue, true);
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.SATURATION, csaturation, true);
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, cwhiteBalance, true);
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, true);
-            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, true);
+            ResetValues(groupAuto);
+            zedCamera.RetrieveCameraSettings();
+            loaded = false;
+            if (zedCamera != null)
+            {
+                resetWanted = true;
+            }
+        }
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Save"))
+        {
+            SaveCameraSettings();
+        }
 
+        if (GUILayout.Button("Load"))
+        {
+            LoadCameraSettings();
         }
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
@@ -259,9 +304,48 @@ public class ZEDEditor : EditorWindow
                     whiteBalance = zedCamera.GetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE);
 
                     Repaint();
-                }
+                } 
             }
         }
+    }
+
+    private void ResetValues(bool auto)
+    {
+        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.BRIGHTNESS, cbrightness, false);
+        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.CONTRAST, ccontrast, false);
+        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.HUE, 0, false);
+        zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.SATURATION, csaturation, false);
+        if (auto)
+        {
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, cwhiteBalance, true);
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, true);
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, true);
+        }
+    }
+
+    void SaveCameraSettings()
+    {
+        zedCamera.SaveCameraSettings(ZEDSettingsPath);
+    }
+
+    private void UpdateValuesCameraSettings()
+    {
+        ZEDCameraSettingsManager.CameraSettings settings = zedCamera.GetCameraSettings();
+        hue = settings.Hue;
+
+        brightness = settings.Brightness;
+        contrast = settings.Contrast;
+        exposure = settings.Exposure;
+        saturation = settings.Saturation;
+        gain = settings.Gain;
+    }
+
+    void LoadCameraSettings()
+    {
+        zedCamera.LoadCameraSettings(ZEDSettingsPath);
+        UpdateValuesCameraSettings();
+        groupAuto = false;
+        loaded = true;
     }
 
     void LabelHorizontal(string name, float value)
@@ -289,8 +373,11 @@ public class ZEDEditor : EditorWindow
         LabelHorizontal("cy", parameters.calibParameters.leftCam.cy);
 
         GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
-        LabelHorizontal("k1", (float)parameters.calibParameters.leftCam.disto[0]);
-        LabelHorizontal("k2", (float)parameters.calibParameters.leftCam.disto[1]);
+        if (parameters.calibParameters.leftCam.disto != null)
+        {
+            LabelHorizontal("k1", (float)parameters.calibParameters.leftCam.disto[0]);
+            LabelHorizontal("k2", (float)parameters.calibParameters.leftCam.disto[1]);
+        }
         GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
         LabelHorizontal("vFOV", parameters.calibParameters.leftCam.vFOV);
         LabelHorizontal("hFOV", parameters.calibParameters.leftCam.hFOV);
@@ -311,8 +398,11 @@ public class ZEDEditor : EditorWindow
         LabelHorizontal("cy", parameters.calibParameters.rightCam.cy);
 
         GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
-        LabelHorizontal("k1", (float)parameters.calibParameters.rightCam.disto[0]);
-        LabelHorizontal("k2", (float)parameters.calibParameters.rightCam.disto[1]);
+        if (parameters.calibParameters.leftCam.disto != null)
+        {
+            LabelHorizontal("k1", (float)parameters.calibParameters.rightCam.disto[0]);
+            LabelHorizontal("k2", (float)parameters.calibParameters.rightCam.disto[1]);
+        }
         GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
         LabelHorizontal("vFOV", parameters.calibParameters.rightCam.vFOV);
         LabelHorizontal("hFOV", parameters.calibParameters.rightCam.hFOV);
@@ -353,12 +443,19 @@ public class ZEDEditor : EditorWindow
         if (zedCamera != null && zedCamera.CameraIsReady)
         {
             style.normal.textColor = Color.black;
-            GUILayout.Label("Connected", style);
+            GUILayout.Label("Online", style);
         }
         else
         {
             style.normal.textColor = Color.black;
-            GUILayout.Label("Not Connected", style);
+            if (!launched)
+            {
+                GUILayout.Label("To access information, please launch your scene once", style);
+            }
+            else
+            {
+                GUILayout.Label("Offline", style);
+            }
         }
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
@@ -387,4 +484,17 @@ public class ZEDEditor : EditorWindow
                 break;
         }
     }
+
+    private void OnDestroy()
+    {
+        if (zedCamera != null)
+        {
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.GAIN, gain, true);
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.EXPOSURE, exposure, true);
+            zedCamera.SetCameraSettings(sl.CAMERA_SETTINGS.WHITEBALANCE, -1, true);
+        }
+    }
+
+
 }
+

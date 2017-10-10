@@ -119,6 +119,12 @@ public class SelectableObject : MonoBehaviour
     private void changeState(State s)
     {
         m_CurrentState = s;
+
+        GameObject obj = null;
+        if ( SelectorManager.Instance.UI_Elements != null && SelectorManager.Instance.UI_Elements.ContainsKey(name))
+        {
+            obj = SelectorManager.Instance.UI_Elements[name];
+        }
         switch (m_CurrentState)
         {
             // Reset the objects material and the corrensponding GUI component
@@ -127,7 +133,10 @@ public class SelectableObject : MonoBehaviour
                 {
                     mRenderer.material = m_DefaultMaterial;
                 }
-                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().enabled = false;
+                if (obj)
+                {
+                    obj.GetComponent<Outline>().enabled = false;
+                }
                 break;
             case State.TARGETED:
                 // Set the objects material to targeted and highlight the corresponding GUI component with color of targeted material
@@ -135,8 +144,11 @@ public class SelectableObject : MonoBehaviour
                 {
                     mRenderer.material = TargetedMaterial;
                 }
-                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().enabled = true;
-                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().effectColor = TargetedMaterial.color;
+                if (obj)
+                {
+                    obj.GetComponent<Outline>().enabled = true;
+                    obj.GetComponent<Outline>().effectColor = TargetedMaterial.color;
+                }
                 break;
             case State.SELECTED:
                 // Set the objects material to selected and highlight the corresponding GUI component with color of selected material
@@ -144,7 +156,8 @@ public class SelectableObject : MonoBehaviour
                 {
                     mRenderer.material = SelectedMaterial;
                 }
-                SelectorManager.Instance.UI_Elements[name].GetComponent<Outline>().effectColor = SelectedMaterial.color;
+                if (obj)
+                    obj.GetComponent<Outline>().effectColor = SelectedMaterial.color;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

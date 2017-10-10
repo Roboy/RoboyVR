@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VR;
 using ROSBridgeLib.sensor_msgs;
+using ROSBridgeLib;
+using ROSBridgeLib.custom_msgs;
 
 /// <summary>
 /// BeRoboymanager has different tasks to do:
 ///
 ///     -# Keep track of user movement and translate roboy when in specific view modes
 ///     -# Convert received images into textures which can then be rendered on screen
-///     -# FUTURE: Send tracking messages over the rosbridge to gazebo/ real roboy
+///     -# Send tracking messages over the rosbridge to gazebo/ real roboy
 /// </summary>
 public class BeRoboyManager : Singleton<BeRoboyManager> {
 
@@ -59,7 +61,12 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <summary>
     /// Variable to determine if headset was rotated.
     /// </summary>
-    private float m_CurrentAngle = 0.0f;
+    private float m_CurrentAngleX = 0.0f;
+
+    /// <summary>
+    /// Variable to determine if headset was rotated.
+    /// </summary>
+    private float m_CurrentAngleY = 0.0f;
 
     /// <summary>
     /// Color array for the simulation image conversion.
@@ -70,6 +77,11 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// Color array for the zed image conversion.
     /// </summary>
     private Color[] m_ColorArrayZed = new Color[1280 * 720];
+
+    /// <summary>
+    /// Reference to the tools controller (right).
+    /// </summary>
+    private SteamVR_TrackedObject m_Controller;
 
     #endregion PRIVATE_MEMBER_VARIABLES
 
@@ -96,7 +108,10 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         {
             Debug.Log("No Camera found!");
         }
-       
+
+        m_Controller = ControllerManager.Instance.ControllerForTools;
+
+
     }
 	
 	void Update () {
@@ -112,6 +127,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
             if(TrackingEnabled)
                 translateRoboy();
         }
+
     }
     #endregion //MONOBEHAVIOR_METHODS
 
@@ -135,6 +151,32 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     {
         RefreshSimImage(image);
     }
+
+    /// <summary>
+    /// Function to publish ExternalJoint messages via ROS.
+    /// </summary>
+    /// <param name="jointNames"></param>
+    /// <param name="angles"></param>
+    public void ReceiveExternalJoint(List<string> jointNames, List<float> angles)
+    {
+        ROSBridgeLib.custom_msgs.ExternalJointMsg msg =
+            new ROSBridgeLib.custom_msgs.ExternalJointMsg(jointNames, angles);
+
+        ROSBridge.Instance.Publish(RoboyHeadPublisher.GetMessageTopic(), msg);
+    }
+
+    /// <summary>
+    /// Function to publish Position messages via ROS.
+    /// </summary>
+    /// <param name="pos"></param>
+    public void ReceivePosition(Vector3 pos)
+    {
+        ROSBridgeLib.custom_msgs.RoboyPositionMsg msg =
+            new ROSBridgeLib.custom_msgs.RoboyPositionMsg(pos.x, pos.y, pos.z);
+
+        ROSBridge.Instance.Publish(RoboyPositionPublisher.GetMessageTopic(), msg);
+    }
+
     #endregion PUBLIC_METHODS
 
 
@@ -201,17 +243,87 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     private void translateRoboy()
     {
-        // Check whether the user has rotated the headset or not
-        if (m_CurrentAngle != m_Cam.transform.eulerAngles.y)
+        // References to roboy parts we need for rotation/ translation
+        Transform head_parent = transform.GetChild(0).Find("head");
+        Transform head_pivot = head_parent.GetChild(0);
+        Transform torso_pivot = transform.GetChild(0).Find("torso_pivot");
+
+
+        // Check whether the user has rotated the headset in x direction or not
+        if (m_CurrentAngleX != m_Cam.transform.eulerAngles.x)
         {
             // If the headset was rotated, rotate roboy
-            transform.RotateAround(m_Cam.transform.localPosition, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngle);
+            head_parent.RotateAround(head_pivot.position, Vector3.right, m_Cam.transform.eulerAngles.x - m_CurrentAngleX);
         }
-        m_CurrentAngle = m_Cam.transform.eulerAngles.y;
+        m_CurrentAngleX = m_Cam.transform.eulerAngles.x;
+
+        // Check whether the user has rotated the headset in y direction or not
+        if (m_CurrentAngleY != m_Cam.transform.eulerAngles.y)
+        {
+            // If the headset was rotated, rotate roboy
+            head_parent.RotateAround(head_pivot.position, Vector3.up, m_Cam.transform.eulerAngles.y - m_CurrentAngleY);
+        }
+        m_CurrentAngleY = m_Cam.transform.eulerAngles.y;
 
         // Move roboy accordingly to headset movement
         Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
+
+        // Publish position to gazebo
+        ReceivePosition(GazeboUtility.UnityPositionToGazebo(transform.position));
+
+        // The torso of roboy will be rotated towards the (right)controller position
+        torso_pivot.transform.LookAt(new Vector3(m_Controller.transform.position.x, torso_pivot.transform.position.y, m_Controller.transform.position.z));
+
+        // Send rotation data via ROS
+        // Convert the headset rotation from unity coordinate spaze to gazebo coordinates
+        Quaternion rot = GazeboUtility.UnityRotationToGazebo(headRotation);
+        float x_angle = 0.0f;
+        float y_angle = 0.0f;
+        // Angle for torso rotation
+        float t_angle = 0.0f;
+
+        // Convert head rotation
+        if (rot.eulerAngles.x > 180)
+        {
+            y_angle = (rot.eulerAngles.x - 360) * Mathf.Deg2Rad;
+        }
+        else
+        {
+            y_angle = rot.eulerAngles.x * Mathf.Deg2Rad;
+        }
+
+        x_angle = rot.eulerAngles.z * Mathf.Deg2Rad;
+
+        // Now convert torso rotation
+        if (torso_pivot.eulerAngles.y > 180)
+        {
+            t_angle = (torso_pivot.eulerAngles.y - 360) * Mathf.Deg2Rad;
+        }
+        else
+        {
+            t_angle = torso_pivot.eulerAngles.y * Mathf.Deg2Rad;
+        }
+        
+        // Determine which joints should me modified
+        List<string> joints = new List<string>();
+        // X rotation
+        joints.Add("neck_3");
+        // Y rotation
+        joints.Add("neck_4");
+        // Body rotation
+        joints.Add("spine_1");
+
+        // Determine the angle for the joints
+        List<float> angles = new List<float>();
+        // Add the x-angle of the headset after conversion from unity to ros
+        angles.Add(x_angle);
+        // Add the y-angle of the headset after conversion from unity to ros
+        angles.Add(y_angle);
+        // Add the torso rotation angle after conversion from unity to ros
+        angles.Add(t_angle * (-1.0f));
+        // Start sending the actual message
+        ReceiveExternalJoint(joints, angles);
     }
 
     /// <summary>

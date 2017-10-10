@@ -4,9 +4,6 @@ namespace ROSBridgeLib
 {
     public class RoboyForcePublisher : ROSBridgePublisher
     {
-
-        #region PUBLIC_METHODS
-
         public new static string GetMessageTopic()
         {
             return "/roboy/external_force";
@@ -21,7 +18,5 @@ namespace ROSBridgeLib
         {
             return msg.ToYAMLString();
         }
-
-        #endregion //PUBLIC_METHODS
     }
 }

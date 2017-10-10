@@ -43,11 +43,12 @@
 			
 			float4 frag (v2f i) : SV_Target
 			{
-				if (_isLinear == 1)
-				{
-				return float4(RGBtoYUV(pow(tex2D(_MainTex, i.uv).bgr, 1.0f / 2.2f)), 1);
-				}
+#ifndef UNITY_COLORSPACE_GAMMA
+
+				return float4(RGBtoYUV(LinearToGammaSpace(tex2D(_MainTex, i.uv).bgr)), 1);
+#else
 				return float4(RGBtoYUV(tex2D(_MainTex, i.uv).bgr), 1);
+#endif
 			}
 			ENDCG
 		}

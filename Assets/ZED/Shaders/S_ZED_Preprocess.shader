@@ -1,4 +1,4 @@
-﻿Shader "ZED/S_ZED_Preprocess"
+﻿Shader "ZED/GreenScreen/ZED Preprocess"
 {
 	Properties
 	{
@@ -81,7 +81,7 @@
 				float2 uv7 = clamp(uv + float2(0, _MainTex_TexelSize.y*_erosion), fixed2(_MainTex_TexelSize.x, _MainTex_TexelSize.y), fixed2(1 - _MainTex_TexelSize.x, 1 - _MainTex_TexelSize.y));
 
 				if (_erosion >= 1) {
-
+				
 					//Erosion with one pass not optimized, prefer erosion with multi pass
 					//0 | X | 0
 					//X | 0 | X
@@ -91,7 +91,7 @@
 					float a2 = pow(saturate(tex2D(_MaskTex, uv3).r / _smoothness), 1.5);
 					float a3 = pow(saturate(tex2D(_MaskTex, uv5).r / _smoothness), 1.5);
 					float a4 = pow(saturate(tex2D(_MaskTex, uv7).r / _smoothness), 1.5);
-
+				
 					o.a = min(min(min(min(o.a, a1), a2), a3), a4);
 				}
 				else {

@@ -1,14 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
-
 namespace sl
 {
     public struct Resolution
     {
-        public int width;
-        public int height;
+        public System.UIntPtr width;
+        public System.UIntPtr height;
     };
-
     [StructLayout(LayoutKind.Sequential)]
     public struct CameraInformations
     {
@@ -17,7 +15,6 @@ namespace sl
         public uint serialNumber;
         public uint firmwareVersion;
     }
-
     [StructLayout(LayoutKind.Sequential)]
     public struct Pose
     {
@@ -27,7 +24,6 @@ namespace sl
         public Vector3 translation;
         public int pose_confidence;
     }
-
     [StructLayout(LayoutKind.Sequential)]
     public struct CameraParameters
     {
@@ -47,10 +43,8 @@ namespace sl
         /// Optical center y
         /// </summary>
         public float cy;
-
         [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U8, SizeConst = 5)]
         public double[] disto;
-
         /// <summary>
         /// Vertical field of view after stereo rectification
         /// </summary>
@@ -63,10 +57,8 @@ namespace sl
         /// Diagonal field of view after stereo rectification
         /// </summary>
         public float dFOV;
-
         public Resolution resolution;
     };
-
     [StructLayout(LayoutKind.Sequential)]
     public struct CalibrationParameters
     {
@@ -74,7 +66,6 @@ namespace sl
         /// Rotation (using Rodrigues' transformation) between the two sensors. Defined as 'tilt', 'convergence' and 'roll'
         /// </summary>
         public Vector3 Rot;
-
         /// <summary>
         /// Translation between the two sensors. T[0] is the distance between the two cameras in meters.
         /// </summary>
@@ -88,8 +79,6 @@ namespace sl
         /// </summary>
         public CameraParameters rightCam;
     };
-
-
     [StructLayout(LayoutKind.Sequential)]
     public struct Recording_state
     {
@@ -114,8 +103,6 @@ namespace sl
         /// </summary>
         public double average_compression_ratio;
     }
-
-
     [StructLayout(LayoutKind.Sequential)]
     public struct MotionPoseData
     {
@@ -127,7 +114,6 @@ namespace sl
         ///Timestamp of the frame that this pose estimate corresponds to.
         /// </summary>  
         public ulong timestamp;
-
         public Quaternion rotation;
         public Vector3 translation;
         /// <summary>  
@@ -139,7 +125,6 @@ namespace sl
         /// </summary>  
         public int pose_confidence;
     }
-
     public enum ZED_SELF_CALIBRATION_STATE
     {
         /// <summary>
@@ -159,7 +144,6 @@ namespace sl
         /// </summary>
         SELF_CALIBRATION_SUCCESS
     };
-
     public enum DEPTH_MODE
     {
         /// <summary>
@@ -179,7 +163,6 @@ namespace sl
         /// </summary>
         QUALITY
     };
-
     public enum UNIT
     {
         MILLIMETER,
@@ -189,12 +172,6 @@ namespace sl
         FOOT,
     };
 
-    public enum TRACKING_REFERENCE
-    {
-        TRACKING_REFERENCE_LEFT, /*!< The left camera is taken as reference */
-        TRACKING_REFERENCE_CENTER, /*!< The center of the ZED is taken as reference */
-        TRACKING_REFERENCE_RIGHT /*!< The right camera is taken as reference */
-    };
 
     public enum ERROR_CODE
     {
@@ -272,7 +249,6 @@ namespace sl
         /// </summary>
         CORRUPTED_SDK_INSTALLATION
     };
-
     public enum RESOLUTION
     {
         /// <summary>
@@ -292,7 +268,6 @@ namespace sl
         /// </summary>
         VGA
     };
-
     public enum SENSING_MODE
     {
         /// <summary>
@@ -305,16 +280,13 @@ namespace sl
         /// Applications example: AR/VR, Mixed-reality capture, Image post-processing
         /// </summary>
         FILL
-
     };
-
     public enum TYPE_VIEW
     {
         GET_VIEW,
         RETRIEVE_IMAGE,
         RETRIEVE_MEASURE
     }
-
     public enum VIEW
     {
         LEFT,
@@ -325,11 +297,20 @@ namespace sl
         RIGHT_UNRECTIFIED,
         LEFT_UNRECTIFIED_GREY,
         RIGHT_UNRECTIFIED_GREY,
-        SIDE_BY_SIDE, /*!< Left and right image (the image width is therefore doubled) */
-        DEPTH, /*!< Normalized depth image */
-        CONFIDENCE, /*!< Normalized confidence image */
+        /// <summary>
+        /// Left and right image (the image width is therefore doubled)
+        /// </summary>
+        SIDE_BY_SIDE,
+        /// <summary>
+        /// Normalized depth image
+        /// </summary>
+        DEPTH,
+        /// <summary>
+        /// Normalized confidence image
+        /// </summary>
+        CONFIDENCE,
+        NORMALS
     };
-
     public enum CAMERA_SETTINGS
     {
         /// <summary>
@@ -361,9 +342,6 @@ namespace sl
         /// </summary>
         WHITEBALANCE
     };
-
-
-
     public enum MEASURE
     {
         /// <summary>
@@ -397,9 +375,9 @@ namespace sl
         /// <summary>
         /// 3D coordinates and Color of the image , 4 channels, FLOAT (the 4th channel encode 4 UCHAR for color in A-B-G-R order)
         /// </summary>
-        XYZABGR
+        XYZABGR,
+        NORMALS
     };
-
     /// <summary>
     /// Only few functions of tracking use this system, the path is the default value
     /// </summary>
@@ -414,7 +392,6 @@ namespace sl
         /// </summary>
         CAMERA
     };
-
     public enum TRACKING_FRAME_STATE
     {
         /// <summary>
@@ -430,7 +407,6 @@ namespace sl
         /// </summary>
         TRACKING_OFF
     }
-
     public enum SVO_COMPRESSION_MODE
     {
         /// <summary>

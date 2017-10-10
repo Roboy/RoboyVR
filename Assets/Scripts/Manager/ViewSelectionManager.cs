@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// ViewSelectionManager handles the transition between various view scenarios.
 /// </summary>
-public class ViewSelectionManager : MonoBehaviour {
+public class ViewSelectionManager : Singleton<ViewSelectionManager> {
 
 
     #region PUBLIC_MEMBER_VARIABLES
@@ -31,6 +31,18 @@ public class ViewSelectionManager : MonoBehaviour {
     /// Reference to the image where the zed feed can be displayed.
     /// </summary>
     public RawImage ZedImage;
+    /// <summary>
+    /// Reference to Roboy's surrounding.
+    /// </summary>
+    public GameObject Cave;
+    /// <summary>
+    /// Reference to Roboy itself.
+    /// </summary>
+    public GameObject Roboy;
+    /// <summary>
+    /// Reference to the teleporter ray.
+    /// </summary>
+    public GameObject Pointer;
 
     #endregion PUBLIC_MEMBER_VARIABLES
 
@@ -74,7 +86,10 @@ public class ViewSelectionManager : MonoBehaviour {
         GazeboImage.gameObject.SetActive(true);
         HtcImage.gameObject.SetActive(false);
         ZedImage.gameObject.SetActive(false);
-        
+        Cave.gameObject.SetActive(false);
+        Roboy.gameObject.SetActive(true);
+        Pointer.gameObject.SetActive(false);
+
     }
     
     /// <summary>
@@ -92,7 +107,10 @@ public class ViewSelectionManager : MonoBehaviour {
         GazeboImage.gameObject.SetActive(false);
         HtcImage.gameObject.SetActive(false);
         ZedImage.gameObject.SetActive(true);
-        
+        Cave.gameObject.SetActive(false);
+        Roboy.gameObject.SetActive(false);
+        Pointer.gameObject.SetActive(false);
+
     }
     
     /// <summary>
@@ -107,7 +125,10 @@ public class ViewSelectionManager : MonoBehaviour {
 
         //Turn Canvas On/Off and enable the image that should be seen.
         InstructionCanvas.gameObject.SetActive(false);
-        
+        Cave.gameObject.SetActive(true);
+        Roboy.gameObject.SetActive(true);
+        Pointer.gameObject.SetActive(true);
+
     }
     
     /// <summary>
@@ -122,6 +143,9 @@ public class ViewSelectionManager : MonoBehaviour {
 
         //Turn Canvas On/Off and enable the image that should be seen.
         InstructionCanvas.gameObject.SetActive(false);
+        Cave.gameObject.SetActive(true);
+        Roboy.gameObject.SetActive(true);
+        Pointer.gameObject.SetActive(false);
 
     }
 

@@ -77,7 +77,7 @@ namespace ROSBridgeLib
 
             public static string GetMessageType()
             {
-                return "common_utilities/ExternalForce";
+                return "roboy_communication_simulation/ExternalForce";
             }
 
             public override string ToString()
@@ -85,27 +85,10 @@ namespace ROSBridgeLib
                 return "ExternalForce [name=" + _linkname + ", position=" + _position.ToString() + ",  force=" + _force.ToString() + ", duration=" + _duration.ToString() + "]";
             }
 
-            //public override string ToYAMLString()
-            //{
-            //    return "{" +_linkname.ToYAMLString() + ", \"position\" : " + _position.ToYAMLString() + ", \"force\" : " + _force.ToYAMLString() + ", \"duration\" : " + _duration.ToYAMLString() + "}";
-            //}
-
             public override string ToYAMLString()
             {
-                return "{" + _linkname.ToYAMLString() + ", " + _position.ToYAMLString() + ", " + _force.ToYAMLString() + ", " + _duration.ToYAMLString() + "}";/*_linkname.ToYAMLString() + ", " + _position.ToYAMLString() + ", " + _force.ToYAMLString() + ", duration: " + 2000;*/
+                return "{" + _linkname.ToYAMLString() + ", " + _position.ToYAMLString() + ", " + _force.ToYAMLString() + ", " + _duration.ToYAMLString() + "}";
             }
-
-
-            //public override string ToYAMLString()
-            //{
-            //    return "{\"name\" : \"torso\", \"x\" : 0, \"y\" : 0, \"z\" : 0, \"f_x\" : 0, \"f_y\" : 10000, \"f_z\" : 10, \"duration\" : 20}";/*_linkname.ToYAMLString() + ", " + _position.ToYAMLString() + ", " + _force.ToYAMLString() + ", duration: " + 2000;*/
-            //}
-
-            //{name: 'torso', x: 0, y: 0, z: 0, f_x: 0, f_y: 0, f_z: 100000, duration: 2000}
-
-            //{name: 'torso', x: 0, y: 0, z: 0, f_x: 0, f_y: 0, f_z: 100000, duration: 2000}
         }
     }
-
-
 }

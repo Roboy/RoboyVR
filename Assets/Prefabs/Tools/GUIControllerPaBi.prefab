@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 114415030001619352}
   - component: {fileID: 114788611765484526}
   - component: {fileID: 114795703106315496}
+  - component: {fileID: 114116959565528772}
   m_Layer: 5
   m_Name: GUIControllerPaBi
   m_TagString: GUIController
@@ -268,7 +269,7 @@ GameObject:
   - component: {fileID: 65362268709467762}
   - component: {fileID: 225151919890721652}
   m_Layer: 5
-  m_Name: shank_1
+  m_Name: shank_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -306,7 +307,7 @@ GameObject:
   - component: {fileID: 65720889617715208}
   - component: {fileID: 225313373286923158}
   m_Layer: 5
-  m_Name: shank_2
+  m_Name: shank_left
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -364,7 +365,7 @@ GameObject:
   - component: {fileID: 65293446493421992}
   - component: {fileID: 225159360626671342}
   m_Layer: 5
-  m_Name: thigh_2
+  m_Name: thigh_left
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +402,7 @@ GameObject:
   - component: {fileID: 65387019022858606}
   - component: {fileID: 225619439104511204}
   m_Layer: 5
-  m_Name: thigh_1
+  m_Name: thigh_right
   m_TagString: RoboyUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -658,6 +659,18 @@ MonoBehaviour:
   m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 0.2, y: -0.2}
   m_UseGraphicAlpha: 1
+--- !u!114 &114116959565528772
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1095282307360886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298d2ebab930f7146bdeb2e7a96b0185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 64defa9606c7b0743a8cb12f8fac3d4e, type: 3}
 --- !u!114 &114220443737191072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -783,7 +796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.53676474, g: 0.73164296, b: 1, a: 1}
+  m_Color: {r: 0.19117647, g: 1, b: 0.93306285, a: 0.392}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

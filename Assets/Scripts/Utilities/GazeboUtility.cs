@@ -58,4 +58,15 @@ public class GazeboUtility {
 
         return finalRot;
     }
+
+    /// <summary>
+    /// Removes first and last string character (intended for unnecessary quotation marks but works for anything)
+    /// </summary>
+    /// <param name="s">string to be cropped</param>
+    /// <returns></returns>
+    public static string RemoveQuotationMarks(string s)
+    {
+        string temp = s.Remove(0, 1);
+        return temp.Remove(s.Length - 2, 1);
+    }
 }

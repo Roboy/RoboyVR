@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// INSERT CLASS NAME. 
 /// This is the long description separated from the short description with a .
 /// </summary>
-public class SelectionWheelManager : MonoBehaviour
+public class ScriptName : MonoBehaviour
 {
     #region PUBLIC_MEMBER_VARIABLES
     #endregion

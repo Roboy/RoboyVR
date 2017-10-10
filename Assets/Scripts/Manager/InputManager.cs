@@ -1,17 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// InputManager holds a reference of every tool. On top of that it listens to button events from these tools and forwards touchpad input to the respective classes.
 /// </summary>
-public class InputManager : Singleton<InputManager> {
+public class InputManager : Singleton<InputManager>
+{
 
     /// <summary>
     /// Public GUIController reference.
     /// </summary>
-    public GUIController GUI_Controller {
+    public GUIController GUI_Controller
+    {
         get { return m_GUIController; }
+    }
+
+    /// <summary>
+    /// Public ViewController reference.
+    /// </summary>
+    public ViewController View_Controller
+    {
+        get { return m_ViewController; }
+    }
+
+    /// <summary>
+    /// Public ModelSpawnController reference.
+    /// </summary>
+    public ModelSpawnController ModelSpawn_Controller
+    {
+        get { return m_ModelSpawnController; }
     }
 
     /// <summary>
@@ -38,6 +57,11 @@ public class InputManager : Singleton<InputManager> {
         get { return m_TimeTool; }
     }
 
+    public HandTool HandTool
+    {
+        get { return m_HandTool; }
+    }
+
     /// <summary>
     /// Private SelectorTool reference. Is serialized so it can be dragged in the editor.
     /// </summary>
@@ -47,7 +71,8 @@ public class InputManager : Singleton<InputManager> {
     /// <summary>
     /// Private ShootingTool reference. Is serialized so it can be dragged in the editor.
     /// </summary>
-    [SerializeField] private ShootingTool m_ShootingTool;
+    [SerializeField]
+    private ShootingTool m_ShootingTool;
 
     /// <summary>
     /// Private TimeTool reference. Is serialized so it can be dragged in the editor.
@@ -56,10 +81,40 @@ public class InputManager : Singleton<InputManager> {
     private TimeTool m_TimeTool;
 
     /// <summary>
+    /// Private HandTool reference. Is serialized so it can be dragged in the editor.
+    /// </summary>
+    [SerializeField]
+    private HandTool m_HandTool;
+
+    /// <summary>
     /// Private GUIController reference. Is serialized so it can be dragged in the editor.
     /// </summary>
     [SerializeField]
     private GUIController m_GUIController;
+
+    /// <summary>
+    /// Private GUIController reference. Is serialized so it can be dragged in the editor.
+    /// </summary>
+    [SerializeField]
+    private ViewController m_ViewController;
+
+    /// <summary>
+    /// Private ModelSpawn reference. Is serialized so it can be dragged in the editor.
+    /// </summary>
+    [SerializeField]
+    private ModelSpawnController m_ModelSpawnController;
+
+    /// <summary>
+    /// Selection wheel to select tools.
+    /// </summary>
+    [SerializeField]
+    private SelectionWheel m_ToolWheel;
+
+    /// <summary>
+    /// Selection wheel to select different GUI modes.
+    /// </summary>
+    [SerializeField]
+    private SelectionWheel m_GUIWheel;
 
     /// <summary>
     /// Controllers initialized or not.
@@ -86,7 +141,7 @@ public class InputManager : Singleton<InputManager> {
         Top,
         Bottom,
         None
-    } 
+    }
 
     /// <summary>
     /// Calls the ray cast from the selector tool if it is active.
@@ -100,14 +155,17 @@ public class InputManager : Singleton<InputManager> {
         if (m_SelectorTool.gameObject.activeInHierarchy)
         {
             m_SelectorTool.GetRayFromController();
-           
+
         }
 
         Valve.VR.EVRButtonId mask = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
         VRUILogic.Instance.SetTouchPosition(0, m_SelectorTool.Controller.GetAxis(mask));
-        VRUILogic.Instance.SetTouchPosition(1, m_GUIController.Controller.GetAxis(mask));
-        VRUILogic.Instance.SetTouched(0, m_SelectorTool.Controller.GetTouch(mask));
-        VRUILogic.Instance.SetTouched(1, m_GUIController.Controller.GetTouch(mask));
+        VRUILogic.Instance.SetTouchedInfo(0, m_SelectorTool.Controller.GetTouch(mask));
+        if (m_GUIController)
+        {
+            VRUILogic.Instance.SetTouchPosition(1, m_GUIController.Controller.GetAxis(mask));
+            VRUILogic.Instance.SetTouchedInfo(1, m_GUIController.Controller.GetTouch(mask));
+        }
     }
 
     /// <summary>
@@ -124,9 +182,26 @@ public class InputManager : Singleton<InputManager> {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void GUIControllerSideButtons(object sender, ClickedEventArgs e)
+    public void OnChangeGUITool(object sender, ClickedEventArgs e)
     {
-        RoboyManager.Instance.ResetSimulation();
+        if (m_GUIWheel != null)
+        {
+            m_GUIWheel.gameObject.SetActive(!m_GUIWheel.gameObject.activeSelf);
+        }
+        else if (m_ViewController != null && m_GUIController)
+        {
+            if (m_GUIController.gameObject.activeSelf)
+            {
+                m_GUIController.gameObject.SetActive(false);
+                m_ViewController.gameObject.SetActive(true);
+            }
+            else if (m_ViewController.gameObject.activeSelf)
+            {
+                m_GUIController.gameObject.SetActive(true);
+                m_ViewController.gameObject.SetActive(false);
+            }
+            //RoboyManager.Instance.ResetSimulation();
+        }
     }
 
     /// <summary>
@@ -134,9 +209,14 @@ public class InputManager : Singleton<InputManager> {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void ToolControllerSideButtons(object sender, ClickedEventArgs e)
+    public void OnChangeTool(object sender, ClickedEventArgs e)
     {
-        ModeManager.Instance.ChangeToolMode();
+        if (m_ToolWheel == null)
+            ModeManager.Instance.ChangeToolMode();
+        else
+        {
+            m_ToolWheel.gameObject.SetActive(!m_ToolWheel.gameObject.activeSelf);
+        }
     }
 
     /// <summary>
@@ -172,13 +252,13 @@ public class InputManager : Singleton<InputManager> {
         if (e.controllerIndex.Equals(m_SelectorTool.Controller.index))
         {
             SelectorTool_TouchpadStatus = result;
-        }        
+        }
         else if (e.controllerIndex.Equals(m_GUIController.Controller.index))
-        {         
+        {
             GUIController_TouchpadStatus = result;
             m_GUIController.CheckTouchPad(result);
         }
-            
+
     }
 
     /// <summary>
@@ -187,11 +267,17 @@ public class InputManager : Singleton<InputManager> {
     /// <param name="toolList"></param>
     private void setTools(List<ControllerTool> toolList)
     {
+        List<SelectionWheelPart> toolWheelParts = new List<SelectionWheelPart>();
+        List<SelectionWheelPart> guiWheelParts = new List<SelectionWheelPart>();
         foreach (ControllerTool tool in toolList)
         {
             if (tool is GUIController)
             {
                 m_GUIController = (GUIController)tool;
+            }
+            else if (tool is ModelSpawnController)
+            {
+                m_ModelSpawnController = (ModelSpawnController)tool;
             }
             else if (tool is SelectorTool)
             {
@@ -205,7 +291,44 @@ public class InputManager : Singleton<InputManager> {
             {
                 m_TimeTool = (TimeTool)tool;
             }
+            else if (tool is ViewController)
+            {
+                m_ViewController = (ViewController)tool;
+            }
+            else if (tool is HandTool)
+            {
+                m_HandTool = (HandTool)tool;
+            }
+
+            if (m_ToolWheel)
+            {
+                SelectionWheelPart toolWheelPart;
+                if ((toolWheelPart = tool.gameObject.GetComponent<SelectionWheelPartTool>()) != null)
+                    toolWheelParts.Add(toolWheelPart);
+            }
+            if (m_GUIWheel)
+            {
+                SelectionWheelPart GUIWheelPart;
+                if ((GUIWheelPart = tool.gameObject.GetComponent<SelectionWheelPartGUITool>()) != null)
+                {
+                    guiWheelParts.Add(GUIWheelPart);
+                }
+            }
         }
+
+        if (m_ToolWheel)
+        {
+            m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
+            m_ToolWheel.Initialize(toolWheelParts, 0);
+            m_ToolWheel.gameObject.SetActive(false);
+        }
+        if (m_GUIWheel)
+        {
+            m_GUIWheel.BindController(m_GUIController.ControllerObject);
+            m_GUIWheel.Initialize(guiWheelParts, 0);
+            m_GUIWheel.gameObject.SetActive(false);
+        }
+
     }
 
     /// <summary>
@@ -218,16 +341,41 @@ public class InputManager : Singleton<InputManager> {
         m_ShootingTool.gameObject.SetActive(false);
         m_TimeTool.gameObject.SetActive(false);
 
-        while (m_SelectorTool.ControllerEventListener == null || m_GUIController.ControllerEventListener == null)
+        // right now the tool wheel is only in the RoboyInteractionScene, so we need to be aware of that
+        if (m_ToolWheel)
+        {
+            m_HandTool.gameObject.SetActive(false);
+        }
+
+        SteamVR_RenderModel controllerModel = m_SelectorTool.transform.parent.GetComponentInChildren<SteamVR_RenderModel>();
+        controllerModel.gameObject.SetActive(false);
+
+        //If there is a view controller, disable it.
+        if (m_ViewController != null)
+        {
+            m_ViewController.gameObject.SetActive(false);
+        }
+        //If there is a hand tool, disable it.
+        if (m_HandTool != null)
+        {
+            m_HandTool.gameObject.SetActive(false);
+        }
+        while (m_SelectorTool.ControllerEventListener == null)
             yield return Time.fixedDeltaTime;
 
         m_SelectorTool.ControllerEventListener.PadClicked += GetTouchpadInput;
-        m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
-
-        m_GUIController.ControllerEventListener.Gripped += GUIControllerSideButtons;
+        if (m_GUIController)
+        {
+            m_GUIController.ControllerEventListener.PadClicked += GetTouchpadInput;
+            m_GUIController.ControllerEventListener.Gripped += OnChangeGUITool;
+        }
+        if (m_ModelSpawnController)
+        {
+            m_ModelSpawnController.gameObject.SetActive(false);
+        }
 
         //CHANGE THIS
-        m_SelectorTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
+        m_SelectorTool.ControllerEventListener.Gripped += OnChangeTool;
         //m_ShootingTool.ControllerEventListener.Gripped += ToolControllerSideButtons;
 
         m_Initialized = true;

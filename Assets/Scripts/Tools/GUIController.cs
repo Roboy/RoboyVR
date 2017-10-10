@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VRTK.Examples.Utilities;
 
 /// <summary>
@@ -98,7 +99,8 @@ public class GUIController : ControllerTool {
                 changepanelsToNextMode();
                 break;
             case InputManager.TouchpadStatus.Top:
-                StartCoroutine(changeGUIMode());
+                if(ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer)
+                    StartCoroutine(changeGUIViewerMode());
                 break;
             case InputManager.TouchpadStatus.Bottom:
                 changePageOfPanel();
@@ -164,7 +166,7 @@ public class GUIController : ControllerTool {
     /// </summary>
     private void changePageOfPanel()
     {
-        if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIPanels)
+        if (ModeManager.Instance.CurrentGUIViewerMode == ModeManager.GUIViewerMode.MotorValues)
         {
             List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
             List<RoboyPart> selectedRoboyParts =
@@ -182,7 +184,7 @@ public class GUIController : ControllerTool {
     /// </summary>
     private void changepanelsToNextMode()
     {
-        if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIPanels)
+        if (ModeManager.Instance.CurrentGUIViewerMode == ModeManager.GUIViewerMode.MotorValues)
         {
             // get the selected roboy parts
             List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
@@ -206,7 +208,7 @@ public class GUIController : ControllerTool {
     /// </summary>
     private void changeToPreviousMode()
     {
-        if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIPanels)
+        if (ModeManager.Instance.CurrentGUIViewerMode == ModeManager.GUIViewerMode.MotorValues)
         {
             // get the selected roboy parts 
             List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
@@ -225,10 +227,10 @@ public class GUIController : ControllerTool {
         }
     }
     /// <summary>
-    /// Changes GUI mode between selection and panel mode.
+    /// Changes GUIViewer mode between selection and panel mode.
     /// </summary>
     /// <returns></returns>
-    private IEnumerator changeGUIMode()
+    private IEnumerator changeGUIViewerMode()
     {
         // get the selectet parts
         List<SelectableObject> selectedRoboyPartsOBJ = SelectorManager.Instance.SelectedParts;
@@ -239,7 +241,7 @@ public class GUIController : ControllerTool {
         if (selectedRoboyParts.Count == 0)
             yield break;
         // else check current GUI mode
-        if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.Selection)
+        if (ModeManager.Instance.CurrentGUIViewerMode == ModeManager.GUIViewerMode.Selection)
         {
             // start shrink animation
             yield return StartCoroutine(m_SelectionPanel.shrinkCoroutine());
@@ -260,7 +262,7 @@ public class GUIController : ControllerTool {
 
             m_SelectionPanel.CurrentPanelModeText.text = ModeManager.Instance.CurrentPanelmode.ToString().Replace("_", " ");
         }
-        else if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIPanels)
+        else if (ModeManager.Instance.CurrentGUIViewerMode == ModeManager.GUIViewerMode.MotorValues)
         {
             // fade out the ui panels
             foreach (var roboyPart in selectedRoboyParts)
@@ -275,7 +277,7 @@ public class GUIController : ControllerTool {
             m_SelectionPanel.Enlarge();
         }
         // update GUI mode in modemanager
-        ModeManager.Instance.ChangeGUIMode();
+        ModeManager.Instance.ChangeGUIViewerMode();
     }
 
 

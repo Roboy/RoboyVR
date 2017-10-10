@@ -47,8 +47,9 @@ Shader "ZED/ZED_PreviewShader"
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 color = tex2D(_MainTex, i.uv);
-				//To deal with gamma linear space
-				color =  pow(color, 1/ _Color_Booster);
+			if (!IsGammaSpace()) {
+				color.rgb = LinearToGammaSpace(color.rgb);
+			}
 				return fixed4(color.rgb, 1);
 			}
 			ENDCG

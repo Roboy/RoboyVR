@@ -7,6 +7,18 @@ public class ZEDManagerVR : MonoBehaviour
     /// Current instance of the ZED Camera
     /// </summary>
     private sl.ZEDCamera zedCamera;
+
+
+    [Header("Camera")]
+    /// <summary>
+    /// Enable grab threading
+    /// </summary>
+    [HideInInspector]
+    [Tooltip("Thread grab calls. May increase performance for multi-core processors.")]
+    public bool multithreading = false;
+
+    [Header("Motion Tracking")]
+
     /// <summary>
     /// Enable positional tracking
     /// </summary>
@@ -20,6 +32,8 @@ public class ZEDManagerVR : MonoBehaviour
     private Vector3 position;
 
     private bool tracking = true;
+    private bool isThreaded = false;
+
 
 
     Vector3 destination = new Vector3();
@@ -76,8 +90,9 @@ public class ZEDManagerVR : MonoBehaviour
         {
             throw new Exception("Initialization failed " + e.ToString());
         }
-      
-        
+
+
+        ZEDUpdater.GetInstance().SetMultiThread(isThreaded);
 
         if (ZedSVOManager != null)
         {
@@ -154,19 +169,15 @@ public class ZEDManagerVR : MonoBehaviour
 
         Quaternion diffRotation = Quaternion.identity;
         Quaternion rotationHMD = Quaternion.identity;
-      
+
         Quaternion orientationPose = Quaternion.identity;
         //Get the pose with an offset
-
         Vector3 world_pose_translation = new Vector3();
         Vector3 camera_pose_translation = new Vector3();
-
         // Get motion tracking in camera reference frame (current position regarding previous camera position)
         zedCamera.GetPosition(ref orientationPose, ref position, sl.REFERENCE_FRAME.CAMERA);
-
         // Get motion tracking in a target frame that may be different from the camera reference frame.
-        zedCamera.GetPosition(ref orientationPose, ref camera_pose_translation, ref diffRotation, ref posNulle,  sl.REFERENCE_FRAME.CAMERA);
-
+        zedCamera.GetPosition(ref orientationPose, ref camera_pose_translation, ref diffRotation, ref posNulle, sl.REFERENCE_FRAME.CAMERA);
         // Get motion tracking in world reference frame.
         zedCamera.GetPosition(ref orientation, ref world_pose_translation, sl.REFERENCE_FRAME.WORLD);
         if (headset)
@@ -181,46 +192,39 @@ public class ZEDManagerVR : MonoBehaviour
         {
             cumul += rotationHMD * position;
         }
-
         if (Mathf.Abs(position.y - camera_pose_translation.y) > 0.05)
         {
             Vector3 correctionPos = position;
             correctionPos.x = 0;
             correctionPos.z = 0;
-
             destination = cumul;
             destination.y = world_pose_translation.y;
             start = cumul;
-
             distance = (destination - start);
             numberTick = 3 * (int)(1.0f / Time.deltaTime);
         }
-
         if (trackingTranslation)
         {
             acceleration = new Vector3();
-
             acceleration = position - previousPose;
             acceleration.y = 0;
             Quaternion d = previousQuaternion * Quaternion.Inverse(rotationHMD);
             Vector3 diffRotationHMD = new Vector4(d.x, d.y, d.z);
             if (numberTick > 0)
             {
-                if (acceleration.magnitude >= magnitudeAcc || diffRotationHMD.magnitude > 0.007)
+                if (acceleration.magnitude >= magnitudeAcc || diffRotationHMD.magnitude > 0.008)
                 {
                     cumul += distance / numberTick;
                     start = cumul;
                     destination.x = cumul.x;
-                    destination.z = cumul.z;   
+                    destination.z = cumul.z;
                     distance = (destination - start);
-
                     numberTick--;
                 }
             }
         }
         previousPose = position;
         previousQuaternion = rotationHMD;
-
         Vector3 transformV = cumul;
         Quaternion transformQ = orientation;
         sl.ZEDCamera.TransformPose(ref transformQ, ref transformV, ref diffRotation, ref cameraHeadOffset);
@@ -231,34 +235,47 @@ public class ZEDManagerVR : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnEnable()
+    {
+        ZEDUpdater.OnGrab += OnGrab;
+    }
+
+    public void OnDisable()
+    {
+        ZEDUpdater.OnGrab -= OnGrab;
+    }
+    void OnGrab()
     {
         if (zedCamera != null)
         {
-            if (zedCamera.Grab(sl.SENSING_MODE.STANDARD) == 0)
+
+            UpdateTracking();
+        }
+
+        if (ZedSVOManager != null)
+        {
+            if (ZedSVOManager.record)
             {
-                UpdateTracking();
+                zedCamera.Record();
             }
 
-            if (ZedSVOManager != null)
+            if (ZedSVOManager.read && ZedSVOManager.loop)
             {
-                if (ZedSVOManager.record)
+                if (zedCamera.GetSVOPosition() >= zedCamera.GetSVONumberOfFrames() - 2)
                 {
-                    zedCamera.Record();
-                }
-
-                if (ZedSVOManager.read && ZedSVOManager.loop)
-                {
-                    // if we reached end of the file, loop at the beginning of the SVO file
-                    if (zedCamera.GetSVOPosition() >= zedCamera.GetSVONumberOfFrames() - 2)
-                    {
-                        zedCamera.SetSVOPosition(0);
-                    }
+                    zedCamera.SetSVOPosition(0);
                 }
             }
         }
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        ZEDUpdater.GetInstance().Update(sl.SENSING_MODE.STANDARD, true);
+    }
+
+
 
     void OnApplicationQuit()
     {
@@ -266,13 +283,11 @@ public class ZEDManagerVR : MonoBehaviour
         {
             if (ZedSVOManager != null)
             {
-                // If recording module was activated, disable it to "close" the SVO file
                 if (ZedSVOManager.record)
                 {
                     zedCamera.DisableRecording();
                 }
             }
-            //Destroy the ZED Camera plugin
             zedCamera.Destroy();
         }
         zedCamera = null;

@@ -1,44 +1,31 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using System.Globalization;
 
 [ExecuteInEditMode]
-public class MeshUpdater : MonoBehaviour {
-
-    /// <summary>
-    /// State enum to track the current state of the mesh updater
-    /// </summary>
-    public enum State
-    {
-        None = 0,
-        Initialized = 1,
-        BlenderPathSet = 2,
-        Scanned = 3,
-        Downloaded = 4
-    }
+public class MeshUpdater : MonoBehaviour
+{
 
     /// <summary>
     /// Github repository of the roboy models.
     /// </summary>
     public string Github_Repository = @"https://github.com/Roboy/roboy_models/";
 
-    public string Branch = "master";
+    public string Branch = "VRTeam";
+
 
     /// <summary>
-    /// Path to blender.exe. Is set via the user via a file selection through the file explorer.
+    /// Public property for the editor script
     /// </summary>
     [HideInInspector]
-    public string PathToBlender {
-        get { return m_PathToBlender; }
-        set {
-                m_PathToBlender =  value;
-                m_CurrentState = (State) Mathf.Max((int)State.BlenderPathSet, (int)m_CurrentState);
-        }
-    }
+    public UpdaterUtility.State ModelsCurrentState = UpdaterUtility.State.None;
+
     /// <summary>
     /// Public property of the URL Dic for the editor script
     /// </summary>
@@ -50,36 +37,6 @@ public class MeshUpdater : MonoBehaviour {
     public Dictionary<string, bool> ModelChoiceDictionary = new Dictionary<string, bool>();
 
     /// <summary>
-    /// Public property for the editor script
-    /// </summary>
-    public State CurrentState { get { return m_CurrentState; } }
-
-    /// <summary>
-    /// Current state of the meshupdater
-    /// </summary>
-    private State m_CurrentState = State.None;
-
-    /// <summary>
-    /// Private variable for the blender path to encapsulate the get and set in a property instead of a function.
-    /// </summary>
-    private string m_PathToBlender;
-
-    /// <summary>
-    /// This should be the path to the "MeshDownloader". It is located in the ExternalTools directory.
-    /// </summary>
-    private string m_PathToDownloadScript;
-
-    /// <summary>
-    /// This should be the path to the "MeshScanner". It is located in the ExternalTools directory.
-    /// </summary>
-    private string m_PathToScanScript;
-
-    /// <summary>
-    /// Cached variable of the projects assets directory.
-    /// </summary>
-    private string m_ProjectFolder;
-
-    /// <summary>
     /// Stores all model "Titles + URLs"
     /// </summary>
     private Dictionary<string, string> m_URLDictionary = new Dictionary<string, string>();
@@ -89,8 +46,10 @@ public class MeshUpdater : MonoBehaviour {
     /// </summary>
     private List<string> m_ModelNames = new List<string>();
 
+
     // Use this for initialization
-    void Awake () {
+    void Awake()
+    {
         Initialize();
     }
 
@@ -99,11 +58,12 @@ public class MeshUpdater : MonoBehaviour {
     /// </summary>
     public void Initialize()
     {
-        m_ProjectFolder = Application.dataPath;
-        m_PathToDownloadScript = m_ProjectFolder + @"/ExternalTools/ModelDownloader.py";
-        m_PathToScanScript = m_ProjectFolder + @"/ExternalTools/ModelScanner.py";
-   
-        showWarnings();
+        UpdaterUtility.ProjectFolder = Application.dataPath;
+        UpdaterUtility.PathToDownloadScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelDownloader.py";
+        UpdaterUtility.PathToScanScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelScanner.py";
+        UpdaterUtility.PathToSDFreader = UpdaterUtility.ProjectFolder + @"/ExternalTools/SDF_reader.py";
+
+        UpdaterUtility.showWarnings();
     }
 
     /// <summary>
@@ -111,11 +71,11 @@ public class MeshUpdater : MonoBehaviour {
     /// </summary>
     public void Scan()
     {
-        string[] scanArguments = { "python", m_PathToScanScript, Github_Repository + @"tree/" +Branch };
+        string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, Github_Repository + @"tree/" + Branch };
         CommandlineUtility.RunCommandLine(scanArguments);
         // to do whether scan file exists and is right
         // check whether file exists
-        string pathToScanFile = m_ProjectFolder + @"/tempModelURLs.txt";
+        string pathToScanFile = UpdaterUtility.ProjectFolder + @"/tempModelURLs.txt";
         if (!File.Exists(pathToScanFile))
         {
             Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
@@ -156,7 +116,7 @@ public class MeshUpdater : MonoBehaviour {
         {
             ModelChoiceDictionary.Add(urlDicEntry.Key, false);
         }
-        m_CurrentState = State.Scanned;
+        ModelsCurrentState = UpdaterUtility.State.Scanned;
     }
 
     /// <summary>
@@ -164,18 +124,18 @@ public class MeshUpdater : MonoBehaviour {
     /// </summary>
     public void UpdateModels()
     {
-        string pathToOriginModels = m_ProjectFolder + @"/SimulationModels/";
+        string pathToOriginModels = UpdaterUtility.ProjectFolder + @"/SimulationModels/";
         //var processInfo = new ProcessStartInfo("cmd.exe", "/C" + "start \"\" \"" + m_PathToBlender + "\" -P \"" + m_PathToDownloadScript + "\" \"" + pathToMeshes + "\" \"" + m_pathToProjectModels + "\" \"\"");
         //UnityEngine.Debug.Log("Run not implemented yet!");
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
         {
-            string[] scanArguments = { "python", m_PathToScanScript, m_URLDictionary[urlEntry.Key] };
+            string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, m_URLDictionary[urlEntry.Key] };
             CommandlineUtility.RunCommandLine(scanArguments);
             //Debug.Log(m_URLDictionary[urlEntry.Key]);
 
-            string pathToScanFile = m_ProjectFolder + @"/tempModelURLs.txt";
+            string pathToScanFile = UpdaterUtility.ProjectFolder + @"/tempModelURLs.txt";
             if (!File.Exists(pathToScanFile))
             {
                 Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
@@ -200,59 +160,142 @@ public class MeshUpdater : MonoBehaviour {
                 {
                     Debug.Log("Link does not have the github repository!");
                     continue;
-                }             
+                } 
 
                 //replace "tree" with "raw" in URL
                 var regex = new Regex(Regex.Escape("tree"));
                 titleURL[1] = regex.Replace(titleURL[1], "raw", 1);
 
+                //replace "tree" with "raw" in URL
+                var regex1 = new Regex(Regex.Escape("tree"));
+                string tempModelURL = regex.Replace(m_URLDictionary[urlEntry.Key], "raw", 1);
+
                 //start modeldownloader.py for visual
-                string[] updateArgumentsVis = { "start \"\" \"" + m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/visual/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/visual", "" };
+                string[] updateArgumentsXML = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, tempModelURL + @"/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels", "" };
+                CommandlineUtility.RunCommandLine(updateArgumentsXML);
+
+                //start modeldownloader.py for visual
+                string[] updateArgumentsVis = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, titleURL[1] + @"/visual/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/visual", "" };
                 CommandlineUtility.RunCommandLine(updateArgumentsVis);
 
                 //start modeldownloader.py for collision
-                string[] updateArgumentsCol = { "start \"\" \""+ m_PathToBlender + "\" -P", m_PathToDownloadScript, titleURL[1] + @"/collision/", m_ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/collision", "" };
+                string[] updateArgumentsCol = { "start \"\" \"" + UpdaterUtility.PathToBlender + "\" -P", UpdaterUtility.PathToDownloadScript, titleURL[1] + @"/collision/", UpdaterUtility.ProjectFolder + @"/SimulationModels/" + urlEntry.Key + @"/OriginModels/collision", "" };
                 CommandlineUtility.RunCommandLine(updateArgumentsCol);
 
-                if (!m_ModelNames.Contains(urlEntry.Key)) {
-                    m_ModelNames.Add(urlEntry.Key);                               
+                if (!m_ModelNames.Contains(urlEntry.Key))
+                {
+                    m_ModelNames.Add(urlEntry.Key);
                 }
             }
-            m_CurrentState = State.Downloaded;
-        }  
+            if (File.Exists(pathToOriginModels + urlEntry.Key + @"/OriginModels/model.sdf"))
+            {
+                Debug.Log("model.sdf found!");
+                // read .sdf file
+                string[] argumentsSDFreader = { "python \"" + UpdaterUtility.PathToSDFreader + "\"", pathToOriginModels + urlEntry.Key + @"/OriginModels/model.sdf" };
+                CommandlineUtility.RunCommandLine(argumentsSDFreader);
+            }
+            else
+            {
+                Debug.LogWarning("model.sdf not found!");
+            }
+
+            ModelsCurrentState = UpdaterUtility.State.Downloaded;
+        }
     }
 
     /// <summary>
     /// Creates prefabs for every model which were downloaded. 
     /// </summary>
-    public void CreatePrefab() {
+    public void CreatePrefab()
+    {
         foreach (string modelName in m_ModelNames)
-        {   
-            string absoluteModelPath = m_ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
-            //Create GameObject where everything will be attached
-            GameObject modelParent = new GameObject(modelName);
+        {
+            string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/temp" + modelName + "SDFs.txt";
+            if (!File.Exists(pathToSDFFile))
+            {
+                Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+                return;
+            }
+            // get file content of format title:url
+            string[] sdfContent = File.ReadAllLines(pathToSDFFile);
+
+            File.Delete(pathToSDFFile);
+            List<string[]> linkList = new List<string[]>();
+
+            foreach (string line in sdfContent)
+            {
+                string[] SDFline = line.Split(';');
+                linkList.Add(SDFline);
+
+            }
+
+
+            GameObject modelParent = null;
+            string absoluteModelPath = UpdaterUtility.ProjectFolder + @"/SimulationModels/" + modelName + "/OriginModels";
+            for (int i = 0; i < linkList.Count; i++)
+            //foreach (string[] line in linkList)
+            {
+                if (linkList[i][0] == "model_name")
+                {
+                    //Create GameObject where everything will be attached
+                    modelParent = new GameObject(linkList[i][1]);
+                    linkList.Remove(linkList[i]);
+                    //continue;
+                }
+            }
 
 
             //List for all downloaded visuals
             List<string> visMeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                visMeshList = getFilePathsFBX(absoluteModelPath + @"/visual");
+                visMeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath + @"/visual");
             }
 
             //List for all downloaded colliders
             List<string> colMeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                colMeshList = getFilePathsFBX(absoluteModelPath + @"/collision");
+                colMeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath + @"/collision");
             }
 
             foreach (string name in visMeshList)
             {
+                string[] currentLine = null;
+                foreach (string[] line in linkList)
+                {
+                    for (int j = 0; j < line.Length; j++)
+                    {
+                        string name1 = name.Replace(".fbx", "");
+                        Debug.Log(name1 +" : " + name);
+                        if (line[j].Contains(name1))
+                        {
+                            currentLine = line;
+                            Debug.Log(currentLine.Length);
+                        }
+                                                 
+                    }
+                }
+                string[] pose = null;
+                string[] VIS_scale = null;
+                //string[] COL_scale = null;
+                for (int i = 0; i < currentLine.Length; i++) {
+                    if (currentLine[i].Contains("link_pose")) {
+                        pose = currentLine[i + 1].Split(' ');
+                    }
+                    if (currentLine[i].Contains("VIS_mesh_scale")) {
+                        VIS_scale = currentLine[i + 1].Split(' ');
+                    }
+                    //if (currentLine[i].Contains("COL_mesh_scale"))
+                    //{
+                    //    COL_scale = currentLine[i + 1].Split(' ');
+                    //}
+                }
+
                 GameObject meshPrefab = null;
                 string relativeModelPath = "Assets/SimulationModels/" + modelName + "/OriginModels/";
                 // import Mesh
-                meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + @"visual/" + name, typeof(Object));
+                meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(relativeModelPath + @"visual/" + name, typeof(UnityEngine.Object));
                 //StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
                 if (meshPrefab == null)
                 {
@@ -261,8 +304,30 @@ public class MeshUpdater : MonoBehaviour {
                 }
 
                 GameObject meshCopy = Instantiate(meshPrefab);
+                Debug.Log(pose.Length);
                 meshCopy.tag = "RoboyPart";
-                attachCollider(meshCopy, relativeModelPath, name);
+
+                meshCopy.transform.position = GazeboUtility.GazeboPositionToUnity(new Vector3(  float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                float.Parse(pose[1], CultureInfo.InvariantCulture.NumberFormat), 
+                                                                                                float.Parse(pose[2], CultureInfo.InvariantCulture.NumberFormat)));
+                meshCopy.transform.eulerAngles = GazeboUtility.GazeboPositionToUnity(new Vector3(   Mathf.Rad2Deg*float.Parse(pose[3], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    Mathf.Rad2Deg * float.Parse(pose[4], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    Mathf.Rad2Deg * float.Parse(pose[5], CultureInfo.InvariantCulture.NumberFormat)));
+                if (VIS_scale != null) {
+                    meshCopy.transform.localScale = GazeboUtility.GazeboPositionToUnity(new Vector3(100 * float.Parse(VIS_scale[0], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    100 * float.Parse(VIS_scale[1], CultureInfo.InvariantCulture.NumberFormat),
+                                                                                                    100 * float.Parse(VIS_scale[2], CultureInfo.InvariantCulture.NumberFormat)));
+                }
+
+                UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
+                
+                
+
+                var regex1 = new Regex(Regex.Escape("(Clone)"));
+                meshCopy.name = regex1.Replace(meshCopy.name, "", 1);
+
+                var regex2 = new Regex(Regex.Escape("VIS_"));
+                meshCopy.name = regex2.Replace(meshCopy.name, "", 1);
 
                 SelectableObject selectableObjectComponent = meshCopy.AddComponent<SelectableObject>();
                 selectableObjectComponent.TargetedMaterial = Resources.Load("RoboyMaterials/TargetedMaterial") as Material;
@@ -275,13 +340,15 @@ public class MeshUpdater : MonoBehaviour {
             modelParent.tag = "Roboy";
 
             //Create Prefab of existing GO
-            Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
+            UnityEngine.Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/SimulationModels/" + modelName + "/" + modelName + ".prefab");
             PrefabUtility.ReplacePrefab(modelParent, prefab, ReplacePrefabOptions.ConnectToPrefab);
             //Destroy GO after prefab is created
             DestroyImmediate(modelParent);
         }
         m_ModelNames.Clear();
     }
+}
+
 
     ///// <summary>
     ///// Tries to import the model in the given path. Does not work like intended cause of reasons.
@@ -309,73 +376,3 @@ public class MeshUpdater : MonoBehaviour {
     //    }
     //}
 
-    /// <summary>
-    /// Returns fbx file paths in the given directory.
-    /// </summary>
-    /// <param name="sDir">The directory you want to search.</param>
-    /// <returns>List of all fbx file paths.</returns>
-    private List<string> getFilePathsFBX(string sDir)
-    {
-        List<string> files = new List<string>();
-        {
-            foreach (string f in Directory.GetFiles(sDir))
-            {   
-                if(Path.GetExtension(f) == ".fbx")
-                    files.Add(Path.GetFileName(f));
-            }
-        }
-        return files;
-    }
-
-    /// <summary>
-    /// Attaches a collider to the given gameObject.
-    /// </summary>
-    /// <param name="meshGO">The gameObject you want to attach the colliders on.</param>
-    /// <param name="path">The path of the parent object in the Origin folder.</param>
-    /// <param name="modelName">The actual name of the visual model.</param>
-    private void attachCollider(GameObject meshGO, string path, string modelName)
-    {
-        // replace name from visual to collision
-        modelName = modelName.Replace("VIS_", "COL_");
-        // get the object which serves as mesh collider
-        GameObject colliderPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(path + @"collision/" + modelName, typeof(Object));
-
-        if (colliderPrefab == null)
-        {
-            Debug.Log("Did not found a collider object for mesh: " + modelName);
-            return;
-        }
-        // go through each mesh filter and add all mesh references as mesh colliders to the gameObject
-        List<MeshFilter> collRenderers = colliderPrefab.GetComponentsInChildren<MeshFilter>().ToList();
-
-        foreach (MeshFilter collRenderer in collRenderers)
-        {
-            MeshCollider meshCollider = meshGO.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = collRenderer.sharedMesh;
-        }
-    }
-
-    /// <summary>
-    /// Shows warnings for each python script.
-    /// </summary>
-    private void showWarnings()
-    {
-        if (File.Exists(m_PathToDownloadScript))
-        {
-            Debug.Log("Download script found!");
-        }
-        else
-        {
-            Debug.LogWarning("Download script not found!");
-        }
-
-        if (File.Exists(m_PathToScanScript))
-        {
-            Debug.Log("Scan script found!");
-        }
-        else
-        {
-            Debug.LogWarning("Scan script not found!");
-        }
-    }
-}
