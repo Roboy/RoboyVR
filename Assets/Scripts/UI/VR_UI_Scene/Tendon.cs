@@ -71,9 +71,10 @@ public class Tendon : MonoBehaviour
     /// </summary>
     void Update()
     {
+        if (m_Wirepoints == null) return;
         for (int i = 0; i < m_Wirepoints.Length; i++)
         {
-            if (m_Wirepoints[i].hasChanged)
+            if (m_Wirepoints[i] && m_Wirepoints[i].hasChanged)
             {
                 UpdateTendons();
                 for (int j = i; j < m_Wirepoints.Length; j++)
@@ -132,6 +133,7 @@ public class Tendon : MonoBehaviour
             if (!parent)
             {
                 Debug.Log("[Tendon] Parent with name " + objectNames[i] + " could not be located. Tendons won't move with obj.");
+                p.transform.SetParent(VRUILogic.Instance.GetDefaultWirepointContainer().transform);
             }
             else
             {
@@ -191,10 +193,13 @@ public class Tendon : MonoBehaviour
     /// </summary>
     private void UpdateTendons()
     {
+        if (m_Wirepoints == null)
+            return;
         Vector3[] positions = new Vector3[m_Wirepoints.Length];
         for (int i = 0; i < m_Wirepoints.Length; i++)
         {
-            positions[i] = m_Wirepoints[i].position;
+            if (m_Wirepoints[i])
+                positions[i] = m_Wirepoints[i].position;
         }
         m_LineRenderer.SetPositions(positions);
     }

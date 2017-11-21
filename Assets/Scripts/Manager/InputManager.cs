@@ -122,16 +122,6 @@ public class InputManager : Singleton<InputManager>
     private bool m_Initialized = false;
 
     /// <summary>
-    /// Touchpad status of the controller where selector tool is attached to.
-    /// </summary>
-    public TouchpadStatus SelectorTool_TouchpadStatus { get; private set; }
-
-    /// <summary>
-    /// Touchpad status of the controller where gui controller tool is attached to.
-    /// </summary>
-    public TouchpadStatus GUIController_TouchpadStatus { get; private set; }
-
-    /// <summary>
     /// Possible touchpad positions.
     /// </summary>
     public enum TouchpadStatus
@@ -173,7 +163,7 @@ public class InputManager : Singleton<InputManager>
     /// </summary>
     public void Initialize(List<ControllerTool> toolList)
     {
-        setTools(toolList);
+        SetTools(toolList);
         StartCoroutine(initControllersCoroutine());
     }
 
@@ -214,8 +204,10 @@ public class InputManager : Singleton<InputManager>
         if (m_ToolWheel == null)
             ModeManager.Instance.ChangeToolMode();
         else
-        {
-            m_ToolWheel.gameObject.SetActive(!m_ToolWheel.gameObject.activeSelf);
+        { //activate or deactivate tool wheel depending on previous state
+            bool previousState = m_ToolWheel.gameObject.activeSelf;
+            m_ToolWheel.gameObject.SetActive(!previousState);
+            VRUILogic.Instance.SetToolWheelState(!previousState);
         }
     }
 
@@ -248,14 +240,9 @@ public class InputManager : Singleton<InputManager>
             else
                 result = TouchpadStatus.Bottom;
         }
-
-        if (e.controllerIndex.Equals(m_SelectorTool.Controller.index))
+        
+        if (e.controllerIndex.Equals(m_GUIController.Controller.index))
         {
-            SelectorTool_TouchpadStatus = result;
-        }
-        else if (e.controllerIndex.Equals(m_GUIController.Controller.index))
-        {
-            GUIController_TouchpadStatus = result;
             m_GUIController.CheckTouchPad(result);
         }
 
@@ -265,7 +252,7 @@ public class InputManager : Singleton<InputManager>
     /// Set all tools depending on their type to the respective variable.
     /// </summary>
     /// <param name="toolList"></param>
-    private void setTools(List<ControllerTool> toolList)
+    private void SetTools(List<ControllerTool> toolList)
     {
         List<SelectionWheelPart> toolWheelParts = new List<SelectionWheelPart>();
         List<SelectionWheelPart> guiWheelParts = new List<SelectionWheelPart>();

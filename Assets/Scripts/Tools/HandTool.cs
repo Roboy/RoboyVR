@@ -81,4 +81,22 @@ public class HandTool : ControllerTool {
         ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
         ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
     }
+
+    /*
+    public void GrabRoboy()
+    {
+        RoboyPart roboyPart;
+        // If the hitted object is roboy
+        if ((roboyPart = collision.gameObject.GetComponent<RoboyPart>()) != null)
+        {
+            // Transform the position to roboy space
+            Vector3 forcePosition = collision.transform.InverseTransformPoint(transform.position);
+            // transform the direction to roboy space
+            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 1500);
+            int duration = 200;
+            // trigger the message in RoboyManager
+            RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
+        }
+
+    }*/
 }

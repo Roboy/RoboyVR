@@ -104,10 +104,10 @@ public class ZEDManagerVR : MonoBehaviour
                 }
             }
         }
-        if (UnityEngine.VR.VRSettings.enabled)
+        if (UnityEngine.XR.XRSettings.enabled)
         {
             headset = true;
-            UnityEngine.VR.InputTracking.Recenter();
+            UnityEngine.XR.InputTracking.Recenter();
         }
         else
         {
@@ -126,9 +126,9 @@ public class ZEDManagerVR : MonoBehaviour
         if (tracking)
         {
 #if UNITY_5_5_OR_NEWER
-            if (UnityEngine.VR.VRSettings.isDeviceActive)
+            if (UnityEngine.XR.XRSettings.isDeviceActive)
             {
-                Quaternion quat = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head);
+                Quaternion quat = UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);
                 Vector3 vec = new Vector3(0, 0, 0);
                 if (!(tracking = (zedCamera.EnableTracking(ref quat, ref vec, true) == sl.ERROR_CODE.SUCCESS)))
                 {
@@ -182,7 +182,7 @@ public class ZEDManagerVR : MonoBehaviour
         zedCamera.GetPosition(ref orientation, ref world_pose_translation, sl.REFERENCE_FRAME.WORLD);
         if (headset)
         {
-            rotationHMD = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head);
+            rotationHMD = UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);
         }
         else
         {

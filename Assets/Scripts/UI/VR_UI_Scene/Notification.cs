@@ -258,7 +258,6 @@ public class Notification : MonoBehaviour
         {
             m_BodyPart = obj.gameObject;
         }
-        else Debug.Log(" NOTHING FOUND");
     }
     #endregion
 }

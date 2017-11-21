@@ -84,7 +84,7 @@ public class ZEDManager : MonoBehaviour
 
             if (isThreaded != multithreading)
             {
-                if (tracking && UnityEngine.VR.VRSettings.enabled && multithreading)
+                if (tracking && UnityEngine.XR.XRSettings.enabled && multithreading)
                 {
                     Debug.Log("[ZED Plugin] : Multi-threading is deactivated with VR");
                     multithreading = false;
@@ -189,7 +189,7 @@ public class ZEDManager : MonoBehaviour
     private void Start()
     {
 
-        if (tracking && UnityEngine.VR.VRSettings.enabled && multithreading)
+        if (tracking && UnityEngine.XR.XRSettings.enabled && multithreading)
         {
             multithreading = false;
             isThreaded = false;

@@ -266,7 +266,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         m_CurrentAngleY = m_Cam.transform.eulerAngles.y;
 
         // Move roboy accordingly to headset movement
-        Quaternion headRotation = InputTracking.GetLocalRotation(VRNode.Head);
+        Quaternion headRotation = UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
 
         // Publish position to gazebo

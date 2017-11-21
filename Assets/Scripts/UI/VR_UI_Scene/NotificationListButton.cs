@@ -80,6 +80,8 @@ public class NotificationListButton : MonoBehaviour
         {
             infoScreen = Instantiate(m_AdditionalNotificationInfoPrefab);
             infoScreen.name = "AdditionalInfoScreen";
+            //dont link to this item (will be destroyed automatically over timme) but use container
+            infoScreen.transform.SetParent(transform.parent);
         }
         infoScreen.GetComponentInChildren<AdditionalInfoScreenManager>().Setup(m_Note);
     }

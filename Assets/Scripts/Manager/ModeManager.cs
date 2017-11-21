@@ -11,7 +11,8 @@ using System;
 /// - Current GUI mode: selection vs. GUI panels
 /// - Current panel mode: motorforce, motorvoltage etc.
 /// </summary>
-public class ModeManager : Singleton<ModeManager> {
+public class ModeManager : Singleton<ModeManager>
+{
 
     /// <summary>
     /// We change between Single view where we can choose only one objet at a time and comparison view with three maximum objects at a time.
@@ -86,7 +87,8 @@ public class ModeManager : Singleton<ModeManager> {
     /// <summary>
     /// Current view mode, READ ONLY.
     /// </summary>
-    public Viewmode CurrentViewmode {
+    public Viewmode CurrentViewmode
+    {
         get { return m_CurrentViewmode; }
     }
 
@@ -117,7 +119,7 @@ public class ModeManager : Singleton<ModeManager> {
     /// </summary>
     public ToolMode CurrentToolMode
     {
-        get { return m_CurrentToolMode;}
+        get { return m_CurrentToolMode; }
     }
 
     /// <summary>
@@ -174,7 +176,7 @@ public class ModeManager : Singleton<ModeManager> {
         {
             m_CurrentViewmode = Viewmode.Single;
             SelectorManager.Instance.MaximumSelectableObjects = 1;
-        }  
+        }
     }
 
     /// <summary>
@@ -267,7 +269,7 @@ public class ModeManager : Singleton<ModeManager> {
     /// </summary>
     public void ChangePanelModeNext()
     {
-        m_CurrentPanelmode =  (Panelmode)((int) (m_CurrentPanelmode+1) % Enum.GetNames(typeof(Panelmode)).Length);
+        m_CurrentPanelmode = (Panelmode)((int)(m_CurrentPanelmode + 1) % Enum.GetNames(typeof(Panelmode)).Length);
     }
 
     /// <summary>
@@ -282,7 +284,7 @@ public class ModeManager : Singleton<ModeManager> {
         else
         {
             m_CurrentPanelmode--;
-        }     
+        }
     }
 
     /// <summary>
@@ -320,8 +322,10 @@ public class ModeManager : Singleton<ModeManager> {
                 break;
             default:
                 Debug.Log("Tool mode: " + tool + " not implemented!");
-                break;
+                return;
         }
+        if (state) //update tool mode in case this tool is active, ignore  otherwise
+            VRUILogic.Instance.SetToolMode(tool);
     }
 
     private void changeGUIToolStatus(GUIMode mode, bool state)

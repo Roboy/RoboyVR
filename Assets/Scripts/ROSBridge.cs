@@ -78,7 +78,7 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// <param name="rosObject"></param>
     public void AddROSActor(ROSObject rosObject)
     {
-        if (!m_ROSInitialized)
+        if (!m_ROSInitialized || m_ROS == null)
         {
             // add the cached rosobjects so we can add them later
             m_ROSObjectsToAdd.Add(rosObject);
@@ -139,7 +139,7 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// </summary>
     private void Update()
     {
-        if (!m_ROSInitialized)
+        if (!m_ROSInitialized || m_ROS == null)
             return;
 
         m_ROS.Render();

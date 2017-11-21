@@ -71,7 +71,10 @@ public class SelectorTool : ControllerTool
             switch (hit.transform.tag)
             {
                 case "RoboyUI": // if the ray hits an UI component then retrieve the roboy part from RoboyManager
-                    hittedObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
+                    try
+                    {
+                        hittedObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
+                    } catch { }
                     break;
                 case "UIButton":
                     Button b_pressed = hit.collider.GetComponent<Button>();

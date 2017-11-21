@@ -59,9 +59,25 @@ public class VRUILogic : Singleton<VRUILogic>
     /// </summary>
     [SerializeField]
     private GameObject m_Roboy;
+
+    /// <summary>
+    /// Gameobject which contains all UI components
+    /// </summary>
+    [SerializeField]
+    private GameObject m_UIComponents;
     #endregion
 
     #region userInpur Related
+    /// <summary>
+    /// Contains the mode of the currently selected tool the user works with
+    /// </summary>
+    private ModeManager.ToolMode m_ToolMode;
+
+    /// <summary>
+    /// Specifies whether user is currently changing his tool (hand, time tool, pointer ....) or not
+    /// </summary>
+    private bool m_UserIsSelectingTool;
+
     /// <summary>
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
@@ -154,6 +170,10 @@ public class VRUILogic : Singleton<VRUILogic>
     private GameObject m_TendonContainer;
 
     /// <summary>
+    /// This container holds references to all wirepoints which could not be matched to their respective Roboy part.
+    /// </summary>
+    private GameObject m_WirepointContainer;
+    /// <summary>
     /// List containing all registered tendons 
     /// </summary>
     private List<Tendon> m_Tendons = new List<Tendon>();
@@ -189,21 +209,54 @@ public class VRUILogic : Singleton<VRUILogic>
             box.material = m_Skybox;
         }
         //notifications
-        m_NotificationsContainer = new GameObject();
-        m_NotificationsContainer.name = "NotificationContainer";
+        m_NotificationsContainer = new GameObject("NotificationContainer");
+        m_NotificationsContainer.transform.SetParent(m_UIComponents.transform);
         //tendons
-        m_TendonContainer = new GameObject();
-        m_TendonContainer.name = "TendonContainer";
+        m_TendonContainer = new GameObject("TendonContainer");
         if (m_Modes != null && m_Modes.Length > ((int)UIMode.Middleware))
         {
             Debug.Log("Tendoncontainer set as child obj");
             m_TendonContainer.transform.SetParent(m_Modes[(int)UIMode.Middleware].transform);
         }
+        //Wirepoints of tendons
+        m_WirepointContainer = new GameObject("WirepointDefaultContainer");
+        m_WirepointContainer.transform.SetParent(m_UIComponents.transform);
     }
     #endregion
 
     #region PUBLIC_METHODS
     #region Other
+
+    /// <summary>
+    /// Sets, whether the user currently changes his tool (time/selector/hand ...) or if he is not changing it
+    /// </summary>
+    /// <param name="state"></param>
+    public void SetToolWheelState(bool state)
+    {
+        m_UserIsSelectingTool = state;
+        if (state) //if currently selecting, disable UI to have less obstacles and objects while selecting
+            SetUserInterfaceComponentsState(false);
+        else if(m_ToolMode == ModeManager.ToolMode.SelectorTool)
+        {
+            SetUserInterfaceComponentsState(true);
+        }
+    }
+    /// <summary>
+    /// Sets the internal toolmode state according to given mode
+    /// </summary>
+    /// <param name="currentMode"></param>
+    public void SetToolMode(ModeManager.ToolMode currentMode)
+    {
+        Debug.Log("Setting tool mode in VRUILogic  " + currentMode.ToString());
+        m_ToolMode = currentMode;
+        if (m_ToolMode != ModeManager.ToolMode.SelectorTool)
+            SetUserInterfaceComponentsState(false);
+        else if (!m_UserIsSelectingTool)
+        {
+            SetUserInterfaceComponentsState(true);
+        }
+
+    }
     /// <summary>
     ///  Returns a list of selected objects from the selectorManager containing the info.
     /// </summary>
@@ -211,6 +264,15 @@ public class VRUILogic : Singleton<VRUILogic>
     public List<SelectableObject> GetSelectedParts()
     {
         return SelectorManager.Instance.SelectedParts;
+    }
+    
+    /// <summary>
+    /// Activates or deactivates all UI components according to specified boolean
+    /// </summary>
+    /// <param name="active">active: = true-> enable components</param>
+    public void SetUserInterfaceComponentsState(bool active)
+    {
+        m_UIComponents.SetActive(active);
     }
     #endregion
 
@@ -526,6 +588,14 @@ public class VRUILogic : Singleton<VRUILogic>
     }
 
     /// <summary>
+    /// In case wirepoints could not be linked to the respective Roboy parts, the points are stored in here.
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetDefaultWirepointContainer()
+    {
+        return m_WirepointContainer;
+    }
+    /// <summary>
     /// updates tendon with new force value in case tendon is registered/exists
     /// </summary>
     /// <param name="tendonID">tendon which is to be updated</param>
@@ -579,6 +649,8 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="tendon"></param>
     private void AddTendon(Tendon tendon)
     {
+        Debug.Log("Adding tendon (tendon)");
+        Debug.Log("is obj there: " + m_Tendons);
         if (tendon && !m_Tendons.Contains(tendon)) //if not inserted already
         {
             int index = tendon.GetTendonID();
