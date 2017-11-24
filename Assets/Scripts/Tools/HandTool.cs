@@ -6,19 +6,77 @@ using ROSBridgeLib;
 /// <summary>
 /// Tool to push Roboy around and apply forces via direct contact.
 /// </summary>
-public class HandTool : ControllerTool {
+public class HandTool : ControllerTool
+{
+    #region PUBLIC_MEMBER_VARIABLES
+    #endregion
 
+    #region PRIVATE_MEMBER_VARIABLES
+
+    /// <summary>
+    /// object containing the visual form of a right hand
+    /// </summary>
     [SerializeField]
-    Mesh m_RightHandMesh;
+    private Mesh m_RightHandMesh;
 
+    /// <summary>
+    /// object containing the visual form of a left hand
+    /// </summary>
     [SerializeField]
-    Mesh m_LeftHandMesh;
+    private Mesh m_LeftHandMesh;
 
+    /// <summary>
+    /// TODO: maybe delete? no reference for now
+    /// </summary>
     private RoboyHandsPublisher m_RoboyHandsPublisher;
 
+    /// <summary>
+    /// TODO: is it used for anything?
+    /// </summary>
     private MeshFilter m_MeshFilter;
 
+    /// <summary>
+    /// describing if hand model of left or right hand used
+    /// </summary>
     private bool m_IsLeft = false;
+
+    /// <summary>
+    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
+    /// </summary>
+    [SerializeField]
+    private float m_RayDistance = 2f;
+
+    /// <summary>
+    /// Variable to track the last highlighted object for comparison.
+    /// </summary>
+    private SelectableObject m_HighlightedObject;
+
+    /// <summary>
+    /// specifies, whether highlighted obj is selected(true) or just highlighted (false)
+    /// </summary>
+    private bool m_ObjectIsSelected = false;
+
+    #region spring-related
+
+    /// <summary>
+    /// To calculate spring forces, the initial length needs to be known
+    /// </summary>
+    private float m_InitialLength;
+
+    /// <summary>
+    /// Spring stiffness used to calculate forces
+    /// </summary>
+    private float m_SpringStiffness = 10f;
+
+    /// <summary>
+    /// gameobj holding position reference to the point where Roboy is grabbed. 
+    /// It moves along with Roboy since its parent is the respective Roboy part
+    /// </summary>
+    private GameObject m_RoboyPoint;
+    #endregion
+    #endregion
+
+    #region UNITY_MONOBEHAVIOUR
 
     /// <summary>
     /// Get which model to use for hand: right or left.
@@ -46,8 +104,12 @@ public class HandTool : ControllerTool {
             m_MeshFilter.mesh = m_LeftHandMesh;
             m_IsLeft = true;
         }
+
     }
 
+    /// <summary>
+    /// Called once every frame, publishes hand position to gazebo
+    /// </summary>
     private void Update()
     {
 
@@ -81,22 +143,120 @@ public class HandTool : ControllerTool {
         ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
         ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
     }
+    #endregion
 
-    /*
-    public void GrabRoboy()
+    #region PUBLIC_METHODS
+    /// <summary>
+    /// Starts a ray from the controller. If the ray hits a roboy part, it changes its selection status. 
+    /// Roboy parts are highlighted when pointing at them, and selected if the grab butten is held. 
+    /// As soon as the button is released, the part is no longer selected (but might still be highlighed) //TODO: Test to be sure
+    /// Function adapted from SelectorTool.cs
+    /// </summary>
+    public void CheckUserGrabbingRoboy()
     {
-        RoboyPart roboyPart;
-        // If the hitted object is roboy
-        if ((roboyPart = collision.gameObject.GetComponent<RoboyPart>()) != null)
-        {
-            // Transform the position to roboy space
-            Vector3 forcePosition = collision.transform.InverseTransformPoint(transform.position);
-            // transform the direction to roboy space
-            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 1500);
-            int duration = 200;
-            // trigger the message in RoboyManager
-            RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
-        }
+        // Start a ray from the controller
+        RaycastHit hit;
 
-    }*/
+        // If the ray hits something...
+        if (Physics.Raycast(transform.position, transform.forward, out hit, m_RayDistance))
+        {
+            // set the end position to the hit point
+            SelectableObject hittedObject = null;
+
+            // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
+            if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer && ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
+                return;
+            //Depending on the tag (== UI elem type), call different fcts 
+            switch (hit.transform.tag)
+            {
+                //for now: if no roboy part, then ignore
+                case "RoboyUI":
+                case "UIButton":
+                case "UISlider":
+                case "Floor":
+                    break;
+                default: //not UI -> Roboy parts 
+                    //TODO: be careful, when new tags introduced and used in scene, this might blow up
+                    hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
+                    break;
+            }
+
+            //if object found
+            if (hittedObject != null)
+            {
+                //Ignore ModelSpawn- (see modemanager.SpawnViewerMode) stuff since this tool doesn't spawn/remove but change position
+                // if the ray hits something different than last frame, then reset the last roboy part
+                if (m_HighlightedObject != hittedObject)
+                {
+                    if (m_HighlightedObject != null) 
+                        m_HighlightedObject.SetStateDefault(); //no longer highlighted
+                    // update the last roboy part as the current one
+                    m_HighlightedObject = hittedObject;
+                }
+                // otherwise set the roboy part to targeted
+                else
+                {
+                    hittedObject.SetStateTargeted(); //only set to target if not selected/targeted already
+                }
+                // and select it if the user presses the trigger
+                if (m_SteamVRDevice.GetHairTriggerDown())
+                {
+                    hittedObject.SetStateSelected();
+                    m_ObjectIsSelected = true;
+                    Vibrate();
+                    //TODO: if repositioning of arm desired, best do it here
+
+                    //set point where Roboy was grabbed to reference for force calculation
+                    m_RoboyPoint = new GameObject("GrabbedPoint");
+                    m_RoboyPoint.transform.position = hit.transform.position;
+                    m_RoboyPoint.transform.SetParent(hittedObject.transform);
+                    //initial spring length depending on hand and roboy part position
+                    m_InitialLength = (m_RoboyPoint.transform.position - transform.position).magnitude;
+                }
+            }
+        }
+        // if the ray does not hit anything, then just reset the last selected roboy part
+        else
+        {
+            if (m_HighlightedObject != null && !m_ObjectIsSelected) //if element only was highlighted
+            {
+                m_HighlightedObject.SetStateDefault(); 
+            }
+            m_HighlightedObject = null;
+        }
+        //check if object thinks it's still held (no matter of ray hit sth)
+        if ( m_ObjectIsSelected && m_HighlightedObject) 
+        {
+            if (m_SteamVRDevice.GetHairTriggerUp()) //only release obj if trigger is not held anymore
+            {
+                m_HighlightedObject.SetStateDefault();
+                m_HighlightedObject = null;
+                Destroy(m_RoboyPoint);
+                m_RoboyPoint = null;
+            }
+        }
+        //finally, handle user movement
+        EvaluateHandPosition();
+    }
+
+    /// <summary>
+    /// This method evaluates current position of the hand and computes forces acted on roboy by grabbing and moving. 
+    /// Springs are used for this
+    /// sends the info to gazebo
+    /// </summary>
+    private void EvaluateHandPosition()
+    {
+        if (m_RoboyPoint && m_ObjectIsSelected) //if we're currently grabbing sth and we have the means to calculate forces
+        {
+            float newLength = (transform.position - m_RoboyPoint.transform.position).magnitude;
+            float force = m_SpringStiffness * (m_InitialLength - newLength);
+            Vector3 direction = (transform.position - m_RoboyPoint.transform.position);
+            direction.Normalize();
+            direction *= force;
+
+            Debug.Log("[Hand Tool] Calculated force: " + direction);
+            //TODO: send this to Gazebo, maybe even position where applied ? -> make sure it affects roboy
+        }
+    }
+    #endregion
 }

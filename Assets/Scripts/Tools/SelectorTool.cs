@@ -77,16 +77,15 @@ public class SelectorTool : ControllerTool
                     } catch { }
                     break;
                 case "UIButton":
+                    //if button can be held (not just pressed), it is registered as being held
+                    //therefore, it needs an eventtrigger component attached
                     Button b_pressed = hit.collider.GetComponent<Button>();
-                    //TODO: WOrk in progress
-                    //for scroll option
                     EventTrigger eventsystem = b_pressed.GetComponent<EventTrigger>();
 
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
                         b_pressed.onClick.Invoke();
-                        /*TODO: work in progress ctd.*/
-                        if (eventsystem)
+                        if (eventsystem) //if holding supported
                         {
                             eventsystem.OnPointerDown(null);
                             m_LastHeldObject = eventsystem;
@@ -179,7 +178,7 @@ public class SelectorTool : ControllerTool
         }
 
         //for grabbing and holding updates:
-        if (m_LastHeldObject) //check if object thinks it's still held (no matter of ray hit sth)
+        if (m_LastHeldObject) //check if object thinks it's still held (no matter if ray hit sth)
         {
             if (m_SteamVRDevice.GetHairTriggerUp()) //if trigger not held anymore
             {

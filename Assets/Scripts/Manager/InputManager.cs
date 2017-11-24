@@ -147,6 +147,10 @@ public class InputManager : Singleton<InputManager>
             m_SelectorTool.GetRayFromController();
 
         }
+        if (m_HandTool.gameObject.activeInHierarchy)
+        {
+            m_HandTool.CheckUserGrabbingRoboy();
+        }
 
         Valve.VR.EVRButtonId mask = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
         VRUILogic.Instance.SetTouchPosition(0, m_SelectorTool.Controller.GetAxis(mask));
