@@ -44,7 +44,7 @@ public class HandTool : ControllerTool
     /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
     /// </summary>
     [SerializeField]
-    private float m_RayDistance = 2f;
+    private float m_RayDistance = 0.3f;
 
     /// <summary>
     /// Variable to track the last highlighted object for comparison.
@@ -158,7 +158,7 @@ public class HandTool : ControllerTool
         RaycastHit hit;
 
         // If the ray hits something...
-        if (Physics.Raycast(transform.position, transform.forward, out hit, m_RayDistance))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, m_RayDistance)) 
         {
             // set the end position to the hit point
             SelectableObject hittedObject = null;
@@ -188,10 +188,15 @@ public class HandTool : ControllerTool
                 // if the ray hits something different than last frame, then reset the last roboy part
                 if (m_HighlightedObject != hittedObject)
                 {
-                    if (m_HighlightedObject != null) 
+                    if (m_HighlightedObject != null)
                         m_HighlightedObject.SetStateDefault(); //no longer highlighted
                     // update the last roboy part as the current one
-                    m_HighlightedObject = hittedObject;
+                    //ignore if we're already grabbing another roboy part 
+                    if (!m_ObjectIsSelected)
+                    {
+                        m_HighlightedObject = hittedObject;
+
+                    }
                 }
                 // otherwise set the roboy part to targeted
                 else
@@ -220,19 +225,20 @@ public class HandTool : ControllerTool
         {
             if (m_HighlightedObject != null && !m_ObjectIsSelected) //if element only was highlighted
             {
-                m_HighlightedObject.SetStateDefault(); 
+                m_HighlightedObject.SetStateDefault();
+                m_HighlightedObject = null;
             }
-            m_HighlightedObject = null;
         }
         //check if object thinks it's still held (no matter of ray hit sth)
-        if ( m_ObjectIsSelected && m_HighlightedObject) 
+        if (m_ObjectIsSelected && m_HighlightedObject)
         {
             if (m_SteamVRDevice.GetHairTriggerUp()) //only release obj if trigger is not held anymore
             {
-                m_HighlightedObject.SetStateDefault();
+                m_HighlightedObject.SetStateDefault(true); //force it to go back to previous state
                 m_HighlightedObject = null;
                 Destroy(m_RoboyPoint);
                 m_RoboyPoint = null;
+                m_ObjectIsSelected = false;
             }
         }
         //finally, handle user movement
@@ -250,12 +256,39 @@ public class HandTool : ControllerTool
         {
             float newLength = (transform.position - m_RoboyPoint.transform.position).magnitude;
             float force = m_SpringStiffness * (m_InitialLength - newLength);
-            Vector3 direction = (transform.position - m_RoboyPoint.transform.position);
-            direction.Normalize();
-            direction *= force;
 
-            Debug.Log("[Hand Tool] Calculated force: " + direction);
+
+            Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position);
+            directionWorldSpace.Normalize();
+            directionWorldSpace *= force;
+
             //TODO: send this to Gazebo, maybe even position where applied ? -> make sure it affects roboy
+            //TODO: damping ? is it going to wiggle the whole time when in base position
+            //TODO: check if transformations  correct / in right space & direction
+            RoboyPart roboyPart;
+            if ((roboyPart = m_HighlightedObject.gameObject.GetComponent<RoboyPart>()) != null)
+            {
+                // Transform the position to roboy space
+                Vector3 forcePosition = m_RoboyPoint.transform.position;
+                // transform the direction to roboy space
+                Vector3 forceDirection = roboyPart.transform.InverseTransformDirection(directionWorldSpace);
+                int  duration = (int) Time.fixedDeltaTime * 1000; // time period during which force should be valid,, in milliseconds
+                // trigger the message in RoboyManager
+                RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
+            }
+        }
+    }
+
+    /// <summary>
+    /// deselect everything so that Roboy appears in his default state
+    /// </summary>
+    public override void EndTool()
+    {
+        if (m_ObjectIsSelected)
+        {
+            m_ObjectIsSelected = false;
+            m_HighlightedObject.SetStateDefault(true);
+            m_HighlightedObject = null;
         }
     }
     #endregion

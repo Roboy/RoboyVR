@@ -13,7 +13,7 @@ using System;
 /// </summary>
 public class ModeManager : Singleton<ModeManager>
 {
-
+    #region PUBLIC_VARIABLES
     /// <summary>
     /// We change between Single view where we can choose only one objet at a time and comparison view with three maximum objects at a time.
     /// </summary>
@@ -129,7 +129,9 @@ public class ModeManager : Singleton<ModeManager>
     {
         get { return m_CurrentGUIMode; }
     }
+    #endregion
 
+    #region PRIVATE_VARIABLES
     /// <summary>
     /// Private variable for current view mode.
     /// </summary>
@@ -160,6 +162,13 @@ public class ModeManager : Singleton<ModeManager>
     /// </summary>
     private GUIMode m_CurrentGUIMode = GUIMode.GUIViewer;
 
+    /// <summary>
+    /// Holds reference to currently active controller tool from inputmanager
+    /// </summary>
+    private ControllerTool m_CurrentlyActiveTool;
+    #endregion
+
+    #region PUBLIC_METHODS
     /// <summary>
     /// Changes between single and comparison view.
     /// </summary>
@@ -196,65 +205,54 @@ public class ModeManager : Singleton<ModeManager>
 
     /// <summary>
     /// Switches between all tools.
+    /// Deactivates previous tool and activates new one
     /// </summary>
     public void ChangeToolMode()
     {
-
-        if (m_CurrentToolMode == ToolMode.SelectorTool)
+        switch (m_CurrentToolMode)
         {
-            //Debug.Log("toolmode to shoot");
-            InputManager.Instance.Selector_Tool.enabled = false;
-            InputManager.Instance.ShootingTool.enabled = true;
-            InputManager.Instance.Selector_Tool.gameObject.SetActive(false);
-            InputManager.Instance.ShootingTool.gameObject.SetActive(true);
-            m_CurrentToolMode = ToolMode.ShootingTool;
+            case ToolMode.SelectorTool:
+                SetNewActiveTool(InputManager.Instance.ShootingTool);
+                m_CurrentToolMode = ToolMode.ShootingTool;
+                break;
+            case ToolMode.ShootingTool:
+                SetNewActiveTool(InputManager.Instance.TimeTool);
+                m_CurrentToolMode = ToolMode.TimeTool;
+                break;
+            case ToolMode.TimeTool:
+                SetNewActiveTool(InputManager.Instance.HandTool);
+                m_CurrentToolMode = ToolMode.HandTool;
+                break;
+            case ToolMode.HandTool:
+                SetNewActiveTool(InputManager.Instance.Selector_Tool);
+                m_CurrentToolMode = ToolMode.SelectorTool;
+                break;
+            case ToolMode.Undefined:
+                return;
+            default:
+                return;
         }
-        else if (m_CurrentToolMode == ToolMode.ShootingTool)
-        {
-            //Debug.Log("toolmode to time");
-            InputManager.Instance.TimeTool.enabled = true;
-            InputManager.Instance.ShootingTool.enabled = false;
-            InputManager.Instance.TimeTool.gameObject.SetActive(true);
-            InputManager.Instance.ShootingTool.gameObject.SetActive(false);
-            m_CurrentToolMode = ToolMode.TimeTool;
-        }
-        else if (m_CurrentToolMode == ToolMode.TimeTool)
-        {
-            //Debug.Log("toolmode to hand");
-            InputManager.Instance.HandTool.enabled = true;
-            InputManager.Instance.TimeTool.enabled = false;
-            InputManager.Instance.HandTool.gameObject.SetActive(true);
-            InputManager.Instance.TimeTool.gameObject.SetActive(false);
-            m_CurrentToolMode = ToolMode.HandTool;
-        }
-        else if (m_CurrentToolMode == ToolMode.HandTool)
-        {
-            //Debug.Log("toolmode to select");
-            InputManager.Instance.Selector_Tool.enabled = true;
-            InputManager.Instance.HandTool.enabled = false;
-            InputManager.Instance.Selector_Tool.gameObject.SetActive(true);
-            InputManager.Instance.HandTool.gameObject.SetActive(false);
-            m_CurrentToolMode = ToolMode.SelectorTool;
-        }
-
-    }
-
-    /// <summary>
-    /// Changes the tool mode based on the enum to the new one and turns off the old tool.
-    /// </summary>
-    /// <param name="mode"></param>
-    public void ChangeToolMode(ToolMode mode)
-    {
-        changeToolStatus(m_CurrentToolMode, false);
-        m_CurrentToolMode = mode;
-        changeToolStatus(m_CurrentToolMode, true);
     }
 
     public void ChangeToolMode(ControllerTool tool)
     {
-        changeToolStatus(m_CurrentToolMode, false);
         m_CurrentToolMode = mapToolTypeToEnum(tool);
-        changeToolStatus(m_CurrentToolMode, true);
+
+        //update controller object
+        if (m_CurrentlyActiveTool)
+        {
+            m_CurrentlyActiveTool.EndTool();
+            m_CurrentlyActiveTool.enabled = false;
+            m_CurrentlyActiveTool.gameObject.SetActive(false);
+        }
+
+
+        tool.enabled = true;
+        tool.gameObject.SetActive(true);
+        m_CurrentlyActiveTool = tool;
+        //update tool mode in case this tool is active, ignore  otherwise
+        VRUILogic.Instance.SetToolMode(m_CurrentToolMode);
+
     }
 
     public void ChangeGUIToolMode(ControllerTool tool)
@@ -294,38 +292,22 @@ public class ModeManager : Singleton<ModeManager>
     {
         m_CurrentPanelmode = Panelmode.Motor_Force;
     }
+    #endregion
+
+    #region PRIVATE_METHODS
 
     /// <summary>
-    /// Changes the tool based on the enum to the new state.
+    /// deactivates currently active tool and activates new tool
     /// </summary>
     /// <param name="tool"></param>
-    /// <param name="state"></param>
-    private void changeToolStatus(ToolMode tool, bool state)
+    private void SetNewActiveTool(ControllerTool tool)
     {
-        switch (tool)
-        {
-            case ToolMode.SelectorTool:
-                InputManager.Instance.Selector_Tool.enabled = state;
-                InputManager.Instance.Selector_Tool.gameObject.SetActive(state);
-                break;
-            case ToolMode.ShootingTool:
-                InputManager.Instance.ShootingTool.enabled = state;
-                InputManager.Instance.ShootingTool.gameObject.SetActive(state);
-                break;
-            case ToolMode.TimeTool:
-                InputManager.Instance.TimeTool.enabled = state;
-                InputManager.Instance.TimeTool.gameObject.SetActive(state);
-                break;
-            case ToolMode.HandTool:
-                InputManager.Instance.HandTool.enabled = state;
-                InputManager.Instance.HandTool.gameObject.SetActive(state);
-                break;
-            default:
-                Debug.Log("Tool mode: " + tool + " not implemented!");
-                return;
-        }
-        if (state) //update tool mode in case this tool is active, ignore  otherwise
-            VRUILogic.Instance.SetToolMode(tool);
+        m_CurrentlyActiveTool.EndTool();
+        m_CurrentlyActiveTool.enabled = false;
+        m_CurrentlyActiveTool.gameObject.SetActive(false);
+        m_CurrentlyActiveTool = tool;
+        m_CurrentlyActiveTool.enabled = true;
+        m_CurrentlyActiveTool.gameObject.SetActive(true);
     }
 
     private void changeGUIToolStatus(GUIMode mode, bool state)
@@ -392,4 +374,5 @@ public class ModeManager : Singleton<ModeManager>
             return GUIMode.Undefined;
         }
     }
+    #endregion
 }

@@ -58,10 +58,6 @@ public class Tendon : MonoBehaviour
     /// </summary>
     private LineRenderer m_LineRenderer;
 
-    /// <summary>
-    /// Needed to color tendons individually
-    /// </summary>
-    MaterialPropertyBlock m_Block;
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -121,7 +117,6 @@ public class Tendon : MonoBehaviour
         m_Force = 0;
         m_WirePointParents = new GameObject[pointPositions.Length];
         m_Wirepoints = new Transform[pointPositions.Length];
-        m_Block = new MaterialPropertyBlock();
 
         //create points in worldspace and connect to parents
         for (int i = 0; i < pointPositions.Length; i++)

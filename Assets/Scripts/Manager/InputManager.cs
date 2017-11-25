@@ -8,6 +8,18 @@ using System.Linq;
 /// </summary>
 public class InputManager : Singleton<InputManager>
 {
+    #region PUBLIC_MEMBER_VARIABLES
+    /// <summary>
+    /// Possible touchpad positions.
+    /// </summary>
+    public enum TouchpadStatus
+    {
+        Right,
+        Left,
+        Top,
+        Bottom,
+        None
+    }
 
     /// <summary>
     /// Public GUIController reference.
@@ -61,7 +73,9 @@ public class InputManager : Singleton<InputManager>
     {
         get { return m_HandTool; }
     }
+    #endregion
 
+    #region PRIVATE_VARIABLES
     /// <summary>
     /// Private SelectorTool reference. Is serialized so it can be dragged in the editor.
     /// </summary>
@@ -120,19 +134,9 @@ public class InputManager : Singleton<InputManager>
     /// Controllers initialized or not.
     /// </summary>
     private bool m_Initialized = false;
+    #endregion
 
-    /// <summary>
-    /// Possible touchpad positions.
-    /// </summary>
-    public enum TouchpadStatus
-    {
-        Right,
-        Left,
-        Top,
-        Bottom,
-        None
-    }
-
+    #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
     /// Calls the ray cast from the selector tool if it is active.
     /// </summary>
@@ -152,6 +156,7 @@ public class InputManager : Singleton<InputManager>
             m_HandTool.CheckUserGrabbingRoboy();
         }
 
+        //For the State Visualization UI: (VRUILogic is singleton so this is of no impact if not present)
         Valve.VR.EVRButtonId mask = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
         VRUILogic.Instance.SetTouchPosition(0, m_SelectorTool.Controller.GetAxis(mask));
         VRUILogic.Instance.SetTouchedInfo(0, m_SelectorTool.Controller.GetTouch(mask));
@@ -161,7 +166,9 @@ public class InputManager : Singleton<InputManager>
             VRUILogic.Instance.SetTouchedInfo(1, m_GUIController.Controller.GetTouch(mask));
         }
     }
+    #endregion
 
+    #region PUBLIC_METHODS
     /// <summary>
     /// Initialize all tools.
     /// </summary>
@@ -244,14 +251,16 @@ public class InputManager : Singleton<InputManager>
             else
                 result = TouchpadStatus.Bottom;
         }
-        
+
         if (e.controllerIndex.Equals(m_GUIController.Controller.index))
         {
             m_GUIController.CheckTouchPad(result);
         }
 
     }
+    #endregion
 
+    #region PRIVATE_METHODS
     /// <summary>
     /// Set all tools depending on their type to the respective variable.
     /// </summary>
@@ -326,7 +335,7 @@ public class InputManager : Singleton<InputManager>
     /// Initializes all controllers and tools.
     /// </summary>
     /// <returns></returns>
-    IEnumerator initControllersCoroutine()
+    private IEnumerator initControllersCoroutine()
     {
         m_SelectorTool.gameObject.SetActive(true);
         m_ShootingTool.gameObject.SetActive(false);
@@ -371,4 +380,5 @@ public class InputManager : Singleton<InputManager>
 
         m_Initialized = true;
     }
+    #endregion
 }

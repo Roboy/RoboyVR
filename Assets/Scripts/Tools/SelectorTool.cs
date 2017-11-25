@@ -187,5 +187,22 @@ public class SelectorTool : ControllerTool
             }
         }
     }
+
+    /// <summary>
+    /// deselect everything so that Roboy appears in his default state
+    /// </summary>
+    public override void EndTool()
+    {
+        if (m_LastSelectedObject)
+        {
+            m_LastSelectedObject.SetStateDefault(true);
+            m_LastSelectedObject = null;    
+        }
+        if(m_LastHeldObject)
+        {
+            m_LastHeldObject.OnPointerUp(null);
+            m_LastHeldObject = null;
+        }
+    }
 }
 

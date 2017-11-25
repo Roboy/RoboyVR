@@ -6,7 +6,8 @@ using UnityEngine;
 /// ControllerTool is a base class for all tools which are attached to a controller. It provides access to steamVR functions to track the input of the controllers.
 /// On top of that it provides a function to vibrate the controller for a defined time.
 /// </summary>
-public class ControllerTool : MonoBehaviour {
+public class ControllerTool : MonoBehaviour
+{
 
     public SteamVR_TrackedObject ControllerObject { get { return m_SteamVRController; } }
 
@@ -14,7 +15,7 @@ public class ControllerTool : MonoBehaviour {
     /// Returns the controller identity for verification purposes for outside classes.
     /// </summary>
     public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int)m_SteamVRController.index); } }
-    
+
     /// <summary>
     /// Returns a component which listens to controller events like OnTouchpad.
     /// </summary>
@@ -29,7 +30,7 @@ public class ControllerTool : MonoBehaviour {
     /// Returns the controller identity for verification purposes for deriving classes.
     /// </summary>
     protected SteamVR_TrackedObject m_SteamVRController;
-    
+
     /// <summary>
     /// Protected controller for event tracking in classes deriving from this class like SelectorTool or ShootingTool.
     /// </summary>
@@ -40,6 +41,7 @@ public class ControllerTool : MonoBehaviour {
     /// </summary>
     protected bool m_Initialized = false;
 
+    #region UNITY_MONOBEHAVIOUR_METHODS
     /// <summary>
     /// Calls initialize for all controller members.
     /// </summary>
@@ -47,7 +49,9 @@ public class ControllerTool : MonoBehaviour {
     {
         Initialize();
     }
+    #endregion
 
+    #region PUBLIC_METHODS
     /// <summary>
     /// Starts a coroutine to vibrate the controller for a fixed time.
     /// </summary>
@@ -64,6 +68,16 @@ public class ControllerTool : MonoBehaviour {
         StartCoroutine(initializeCoroutine());
     }
 
+    /// <summary>
+    /// This method performs changes so that after the method call, 
+    /// the tool is not accountable for any (previous) changes which interfer with other tools
+    /// </summary>
+    public virtual void EndTool()
+    {
+    }
+    #endregion
+
+    #region PRIVATE_METHODS
     /// <summary>
     /// Coroutine to vibrate the controller for a fixed time.
     /// </summary>
@@ -98,4 +112,5 @@ public class ControllerTool : MonoBehaviour {
         m_SteamVRTrackedController = GetComponentInParent<SteamVR_TrackedController>();
         m_Initialized = true;
     }
+    #endregion
 }

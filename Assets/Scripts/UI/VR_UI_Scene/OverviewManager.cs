@@ -23,11 +23,6 @@ public class OverviewManager : MonoBehaviour
     /// </summary>
     private GraphObject m_Heart;
 
-    /// <summary>
-    /// for continuously testing  (managing coroutines)
-    /// </summary>
-    private bool m_Testing = false;
-
     /* For test purposes to adjust heartbeat
      *  #region heartbeat values
      [SerializeField]
