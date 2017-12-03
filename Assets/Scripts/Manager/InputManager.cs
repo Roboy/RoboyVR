@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ROSBridgeLib; //TODO:only for test purposes, remove later
 using System.Linq;
 
 /// <summary>
@@ -149,6 +150,10 @@ public class InputManager : Singleton<InputManager>
         if (m_SelectorTool.gameObject.activeInHierarchy)
         {
             m_SelectorTool.GetRayFromController();
+
+            //TODO Only for testin purposes-> delete!!!
+            //ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("roboy", gameObject.name, transform.x, transform.y, transform.z, transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w );
+            //ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
 
         }
         if (m_HandTool.gameObject.activeInHierarchy)

@@ -26,11 +26,6 @@ public class HandTool : ControllerTool
     private Mesh m_LeftHandMesh;
 
     /// <summary>
-    /// TODO: maybe delete? no reference for now
-    /// </summary>
-    private RoboyHandsPublisher m_RoboyHandsPublisher;
-
-    /// <summary>
     /// TODO: is it used for anything?
     /// </summary>
     private MeshFilter m_MeshFilter;
@@ -110,7 +105,7 @@ public class HandTool : ControllerTool
     /// <summary>
     /// Called once every frame, publishes hand position to gazebo
     /// </summary>
-    private void Update()
+    private void FixedUpdate()
     {
 
         string linkName = (m_IsLeft) ? "left_hand" : "right_hand";
@@ -140,8 +135,8 @@ public class HandTool : ControllerTool
         qzDic.Add(linkName, gazeboRotation.z);
         qwDic.Add(linkName, gazeboRotation.w);
 
-        ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
-        ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
+       ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
+       ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
     }
     #endregion
 
@@ -158,7 +153,7 @@ public class HandTool : ControllerTool
         RaycastHit hit;
 
         // If the ray hits something...
-        if (Physics.Raycast(transform.position, transform.forward, out hit, m_RayDistance)) 
+        if (Physics.Raycast(transform.position, transform.forward, out hit, m_RayDistance))
         {
             // set the end position to the hit point
             SelectableObject hittedObject = null;
@@ -254,6 +249,7 @@ public class HandTool : ControllerTool
     {
         if (m_RoboyPoint && m_ObjectIsSelected) //if we're currently grabbing sth and we have the means to calculate forces
         {
+            //Debug.Log("Grabbing sth. evaluating force");
             float newLength = (transform.position - m_RoboyPoint.transform.position).magnitude;
             float force = m_SpringStiffness * (m_InitialLength - newLength);
 
@@ -272,8 +268,9 @@ public class HandTool : ControllerTool
                 Vector3 forcePosition = m_RoboyPoint.transform.position;
                 // transform the direction to roboy space
                 Vector3 forceDirection = roboyPart.transform.InverseTransformDirection(directionWorldSpace);
-                int  duration = (int) Time.fixedDeltaTime * 1000; // time period during which force should be valid,, in milliseconds
+                int duration = (int)(Time.smoothDeltaTime * 1000); // time period during which force should be valid,, in milliseconds
                 // trigger the message in RoboyManager
+                Debug.Log("[HandTool] Sending ROS msg");
                 RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
             }
         }

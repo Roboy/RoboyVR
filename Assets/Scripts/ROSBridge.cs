@@ -93,13 +93,19 @@ public class ROSBridge : Singleton<ROSBridge> {
         var services = rosObject.GetComponents<ROSBridgeService>();
         
         foreach (var sub in subscribers)
+        {
             m_ROS.AddSubscriber(sub.GetType());
+            //Debug.Log("[ROSBridge]: adding subscriber " + sub.name);
+        }
 
-        foreach (var pub in publishers)
+        foreach (var pub in publishers) { 
             m_ROS.AddPublisher(pub.GetType());
-
-        foreach (var serv in services)
+            //Debug.Log("[ROSBridge]: adding publisher " + pub.name);
+        }
+        foreach (var serv in services) { 
             m_ROS.AddServiceResponse(serv.GetType());
+            //Debug.Log("[ROSBridge]: adding service " + serv.name);
+        }
 
         m_ROSObjects.Add(rosObject);
     }
@@ -110,6 +116,7 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// <param name="rosObject"></param>
     public void RemoveROSActor(ROSObject rosObject)
     {
+        Debug.Log("[ROSBridge] Removing ROS Actor");
         if (!m_ROSInitialized)
         {
             return;
@@ -160,6 +167,7 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// </summary>
     private void OnApplicationQuit()
     {
+        Debug.Log("[ROSManager] Disconnecting from ROS");
         if (m_ROSInitialized)
         {
             m_ROS.Disconnect();

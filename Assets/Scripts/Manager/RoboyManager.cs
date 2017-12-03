@@ -91,7 +91,7 @@ public class RoboyManager : Singleton<RoboyManager>
     }
 
     /// <summary>
-    /// Run ROSBridge
+    /// Run ROSBridge, Reset ROS simulation if Key R is pressed
     /// </summary>
     void Update()
     {
@@ -148,7 +148,6 @@ public class RoboyManager : Singleton<RoboyManager>
     {
         ROSBridgeLib.custom_msgs.ExternalForceMsg msg =
             new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, GazeboUtility.UnityPositionToGazebo(position), GazeboUtility.UnityPositionToGazebo(force), duration);
-
         ROSBridge.Instance.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
 
         //Debug.Log(msg.ToYAMLString());

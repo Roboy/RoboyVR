@@ -10,7 +10,7 @@ As you already installed gazebo and the roboy project like described in the inst
 
 .. code:: bash
 
-  source /path-to-roboy-ros-control/devel.setup.bash
+  source /path-to-roboy-ros-control/devel/setup.bash
 
 2. Start the launch file which starts Gazebo with the PaBi legs and a PaBiDanceSimulator ROS node
 
@@ -39,10 +39,18 @@ These commands should be sufficient but it can happen that gazebo has problems l
 
 2. Export the gazebo paths to the model
 
+It is assumed you downloaded and installed the `roboy-ros-control <https://github.com/Roboy/roboy-ros-control>`_ repository as well as the `roboy-models <https://github.com/Roboy/roboy_models>`_ repository according to the provided manuals. You can provide gazebo with the needed models by either calling: 
+
 .. code:: bash
 
   source /usr/share/gazebo-7/setup.sh
   export GAZEBO_MODEL_PATH=/path/to/roboy-ros-control/src/roboy_models:$GAZEBO_MODEL_PATH
+  
+Alternatively, adapt the following path to the repository as well as the folder name of the required model and execute this command: 
+
+.. code:: bash
+  
+  ln -s /path/to/roboy-models/Required_Model/ ~/.gazebo/models/
 
 3. If nothing helps than write an email to roboyvr@gmail.com. We will glady help you to experience the RoboyVR-Experience.
 

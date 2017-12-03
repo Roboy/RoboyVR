@@ -210,7 +210,8 @@ public class VRUILogic : Singleton<VRUILogic>
         }
         //notifications
         m_NotificationsContainer = new GameObject("NotificationContainer");
-        m_NotificationsContainer.transform.SetParent(m_UIComponents.transform);
+        if (m_UIComponents)
+            m_NotificationsContainer.transform.SetParent(m_UIComponents.transform);
         //tendons
         m_TendonContainer = new GameObject("TendonContainer");
         if (m_Modes != null && m_Modes.Length > ((int)UIMode.Middleware))
@@ -220,7 +221,8 @@ public class VRUILogic : Singleton<VRUILogic>
         }
         //Wirepoints of tendons
         m_WirepointContainer = new GameObject("WirepointDefaultContainer");
-        m_WirepointContainer.transform.SetParent(m_UIComponents.transform);
+        if (m_UIComponents)
+            m_WirepointContainer.transform.SetParent(m_UIComponents.transform);
     }
     #endregion
 
@@ -236,7 +238,7 @@ public class VRUILogic : Singleton<VRUILogic>
         m_UserIsSelectingTool = state;
         if (state) //if currently selecting, disable UI to have less obstacles and objects while selecting
             SetUserInterfaceComponentsState(false);
-        else if(m_ToolMode == ModeManager.ToolMode.SelectorTool)
+        else if (m_ToolMode == ModeManager.ToolMode.SelectorTool)
         {
             SetUserInterfaceComponentsState(true);
         }
@@ -265,14 +267,15 @@ public class VRUILogic : Singleton<VRUILogic>
     {
         return SelectorManager.Instance.SelectedParts;
     }
-    
+
     /// <summary>
     /// Activates or deactivates all UI components according to specified boolean
     /// </summary>
     /// <param name="active">active: = true-> enable components</param>
     public void SetUserInterfaceComponentsState(bool active)
     {
-        m_UIComponents.SetActive(active);
+        if (m_UIComponents)
+            m_UIComponents.SetActive(active);
     }
     #endregion
 

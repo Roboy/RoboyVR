@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Reflection;
+﻿using SimpleJSON;
 using System;
-using WebSocketSharp;
-using WebSocketSharp.Net;
-using WebSocketSharp.Server;
-using SimpleJSON;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using WebSocketSharp;
 
 namespace ROSBridgeLib
 {
@@ -59,6 +56,7 @@ namespace ROSBridgeLib
                 return _topic;
             }
         };
+
         private string _host;
         private int _port;
         private WebSocket _ws;
@@ -74,6 +72,16 @@ namespace ROSBridgeLib
         private bool _sendErrorMessage = false;
 
         private object _queueLock = new object();
+
+        /// <summary>
+        /// list containing all publishing topics (only one message type possible -> not necessary) that have been announced so far
+        /// </summary>
+        private List<string> m_AnnouncedTopics = new List<string>();
+
+        /// <summary>
+        /// list containing all subscription topics (only one message type possible -> not necessary to specify) that have been announced so far
+        /// </summary>
+        private List<string> m_SubscribedTopics = new List<string>();
 
         private static string GetMessageType(Type t)
         {
@@ -154,6 +162,7 @@ namespace ROSBridgeLib
         public void RemoveServiceResponse(Type serviceResponse)
         {
             // Code here
+            throw new Exception("NOT IMPLEMENTED");
         }
 
         /**
@@ -161,11 +170,19 @@ namespace ROSBridgeLib
 		 */
         public void AddSubscriber(Type subscriber)
         {
+            //Multiple subscribers for the same topic possible
             IsValidSubscriber(subscriber);
             _subscribers.Add(subscriber);
+
+            string topic = GetMessageTopic(subscriber);
+            m_SubscribedTopics.Add(topic);
             if (_running)
             {
-                _ws.Send(ROSBridgeMsg.Subscribe(GetMessageTopic(subscriber), GetMessageType(subscriber)));
+                //only announce if not announced yet, 
+                if (!m_SubscribedTopics.Contains(topic))
+                {
+                    _ws.Send(ROSBridgeMsg.Subscribe(GetMessageTopic(subscriber), GetMessageType(subscriber)));
+                }
             }
         }
 
@@ -178,9 +195,15 @@ namespace ROSBridgeLib
                 return;
 
             _subscribers.Remove(subscriber);
+            string topic = GetMessageTopic(subscriber);
+            m_SubscribedTopics.Remove(topic);
             if (_running)
             {
-                _ws.Send(ROSBridgeMsg.UnSubscribe(GetMessageTopic(subscriber)));
+                //since multiple subscribers can subscribe to same topic, only send unsubscribe if no more subscribers on this topic
+                if (!m_SubscribedTopics.Contains(topic))
+                {
+                    _ws.Send(ROSBridgeMsg.UnSubscribe(topic));
+                }
             }
         }
 
@@ -191,10 +214,16 @@ namespace ROSBridgeLib
         {
             IsValidPublisher(publisher);
             _publishers.Add(publisher);
+            string topic = GetMessageTopic(publisher);
             if (_running)
             {
-                _ws.Send(ROSBridgeMsg.Advertise(GetMessageTopic(publisher), GetMessageType(publisher)));
+                if (!m_AnnouncedTopics.Contains(topic))
+                {
+                    _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(publisher)));
+                }
             }
+            //keep track of all new publishers (no matter the topic / if the topic already exists )
+            m_AnnouncedTopics.Add(topic);
         }
 
         /**
@@ -206,9 +235,16 @@ namespace ROSBridgeLib
                 return;
 
             _publishers.Remove(publisher);
+            //keep track of all publishers no matter if the topic 
+            string topic = GetMessageTopic(publisher);
+            m_AnnouncedTopics.Remove(topic);
             if (_running)
             {
-                _ws.Send(ROSBridgeMsg.UnAdvertise(GetMessageTopic(publisher)));
+                //if we hvae no more publishers on this topic
+                if (!m_AnnouncedTopics.Contains(topic))
+                {
+                    _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
+                }
             }
         }
 
@@ -231,13 +267,32 @@ namespace ROSBridgeLib
             _myThread.Abort();
             foreach (Type p in _subscribers)
             {
-                _ws.Send(ROSBridgeMsg.UnSubscribe(GetMessageTopic(p)));
-                //Debug.Log ("Sending " + ROSBridgePacket.unSubscribe(getMessageTopic(p)));
+                string topic = GetMessageTopic(p);
+                //remove this subscriber
+                if (m_SubscribedTopics.Contains(topic))
+                {
+                    m_SubscribedTopics.Remove(topic);
+                }
+                //if no mo subscribers on this topic
+                if (!m_SubscribedTopics.Contains(topic))
+                {
+                    _ws.Send(ROSBridgeMsg.UnSubscribe(topic));
+                }
             }
             foreach (Type p in _publishers)
             {
-                _ws.Send(ROSBridgeMsg.UnAdvertise(GetMessageTopic(p)));
-                //Debug.Log ("Sending " + ROSBridgePacket.unAdvertise (getMessageTopic(p)));
+                string topic = GetMessageTopic(p);
+                //remove this advertiser
+                if (m_AnnouncedTopics.Contains(topic))
+                {
+                    m_AnnouncedTopics.Remove(topic);
+                }
+
+                //if no more advertiser on this topic
+                if (!m_AnnouncedTopics.Contains(topic))
+                {
+                    _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
+                }
             }
             _ws.Close();
             _running = false;
@@ -253,21 +308,41 @@ namespace ROSBridgeLib
             CheckConnection();
 
             _running = true;
-            foreach (Type p in _subscribers)
+            AnnouncePublishersAndSubscribers();
+        }
+
+        /// <summary>
+        /// Announces all publishers and subscribers which were previously added to the lists _publishers and _subscriers
+        /// </summary>
+        private void AnnouncePublishersAndSubscribers()
+        {
+            if (_running && _ws != null)
             {
-                _ws.Send(ROSBridgeMsg.Subscribe(GetMessageTopic(p), GetMessageType(p)));
-                //Debug.Log ("Sending " + ROSBridgeMsg.Subscribe (GetMessageTopic(p), GetMessageType (p)));
-            }
-            foreach (Type p in _publishers)
-            {
-                _ws.Send(ROSBridgeMsg.Advertise(GetMessageTopic(p), GetMessageType(p)));
-                //Debug.Log ("Sending " + ROSBridgeMsg.Advertise (GetMessageTopic(p), GetMessageType(p)));
-            }
-            while (true)
-            {
-                Thread.Sleep(10000);
+                foreach (Type p in _subscribers)
+                {
+                    string topic = GetMessageTopic(p);
+                    m_SubscribedTopics.Add(topic);
+                    //only announce if not already known that we subscribed
+                    if (!m_SubscribedTopics.Contains(topic))
+                    {
+                        _ws.Send(ROSBridgeMsg.Subscribe(topic, GetMessageType(p)));
+                    }
+                    //Debug.Log ("Sending " + ROSBridgeMsg.Subscribe (GetMessageTopic(p), GetMessageType (p)));
+                }
+                foreach (Type p in _publishers)
+                {
+                    string topic = GetMessageTopic(p);
+                    m_AnnouncedTopics.Add(topic);
+                    //only announce new publisher if we didn't already announce one for this topic
+                    if (!m_AnnouncedTopics.Contains(topic))
+                    {
+                        _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(p)));
+                    }
+                    //Debug.Log ("Sending " + ROSBridgeMsg.Advertise (GetMessageTopic(p), GetMessageType(p)));
+                }
             }
         }
+
 
         /**
          * Checks if the connection is open and prints a message in that case. Does not do anything in the other case as Connect() has an exception in this case and it wont be printed anyway.
@@ -290,7 +365,7 @@ namespace ROSBridgeLib
                 Debug.Log(e.Message);
                 _sendErrorMessage = true;
             }
-                
+
         }
 
         private void OnMessage(string s)
@@ -298,20 +373,30 @@ namespace ROSBridgeLib
             //Debug.Log("Got a message " + s);
             if ((s != null) && !s.Equals(""))
             {
-                JSONNode node = JSONNode.Parse(s);
+                JSONNode node;
+                try
+                {
+                    node = JSONNode.Parse(s);
+                }
+                catch { return; }
                 //Debug.Log ("Parsed it");
                 string op = node["op"];
-                //Debug.Log ("Operation is " + op);
                 if ("publish".Equals(op))
                 {
+                    //Message was published on this topic
                     string topic = node["topic"];
-                    //Debug.Log ("Got a message on " + topic);
                     foreach (Type p in _subscribers)
                     {
+                        //search for subscriber listening to the topic of the received message
                         if (topic.Equals(GetMessageTopic(p)))
                         {
                             //Debug.Log ("And will parse it " + GetMessageTopic (p));
-                            ROSBridgeMsg msg = ParseMessage(p, node["msg"]);
+                            ROSBridgeMsg msg;
+                            try
+                            {
+                                msg = ParseMessage(p, node["msg"]);
+                            }
+                            catch { return; }
                             RenderTask newTask = new RenderTask(p, topic, msg);
                             lock (_queueLock)
                             {
@@ -367,13 +452,32 @@ namespace ROSBridgeLib
             }
         }
 
-        public void Publish(String topic, ROSBridgeMsg msg)
+        public void Publish(string topic, ROSBridgeMsg msg)
         {
             if (_ws != null)
             {
-                string s = ROSBridgeMsg.Publish(topic, msg.ToYAMLString());
-                //Debug.Log ("Sending " + s);
-                _ws.Send(s);
+
+                if (m_AnnouncedTopics.Contains(topic))
+                {
+                    string s = ROSBridgeMsg.Publish(topic, msg.ToYAMLString());
+                    //Debug.Log ("Sending " + s);
+                    _ws.Send(s);
+                }
+                else
+                {
+                    AnnouncePublishersAndSubscribers();
+                    //Try second time otherwise not working
+                    if (m_AnnouncedTopics.Contains(topic))
+                    {
+                        string s = ROSBridgeMsg.Publish(topic, msg.ToYAMLString());
+                        //Debug.Log ("Sending " + s);
+                        _ws.Send(s);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[ROS Websocket Connection] Trying to publish on a topic that is not registered!");
+                    }
+                }
             }
         }
 
