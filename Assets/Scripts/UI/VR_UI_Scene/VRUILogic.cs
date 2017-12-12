@@ -216,7 +216,7 @@ public class VRUILogic : Singleton<VRUILogic>
         m_TendonContainer = new GameObject("TendonContainer");
         if (m_Modes != null && m_Modes.Length > ((int)UIMode.Middleware))
         {
-            Debug.Log("Tendoncontainer set as child obj");
+            Debug.Log("[VRUILogic] Tendoncontainer set as child obj");
             m_TendonContainer.transform.SetParent(m_Modes[(int)UIMode.Middleware].transform);
         }
         //Wirepoints of tendons
@@ -249,7 +249,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="currentMode"></param>
     public void SetToolMode(ModeManager.ToolMode currentMode)
     {
-        Debug.Log("Setting tool mode in VRUILogic  " + currentMode.ToString());
+        Debug.Log("[VRUILogic] Setting tool mode " + currentMode.ToString());
         m_ToolMode = currentMode;
         if (m_ToolMode != ModeManager.ToolMode.SelectorTool)
             SetUserInterfaceComponentsState(false);
@@ -376,7 +376,7 @@ public class VRUILogic : Singleton<VRUILogic>
         {
             i += m_SelectIndex;
             i %= m_Modes.Length;
-            Debug.Log("New mode: " + i);
+            //Debug.Log("[VRUILogic] New mode: " + i);
             if (i < m_Modes.Length && i >= 0)
             {
                 m_Modes[m_SelectedMode].gameObject.SetActive(false);
@@ -436,7 +436,7 @@ public class VRUILogic : Singleton<VRUILogic>
                     m_InfosList.Add(note);
                     break;
                 default:
-                    Debug.Log("[VRUILogic]This notification type is not implemented yet!" + note.GetNotificationType().ToString());
+                    Debug.Log("[VRUILogic] This notification type is not implemented yet!" + note.GetNotificationType().ToString());
                     break;
             }
             //Debug.Log("Informing subscribers");
@@ -652,8 +652,7 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <param name="tendon"></param>
     private void AddTendon(Tendon tendon)
     {
-        Debug.Log("Adding tendon (tendon)");
-        Debug.Log("is obj there: " + m_Tendons);
+        //Debug.Log("Adding tendon (tendon)");
         if (tendon && !m_Tendons.Contains(tendon)) //if not inserted already
         {
             int index = tendon.GetTendonID();

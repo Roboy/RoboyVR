@@ -24,6 +24,10 @@ namespace ROSBridgeLib
             {
                 _identifier = identifier;
                 _values = values;
+                if (values == null)
+                {
+                    _values = new List<float>();
+                }
             }
 
             public static string GetMessageType()

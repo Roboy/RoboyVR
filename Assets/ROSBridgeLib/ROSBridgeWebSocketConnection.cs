@@ -162,7 +162,7 @@ namespace ROSBridgeLib
         public void RemoveServiceResponse(Type serviceResponse)
         {
             // Code here
-            throw new Exception("NOT IMPLEMENTED");
+            //-> somehow this method is called... No clue what it is supposed to do
         }
 
         /**
@@ -175,13 +175,14 @@ namespace ROSBridgeLib
             _subscribers.Add(subscriber);
 
             string topic = GetMessageTopic(subscriber);
-            m_SubscribedTopics.Add(topic);
             if (_running)
             {
                 //only announce if not announced yet, 
                 if (!m_SubscribedTopics.Contains(topic))
                 {
+                    Debug.Log("[ROS WEBSOCKET] Adding Subscriber. Subscribing to " + topic);
                     _ws.Send(ROSBridgeMsg.Subscribe(GetMessageTopic(subscriber), GetMessageType(subscriber)));
+                    m_SubscribedTopics.Add(topic);
                 }
             }
         }
@@ -202,6 +203,7 @@ namespace ROSBridgeLib
                 //since multiple subscribers can subscribe to same topic, only send unsubscribe if no more subscribers on this topic
                 if (!m_SubscribedTopics.Contains(topic))
                 {
+                    Debug.Log("[ROS WEBSOCKET]Not subcribing anymore to " + topic);
                     _ws.Send(ROSBridgeMsg.UnSubscribe(topic));
                 }
             }
@@ -219,6 +221,7 @@ namespace ROSBridgeLib
             {
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
+                    Debug.Log("[ROS WEBSOCKET] Adding publisher. Advertising " + topic);
                     _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(publisher)));
                 }
             }
@@ -243,6 +246,7 @@ namespace ROSBridgeLib
                 //if we hvae no more publishers on this topic
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
+                    Debug.Log("[ROS WEBSOCKET] not announcing anymore on: " + topic);
                     _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
                 }
             }
@@ -253,7 +257,7 @@ namespace ROSBridgeLib
 		 */
         public void Connect()
         {
-            Debug.Log("Connecting to ROS");
+            Debug.Log("[ROS WEBSOCKET] Connecting to ROS");
             _myThread = new System.Threading.Thread(Run);
             _myThread.Start();
         }
@@ -263,7 +267,7 @@ namespace ROSBridgeLib
 		 */
         public void Disconnect()
         {
-            Debug.Log("Disconnecting from ROS");
+            Debug.Log("[ROS WEBSOCKET] Disconnecting from ROS");
             _myThread.Abort();
             foreach (Type p in _subscribers)
             {
@@ -276,6 +280,7 @@ namespace ROSBridgeLib
                 //if no mo subscribers on this topic
                 if (!m_SubscribedTopics.Contains(topic))
                 {
+                    Debug.Log("[ROS WEBSOCKET] not subscribing anymore to " + topic);
                     _ws.Send(ROSBridgeMsg.UnSubscribe(topic));
                 }
             }
@@ -291,12 +296,13 @@ namespace ROSBridgeLib
                 //if no more advertiser on this topic
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
+                    Debug.Log("[ROS WEBSOCKET] not publishing on topic: " + topic);
                     _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
                 }
             }
+            Debug.Log("[ROS WEBSOCKET] Closing websocket");
             _ws.Close();
             _running = false;
-
         }
 
         private void Run()
@@ -309,6 +315,7 @@ namespace ROSBridgeLib
 
             _running = true;
             AnnouncePublishersAndSubscribers();
+            Debug.Log("Thread Run fct called");
         }
 
         /// <summary>
@@ -325,6 +332,7 @@ namespace ROSBridgeLib
                     //only announce if not already known that we subscribed
                     if (!m_SubscribedTopics.Contains(topic))
                     {
+                        Debug.Log("[ROS WEBSOCKET] Subscribing to " + topic);
                         _ws.Send(ROSBridgeMsg.Subscribe(topic, GetMessageType(p)));
                     }
                     //Debug.Log ("Sending " + ROSBridgeMsg.Subscribe (GetMessageTopic(p), GetMessageType (p)));
@@ -336,6 +344,7 @@ namespace ROSBridgeLib
                     //only announce new publisher if we didn't already announce one for this topic
                     if (!m_AnnouncedTopics.Contains(topic))
                     {
+                        Debug.Log("[ROS WEBSOCKET] Advertising " + topic);
                         _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(p)));
                     }
                     //Debug.Log ("Sending " + ROSBridgeMsg.Advertise (GetMessageTopic(p), GetMessageType(p)));
@@ -351,7 +360,7 @@ namespace ROSBridgeLib
         {
             if (_ws.ReadyState == WebSocketState.Open)
             {
-                Debug.Log("Connection to ROSBridge successful!");
+                Debug.Log("[ROS WEBSOCKET] Connection to ROSBridge successful!");
             }
         }
 
@@ -444,7 +453,6 @@ namespace ROSBridgeLib
             }
             if (newTask != null)
                 Update(newTask.getSubscriber(), newTask.getMsg());
-
             if (_serviceName != null)
             {
                 ServiceResponse(_serviceResponse, _serviceName, _serviceValues);

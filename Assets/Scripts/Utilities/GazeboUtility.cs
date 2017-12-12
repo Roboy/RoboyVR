@@ -12,6 +12,10 @@ public class GazeboUtility {
     /// <returns>Vector in unity coordinate frame.</returns>
     public static Vector3 GazeboPositionToUnity(Vector3 gazeboPos)
     {
+        if (gazeboPos == null)
+        {
+            return Vector3.zero;
+        }
         return new Vector3(gazeboPos.x, gazeboPos.z, gazeboPos.y);
     }
 
@@ -22,6 +26,10 @@ public class GazeboUtility {
     /// <returns>Vector in gazebo coordinate frame.</returns>
     public static Vector3 UnityPositionToGazebo(Vector3 unityPos)
     {
+        if(unityPos == null)
+        {
+            return Vector3.zero;
+        }
         return new Vector3(unityPos.x, unityPos.z, unityPos.y);
     }
 

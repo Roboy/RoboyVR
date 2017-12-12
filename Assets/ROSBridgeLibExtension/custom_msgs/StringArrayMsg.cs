@@ -14,6 +14,7 @@ namespace ROSBridgeLib
             public StringArrayMsg(JSONNode msg)
             {
                 JSONArray linkNames = msg[_identifier].AsArray;
+                
                 foreach (var linkName in linkNames)
                 {
                     _linkNames.Add(linkName.ToString());
@@ -26,6 +27,10 @@ namespace ROSBridgeLib
             {
                 _identifier = identifier;
                 _linkNames = linkNames;
+                if (linkNames == null)
+                {
+                    _linkNames = new List<string>();
+                }
             }
 
             public static string GetMessageType()

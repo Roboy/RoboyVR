@@ -75,8 +75,8 @@ namespace ROSBridgeLib
 
             #region PRIVATE_MEMBER_VARIABLES
 
-            // TO DO MSG SO WE CAN PUBLISH IT
-            private std_msgs.StringMsg _roboyNameMsg;
+            // TODO this is not part of the officially defined msg
+            //private std_msgs.StringMsg _roboyNameMsg;
             private StringArrayMsg _linkNames;
             private FloatArrayMsg _xArray, _yArray, _zArray, _qxArray, _qyArray, _qzArray, _qwArray;
 
@@ -134,7 +134,7 @@ namespace ROSBridgeLib
             public RoboyPoseMsg(string roboyName, List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
                 Dictionary<string, float> qyDic, Dictionary<string, float> qzDic, Dictionary<string, float> qwDic)
             {
-                _roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
+                //_roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
                 _linkNames = new StringArrayMsg("name", linkNames);
 
                 List<float> xValues = CreateListWithLinkNames(linkNames, xDic); 
@@ -173,7 +173,7 @@ namespace ROSBridgeLib
             /// <param name="qw"></param>
             public RoboyPoseMsg(string roboyName, string linkName,  float x, float y, float z, float qx, float qy, float qz, float qw)
             {
-                _roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
+                //_roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
                 List<string> linkNames = new List<string>();
                 linkNames.Add(linkName);
                 _linkNames = new StringArrayMsg("name", linkNames);
@@ -229,7 +229,7 @@ namespace ROSBridgeLib
 
             public override string ToYAMLString()
             {
-                return "{" + _roboyNameMsg.ToYAMLString() + ", " + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
+                return "{" +/* _roboyNameMsg.ToYAMLString() + ", " + */ _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
                     ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() +
                     "}";
             }
