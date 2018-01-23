@@ -226,7 +226,7 @@ public class RoboyManager : Singleton<RoboyManager>
 
         if (name == null)
         {
-            Debug.Log("[RoboyManager]  Using default roboy since no other name specified.");
+            //Debug.Log("[RoboyManager]  Using default roboy since no other name specified.");
             name = m_Roboy.name;
         }
         try
@@ -235,7 +235,7 @@ public class RoboyManager : Singleton<RoboyManager>
         }
         catch
         {
-
+            Debug.Log("Could not find roboy with name  " + m_Roboy.name + " to which to apply the new pose");
             return;
         }
         foreach (KeyValuePair<string, RoboyPart> roboyPart in m_RoboyPartsList[name])
@@ -246,8 +246,11 @@ public class RoboyManager : Singleton<RoboyManager>
                 Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
                 Quaternion originRotation = new Quaternion(qxRotationsDictionary[index], qyRotationsDictionary[index], qzRotationsDictionary[index], qwRotationsDictionary[index]);
 
-                roboyPart.Value.transform.localPosition = GazeboUtility.GazeboPositionToUnity(originPosition);
-                roboyPart.Value.transform.localRotation = GazeboUtility.GazeboRotationToUnity(originRotation);
+
+                roboyPart.Value.transform.position = GazeboUtility.GazeboPositionToUnity(originPosition);
+                //TODO: change to local position for pabiroboy, for roboy_simplified model the pivot points are wrong
+                roboyPart.Value.transform.rotation = GazeboUtility.GazeboRotationToUnity(originRotation);
+                Debug.Log("[RoboyManager] Applied new position");
             }
             catch
             {

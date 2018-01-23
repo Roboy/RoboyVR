@@ -205,8 +205,14 @@ public class VRUILogic : Singleton<VRUILogic>
         m_TouchedPad[1] = false;
         if (m_Skybox)
         {
-            Skybox box = m_Headset.gameObject.AddComponent<Skybox>();
-            box.material = m_Skybox;
+            Skybox previosBox = m_Headset.gameObject.GetComponent<Skybox>();
+            if (previosBox)
+            {
+                previosBox.material = m_Skybox;
+            } else {
+                Skybox box = m_Headset.gameObject.AddComponent<Skybox>();
+                box.material = m_Skybox;
+            }
         }
         //notifications
         m_NotificationsContainer = new GameObject("NotificationContainer");
@@ -609,6 +615,20 @@ public class VRUILogic : Singleton<VRUILogic>
         {
             if (m_Tendons[tendonID])
                 m_Tendons[tendonID].UpdateTendonForce(newForce);
+        }
+    }
+
+    /// <summary>
+    /// Adds the specified tendon offset to the current position
+    /// </summary>
+    /// <param name="tendonID"></param>
+    /// <param name="newOffset"></param>
+    public void ApplyTendonOffset(int tendonID, Vector3 offset)
+    {
+        if (m_Tendons.Count - 1 >= tendonID && tendonID >= 0)
+        {
+            if (m_Tendons[tendonID])
+                m_Tendons[tendonID].ApplyOffset(offset);
         }
     }
 

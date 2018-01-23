@@ -26,6 +26,12 @@ public class HandTool : ControllerTool
     private Mesh m_LeftHandMesh;
 
     /// <summary>
+    /// Factor is multiplied with the force that is created when pulling/ pushing Roboy
+    /// </summary>
+    [SerializeField]
+    private float m_PullForceFactor;
+
+    /// <summary>
     /// TODO: is it used for anything?
     /// </summary>
     private MeshFilter m_MeshFilter;
@@ -137,9 +143,14 @@ public class HandTool : ControllerTool
 
         ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
         ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
-        Debug.Log("[HandTool] Sending ROS pose");
+        //Debug.Log("[HandTool] Sending ROS pose");
 
 
+    }
+
+    private Vector3 RightHandedToLeftHandedCoordinates(Vector3 v)
+    {
+        return new Vector3(-v.z, -v.x, v.y);
     }
     #endregion
 
@@ -257,9 +268,9 @@ public class HandTool : ControllerTool
             float force = m_SpringStiffness * (m_InitialLength - newLength);
 
 
-            Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position);
+            Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position) ;
             directionWorldSpace.Normalize();
-            directionWorldSpace *= force;
+            directionWorldSpace *= force *m_PullForceFactor ;
 
             //TODO: send this to Gazebo, maybe even position where applied ? -> make sure it affects roboy
             //TODO: damping ? is it going to wiggle the whole time when in base position
@@ -270,11 +281,25 @@ public class HandTool : ControllerTool
                 // Transform the position to roboy space
                 Vector3 forcePosition = m_RoboyPoint.transform.position;
                 // transform the direction to roboy space
-                Vector3 forceDirection = roboyPart.transform.InverseTransformDirection(directionWorldSpace);
+                //Vector3 forceDirection = roboyPart.transform.InverseTransformDirection(directionWorldSpace) * m_PullForceFactor;
                 int duration = (int)(Time.smoothDeltaTime * 1000); // time period during which force should be valid,, in milliseconds
-                // trigger the message in RoboyManager
-                Debug.Log("[HandTool] Sending ROS msg");
-                RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
+                                                                   // trigger the message in RoboyManager
+                                                                   //Debug.Log("[HandTool] Sending ROS msg");
+
+
+                //Vector3 gazeboPosition = GazeboUtility.UnityPositionToGazebo(forcePosition);
+                //TODO  wrong or right direction?
+                //              Vector3 gazeboDirection = GazeboUtility.UnityPositionToGazebo(directionWorldSpace * m_PullForceFactor  );
+                //                RoboyManager.Instance.ReceiveExternalForce(roboyPart, gazeboPosition, gazeboDirection, duration);
+                // RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, directionWorldSpace * m_PullForceFactor, duration);
+
+                Debug.Log("Test: " + forcePosition);
+                Debug.Log("One time gazebo thingy: " + GazeboUtility.UnityPositionToGazebo(forcePosition));
+                Debug.Log("gazebo and back thingy: " + GazeboUtility.GazeboPositionToUnity(GazeboUtility.UnityPositionToGazebo(forcePosition)));
+                Debug.Log("double gazebo thingy: " + GazeboUtility.UnityPositionToGazebo(GazeboUtility.UnityPositionToGazebo(forcePosition)));
+                Debug.Log("DOne position");
+                RoboyManager.Instance.ReceiveExternalForce(roboyPart, RightHandedToLeftHandedCoordinates(forcePosition), GazeboUtility.UnityPositionToGazebo(directionWorldSpace), duration);
+
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -21,6 +22,23 @@ public class ExampleFunctions : MonoBehaviour
     /// Boolean managing continuous notification spawn (for coroutine management)
     /// </summary>
     private bool m_Testing = false;
+
+    /// <summary>
+    /// Offset to position the tendons at the right spot, applied constantly
+    /// </summary>
+    [SerializeField]
+    private Vector3 m_Offset;
+
+    /// <summary>
+    /// Rference to all points so that offset can be applied
+    /// </summary>
+    private List<Vector3> m_AllPoints = new List<Vector3>();
+
+    /// <summary>
+    /// Old offset to cheeck for changes and only apply it once
+    /// </summary>
+    private Vector3 m_oldOffset;
+
     #endregion
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -32,6 +50,7 @@ public class ExampleFunctions : MonoBehaviour
     void Start()
     {
         //TENDON EXAMPLE
+        /*
         Vector3[] points1 = { new Vector3(0.242f, 0.355f, -0.034f), //upper arm left
                               new Vector3(0.2358f, 0.4768f, -0.024f),}; //torso
 
@@ -47,14 +66,51 @@ public class ExampleFunctions : MonoBehaviour
                               new Vector3(0.1814f, 0.164f, -0.072f), //lower arm left
                               new Vector3(0.1814f, 0.1287f, -0.102f), //lower arm left
                               new Vector3(0.1814f, 0.0947f, -0.157f)}; //lower arm left
-        string[] names = { "oberarm_left", "torso" };
+        
+        string[] names = { "upper_arm_left", "torso" };
 
-        string[] names3 = { "oberarm_left", "unterarm_left", "unterarm_left", "unterarm_left" };
+        string[] names3 = { "upper_arm_left", "lower_arm_left", "lower_arm_left", "lower_arm_left" };
+        */
+        Vector3[] points1 = { new Vector3(0.2559f, 0.8919f, -0.0379f), //upper arm left
+                              new Vector3(0.2716f, 1.0055f, -0.0545f),}; //torso
+
+        Vector3[] points2 = { new Vector3(0.1999f, 0.9031f, -0.046f), //upper arm left
+                              new Vector3(0.1999f, 1.0024f, -0.046f) }; //torso
+
+        Vector3[] points3 = { new Vector3(0.1999f, 0.8103f, -0.0557f), //upper arm left
+                              new Vector3(0.2178f, 0.7198f, -0.1119f), //lower arm left
+                              new Vector3(0.22383f, 0.72199f, -0.1541f)}; //lower arm left
+
+        Vector3[] points4 = { new Vector3(0.267f, 0.8133f, -0.0394f), //upper arm left
+                              new Vector3(0.2516f, 0.7278f, -0.0891f), //lower arm left
+                              new Vector3(0.2516f, 0.7374f, -0.1462f)}; //lower arm left
+
+        string[] names = { "upper_arm_left", "torso" };
+
+        string[] names3 = { "upper_arm_left", "lower_arm_left", "lower_arm_left" };
         VRUILogic.Instance.AddTendon(0, points1, names, 1f);
         VRUILogic.Instance.AddTendon(1, points2, names, 1f);
         VRUILogic.Instance.AddTendon(2, points3, names3, 1f);
         VRUILogic.Instance.AddTendon(3, points4, names3, 1f);
-        m_Arm = VRUILogic.Instance.GetBodyPart("unterarm_left");
+        // m_Arm = VRUILogic.Instance.GetBodyPart("lower_arm_left");
+
+        foreach(var point in points1){
+            m_AllPoints.Add(point);
+        }
+        foreach (var point in points2)
+        {
+            m_AllPoints.Add(point);
+        }
+
+        foreach (var point in points3)
+        {
+            m_AllPoints.Add(point);
+        }
+        foreach (var point in points4)
+        {
+            m_AllPoints.Add(point);
+        }
+   
 
     }
 
@@ -70,6 +126,7 @@ public class ExampleFunctions : MonoBehaviour
         VRUILogic.Instance.UpdateTendon(2, 1 - x);
         VRUILogic.Instance.UpdateTendon(3, 1 - x);
 
+        UpdatOffset();
         if (m_Arm)
         {
             Vector3 temp = m_Arm.transform.position;
@@ -100,6 +157,21 @@ public class ExampleFunctions : MonoBehaviour
     #endregion
 
     #region PRIVATE_METHODS
+
+    /// <summary>
+    /// applies new offset relative to initial position ( not the current one)
+    /// </summary>
+    private void UpdatOffset()
+    {
+        if (m_oldOffset.Equals(m_Offset)) return;
+        Debug.Log("NEW OFFSET");
+        Vector3 deltaOffset = m_Offset - m_oldOffset;
+        VRUILogic.Instance.ApplyTendonOffset(0, deltaOffset);
+        VRUILogic.Instance.ApplyTendonOffset(1, deltaOffset);
+        VRUILogic.Instance.ApplyTendonOffset(2, deltaOffset);
+        VRUILogic.Instance.ApplyTendonOffset(3, deltaOffset);
+        m_oldOffset = m_Offset;
+    }
     /// <summary>
     /// used for testing of notifications display.
     /// Automatically spawns new notifications.

@@ -3,11 +3,12 @@ Getting started
 
 Part 1: Run rosbridge and roboySimulation
 -----------------------------------------
+In case you need to change the port on which you want to operate (e.g. because it is already in use), adapt the value of the following command and make sure to also change the value in the Unity scene. 
 
 .. code:: bash
 
   source path-to-roboy-ros-control/devel.setup.bash
-  roslaunch rosbridge_server rosbridge_websocket.launch
+  roslaunch rosbridge_server rosbridge_websocket.launch port:=9090
   rosrun roboy_simulation VRRoboy
   
 Part 2: Open the project in Unity

@@ -173,8 +173,8 @@ namespace ROSBridgeLib
             //Multiple subscribers for the same topic possible
             IsValidSubscriber(subscriber);
             _subscribers.Add(subscriber);
-
             string topic = GetMessageTopic(subscriber);
+            
             if (_running)
             {
                 //only announce if not announced yet, 
@@ -246,7 +246,7 @@ namespace ROSBridgeLib
                 //if we hvae no more publishers on this topic
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
-                    Debug.Log("[ROS WEBSOCKET] not announcing anymore on: " + topic);
+                    //Debug.Log("[ROS WEBSOCKET] not announcing anymore on: " + topic);
                     _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
                 }
             }
@@ -296,7 +296,7 @@ namespace ROSBridgeLib
                 //if no more advertiser on this topic
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
-                    Debug.Log("[ROS WEBSOCKET] not publishing on topic: " + topic);
+                    //Debug.Log("[ROS WEBSOCKET] not publishing on topic: " + topic);
                     _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
                 }
             }

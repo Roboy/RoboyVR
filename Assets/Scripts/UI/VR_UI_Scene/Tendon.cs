@@ -127,7 +127,8 @@ public class Tendon : MonoBehaviour
             Transform parent = FindParent(objectNames[i]);
             if (!parent)
             {
-                Debug.Log("[Tendon] Parent with name " + objectNames[i] + " could not be located. Tendons won't move with obj.");
+                //Debug.Log("[Tendon] Parent with name " + objectNames[i] + " could not be located. Tendons won't move with obj.");
+                Debug.Log("[Tendon] parent could not be located, tendon won't move with obejct");
                 p.transform.SetParent(VRUILogic.Instance.GetDefaultWirepointContainer().transform);
             }
             else
@@ -161,6 +162,18 @@ public class Tendon : MonoBehaviour
         if (force > 0)
             m_Force = force;
         UpdateTendonColor();
+    }
+
+    /// <summary>
+    /// Applies specified offset to the tenedon points
+    /// </summary>
+    /// <param name="offset"></param>
+    public void ApplyOffset(Vector3 offset)
+    {
+        for (int i = 0; i < m_Wirepoints.Length; i++)
+        {
+            m_Wirepoints[i].position += offset;
+        }
     }
     #endregion
 

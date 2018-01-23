@@ -1,6 +1,6 @@
 ﻿using SimpleJSON;
 using ROSBridgeLib.custom_msgs;
-
+using UnityEngine;
 namespace ROSBridgeLib
 {
     public class RoboyPoseSubscriber : ROSBridgeSubscriber
@@ -14,7 +14,7 @@ namespace ROSBridgeLib
 
         public new static string GetMessageType()
         {
-            return "roboy_communication_middleware/Pose";
+            return "/roboy_communication_middleware/Pose";
         }
 
         public new static ROSBridgeMsg ParseMessage(JSONNode msg)

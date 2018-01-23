@@ -7,12 +7,12 @@ namespace ROSBridgeLib
     {
         public new static string GetMessageTopic()
         {
-            return "roboy/simulation/pabi_pose";
+            return "/roboy/simulation/PaBiRoboy_demo_simplified_pose";
         }
 
         public new static string GetMessageType()
         {
-            return "roboy_communication_middleware/Pose";
+            return "/roboy_communication_middleware/Pose";
         }
 
         public new static ROSBridgeMsg ParseMessage(JSONNode msg)

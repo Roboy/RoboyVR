@@ -85,7 +85,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1871798522809786}
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 4300000, guid: 3149e51e0ed38f04084995d296238179, type: 3}
 --- !u!114 &114015195755441830
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -122,6 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RightHandMesh: {fileID: 4300000, guid: 3149e51e0ed38f04084995d296238179, type: 3}
   m_LeftHandMesh: {fileID: 4300000, guid: 8e64d726bddfc614c890668110295789, type: 3}
+  m_PullForceFactor: 1000
   m_RayDistance: 0.3
 --- !u!114 &114984493035044586
 MonoBehaviour:

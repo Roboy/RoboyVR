@@ -64,6 +64,7 @@ public class ROSBridge : Singleton<ROSBridge> {
 
     public void Publish(string topic, ROSBridgeMsg msg)
     {
+        //Debug.Log("[ROSBridge Message] Publishing some message on topic" + topic);
         m_ROS.Publish(topic, msg);
     }
 
