@@ -12,285 +12,304 @@ namespace ROSBridgeLib
             #region PUBLIC_MEMBER_VARIABLES
             public string Name
             {
-                get { return _roboyName; }
+                get
+                {
+                    return _roboyName;
+                }
             }
-
-            public Dictionary<string, float> XDic
+            
+            public List<string> linkNames
             {
                 get
                 {
-                    return _xDic;
+                    return _linkNames;
                 }
             }
 
-            public Dictionary<string, float> YDic
+            public Vector3[] positions
             {
                 get
                 {
-                    return _yDic;
+                    return _positions;
                 }
             }
 
-            public Dictionary<string, float> ZDic
+            public Quaternion[] rotations
             {
                 get
                 {
-                    return _zDic;
+                    return _rotations;
                 }
             }
-
-            public Dictionary<string, float> QxDic
-            {
-                get
-                {
-                    return _qxDic;
-                }
-            }
-
-            public Dictionary<string, float> QyDic
-            {
-                get
-                {
-                    return _qyDic;
-                }
-            }
-
-            public Dictionary<string, float> QzDic
-            {
-                get
-                {
-                    return _qzDic;
-                }
-            }
-
-            public Dictionary<string, float> QwDic
-            {
-                get
-                {
-                    return _qwDic;
-                }
-            }
-
             #endregion //PUBLIC_MEMBER_VARIABLES
 
             #region PRIVATE_MEMBER_VARIABLES
 
-            // TODO this is not part of the officially defined msg
-            //private std_msgs.StringMsg _roboyNameMsg;
-            private StringArrayMsg _linkNames;
-            private FloatArrayMsg _xArray, _yArray, _zArray, _qxArray, _qyArray, _qzArray, _qwArray;
-
+            /// <summary>
+            /// Name of the concerned Roboy
+            /// THIS DOES NOT OFFICIALLY EXIST IN THE GIVEN MESSAGE TYPE YET
+            /// </summary>
             private string _roboyName;
-            private Dictionary<string, int> _nameIndexDic;
-            private Dictionary<string, float> _xDic, _yDic, _zDic, _qxDic, _qyDic, _qzDic, _qwDic;
 
+            /// <summary>
+            /// Names of the concerned links of the Roboy
+            /// </summary>
+            private List<string> _linkNames;
+
+            /// <summary>
+            /// Positions of the concerned links 
+            /// IMPORTANT: ORDER MUS BE EQUIVALENT TO LINK NAMES LIST
+            /// </summary>
+            private Vector3[] _positions;
+
+            /// <summary>
+            /// ROtation of the concerned links
+            /// IMPORTANT: ORDER MUS BE EQUIVALENT TO LINK NAMES LIST
+            /// </summary>
+            private Quaternion[] _rotations;
+
+            /// <summary>
+            /// if set to true, the positions and rotations will be in GAZEBO COORD system
+            /// </summary>
+            private bool _publish;
             #endregion //PRIVATE_MEMBER_VARIABLES
 
             #region PUBLIC_METHODS
 
+            /// <summary>
+            /// Parse given message to RoboyPoseMsg type
+            /// FIXME: If malformed message, excepions might occure here!!!
+            /// </summary>
+            /// <param name="msg"></param>
             public RoboyPoseMsg(JSONNode msg)
             {
+                //Initialize everything
+                _linkNames = new List<string>();
+
+                //Is not defined in the official message type yet
                 _roboyName = msg["roboyName"];
-                //Parse names to indeces so we know which name corresponds to which value
+
                 JSONArray nameArray = msg["name"].AsArray;
-                _nameIndexDic = new Dictionary<string, int>();
 
                 for (int i = 0; i < nameArray.Count; i++)
                 {
                     string meshName = nameArray[i].ToString().Replace("\"", string.Empty);
-                    _nameIndexDic.Add(meshName, i);
+                    _linkNames.Add(meshName);
                 }
 
-                //Parse x values with the correponding name as string
-                JSONArray xArray = msg["x"].AsArray;
-                _xDic = CreateDictionary(nameArray, xArray);
+                // x positions 
+                float[] vals = ParseJsonArrayToFloats(msg["x"].AsArray);
+                _positions = new Vector3[vals.Length];
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _positions[i].x = vals[i];
+                }
 
-                //Parse y values with the correponding name as string
-                JSONArray yArray = msg["y"].AsArray;
-                _yDic = CreateDictionary(nameArray, yArray);
-                
-                //Parse z values with the correponding name as string
-                JSONArray zArray = msg["z"].AsArray;
-                _zDic = CreateDictionary(nameArray, zArray);
+                // y position
+                vals = ParseJsonArrayToFloats(msg["y"].AsArray);
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _positions[i].y = vals[i];
+                }
+                // z position
+                vals = ParseJsonArrayToFloats(msg["z"].AsArray);
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _positions[i].z = vals[i];
+                }
 
-                //Parse qx values with the correponding name as string
-                JSONArray qxArray = msg["qx"].AsArray;
-                _qxDic = CreateDictionary(nameArray, qxArray);
+                // rotations 
+                // x rotation
+                vals = ParseJsonArrayToFloats(msg["qx"].AsArray);
+                _rotations = new Quaternion[vals.Length];
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _rotations[i].x = vals[i];
+                }
+                // y rotation
+                vals = ParseJsonArrayToFloats(msg["qy"].AsArray);
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _rotations[i].y = vals[i];
+                }
+                // z rotation
+                vals = ParseJsonArrayToFloats(msg["qz"].AsArray);
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _rotations[i].z = vals[i];
 
-                //Parse qy values with the correponding name as string
-                JSONArray qyArray = msg["qy"].AsArray;
-                _qyDic = CreateDictionary(nameArray, qyArray);
+                }
+                // w value
+                vals = ParseJsonArrayToFloats(msg["qw"].AsArray);
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    _rotations[i].w = vals[i];
 
-                //Parse qz values with the correponding name as string
-                JSONArray qzArray = msg["qz"].AsArray;
-                _qzDic = CreateDictionary(nameArray, qzArray);
-
-                //Parse qw values with the correponding name as string
-                JSONArray qwArray = msg["qw"].AsArray;
-                _qwDic = CreateDictionary(nameArray, qwArray);
+                }
+                // Transform from gazebo coordinate system to unity coordinate system
+                _publish = false;
+                for (int i = 0; i < _positions.Length; i++)
+                {
+                    _positions[i] = GazeboUtility.GazeboPositionToUnity(_positions[i]);
+                    _rotations[i] = GazeboUtility.GazeboRotationToUnity(_rotations[i]);
+                }
             }
 
             /// <summary>
             /// Create message based on given params. Attention: link names, positions and rotation need to correspond to same index (*obviously*)
-            /// TODO: NOT IMPLEMENTED YET
+            /// FIXME: No security checks here
             /// </summary>
-            /// <param name="roboyName"></param>
-            /// <param name="linkNames"></param>
-            /// <param name="positions"></param>
-            /// <param name="rotation"></param>
-            public RoboyPoseMsg(string roboyName, List<string> linkNames, List<Vector3> positions, List<Quaternion> rotation)
+            /// <param name="roboyName">Name of roboy - TODO for now: not of interest / use</param>
+            /// <param name="linkNames">Name of the links to be updated</param>
+            /// <param name="positions">position of these links in UNITY COORDINATE SPACE</param>
+            /// <param name="rotation">rotation of these links in UNITY COORDINATE SPACE</param>
+            public RoboyPoseMsg(string roboyName, List<string> linkNames, Vector3[] positions, Quaternion[] rotations)
             {
-                //GazeboUtility.UnityPositionToGazebo
-                /*TODO NO CONTENT YET*/
-                throw new System.NotImplementedException();
+                // translation from unity to gazebo coordinate system
+                _positions = new Vector3[positions.Length];
+                _rotations = new Quaternion[rotations.Length];
+                _publish = true;
+                for (int i = 0; i < positions.Length; i++)
+                {
+                    _positions[i] = GazeboUtility.UnityPositionToGazebo(positions[i]);
+                    _rotations[i] = GazeboUtility.UnityRotationToGazebo(rotations[i]);
+                }
+                _roboyName = roboyName;
+                _linkNames = linkNames;
             }
 
-
-            public RoboyPoseMsg(string roboyName, List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
-                Dictionary<string, float> qyDic, Dictionary<string, float> qzDic, Dictionary<string, float> qwDic)
-            {
-                //_roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
-                _linkNames = new StringArrayMsg("name", linkNames);
-
-                List<float> xValues = CreateListWithLinkNames(linkNames, xDic); 
-                _xArray = new FloatArrayMsg("x", xValues);
-
-                List<float> yValues = CreateListWithLinkNames(linkNames, yDic);
-                _yArray = new FloatArrayMsg("y", yValues);
-
-                List<float> zValues = CreateListWithLinkNames(linkNames, zDic);
-                _zArray = new FloatArrayMsg("z", zValues);
-
-                List<float> qxValues = CreateListWithLinkNames(linkNames, qxDic);
-                _qxArray = new FloatArrayMsg("qx", qxValues);
-
-                List<float> qyValues = CreateListWithLinkNames(linkNames, qyDic);
-                _qyArray = new FloatArrayMsg("qy", qyValues);
-
-                List<float> qzValues = CreateListWithLinkNames(linkNames, qzDic);
-                _qzArray = new FloatArrayMsg("qz", qzValues);
-
-                List<float> qwValues = CreateListWithLinkNames(linkNames, qwDic);
-                _qwArray = new FloatArrayMsg("qw", qwValues);
-            }
 
             /// <summary>
-            /// Creates pose message for one object
+            /// Creates pose message for one link
+            /// MAINLY FOR TEST PURPOSES
             /// </summary>
-            /// <param name="roboyName"></param>
-            /// <param name="linkName"></param>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <param name="z"></param>
-            /// <param name="qx"></param>
-            /// <param name="qy"></param>
-            /// <param name="qz"></param>
-            /// <param name="qw"></param>
-            public RoboyPoseMsg(string roboyName, string linkName,  float x, float y, float z, float qx, float qy, float qz, float qw)
+            /// <param name="roboyName">Name of the roboy: TODO - for now not of interest</param>
+            /// <param name="linkName">the concerned link</param>
+            /// <param name="position">position of the link in UNITY COORD SPACE</param>
+            /// <param name="rotation">rotation of the link in UNITY COORD SPACE</param>
+            public RoboyPoseMsg(string roboyName, string linkName, Vector3 position, Quaternion rotation)
             {
                 //_roboyNameMsg = new std_msgs.StringMsg("roboyName", roboyName);
-                List<string> linkNames = new List<string>();
-                linkNames.Add(linkName);
-                _linkNames = new StringArrayMsg("name", linkNames);
-
-                List<float> xValues = new List<float>();
-                xValues.Add(x);
-                _xArray = new FloatArrayMsg("x", xValues);
-
-                List<float> yValues = new List<float>();
-                yValues.Add(y);
-                _yArray = new FloatArrayMsg("y", yValues);
-
-                List<float> zValues = new List<float>();
-                zValues.Add(z);
-                _zArray = new FloatArrayMsg("z", zValues);
-
-                List<float> qxValues = new List<float>();
-                qxValues.Add(qx);
-                _qxArray = new FloatArrayMsg("qx", qxValues);
-
-                List<float> qyValues = new List<float>();
-                qyValues.Add(qy);
-                _qyArray = new FloatArrayMsg("qy", qyValues);
-
-                List<float> qzValues = new List<float>();
-                qzValues.Add(qz);
-                _qzArray = new FloatArrayMsg("qz", qzValues);
-
-                List<float> qwValues = new List<float>();
-                qwValues.Add(qw);
-                _qwArray = new FloatArrayMsg("qw", qwValues);
+                _linkNames = new List<string>();
+                _linkNames.Add(linkName);
+                _positions = new Vector3[] { GazeboUtility.UnityPositionToGazebo(position) };
+                _rotations = new Quaternion[] { GazeboUtility.UnityRotationToGazebo(rotation)};
             }
+
             public static string GetMessageType()
             {
                 return "common_utilities/Pose";
             }
 
+
+            /// <summary>
+            /// NOT IMPLEMENTED (NEEDED) Use ToYAMLString
+            /// </summary>
+            /// <returns></returns>
             public override string ToString()
             {
-                return "common_utilities/Pose [name =";
+                throw new System.NotImplementedException();
             }
 
             /// <summary>
-            /// The YAML format is only needed when we publish a msg over the ROSBridge. TO DO CHANGE SO WE CAN PUBLISH IT
+            /// The YAML format is only needed when we publish a msg over the ROSBridge.
             /// </summary>
             /// <returns></returns>
-            //public override string ToYAMLString()
-            //{
-            //    return "{" + _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
-            //        ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() +
-            //        "}";
-            //}
-
             public override string ToYAMLString()
             {
-                return "{" +/* _roboyNameMsg.ToYAMLString() + ", " + */ _linkNames.ToYAMLString() + ", " + _xArray.ToYAMLString() + ", " + _yArray.ToYAMLString() + ", " + _zArray.ToYAMLString() +
-                    ", " + _qxArray.ToYAMLString() + ", " + _qyArray.ToYAMLString() + ", " + _qzArray.ToYAMLString() + ", " + _qwArray.ToYAMLString() +
-                    "}";
+                string result = "{\"name\":[";
+                //link names
+                foreach (string name in _linkNames)
+                {
+                    result += "\"" + name + "\",";
+                }
+                result = result.Remove(result.Length - 1) + "]";
+              
+                result += ", \"x\":" + ParseFLoatArrayToString(GetVector3ArrayPartly(_positions, 0));
+                result += ", \"y\":" + ParseFLoatArrayToString(GetVector3ArrayPartly(_positions, 1));
+                result += ", \"z\":" + ParseFLoatArrayToString(GetVector3ArrayPartly(_positions, 2));
+                result += ", \"qx\":" + ParseFLoatArrayToString(GetQuaternionArrayPartly(_rotations, 0));
+                result += ", \"qy\":" + ParseFLoatArrayToString(GetQuaternionArrayPartly(_rotations, 1));
+                result += ", \"qz\":" + ParseFLoatArrayToString(GetQuaternionArrayPartly(_rotations, 2));
+                result += ", \"qw\":" + ParseFLoatArrayToString(GetQuaternionArrayPartly(_rotations, 3));
+                result += "}";
+                return result;
             }
 
             #endregion //PUBLIC_METHODS
 
+            #region PRIVATE_METHDOS            
             /// <summary>
-            /// creates a List of float items according to the given dictionary and the linknames (which are values inside thr dictionary)
+            /// parses array to float values and returns these in form of an array. 
+            /// All " are removed. 
+            /// FIXME: Malformed messages cause this part to crash when parsing fails (but faster this way)
             /// </summary>
-            /// <param name="linkNames"></param>
-            /// <param name="dictionary"></param>
+            /// <param name="array"></param>
             /// <returns></returns>
-            #region PRIVATE_METHDOS
-            private List<float> CreateListWithLinkNames(List<string> linkNames, Dictionary<string, float> dictionary)
+            private float[] ParseJsonArrayToFloats(JSONArray array)
             {
-                if (linkNames == null || dictionary == null)
-                    return null;
-                List<float> list = new List<float>();
-                foreach (var linkName in linkNames)
+                float[] vals = new float[array.Count];
+                for (int i = 0; i < array.Count; i++)
                 {
-                    list.Add(dictionary[linkName]);
+                    string value = array[i].ToString().Replace("\"", string.Empty);
+                    vals[i] = float.Parse(value);
                 }
-                return list;
+                return vals;
             }
 
+            /// <summary>
+            /// parses float values to string whith json array format.  -> [ "0.0", "0.0" , "0.0" ]
+            /// " are added. 
+            /// </summary>
+            /// <param name="array"></param>
+            /// <returns></returns>
+            private string ParseFLoatArrayToString(float[] array)
+            {
+                string result = "[";
+
+                foreach (float val in array)
+                {
+                    result += "" + val.ToString() + ",";
+                }
+                return result.Remove(result.Length - 1) + "]";
+            }
 
             /// <summary>
-            /// Parse given in array values(float) with the correponding name as string in the dictionary
+            /// returns float array consistion of the "pos"{0;1;2} value of the entry of all entries of the array
+            /// NO SECURITY CHECKS
             /// </summary>
-            /// <param name="nameArray"></param>
+            /// <param name="array"></param>
+            /// <param name="pos"></param>
             /// <returns></returns>
-            private Dictionary<string, float> CreateDictionary(JSONArray nameArray,  JSONArray valueArray)
+            private float[] GetVector3ArrayPartly(Vector3[] array, int pos)
             {
-                if (nameArray == null)
-                    return null;
-                Dictionary<string, float> dictionary = new Dictionary<string, float>();
-
-                for (int i = 0; i < valueArray.Count; i++)
+                float[] result = new float[array.Length];
+                for (int i = 0; i < array.Length; i++)
                 {
-                    string meshName = nameArray[i].ToString().Replace("\"", string.Empty);
-                    dictionary.Add(meshName, valueArray[i].AsFloat);
+
+                    result[i] = array[i][pos];
                 }
-                return dictionary;
+                return result;
+            }
+
+            /// <summary>
+            /// returns float array consistion of the "pos"{0;1;2;3} value of the entry of all entries of the array
+            /// NO SECURITY CHECKS
+            /// </summary>
+            /// <param name="array"></param>
+            /// <param name="pos"></param>
+            /// <returns></returns>
+            private float[] GetQuaternionArrayPartly(Quaternion[] array, int pos)
+            {
+                float[] result = new float[array.Length];
+                for (int i = 0; i < array.Length; i++)
+                {
+
+                    result[i] = array[i][pos];
+                }
+                return result;
             }
             #endregion
         }
     }
 }
-

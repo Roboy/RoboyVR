@@ -3,6 +3,9 @@ using ROSBridgeLib.custom_msgs;
 
 namespace ROSBridgeLib
 {
+    /// <summary>
+    /// Subscriber (never called by other classes, attached to Object with ROSObject component)
+    /// </summary>
     public class PaBiPoseSubscriber : ROSBridgeSubscriber
     {
         public new static string GetMessageTopic()

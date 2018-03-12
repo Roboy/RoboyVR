@@ -1,7 +1,7 @@
 ﻿using SimpleJSON;
 
 /// <summary>
-/// This message is not used so far
+/// Standard ROSBridge Lib message
 /// </summary>
 namespace ROSBridgeLib
 {

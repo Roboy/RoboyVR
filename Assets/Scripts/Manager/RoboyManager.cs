@@ -170,18 +170,10 @@ public class RoboyManager : Singleton<RoboyManager>
         IDictionary<string, RoboyPart> dic;
         m_RoboyPoseMessage = msg;
 
-        Dictionary<string, float> xPositionsDictionary = m_RoboyPoseMessage.XDic;
-        Dictionary<string, float> yPositionsDictionary = m_RoboyPoseMessage.YDic;
-        Dictionary<string, float> zPositionsDictionary = m_RoboyPoseMessage.ZDic;
-
-        Dictionary<string, float> qxRotationsDictionary = m_RoboyPoseMessage.QxDic;
-        Dictionary<string, float> qyRotationsDictionary = m_RoboyPoseMessage.QyDic;
-        Dictionary<string, float> qzRotationsDictionary = m_RoboyPoseMessage.QzDic;
-        Dictionary<string, float> qwRotationsDictionary = m_RoboyPoseMessage.QwDic;
-
         if (name == null)
         {
             //Debug.Log("[RoboyManager]  Using default roboy since no other name specified.");
+            //TODO for now: no name specified for this message type anyways
             name = m_Roboy.name;
         }
         try
@@ -193,23 +185,16 @@ public class RoboyManager : Singleton<RoboyManager>
             Debug.Log("Could not find roboy with name  " + m_Roboy.name + " to which to apply the new pose");
             return;
         }
-        foreach (KeyValuePair<string, RoboyPart> roboyPart in m_RoboyPartsList[name])
+
+        //for each roboypart which was specified
+        for (int i = 0; i < msg.linkNames.Count; i++)
         {
-            string index = roboyPart.Key;
-            try
+            RoboyPart part;
+            //if roboy part exists
+            if (dic.TryGetValue(msg.linkNames[i], out part))
             {
-                Vector3 originPosition = new Vector3(xPositionsDictionary[index], yPositionsDictionary[index], zPositionsDictionary[index]);
-                Quaternion originRotation = new Quaternion(qxRotationsDictionary[index], qyRotationsDictionary[index], qzRotationsDictionary[index], qwRotationsDictionary[index]);
-
-
-                roboyPart.Value.transform.position = GazeboUtility.GazeboPositionToUnity(originPosition);
-                //TODO: change to local position for pabiroboy, for roboy_simplified model the pivot points are wrong
-                roboyPart.Value.transform.rotation = GazeboUtility.GazeboRotationToUnity(originRotation);
-                //Debug.Log("[RoboyManager] Applied new position");
-            }
-            catch
-            {
-                Debug.Log("[RoboyManager] Couldn't find body part named: " + index);
+                part.transform.position = msg.positions[i];
+                part.transform.rotation = msg.rotations[i];
             }
         }
     }

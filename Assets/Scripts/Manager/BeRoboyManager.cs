@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VR;
 using ROSBridgeLib.sensor_msgs;
 using ROSBridgeLib;
 using ROSBridgeLib.custom_msgs;
@@ -173,11 +171,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager>
     /// <param name="pos"></param>
     public void PublishRoboyPosition(Vector3 pos)
     {
-        RoboyPositionMsg msg = new RoboyPositionMsg(pos.x, pos.y, pos.z);
-        Debug.Log("MESSAGE: ROBOY POS: " + msg.ToYAMLString());
+        RoboyPositionMsg msg = new RoboyPositionMsg(pos);
         ROSBridge.Instance.Publish(RoboyPositionPublisher.GetMessageTopic(), msg);
     }
-
     #endregion PUBLIC_METHODS
 
 

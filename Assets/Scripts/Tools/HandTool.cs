@@ -124,36 +124,13 @@ public class HandTool : ControllerTool
     /// </summary>
     private void FixedUpdate()
     {
-
         string linkName = (m_IsLeft) ? "left_hand" : "right_hand";
         List<string> linkNames = new List<string>();
         linkNames.Add(linkName);
 
-        var xDic = new Dictionary<string, float>();
-        var yDic = new Dictionary<string, float>();
-        var zDic = new Dictionary<string, float>();
-        var qxDic = new Dictionary<string, float>();
-        var qyDic = new Dictionary<string, float>();
-        var qzDic = new Dictionary<string, float>();
-        var qwDic = new Dictionary<string, float>();
-        
-        Vector3 gazeboPosition = GazeboUtility.UnityPositionToGazebo(transform.position);
-        Quaternion gazeboRotation = GazeboUtility.UnityRotationToGazebo(transform.rotation);
-
-        //Vector3 gazeboPosition = transform.position;
-        //Quaternion gazeboRotation = transform.rotation;
-
-        xDic.Add(linkName, gazeboPosition.x);
-        yDic.Add(linkName, gazeboPosition.y);
-        zDic.Add(linkName, gazeboPosition.z);
-
-        qxDic.Add(linkName, gazeboRotation.x);
-        qyDic.Add(linkName, gazeboRotation.y);
-        qzDic.Add(linkName, gazeboRotation.z);
-        qwDic.Add(linkName, gazeboRotation.w);
-
-        ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
-        //ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
+        ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands",
+        linkNames, new Vector3[] { transform.position }, new Quaternion[] { transform.rotation });
+        ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
     }
     #endregion
 
@@ -295,7 +272,7 @@ public class HandTool : ControllerTool
                 // delta world direction * forces 
                 Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position) * m_PullForceFactor;
                 //forces in local space of part that is affected
-                Vector3 directionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, directionWorldSpace); 
+                Vector3 directionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, directionWorldSpace);
                 // the position in local space
                 Vector3 forcePosition = GazeboUtility.WorldToLocalSpacePosition(roboyPart.transform, m_RoboyPoint.transform.position);
 
@@ -322,6 +299,6 @@ public class HandTool : ControllerTool
             }
         }
     }
-    
+
     #endregion
 }
