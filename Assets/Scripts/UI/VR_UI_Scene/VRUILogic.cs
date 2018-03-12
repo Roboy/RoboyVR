@@ -368,6 +368,10 @@ public class VRUILogic : Singleton<VRUILogic>
         return m_Headset;
     }
 
+    /// <summary>
+    /// returns reference to the main roboy of the scene (which existed from the beginning)
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetRoboy()
     {
         return m_Roboy;

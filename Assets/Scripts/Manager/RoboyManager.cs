@@ -8,7 +8,6 @@ using ROSBridgeLib.custom_msgs;
 /// In summary it does the following:
 ///
 ///     -# receive pose messages to adjust roboy pose.
-///     -# subscribe to the external force event and forward the message to the simulation.
 ///     -# send a service call for a world reset.
 ///     -# FUTURE: receive motor msg and forward it to the according motors.
 /// </summary>
@@ -62,7 +61,7 @@ public class RoboyManager : Singleton<RoboyManager>
     private Dictionary<string, Transform> m_Roboys = new Dictionary<string, Transform>();
 
     /// <summary>
-    /// Pose message of roboy in ou r build in class
+    /// Pose message of roboy in our build in class
     /// </summary>
     private RoboyPoseMsg m_RoboyPoseMessage;
 
@@ -87,7 +86,7 @@ public class RoboyManager : Singleton<RoboyManager>
     private void Awake()
     {
         //srarches for all roboys in the scene and all their parts
-        getRoboy();
+        LocateRoboy();
         InitializeRoboyParts();
     }
 
@@ -109,7 +108,7 @@ public class RoboyManager : Singleton<RoboyManager>
         {
             Debug.Log("[RoboyManager] Adding new roboy: " + roboy.name);
             m_Roboys.Add(roboy.name, roboy);
-            getRoboyParts(roboy.name);
+            LocateRoboyParts(roboy.name);
         }
     }
 
@@ -126,16 +125,13 @@ public class RoboyManager : Singleton<RoboyManager>
     }
 
     /// <summary>
-    /// Main function to receive messages from ROSBridge. Adjusts the roboy pose and the motors values (future).
+    /// Main function to receive messages from ROSBridge. Adjusts the roboy pose
     /// </summary>
     /// <param name="msg">JSON msg containing roboy pose.</param>
     public void ReceiveMessage(RoboyPoseMsg msg)
     {
         //Debug.Log("Received message");
         AdjustPose(msg.Name, msg);
-
-        //Use additional data to adjust motor values
-
     }
 
     /// <summary>
@@ -143,23 +139,17 @@ public class RoboyManager : Singleton<RoboyManager>
     /// The position is transformed from Unity to Gazebo space here.
     /// </summary>
     /// <param name="roboyPart">The roboypart where the force should be applied.</param>
-    /// <param name="position">The relative position of the force to the roboypart.</param>
-    /// <param name="force">The direction and the amount of force relative to roboypart.</param>
-    /// <param name="duration">The duration for which the force should be applied.</param>
-    public void ReceiveExternalForce(RoboyPart roboyPart, Vector3 position, Vector3 force, int duration)
+    /// <param name="position">The RELATIVE position of the force to the roboypart.</param>
+    /// <param name="force">The RELATIVE direction and the amount of force with respect to the roboypart.</param>
+    /// <param name="duration">The duration for which the force should be applied (in millisecs).</param>
+    public void SendExternalForce(RoboyPart roboyPart, Vector3 position, Vector3 force, int duration)
     {
-        ROSBridgeLib.custom_msgs.ExternalForceMsg msg;
-        if (roboyPart == null)
-        { //TODO fix this (shouldit be sent at all?) if so -> empty string
-            msg = new ROSBridgeLib.custom_msgs.ExternalForceMsg("Roboys-Unicorn-horn", GazeboUtility.UnityPositionToGazebo(position), GazeboUtility.UnityPositionToGazebo(force), duration);
-        }
-        else
+        ExternalForceMsg msg;
+        if (roboyPart != null)
         {
-            msg = new ROSBridgeLib.custom_msgs.ExternalForceMsg(roboyPart.gameObject.name, GazeboUtility.UnityPositionToGazebo(position), GazeboUtility.UnityPositionToGazebo(force), duration);
+            msg = new ExternalForceMsg(roboyPart.gameObject.name, position, force, duration, true);
+            ROSBridge.Instance.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
         }
-        ROSBridge.Instance.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
-
-        //Debug.Log(msg.ToYAMLString());
     }
 
     public void ResetSimulation()
@@ -170,41 +160,6 @@ public class RoboyManager : Singleton<RoboyManager>
     #endregion //PUBLIC_METHODS
 
     #region PRIVATE_METHODS
-
-    /// <summary>
-    /// Test function to draw tendons. For now draws only random lines. TEMPLATE!
-    /// </summary>
-    private void drawTendons()
-    {
-        Dictionary<int, List<Vector3>> tendonsDictionary = new Dictionary<int, List<Vector3>>();
-        int tendonsCount = 5;
-        int tendonsLength = UnityEngine.Random.Range(2, 10);
-
-        for (int i = 0; i < tendonsCount; i++)
-        {
-            List<Vector3> lv = new List<Vector3>();
-            for (int j = 0; j < tendonsLength; j++)
-            {
-                Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f));
-                lv.Add(position);
-            }
-            tendonsDictionary.Add(i, lv);
-            tendonsLength = UnityEngine.Random.Range(2, 10);
-        }
-
-        foreach (KeyValuePair<int, List<Vector3>> t in tendonsDictionary)
-        {
-            //Get number of points for linerenderer
-            int points = t.Value.Count;
-
-            GameObject g = new GameObject();
-            g.AddComponent<LineRenderer>();
-            LineRenderer lr = g.GetComponent<LineRenderer>();
-            lr.positionCount = points - 1;
-            lr.SetPositions(t.Value.ToArray());
-            lr.startWidth = lr.endWidth = 0.1f;
-        }
-    }
 
     /// <summary>
     /// Adjusts roboy pose for all parts with the values from the simulation.
@@ -250,7 +205,7 @@ public class RoboyManager : Singleton<RoboyManager>
                 roboyPart.Value.transform.position = GazeboUtility.GazeboPositionToUnity(originPosition);
                 //TODO: change to local position for pabiroboy, for roboy_simplified model the pivot points are wrong
                 roboyPart.Value.transform.rotation = GazeboUtility.GazeboRotationToUnity(originRotation);
-                Debug.Log("[RoboyManager] Applied new position");
+                //Debug.Log("[RoboyManager] Applied new position");
             }
             catch
             {
@@ -262,7 +217,7 @@ public class RoboyManager : Singleton<RoboyManager>
     /// <summary>
     /// Searches for all roboys via the "Roboy" tag.
     /// </summary>
-    private void getRoboy()
+    private void LocateRoboy()
     {
         GameObject roboy = GameObject.FindGameObjectWithTag("Roboy");
         if (roboy)
@@ -280,7 +235,7 @@ public class RoboyManager : Singleton<RoboyManager>
     /// <summary>
     /// Searches for all roboy parts for the specified roboy(s).
     /// </summary>
-    private void getRoboyParts(string name)
+    private void LocateRoboyParts(string name)
     {
         if (!m_Roboys.ContainsKey(name))
         {

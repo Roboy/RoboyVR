@@ -29,7 +29,24 @@ public class HandTool : ControllerTool
     /// Factor is multiplied with the force that is created when pulling/ pushing Roboy
     /// </summary>
     [SerializeField]
-    private float m_PullForceFactor;
+    private float m_PullForceFactor = 100;
+
+    /// <summary>
+    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
+    /// </summary>
+    [SerializeField]
+    private float m_RayDistance = 0.3f;
+    /// <summary>
+    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
+    /// </summary>
+    [SerializeField]
+    private Vector3 POS;
+    /// <summary>
+    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
+    /// </summary>
+    [SerializeField]
+    private Vector3 DIR;
+
 
     /// <summary>
     /// TODO: is it used for anything?
@@ -40,12 +57,6 @@ public class HandTool : ControllerTool
     /// describing if hand model of left or right hand used
     /// </summary>
     private bool m_IsLeft = false;
-
-    /// <summary>
-    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
-    /// </summary>
-    [SerializeField]
-    private float m_RayDistance = 0.3f;
 
     /// <summary>
     /// Variable to track the last highlighted object for comparison.
@@ -65,15 +76,15 @@ public class HandTool : ControllerTool
     private float m_InitialLength;
 
     /// <summary>
-    /// Spring stiffness used to calculate forces
-    /// </summary>
-    private float m_SpringStiffness = 10f;
-
-    /// <summary>
     /// gameobj holding position reference to the point where Roboy is grabbed. 
     /// It moves along with Roboy since its parent is the respective Roboy part
     /// </summary>
     private GameObject m_RoboyPoint;
+
+    /// <summary>
+    /// For Debug purposes and to draw the force lines
+    /// </summary>
+    private LineRenderer m_Line;
     #endregion
     #endregion
 
@@ -125,7 +136,7 @@ public class HandTool : ControllerTool
         var qyDic = new Dictionary<string, float>();
         var qzDic = new Dictionary<string, float>();
         var qwDic = new Dictionary<string, float>();
-
+        
         Vector3 gazeboPosition = GazeboUtility.UnityPositionToGazebo(transform.position);
         Quaternion gazeboRotation = GazeboUtility.UnityRotationToGazebo(transform.rotation);
 
@@ -142,15 +153,7 @@ public class HandTool : ControllerTool
         qwDic.Add(linkName, gazeboRotation.w);
 
         ROSBridgeLib.custom_msgs.RoboyPoseMsg msg = new ROSBridgeLib.custom_msgs.RoboyPoseMsg("hands", linkNames, xDic, yDic, zDic, qxDic, qyDic, qzDic, qwDic);
-        ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
-        //Debug.Log("[HandTool] Sending ROS pose");
-
-
-    }
-
-    private Vector3 RightHandedToLeftHandedCoordinates(Vector3 v)
-    {
-        return new Vector3(-v.z, -v.x, v.y);
+        //ROSBridge.Instance.Publish(RoboyHandsPublisher.GetMessageTopic(), msg);
     }
     #endregion
 
@@ -213,7 +216,7 @@ public class HandTool : ControllerTool
                     hittedObject.SetStateTargeted(); //only set to target if not selected/targeted already
                 }
                 // and select it if the user presses the trigger
-                if (m_SteamVRDevice.GetHairTriggerDown())
+                if (m_SteamVRDevice != null && m_SteamVRDevice.GetHairTriggerDown())
                 {
                     hittedObject.SetStateSelected();
                     m_ObjectIsSelected = true;
@@ -222,9 +225,14 @@ public class HandTool : ControllerTool
 
                     //set point where Roboy was grabbed to reference for force calculation
                     m_RoboyPoint = new GameObject("GrabbedPoint");
-                    m_RoboyPoint.transform.position = hit.transform.position;
                     m_RoboyPoint.transform.SetParent(hittedObject.transform);
-                    //initial spring length depending on hand and roboy part position
+                    m_RoboyPoint.transform.position = hit.point;
+                    GameObject obj = Instantiate(Resources.Load("UI/Warning")) as GameObject;
+                    obj.name = "Point";
+                    obj.transform.parent = m_RoboyPoint.transform;
+                    obj.transform.localPosition = Vector3.zero;
+
+                    //initial spring length depending on hand and roboy part position (order of coords doesn'T matter)
                     m_InitialLength = (m_RoboyPoint.transform.position - transform.position).magnitude;
                 }
             }
@@ -255,56 +263,6 @@ public class HandTool : ControllerTool
     }
 
     /// <summary>
-    /// This method evaluates current position of the hand and computes forces acted on roboy by grabbing and moving. 
-    /// Springs are used for this
-    /// sends the info to gazebo
-    /// </summary>
-    private void EvaluateHandPosition()
-    {
-        if (m_RoboyPoint && m_ObjectIsSelected) //if we're currently grabbing sth and we have the means to calculate forces
-        {
-            //Debug.Log("Grabbing sth. evaluating force");
-            float newLength = (transform.position - m_RoboyPoint.transform.position).magnitude;
-            float force = m_SpringStiffness * (m_InitialLength - newLength);
-
-
-            Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position) ;
-            directionWorldSpace.Normalize();
-            directionWorldSpace *= force *m_PullForceFactor ;
-
-            //TODO: send this to Gazebo, maybe even position where applied ? -> make sure it affects roboy
-            //TODO: damping ? is it going to wiggle the whole time when in base position
-            //TODO: check if transformations  correct / in right space & direction
-            RoboyPart roboyPart;
-            if ((roboyPart = m_HighlightedObject.gameObject.GetComponent<RoboyPart>()) != null)
-            {
-                // Transform the position to roboy space
-                Vector3 forcePosition = m_RoboyPoint.transform.position;
-                // transform the direction to roboy space
-                //Vector3 forceDirection = roboyPart.transform.InverseTransformDirection(directionWorldSpace) * m_PullForceFactor;
-                int duration = (int)(Time.smoothDeltaTime * 1000); // time period during which force should be valid,, in milliseconds
-                                                                   // trigger the message in RoboyManager
-                                                                   //Debug.Log("[HandTool] Sending ROS msg");
-
-
-                //Vector3 gazeboPosition = GazeboUtility.UnityPositionToGazebo(forcePosition);
-                //TODO  wrong or right direction?
-                //              Vector3 gazeboDirection = GazeboUtility.UnityPositionToGazebo(directionWorldSpace * m_PullForceFactor  );
-                //                RoboyManager.Instance.ReceiveExternalForce(roboyPart, gazeboPosition, gazeboDirection, duration);
-                // RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, directionWorldSpace * m_PullForceFactor, duration);
-
-                Debug.Log("Test: " + forcePosition);
-                Debug.Log("One time gazebo thingy: " + GazeboUtility.UnityPositionToGazebo(forcePosition));
-                Debug.Log("gazebo and back thingy: " + GazeboUtility.GazeboPositionToUnity(GazeboUtility.UnityPositionToGazebo(forcePosition)));
-                Debug.Log("double gazebo thingy: " + GazeboUtility.UnityPositionToGazebo(GazeboUtility.UnityPositionToGazebo(forcePosition)));
-                Debug.Log("DOne position");
-                RoboyManager.Instance.ReceiveExternalForce(roboyPart, RightHandedToLeftHandedCoordinates(forcePosition), GazeboUtility.UnityPositionToGazebo(directionWorldSpace), duration);
-
-            }
-        }
-    }
-
-    /// <summary>
     /// deselect everything so that Roboy appears in his default state
     /// </summary>
     public override void EndTool()
@@ -316,5 +274,54 @@ public class HandTool : ControllerTool
             m_HighlightedObject = null;
         }
     }
+    #endregion
+
+    #region PRUVATE_METHODS
+
+    /// <summary>
+    /// This method evaluates current position of the hand and computes forces acted on roboy by grabbing and moving. 
+    /// Springs are used for this
+    /// sends the info to gazebo
+    /// </summary>
+    private void EvaluateHandPosition()
+    {
+        if (m_RoboyPoint && m_ObjectIsSelected) //if we're currently grabbing sth and we have the means to calculate forces
+        {
+            //TODO: damping ? is it going to wiggle the whole time when in base position
+            //TODO: check if transformations  correct / in right space & direction
+            RoboyPart roboyPart;
+            if ((roboyPart = m_HighlightedObject.gameObject.GetComponent<RoboyPart>()) != null)
+            {
+                // delta world direction * forces 
+                Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position) * m_PullForceFactor;
+                //forces in local space of part that is affected
+                Vector3 directionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, directionWorldSpace); 
+                // the position in local space
+                Vector3 forcePosition = GazeboUtility.WorldToLocalSpacePosition(roboyPart.transform, m_RoboyPoint.transform.position);
+
+                /* DEBUG PURPOSES: draws a line between the points
+                if (m_Line)
+                {
+                    m_Line.SetPosition(0, m_RoboyPoint.transform.position);
+                    m_Line.SetPosition(1, m_RoboyPoint.transform.position + directionWorldSpace);
+
+                }
+                else
+                {
+                    GameObject line = new GameObject();
+                    m_Line = line.AddComponent<LineRenderer>();
+                    m_Line.SetPosition(0, m_RoboyPoint.transform.position);
+                    m_Line.SetPosition(1, m_RoboyPoint.transform.position + directionWorldSpace);
+                    m_Line.startWidth = 0.001f;
+                    m_Line.endWidth = 0.001f;
+                }*/
+
+                int duration = (int)(Time.smoothDeltaTime * 1000); // time period during which force should be valid,, in milliseconds
+                //send force message
+                RoboyManager.Instance.SendExternalForce(roboyPart, forcePosition, directionWorldSpace, duration);
+            }
+        }
+    }
+    
     #endregion
 }

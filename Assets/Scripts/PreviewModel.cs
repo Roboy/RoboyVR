@@ -74,6 +74,12 @@ public class PreviewModel : MonoBehaviour {
             return;
         GameObject simModel = Instantiate(SimulationModel, transform.position, transform.rotation);
         simModel.name = SimulationModel.name;
+        //untag: this way, only our real roboy can be manipulated
+        simModel.tag = "SpawnedModel";
+        for (int i = 0; i < simModel.transform.childCount; i++)
+        {
+            simModel.transform.GetChild(i).gameObject.tag = "SpawnedModel";
+        }
         InputManager.Instance.ModelSpawn_Controller.Operating = false;
         Destroy(InputManager.Instance.Selector_Tool.CurrentPreviewModel.gameObject);
         InputManager.Instance.Selector_Tool.CurrentPreviewModel = null;

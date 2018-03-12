@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using ROSBridgeLib;
 
@@ -17,16 +16,6 @@ public class ROSBridge : Singleton<ROSBridge> {
     /// Port of the ROSBridge.
     /// </summary>
     public int Port = 9090;
-
-    ///// <summary>
-    ///// Public property for other classes to the ros websocket.
-    ///// </summary>
-    //public ROSBridgeWebSocketConnection ROS { get { return m_ROS; } }
-
-    /// <summary>
-    /// Public property of all active ROSObjects in the scene.
-    /// </summary>
-    public List<ROSObject> ROSObjects { get { return m_ROSObjects; } }
 
     /// <summary>
     /// ROS websocket connection.
@@ -62,6 +51,11 @@ public class ROSBridge : Singleton<ROSBridge> {
         }       
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="topic"></param>
+    /// <param name="msg"></param>
     public void Publish(string topic, ROSBridgeMsg msg)
     {
         //Debug.Log("[ROSBridge Message] Publishing some message on topic" + topic);

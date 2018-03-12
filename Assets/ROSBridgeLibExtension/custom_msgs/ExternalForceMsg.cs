@@ -12,67 +12,84 @@ namespace ROSBridgeLib
     {
         public class ExternalForceMsg : ROSBridgeMsg
         {
-            public custom_msgs.LinkMsg Linkname
-            {
-                get
-                {
-                    return _linkname;
-                }
-            }
+            /// <summary>
+            /// name of the affected link
+            /// </summary>
+            private string _linkname;
 
-            public custom_msgs.PositionCustomMsg Position
-            {
-                get
-                {
-                    return _position;
-                }
-            }
+            /// <summary>
+            /// position of the force in local space of link
+            /// </summary>
+            private Vector3 _position;
 
-            public custom_msgs.ForceMsg Force
-            {
-                get
-                {
-                    return _force;
-                }
-            }
+            /// <summary>
+            /// direction of force in local space of link
+            /// </summary>
+            private Vector3 _force;
 
-            public custom_msgs.DurationMsg Duration
-            {
-                get
-                {
-                    return _duration;
-                }
-            }
+            /// <summary>
+            /// duration in milliseconds
+            /// </summary>
+            private int _duration;
 
-            private custom_msgs.LinkMsg _linkname;
-            private custom_msgs.PositionCustomMsg _position;
-            private custom_msgs.ForceMsg _force;
-            private custom_msgs.DurationMsg _duration;
+            /// <summary>
+            /// If set to true, this message is outgoing -> values are in gazebo coord system
+            /// </summary>
+            private bool publish; 
 
 
-
+            /// <summary>
+            /// Creates message: normally called when receiving message on subscription topic
+            /// </summary>
+            /// <param name="msg"></param>
             public ExternalForceMsg(JSONNode msg)
             {
-                _linkname = new custom_msgs.LinkMsg(msg["linkname"]);
-                _position = new custom_msgs.PositionCustomMsg(msg["position"]);
-                _force = new custom_msgs.ForceMsg(msg["force"]);
-                _duration = new custom_msgs.DurationMsg(msg["duration"]);
+                _linkname = msg["linkname"];
+                _position.x = float.Parse(msg["x"]);
+                _position.y = float.Parse(msg["y"]);
+                _position.z = float.Parse(msg["z"]);
+
+                _force.x = float.Parse(msg["x"]);
+                _force.y = float.Parse(msg["y"]);
+                _force.z = float.Parse(msg["z"]);
+
+                _duration = int.Parse(msg["duration"]);
+                //incoming message -> parse from gazebo coordinate system to unity's
+                publish = false;
+                _position = GazeboUtility.GazeboPositionToUnity(_position);
+                _force = GazeboUtility.GazeboPositionToUnity(_force);
             }
 
-            public ExternalForceMsg(custom_msgs.LinkMsg linkname, custom_msgs.PositionCustomMsg position, custom_msgs.ForceMsg force, custom_msgs.DurationMsg duration)
+            /// <summary>
+            /// Creates message specifying given external force.
+            /// NOTICE: COORDINATE SYSTEM TRANSLATION HAPPENS HERE -> set publish to true
+            /// </summary>
+            /// <param name="linkname">Name of affected link</param>
+            /// <param name="position">position in UNity coordinate space</param>
+            /// <param name="force">force in Unity coordinate space</param>
+            /// <param name="duration"></param>
+            /// <param name="publish">If set to true, this message is outgoing -> will be parsed to gazebo coord system</param>
+            public ExternalForceMsg(string linkname, Vector3 position, Vector3 force, int duration, bool publish)
             {
                 _linkname = linkname;
                 _position = position;
                 _force = force;
                 _duration = duration;
+                //outgoing message-> parse to gazebo's coordinate system
+                if (publish)
+                {
+                    _position = GazeboUtility.UnityPositionToGazebo(_position);
+                    _force = GazeboUtility.UnityPositionToGazebo(_force);
+                }
             }
 
-            public ExternalForceMsg(string linkname, Vector3 position, Vector3 force, int duration)
+            /// <summary>
+            /// Returns whether this message's coordinates are defined in Unity's coordinate system or Gazebo's.
+            /// </summary>
+            /// <returns></returns>
+            public bool IsInUnityCoordinateSystem()
             {
-                _linkname = new LinkMsg(linkname);
-                _position = new PositionCustomMsg(position.x, position.y, position.z);
-                _force = new ForceMsg(force.x, force.y, force.z);
-                _duration = new DurationMsg(duration);
+                return !publish;
             }
 
             public static string GetMessageType()
@@ -80,14 +97,23 @@ namespace ROSBridgeLib
                 return "roboy_communication_simulation/ExternalForce";
             }
 
+            /// <summary>
+            /// TODO: never used before.... is this needed ? for now: not implemented exception!
+            /// </summary>
+            /// <returns></returns>
             public override string ToString()
             {
-                return "ExternalForce [name=" + _linkname + ", position=" + _position.ToString() + ",  force=" + _force.ToString() + ", duration=" + _duration.ToString() + "]";
+                throw new System.NotImplementedException();
+                //remainder from prev implementation below
+                //return "ExternalForce [name=" + _linkname + ", position=" + _position.ToString() + ",  force=" + _force.ToString() + ", duration=" + _duration.ToString() + "]";
             }
 
             public override string ToYAMLString()
             {
-                return "{" + _linkname.ToYAMLString() + ", " + _position.ToYAMLString() + ", " + _force.ToYAMLString() + ", " + _duration.ToYAMLString() + "}";
+                return "{" + "\"name\" : \"" + _linkname + "\", " + // name
+                    "\"x\" : " + _position.x + ", \"y\" : " + _position.y + ", \"z\" : " + _position.z + ", " + //pos
+                    "\"f_x\" : " + _position.x + ", \"f_y\" : " + _position.y + ", \"f_z\" : " + _position.z + ", " + //force 
+                    "\"duration\" : " + _duration + "}"; // duration
             }
         }
     }

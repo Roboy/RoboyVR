@@ -20,6 +20,10 @@ namespace ROSBridgeLib
             return new RoboyPoseMsg(msg);
         }
 
+        /// <summary>
+        /// Gets called as soon as message is received over given subscription topic
+        /// </summary>
+        /// <param name="msg"></param>
         public new static void CallBack(ROSBridgeMsg msg)
         {
             RoboyPoseMsg pose = (RoboyPoseMsg)msg;

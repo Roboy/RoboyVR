@@ -130,7 +130,22 @@ namespace ROSBridgeLib
                 _qwDic = CreateDictionary(nameArray, qwArray);
             }
 
-            // TO DO: PARSE THE DICS SO THEY ARE IN FLOAT ARRAY MSGS IN THE RIGHT ORDER
+            /// <summary>
+            /// Create message based on given params. Attention: link names, positions and rotation need to correspond to same index (*obviously*)
+            /// TODO: NOT IMPLEMENTED YET
+            /// </summary>
+            /// <param name="roboyName"></param>
+            /// <param name="linkNames"></param>
+            /// <param name="positions"></param>
+            /// <param name="rotation"></param>
+            public RoboyPoseMsg(string roboyName, List<string> linkNames, List<Vector3> positions, List<Quaternion> rotation)
+            {
+                //GazeboUtility.UnityPositionToGazebo
+                /*TODO NO CONTENT YET*/
+                throw new System.NotImplementedException();
+            }
+
+
             public RoboyPoseMsg(string roboyName, List<string> linkNames, Dictionary<string, float> xDic, Dictionary<string, float> yDic, Dictionary<string, float> zDic, Dictionary<string, float> qxDic,
                 Dictionary<string, float> qyDic, Dictionary<string, float> qzDic, Dictionary<string, float> qwDic)
             {

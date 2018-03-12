@@ -13,7 +13,8 @@ using ROSBridgeLib.custom_msgs;
 ///     -# Convert received images into textures which can then be rendered on screen
 ///     -# Send tracking messages over the rosbridge to gazebo/ real roboy
 /// </summary>
-public class BeRoboyManager : Singleton<BeRoboyManager> {
+public class BeRoboyManager : Singleton<BeRoboyManager>
+{
 
 
     #region PUBLIC_MEMBER_VARIABLES
@@ -97,7 +98,8 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     }
 
 
-    void Start () {
+    void Start()
+    {
 
         //Looking for the HMD camera in scene
         if (!m_CamInitialized)
@@ -113,8 +115,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
 
 
     }
-	
-	void Update () {
+
+    void Update()
+    {
 
         // Looking for the HMD camera in scene.
         if (!m_CamInitialized)
@@ -124,7 +127,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         // If the camera is found, move and rotate Roboy accordingly.
         else
         {
-            if(TrackingEnabled)
+            if (TrackingEnabled)
                 translateRoboy();
         }
 
@@ -157,10 +160,9 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// </summary>
     /// <param name="jointNames"></param>
     /// <param name="angles"></param>
-    public void ReceiveExternalJoint(List<string> jointNames, List<float> angles)
+    public void PublishExternalJoint(List<string> jointNames, List<float> angles)
     {
-        ROSBridgeLib.custom_msgs.ExternalJointMsg msg =
-            new ROSBridgeLib.custom_msgs.ExternalJointMsg(jointNames, angles);
+        ExternalJointMsg msg = new ExternalJointMsg(jointNames, angles);
 
         ROSBridge.Instance.Publish(RoboyHeadPublisher.GetMessageTopic(), msg);
     }
@@ -169,11 +171,10 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// Function to publish Position messages via ROS.
     /// </summary>
     /// <param name="pos"></param>
-    public void ReceivePosition(Vector3 pos)
+    public void PublishRoboyPosition(Vector3 pos)
     {
-        ROSBridgeLib.custom_msgs.RoboyPositionMsg msg =
-            new ROSBridgeLib.custom_msgs.RoboyPositionMsg(pos.x, pos.y, pos.z);
-
+        RoboyPositionMsg msg = new RoboyPositionMsg(pos.x, pos.y, pos.z);
+        Debug.Log("MESSAGE: ROBOY POS: " + msg.ToYAMLString());
         ROSBridge.Instance.Publish(RoboyPositionPublisher.GetMessageTopic(), msg);
     }
 
@@ -215,10 +216,10 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
     /// <param name="msg">JSON msg containing the roboy pose.</param>
     private void RefreshSimImage(ImageMsg image)
     {
-        
+
         // Get the image as an array from the message.
         byte[] image_temp = image.GetImage();
-        
+
 
         int j = 0;
         for (int i = 0; i < image_temp.Length; i += 3)
@@ -270,7 +271,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         transform.position = m_Cam.transform.position + (headRotation * Vector3.forward) * (-0.3f);
 
         // Publish position to gazebo
-        ReceivePosition(GazeboUtility.UnityPositionToGazebo(transform.position));
+        PublishRoboyPosition(transform.position);
 
         // The torso of roboy will be rotated towards the (right)controller position
         torso_pivot.transform.LookAt(new Vector3(m_Controller.transform.position.x, torso_pivot.transform.position.y, m_Controller.transform.position.z));
@@ -304,7 +305,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         {
             t_angle = torso_pivot.eulerAngles.y * Mathf.Deg2Rad;
         }
-        
+
         // Determine which joints should me modified
         List<string> joints = new List<string>();
         // X rotation
@@ -323,7 +324,7 @@ public class BeRoboyManager : Singleton<BeRoboyManager> {
         // Add the torso rotation angle after conversion from unity to ros
         angles.Add(t_angle * (-1.0f));
         // Start sending the actual message
-        ReceiveExternalJoint(joints, angles);
+        PublishExternalJoint(joints, angles);
     }
 
     /// <summary>

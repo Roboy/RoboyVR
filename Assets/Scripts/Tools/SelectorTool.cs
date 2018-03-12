@@ -48,7 +48,10 @@ public class SelectorTool : ControllerTool
     /// </summary>
     public void GetRayFromController()
     {
-        if (InputManager.Instance.ModelSpawn_Controller!=null &&InputManager.Instance.ModelSpawn_Controller.Operating && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null && m_SteamVRDevice.GetHairTriggerDown())
+        //if currintly using model spawner and we chose a model
+        if (InputManager.Instance.ModelSpawn_Controller != null && InputManager.Instance.ModelSpawn_Controller.Operating
+            && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert
+            && CurrentPreviewModel != null && m_SteamVRDevice.GetHairTriggerDown())
         {
             CurrentPreviewModel.CreateSimulationModel();
         }
@@ -62,9 +65,9 @@ public class SelectorTool : ControllerTool
         {
             // set the end position to the hit point
             m_LineRenderer.SetPosition(1, hit.point);
-            SelectableObject hittedObject = null;
+            SelectableObject hitObject = null;
 
-            // verify that you are in selection mode -------------CHANGE THIS IN FUTURE ONLY TEST
+            // verify that you are in selection mode 
             if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer && ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
                 return;
             //Depending on the tag (== UI elem type), call different fcts 
@@ -73,8 +76,9 @@ public class SelectorTool : ControllerTool
                 case "RoboyUI": // if the ray hits an UI component then retrieve the roboy part from RoboyManager
                     try
                     {
-                        hittedObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
-                    } catch { }
+                        hitObject = RoboyManager.Instance.RoboyParts[hit.transform.name].GetComponent<SelectableObject>();
+                    }
+                    catch { }
                     break;
                 case "UIButton":
                     //if button can be held (not just pressed), it is registered as being held
@@ -110,58 +114,91 @@ public class SelectorTool : ControllerTool
                     }
                     break;
                 case "Floor":
-                    if (InputManager.Instance.ModelSpawn_Controller != null && InputManager.Instance.ModelSpawn_Controller.Operating && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null)
+                    //if spawning models
+                    if (InputManager.Instance.ModelSpawn_Controller != null && InputManager.Instance.ModelSpawn_Controller.Operating
+                        && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Insert && CurrentPreviewModel != null)
                     {
                         // move the current insert model above the point where we point on the floor
                         CurrentPreviewModel.transform.position = hit.point + new Vector3(0, 0.5f, 0);
                         //CurrentPreviewModel.transform.LookAt(transform);
                     }
                     break;
-                default: //not UI -> Roboy parts
-                    hittedObject = hit.transform.gameObject.GetComponent<SelectableObject>();
+                default: 
+                    //most likely Roboy parts / spawned model
+                    hitObject = hit.transform.gameObject.GetComponent<SelectableObject>();
                     break;
             }
-           
-            //if object found
-            if (hittedObject != null)
+
+            //if hit object found
+            if (hitObject != null)
             {
                 // if we hit an object on the model layer and are currently in removing state of spawn model controller
-                if (InputManager.Instance.ModelSpawn_Controller != null && hittedObject.gameObject.layer == LayerMask.NameToLayer("ModelLayer")
+                if (InputManager.Instance.ModelSpawn_Controller != null && hitObject.gameObject.layer == LayerMask.NameToLayer("ModelLayer")
                     /* && InputManager.Instance.ModelSpawn_Controller.Operating */
                     && ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Remove)
                 {
                     if (m_SteamVRDevice.GetHairTriggerDown())
                     {
-                        Transform rootParent = hittedObject.transform;
-                        // replace this with a handler function in selectionmanager/modelmanager
-                        // get the root parent
-                        while (rootParent.transform.parent != null)
-                        {
-                            rootParent = rootParent.transform.parent;
-                        }
+                        Transform rootParent = hitObject.transform.root;
                         Destroy(rootParent.gameObject);
                     }
                     return;
                 }
                 // if the ray hits something different than last frame, then reset the last roboy part
-                if (m_LastSelectedObject != hittedObject)
+                if (m_LastSelectedObject != hitObject)
                 {
                     if (m_LastSelectedObject != null)
-                        m_LastSelectedObject.SetStateDefault();
-
-                    // update the last roboy part as the current one
-                    m_LastSelectedObject = hittedObject;
+                    {/* TODO somehow not working
+                        //pointing at spawned model
+                        if (m_LastSelectedObject.tag == "SpawnedModel")
+                        {
+                            if (hitObject.transform.root != m_LastSelectedObject.transform.root) // since we selected everything for this model, deselect everything in case we don*t point at this model anymore
+                            {
+                                foreach (var part in m_LastSelectedObject.transform.root.GetComponentsInChildren<SelectableObject>())
+                                {
+                                    part.SetStateDefault();
+                                }
+                                m_LastSelectedObject = null;
+                            } else
+                            {
+                                return; // still pointing at same spawned model
+                            }
+                        }
+                        else*/
+                        { // normal case
+                            m_LastSelectedObject.SetStateDefault();
+                        }
+                    }/* TODO somehow not working
+                    if (hitObject.tag == "SpawnedModel")      { //TODO doesn't work yet
+                        Debug.Log("[SelectorTool] Pointing at spawned model");
+                        if (ModeManager.Instance.CurrentSpawnViewerMode == ModeManager.SpawnViewerMode.Remove)
+                        {
+                            // only be able to target spawned models to remove it
+                            foreach (var part in hitObject.transform.root.GetComponentsInChildren<SelectableObject>())
+                            {
+                                Debug.Log("lots of parts....-");
+                                part.SetStateTargeted();
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    else*/
+                    {
+                        hitObject.SetStateTargeted();
+                    }
+                    
+                    // set the last roboy part as the current one
+                    m_LastSelectedObject = hitObject;
                     Vibrate();
                 }
-                // otherwise set the roboy part to targeted
-                else
-                {
-                    hittedObject.SetStateTargeted();
-                }
-                // and select it if the user presses the trigger
+
+                // select it if the user presses the trigger
                 if (m_SteamVRDevice.GetHairTriggerDown())
                 {
-                    hittedObject.SetStateSelected();
+                    hitObject.SetStateSelected();
                     //Vibrate();
                 }
             }
@@ -196,9 +233,9 @@ public class SelectorTool : ControllerTool
         if (m_LastSelectedObject)
         {
             m_LastSelectedObject.SetStateDefault(true);
-            m_LastSelectedObject = null;    
+            m_LastSelectedObject = null;
         }
-        if(m_LastHeldObject)
+        if (m_LastHeldObject)
         {
             m_LastHeldObject.OnPointerUp(null);
             m_LastHeldObject = null;

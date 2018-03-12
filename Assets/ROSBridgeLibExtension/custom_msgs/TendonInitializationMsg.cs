@@ -53,7 +53,7 @@ namespace ROSBridgeLib
                 JSONArray values = msg["wirepoints"].AsArray;
                 for (int i = 0; i < values.Count; i += 3)
                 {
-                    _wirepoints.Add(new Vector3(float.Parse(values[i]), float.Parse(values[i+1]), float.Parse(values[i+2])));
+                    _wirepoints.Add(new Vector3(float.Parse(values[i]), float.Parse(values[i + 1]), float.Parse(values[i + 2])));
                 }
                 //roboyparts
                 values = msg["roboyParts"].AsArray;

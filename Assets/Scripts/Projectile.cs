@@ -37,7 +37,7 @@ public class Projectile : MonoBehaviour
             Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 1500);
             int duration = 200;
             // trigger the message in RoboyManager
-            RoboyManager.Instance.ReceiveExternalForce(roboyPart, forcePosition, forceDirection, duration);
+            RoboyManager.Instance.SendExternalForce(roboyPart, forcePosition, forceDirection, duration);
         }
     }
 }

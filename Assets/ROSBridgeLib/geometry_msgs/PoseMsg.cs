@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Text;
-using SimpleJSON;
+﻿using SimpleJSON;
 
+/// <summary>
+/// This message is not used so far
+/// </summary>
 namespace ROSBridgeLib
 {
     namespace geometry_msgs

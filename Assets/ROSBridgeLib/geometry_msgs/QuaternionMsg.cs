@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Text;
-using SimpleJSON;
-using ROSBridgeLib.geometry_msgs;
+﻿using SimpleJSON;
 
+/// <summary>
+/// This message is referenced in PoseMsg, but both are not used 
+/// </summary>
 namespace ROSBridgeLib
 {
     namespace geometry_msgs

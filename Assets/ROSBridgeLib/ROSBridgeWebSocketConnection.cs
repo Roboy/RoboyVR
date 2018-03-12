@@ -174,7 +174,7 @@ namespace ROSBridgeLib
             IsValidSubscriber(subscriber);
             _subscribers.Add(subscriber);
             string topic = GetMessageTopic(subscriber);
-            
+
             if (_running)
             {
                 //only announce if not announced yet, 
@@ -472,7 +472,9 @@ namespace ROSBridgeLib
                     _ws.Send(s);
                 }
                 else
-                {
+                {// if not announced that we're publishing on this topic 
+                 //-> go through list of publishers/ subscribers and see if one is not yet advertised, try again
+
                     AnnouncePublishersAndSubscribers();
                     //Try second time otherwise not working
                     if (m_AnnouncedTopics.Contains(topic))

@@ -27,6 +27,7 @@ TagManager:
   - ViewController
   - Halo
   - Floor
+  - SpawnedModel
   layers:
   - Default
   - TransparentFX

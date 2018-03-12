@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using SimpleJSON;
+﻿using SimpleJSON;
+using UnityEngine;
 
 namespace ROSBridgeLib
 {
@@ -8,22 +7,29 @@ namespace ROSBridgeLib
     {
         public class PositionCustomMsg : ROSBridgeMsg
         {
-            private double _x;
-            private double _y;
-            private double _z;
+            private float _x;
+            private float _y;
+            private float _z;
 
             public PositionCustomMsg(JSONNode msg)
             {
-                _x = double.Parse(msg["x"]);
-                _y = double.Parse(msg["y"]);
-                _z = double.Parse(msg["z"]);
+                Vector3 gazeboPos = new Vector3(float.Parse(msg["x"]), float.Parse(msg["y"]), float.Parse(msg["z"]));
+                Vector3 unityPos = GazeboUtility.GazeboPositionToUnity(gazeboPos);
+                _x = unityPos.x;
+                _y = unityPos.y;
+                _z = unityPos.z;
             }
-
-            public PositionCustomMsg(double x, double y, double z)
+            
+            /// <summary>
+            /// Constructor for position msg: Position in unity coord space
+            /// </summary>
+            /// <param name="position"></param>
+            public PositionCustomMsg(Vector3 position)
             {
-                _x = x;
-                _y = y;
-                _z = z;
+                Vector3 gazebopos = GazeboUtility.UnityPositionToGazebo(position);
+                _x = gazebopos.x;
+                _y = gazebopos.y;
+                _z = gazebopos.z;
             }
 
             public static string GetMessageType()
@@ -31,17 +37,17 @@ namespace ROSBridgeLib
                 return "geometry_msgs/Vector3";
             }
 
-            public double GetX()
+            public float GetX()
             {
                 return _x;
             }
 
-            public double GetY()
+            public float GetY()
             {
                 return _y;
             }
 
-            public double GetZ()
+            public float GetZ()
             {
                 return _z;
             }
