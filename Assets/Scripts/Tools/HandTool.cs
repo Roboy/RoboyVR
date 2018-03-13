@@ -274,28 +274,33 @@ public class HandTool : ControllerTool
                 //forces in local space of part that is affected
                 Vector3 directionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, directionWorldSpace);
                 // the position in local space
-                Vector3 forcePosition = GazeboUtility.WorldToLocalSpacePosition(roboyPart.transform, m_RoboyPoint.transform.position);
-
-                /* DEBUG PURPOSES: draws a line between the points
+                Vector3 forcePositionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, m_RoboyPoint.transform.position);
+                //force position in global space
+                Vector3 forcePositionWorldSpace = m_RoboyPoint.transform.position;
+                // DEBUG PURPOSES: draws a line between the points
                 if (m_Line)
                 {
-                    m_Line.SetPosition(0, m_RoboyPoint.transform.position);
-                    m_Line.SetPosition(1, m_RoboyPoint.transform.position + directionWorldSpace);
-
+                    //world space
+                    //m_Line.SetPosition(0, forcePositionWorldSpace);
+                    //m_Line.SetPosition(1, forcePositionWorldSpace + directionWorldSpace);
+                    //local space
+                    m_Line.SetPosition(0, forcePositionLocalSpace);
+                    m_Line.SetPosition(1, forcePositionLocalSpace + directionLocalSpace);
                 }
                 else
                 {
                     GameObject line = new GameObject();
                     m_Line = line.AddComponent<LineRenderer>();
-                    m_Line.SetPosition(0, m_RoboyPoint.transform.position);
-                    m_Line.SetPosition(1, m_RoboyPoint.transform.position + directionWorldSpace);
+                    m_Line.SetPosition(0, forcePositionLocalSpace);
+                    m_Line.SetPosition(1, forcePositionLocalSpace + directionLocalSpace);
                     m_Line.startWidth = 0.001f;
                     m_Line.endWidth = 0.001f;
-                }*/
+                }
 
-                int duration = (int)(Time.smoothDeltaTime * 1000); // time period during which force should be valid,, in milliseconds
-                //send force message
-                RoboyManager.Instance.SendExternalForce(roboyPart, forcePosition, directionWorldSpace, duration);
+                int duration = (int)(Time.smoothDeltaTime * 1000);  // time period during which force should be valid,, in milliseconds
+                //send force message TODO: for now: WOlrd space even though supposed to be local space (link space) 
+                //RoboyManager.Instance.SendExternalForce(roboyPart,forcePositionWorldSpace, directionWorldSpace, duration);
+                RoboyManager.Instance.SendExternalForce(roboyPart, forcePositionLocalSpace, directionLocalSpace, duration);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using SimpleJSON;
 using ROSBridgeLib.custom_msgs;
+
 namespace ROSBridgeLib
 {
     public class RoboyPoseSubscriber : ROSBridgeSubscriber

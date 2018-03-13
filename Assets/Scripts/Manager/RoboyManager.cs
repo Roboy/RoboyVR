@@ -68,8 +68,7 @@ public class RoboyManager : Singleton<RoboyManager>
     /// <summary>
     /// Dictionary with all roboyparts, used to adjust pose and motor values
     /// </summary>
-    private Dictionary<string, RoboyPart> m_RoboyParts
-        = new Dictionary<string, RoboyPart>();
+    private Dictionary<string, RoboyPart> m_RoboyParts = new Dictionary<string, RoboyPart>();
 
     /// <summary>
     /// list of roboy_parts for each roboy (name maps to his parts in a dictionary)
@@ -119,7 +118,7 @@ public class RoboyManager : Singleton<RoboyManager>
     {
         foreach (var roboyPart in m_RoboyParts)
         {
-            int motorCount = UnityEngine.Random.Range(1, 8);
+            int motorCount = Random.Range(1, 8);
             roboyPart.Value.Initialize(motorCount);
         }
     }
@@ -194,7 +193,7 @@ public class RoboyManager : Singleton<RoboyManager>
             if (dic.TryGetValue(msg.linkNames[i], out part))
             {
                 part.transform.position = msg.positions[i];
-                part.transform.rotation = msg.rotations[i];
+                part.transform.rotation = msg.rotations[i]; 
             }
         }
     }

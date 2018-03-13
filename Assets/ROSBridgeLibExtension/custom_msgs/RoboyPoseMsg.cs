@@ -6,6 +6,10 @@ namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
+        /// <summary>
+        /// RoboyPoseMessage containing all links and their respective positions and rotations. 
+        /// Incoming messages are parsed into Unity coordinate space, outgoing to Gazebo coordinate space. 
+        /// </summary>
         public class RoboyPoseMsg : ROSBridgeMsg
         {
 
@@ -71,7 +75,7 @@ namespace ROSBridgeLib
             /// <summary>
             /// if set to true, the positions and rotations will be in GAZEBO COORD system
             /// </summary>
-            private bool _publish;
+            private bool _outgoing;
             #endregion //PRIVATE_MEMBER_VARIABLES
 
             #region PUBLIC_METHODS
@@ -147,7 +151,7 @@ namespace ROSBridgeLib
 
                 }
                 // Transform from gazebo coordinate system to unity coordinate system
-                _publish = false;
+                _outgoing = false;
                 for (int i = 0; i < _positions.Length; i++)
                 {
                     _positions[i] = GazeboUtility.GazeboPositionToUnity(_positions[i]);
@@ -168,7 +172,7 @@ namespace ROSBridgeLib
                 // translation from unity to gazebo coordinate system
                 _positions = new Vector3[positions.Length];
                 _rotations = new Quaternion[rotations.Length];
-                _publish = true;
+                _outgoing = true;
                 for (int i = 0; i < positions.Length; i++)
                 {
                     _positions[i] = GazeboUtility.UnityPositionToGazebo(positions[i]);
@@ -201,6 +205,14 @@ namespace ROSBridgeLib
                 return "common_utilities/Pose";
             }
 
+            /// <summary>
+            /// Returns whether the given values are in Unity coordinate space (true)
+            /// </summary>
+            /// <returns></returns>
+            public bool IsInUnityCoordinateSpace()
+            {
+                return !_outgoing;
+            }
 
             /// <summary>
             /// NOT IMPLEMENTED (NEEDED) Use ToYAMLString
@@ -258,7 +270,7 @@ namespace ROSBridgeLib
             }
 
             /// <summary>
-            /// parses float values to string whith json array format.  -> [ "0.0", "0.0" , "0.0" ]
+            /// parses float values to string whith json array format.  -> [0.0, 0.0, 0.0]
             /// " are added. 
             /// </summary>
             /// <param name="array"></param>
@@ -269,7 +281,7 @@ namespace ROSBridgeLib
 
                 foreach (float val in array)
                 {
-                    result += "" + val.ToString() + ",";
+                    result += val.ToString() + ",";
                 }
                 return result.Remove(result.Length - 1) + "]";
             }

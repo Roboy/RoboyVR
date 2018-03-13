@@ -57,7 +57,6 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <summary>
     /// Reference to Roboy for position references
     /// </summary>
-    [SerializeField]
     private GameObject m_Roboy;
 
     /// <summary>
@@ -214,6 +213,9 @@ public class VRUILogic : Singleton<VRUILogic>
                 box.material = m_Skybox;
             }
         }
+        //roboy reference
+        m_Roboy = RoboyManager.Instance.Roboy.gameObject;
+
         //notifications
         m_NotificationsContainer = new GameObject("NotificationContainer");
         if (m_UIComponents)

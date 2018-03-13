@@ -108,7 +108,7 @@ namespace ROSBridgeLib
             {
                 return "{" + "\"name\" : \"" + _linkname + "\", " + // name
                     "\"x\" : " + _position.x + ", \"y\" : " + _position.y + ", \"z\" : " + _position.z + ", " + //pos
-                    "\"f_x\" : " + _position.x + ", \"f_y\" : " + _position.y + ", \"f_z\" : " + _position.z + ", " + //force 
+                    "\"f_x\" : " + _force.x + ", \"f_y\" : " + _force.y + ", \"f_z\" : " + _force.z + ", " + //force 
                     "\"duration\" : " + _duration + "}"; // duration
             }
         }

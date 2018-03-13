@@ -72,38 +72,10 @@ public class GazeboUtility {
 
         return finalRot;
     }
-
-    /// <summary>
-    /// Returns the given local point in worldspace
-    /// </summary>
-    /// <param name="localSpace">local space in which the point is currently defined</param>
-    /// <param name="localposition">point in local space</param>
-    /// <returns></returns>
-    public static Vector3 LocalToWorldSpacePosition(Transform localSpace, Vector3 localposition)
-    {
-        if (localSpace != null)
-        {
-           return localSpace.localToWorldMatrix.MultiplyPoint(localposition);
-        }
-        return Vector3.zero;
-    }
     
     /// <summary>
-    /// returns the given point transformed into the given local space
-    /// </summary>
-    /// <param name="localspace">desired local space</param>
-    /// <param name="worldposition">point in worldspace coordinates</param>
-    /// <returns></returns>
-    public static Vector3 WorldToLocalSpacePosition(Transform localspace, Vector3 worldposition)
-    {
-        if (localspace != null)
-        {
-            return localspace.worldToLocalMatrix.MultiplyPoint(worldposition);
-        }
-        return Vector3.zero;
-    }
-    /// <summary>
     /// Returns the given local direction in worldspace coordinates
+    /// IMPORTANT: Not influenced by scale etc
     /// </summary>
     /// <param name="localSpace">local space in which the direction is currently defined</param>
     /// <param name="localdirection">direction in local space</param>
@@ -112,13 +84,30 @@ public class GazeboUtility {
     {
         if (localSpace != null)
         {
-            return localSpace.localToWorldMatrix.MultiplyVector(localdirection);
+            return localSpace.TransformDirection(localdirection);
         }
         return Vector3.zero;
     }
 
     /// <summary>
+    /// Returns quaternion which was translated from world space into local space
+    /// TODO: further testing needed
+    /// </summary>
+    /// <param name="localspace"></param>
+    /// <param name="worldrotation"></param>
+    /// <returns></returns>
+    public static Quaternion WorldToLocalSpaceRotation(Transform localspace, Quaternion worldrotation)
+    {
+        if (localspace != null)
+        {
+            return Quaternion.Inverse(localspace.rotation) * worldrotation;
+        }
+        return Quaternion.identity;
+    }
+
+    /// <summary>
     /// returns the given direction transformed into the given local space
+    /// IMPORTANT: not influenced by scales
     /// </summary>
     /// <param name="localspace">desired local space</param>
     /// <param name="worlddirection">direction in worldspace coordinates</param>
@@ -127,7 +116,7 @@ public class GazeboUtility {
     {
         if (localspace != null)
         {
-            return localspace.worldToLocalMatrix.MultiplyPoint(worlddirection);
+            return localspace.TransformDirection(worlddirection);
         }
         return Vector3.zero;
     }
