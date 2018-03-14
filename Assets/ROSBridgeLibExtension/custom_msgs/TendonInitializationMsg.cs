@@ -9,6 +9,7 @@ namespace ROSBridgeLib
     {
         /// <summary>
         /// Message for initialization of one tendon (defined by tendonID)
+        /// Accounts for parsing errors & malformed messages 
         /// </summary>
         public class TendonInitializationMsg : ROSBridgeMsg
         {
@@ -45,7 +46,12 @@ namespace ROSBridgeLib
                 //These need to match names of externally defined msgs 
                 //-> https://github.com/Roboy/roboy_communication/tree/master/simulation/msgs
                 _tendonID = int.Parse(msg["tendonID"]);
-                //maxForce
+                if (!int.TryParse(msg["tendonID"], out _tendonID) || !float.TryParse(msg["maxForce"], out _maxForce))
+                {
+                    Debug.LogWarning("Received malformed TendonInitializationMsg: received values could not be parsed to float");
+                    CreateEmptyMsg();
+                    return;
+                } //maxForce
                 _maxForce = float.Parse(msg["maxForce"]);
                 //wirepoints
                 _wirepoints = new List<Vector3>();
@@ -53,13 +59,27 @@ namespace ROSBridgeLib
                 JSONArray values = msg["wirepoints"].AsArray;
                 for (int i = 0; i < values.Count; i += 3)
                 {
-                    _wirepoints.Add(new Vector3(float.Parse(values[i]), float.Parse(values[i + 1]), float.Parse(values[i + 2])));
+                    Vector3 point = Vector3.zero;
+                    if (!float.TryParse(values[i], out point.x) || !float.TryParse(values[i+1], out point.y) ||
+                    !float.TryParse(values[i+2], out point.z))
+                    {
+                        Debug.LogWarning("Received malformed TendonInitializationMsg: received wirepoint values could not be parsed to float");
+                        CreateEmptyMsg();
+                        return;
+                    }
+                    _wirepoints.Add(GazeboUtility.GazeboPositionToUnity(point));
                 }
                 //roboyparts
                 values = msg["roboyParts"].AsArray;
                 for (int i = 0; i < values.Count; i++)
                 {
                     _roboyparts.Add(values[i].ToString().Replace("\"", string.Empty));
+                }
+                if(_roboyparts.Count != _wirepoints.Count)
+                {
+                    Debug.LogWarning("Received malformed TendonInitializationMsg: received differing number of wirepoints and concerned body parts");
+                    CreateEmptyMsg();
+                    return;
                 }
             }
 
@@ -146,6 +166,19 @@ namespace ROSBridgeLib
             {
                 return _maxForce;
             }
+
+            #region PRIVATE_METHODS
+            /// <summary>
+            /// For now: create messages. in the future: maybe set some vals to -1? 
+            /// </summary>
+            private void CreateEmptyMsg()
+            {
+                _roboyparts = new List<string>();
+                _wirepoints = new List<Vector3>();
+                _tendonID = 0;
+                _maxForce = 0;
+            }
+            #endregion
         }
     }
 }

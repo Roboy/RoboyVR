@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -70,7 +69,7 @@ public class SelectorTool : ControllerTool
             // verify that you are in selection mode 
             if (ModeManager.Instance.CurrentGUIMode == ModeManager.GUIMode.GUIViewer && ModeManager.Instance.CurrentGUIViewerMode != ModeManager.GUIViewerMode.Selection)
                 return;
-            //Depending on the tag (== UI elem type), call different fcts 
+            //Depending on the tag (== UI elem/ object type), call different fcts 
             switch (hit.transform.tag)
             {
                 case "RoboyUI": // if the ray hits an UI component then retrieve the roboy part from RoboyManager
@@ -123,7 +122,7 @@ public class SelectorTool : ControllerTool
                         //CurrentPreviewModel.transform.LookAt(transform);
                     }
                     break;
-                default: 
+                default:
                     //most likely Roboy parts / spawned model
                     hitObject = hit.transform.gameObject.GetComponent<SelectableObject>();
                     break;
@@ -189,7 +188,7 @@ public class SelectorTool : ControllerTool
                     {
                         hitObject.SetStateTargeted();
                     }
-                    
+
                     // set the last roboy part as the current one
                     m_LastSelectedObject = hitObject;
                     Vibrate();
@@ -209,13 +208,14 @@ public class SelectorTool : ControllerTool
             m_LineRenderer.SetPosition(1, transform.position + transform.forward * m_RayDistance);
 
             if (m_LastSelectedObject != null)
+            {
                 m_LastSelectedObject.SetStateDefault();
-
-            m_LastSelectedObject = null;
+                m_LastSelectedObject = null;
+            }
         }
 
         //for grabbing and holding updates:
-        if (m_LastHeldObject) //check if object thinks it's still held (no matter if ray hit sth)
+        if (m_LastHeldObject) //check if object thinks it's still held (no matter if ray hits the same object or not)
         {
             if (m_SteamVRDevice.GetHairTriggerUp()) //if trigger not held anymore
             {
@@ -226,17 +226,18 @@ public class SelectorTool : ControllerTool
     }
 
     /// <summary>
-    /// deselect everything so that Roboy appears in his default state
+    /// deselect everything so that Roboy appears in his default state (no highlighted roboy parts)
     /// </summary>
     public override void EndTool()
     {
         if (m_LastSelectedObject)
-        {
+        {//deselect everything
             m_LastSelectedObject.SetStateDefault(true);
             m_LastSelectedObject = null;
         }
         if (m_LastHeldObject)
         {
+            //trigger onPointerUp event -> no longer being held
             m_LastHeldObject.OnPointerUp(null);
             m_LastHeldObject = null;
         }

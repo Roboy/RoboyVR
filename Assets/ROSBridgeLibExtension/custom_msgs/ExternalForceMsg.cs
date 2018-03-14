@@ -6,6 +6,10 @@ namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
+        /// <summary>
+        /// External force msg consisting of concerned link, local position, local force(dir + strength), duration
+        /// Returns error if parsing of float values fails
+        /// </summary>
         public class ExternalForceMsg : ROSBridgeMsg
         {
             /// <summary>
@@ -40,16 +44,17 @@ namespace ROSBridgeLib
             /// <param name="msg"></param>
             public ExternalForceMsg(JSONNode msg)
             {
+                //if any of these parsing operations does not succeed
+                if(!float.TryParse(msg["x"],out _position.x) || !float.TryParse(msg["y"], out _position.y) ||
+                    !float.TryParse(msg["z"], out _position.z) || !float.TryParse(msg["f_x"], out _force.x)
+                    || !float.TryParse(msg["f_y"], out _force.y) || !float.TryParse(msg["f_z"], out _force.z)
+                    || !int.TryParse(msg["duration"], out _duration)
+                    )
+                {
+                    Debug.LogWarning("Received malformed message");
+                    return;
+                }
                 _linkname = msg["linkname"];
-                _position.x = float.Parse(msg["x"]);
-                _position.y = float.Parse(msg["y"]);
-                _position.z = float.Parse(msg["z"]);
-
-                _force.x = float.Parse(msg["x"]);
-                _force.y = float.Parse(msg["y"]);
-                _force.z = float.Parse(msg["z"]);
-
-                _duration = int.Parse(msg["duration"]);
                 //incoming message -> parse from gazebo coordinate system to unity's
                 publish = false;
                 _position = GazeboUtility.GazeboPositionToUnity(_position);
@@ -100,8 +105,6 @@ namespace ROSBridgeLib
             public override string ToString()
             {
                 throw new System.NotImplementedException();
-                //remainder from prev implementation below
-                //return "ExternalForce [name=" + _linkname + ", position=" + _position.ToString() + ",  force=" + _force.ToString() + ", duration=" + _duration.ToString() + "]";
             }
 
             public override string ToYAMLString()

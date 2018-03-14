@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TimeTool : ControllerTool {
 
@@ -12,6 +10,9 @@ public class TimeTool : ControllerTool {
         //Debug.Log("TimeToolID: " + m_SteamVRDevice.index);
     }
 
+    /// <summary>
+    /// Sets rotation such that finger position on the touchpad indicates the angle (center of touchpad = (0,0))
+    /// </summary>
     void positionArrow()
     {
         Vector2 touchPos = Controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);

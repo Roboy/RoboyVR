@@ -9,6 +9,7 @@ namespace ROSBridgeLib
         /// <summary>
         /// RoboyPoseMessage containing all links and their respective positions and rotations. 
         /// Incoming messages are parsed into Unity coordinate space, outgoing to Gazebo coordinate space. 
+        /// parsing errors are accounted for.
         /// </summary>
         public class RoboyPoseMsg : ROSBridgeMsg
         {
@@ -21,7 +22,7 @@ namespace ROSBridgeLib
                     return _roboyName;
                 }
             }
-            
+
             public List<string> linkNames
             {
                 get
@@ -51,7 +52,6 @@ namespace ROSBridgeLib
 
             /// <summary>
             /// Name of the concerned Roboy
-            /// THIS DOES NOT OFFICIALLY EXIST IN THE GIVEN MESSAGE TYPE YET
             /// </summary>
             private string _roboyName;
 
@@ -62,13 +62,11 @@ namespace ROSBridgeLib
 
             /// <summary>
             /// Positions of the concerned links 
-            /// IMPORTANT: ORDER MUS BE EQUIVALENT TO LINK NAMES LIST
             /// </summary>
             private Vector3[] _positions;
 
             /// <summary>
             /// ROtation of the concerned links
-            /// IMPORTANT: ORDER MUS BE EQUIVALENT TO LINK NAMES LIST
             /// </summary>
             private Quaternion[] _rotations;
 
@@ -82,7 +80,8 @@ namespace ROSBridgeLib
 
             /// <summary>
             /// Parse given message to RoboyPoseMsg type
-            /// FIXME: If malformed message, excepions might occure here!!!
+            /// If fail: returns empty message
+            /// TODO: Are all exceptions accounted for?
             /// </summary>
             /// <param name="msg"></param>
             public RoboyPoseMsg(JSONNode msg)
@@ -100,56 +99,45 @@ namespace ROSBridgeLib
                     string meshName = nameArray[i].ToString().Replace("\"", string.Empty);
                     _linkNames.Add(meshName);
                 }
+                float[] x_values, y_values, z_values, qx_values, qy_values, qz_values, qw_values = new float[0];
+                //Try parse all values to float arrays, if one not successful -> return warning, abort
+                if (!ParseJsonArrayToFloats(msg["x"].AsArray, out x_values) || !ParseJsonArrayToFloats(msg["y"].AsArray, out y_values) ||
+                    !ParseJsonArrayToFloats(msg["z"].AsArray, out z_values) ||
+                    !ParseJsonArrayToFloats(msg["qx"].AsArray, out qx_values) || !ParseJsonArrayToFloats(msg["qy"].AsArray, out qy_values) ||
+                    !ParseJsonArrayToFloats(msg["qz"].AsArray, out qz_values) || !ParseJsonArrayToFloats(msg["qw"].AsArray, out qw_values))
+                {
+                    Debug.LogWarning("Received Malformed RoboyPoseMsg: Some values are not floats.");
+                    MakeMessageEmpty();
+                    return;
+                }
+                else
+                {
+                    //if some coordinate values missing: warning & abort
+                    if (x_values.Length != y_values.Length || x_values.Length != z_values.Length ||
+                        x_values.Length != qw_values.Length || x_values.Length != qy_values.Length ||
+                        x_values.Length != qz_values.Length || x_values.Length != qw_values.Length
+                        || linkNames.Count != x_values.Length)
+                    {
+                        Debug.LogWarning("Received Malformed RoboyPoseMsg: Number of values in arrays does not match.");
+                        MakeMessageEmpty();
+                        return;
+                    }
+                    // save values
+                    _positions = new Vector3[x_values.Length];
+                    _rotations = new Quaternion[x_values.Length];
 
-                // x positions 
-                float[] vals = ParseJsonArrayToFloats(msg["x"].AsArray);
-                _positions = new Vector3[vals.Length];
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _positions[i].x = vals[i];
+                    for (int i = 0; i < x_values.Length; i++)
+                    {
+                        _positions[i].x = x_values[i];
+                        _positions[i].y = y_values[i];
+                        _positions[i].z = z_values[i];
+                        _rotations[i].x = qx_values[i];
+                        _rotations[i].y = qy_values[i];
+                        _rotations[i].z = qz_values[i];
+                        _rotations[i].w = qw_values[i];
+                    }
                 }
 
-                // y position
-                vals = ParseJsonArrayToFloats(msg["y"].AsArray);
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _positions[i].y = vals[i];
-                }
-                // z position
-                vals = ParseJsonArrayToFloats(msg["z"].AsArray);
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _positions[i].z = vals[i];
-                }
-
-                // rotations 
-                // x rotation
-                vals = ParseJsonArrayToFloats(msg["qx"].AsArray);
-                _rotations = new Quaternion[vals.Length];
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _rotations[i].x = vals[i];
-                }
-                // y rotation
-                vals = ParseJsonArrayToFloats(msg["qy"].AsArray);
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _rotations[i].y = vals[i];
-                }
-                // z rotation
-                vals = ParseJsonArrayToFloats(msg["qz"].AsArray);
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _rotations[i].z = vals[i];
-
-                }
-                // w value
-                vals = ParseJsonArrayToFloats(msg["qw"].AsArray);
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    _rotations[i].w = vals[i];
-
-                }
                 // Transform from gazebo coordinate system to unity coordinate system
                 _outgoing = false;
                 for (int i = 0; i < _positions.Length; i++)
@@ -197,7 +185,7 @@ namespace ROSBridgeLib
                 _linkNames = new List<string>();
                 _linkNames.Add(linkName);
                 _positions = new Vector3[] { GazeboUtility.UnityPositionToGazebo(position) };
-                _rotations = new Quaternion[] { GazeboUtility.UnityRotationToGazebo(rotation)};
+                _rotations = new Quaternion[] { GazeboUtility.UnityRotationToGazebo(rotation) };
             }
 
             public static string GetMessageType()
@@ -236,7 +224,7 @@ namespace ROSBridgeLib
                     result += "\"" + name + "\",";
                 }
                 result = result.Remove(result.Length - 1) + "]";
-              
+
                 result += ", \"x\":" + ParseFLoatArrayToString(GetVector3ArrayPartly(_positions, 0));
                 result += ", \"y\":" + ParseFLoatArrayToString(GetVector3ArrayPartly(_positions, 1));
                 result += ", \"z\":" + ParseFLoatArrayToString(GetVector3ArrayPartly(_positions, 2));
@@ -254,19 +242,22 @@ namespace ROSBridgeLib
             /// <summary>
             /// parses array to float values and returns these in form of an array. 
             /// All " are removed. 
-            /// FIXME: Malformed messages cause this part to crash when parsing fails (but faster this way)
             /// </summary>
-            /// <param name="array"></param>
-            /// <returns></returns>
-            private float[] ParseJsonArrayToFloats(JSONArray array)
+            /// <param name="array">Json array containing float values</param>
+            /// <param name="vals"> new array containing parsed float array</param>
+            /// <returns>true if success, false otherwise</returns>
+            private bool ParseJsonArrayToFloats(JSONArray array, out float[] vals)
             {
-                float[] vals = new float[array.Count];
+                vals = new float[array.Count];
                 for (int i = 0; i < array.Count; i++)
                 {
                     string value = array[i].ToString().Replace("\"", string.Empty);
-                    vals[i] = float.Parse(value);
+                    if (!float.TryParse(value, out vals[i]))
+                    {
+                        return false;
+                    }
                 }
-                return vals;
+                return true;
             }
 
             /// <summary>
@@ -288,7 +279,6 @@ namespace ROSBridgeLib
 
             /// <summary>
             /// returns float array consistion of the "pos"{0;1;2} value of the entry of all entries of the array
-            /// NO SECURITY CHECKS
             /// </summary>
             /// <param name="array"></param>
             /// <param name="pos"></param>
@@ -306,7 +296,6 @@ namespace ROSBridgeLib
 
             /// <summary>
             /// returns float array consistion of the "pos"{0;1;2;3} value of the entry of all entries of the array
-            /// NO SECURITY CHECKS
             /// </summary>
             /// <param name="array"></param>
             /// <param name="pos"></param>
@@ -320,6 +309,17 @@ namespace ROSBridgeLib
                     result[i] = array[i][pos];
                 }
                 return result;
+            }
+
+            /// <summary>
+            /// Sets all values to empty lists, strings or arrays
+            /// </summary>
+            private void MakeMessageEmpty()
+            {
+                _positions = new Vector3[0];
+                _rotations = new Quaternion[0];
+                _roboyName = "";
+                _linkNames = new List<string>();
             }
             #endregion
         }

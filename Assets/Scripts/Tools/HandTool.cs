@@ -36,17 +36,6 @@ public class HandTool : ControllerTool
     /// </summary>
     [SerializeField]
     private float m_RayDistance = 0.3f;
-    /// <summary>
-    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
-    /// </summary>
-    [SerializeField]
-    private Vector3 POS;
-    /// <summary>
-    /// Specifies max length of ray which is used to determine which bodypart is pointed at / should be selected
-    /// </summary>
-    [SerializeField]
-    private Vector3 DIR;
-
 
     /// <summary>
     /// TODO: is it used for anything?
@@ -259,6 +248,7 @@ public class HandTool : ControllerTool
     /// This method evaluates current position of the hand and computes forces acted on roboy by grabbing and moving. 
     /// Springs are used for this
     /// sends the info to gazebo
+    /// //TODO WORK IN PROGRESS
     /// </summary>
     private void EvaluateHandPosition()
     {
@@ -290,9 +280,10 @@ public class HandTool : ControllerTool
                 else
                 {
                     GameObject line = new GameObject();
+                    line.name = "Force-Line-Grabbing Tool";
                     m_Line = line.AddComponent<LineRenderer>();
                     m_Line.SetPosition(0, forcePositionLocalSpace);
-                    m_Line.SetPosition(1, forcePositionLocalSpace + directionLocalSpace);
+                    m_Line.SetPosition(1, forcePositionLocalSpace + directionLocalSpace.normalized);
                     m_Line.startWidth = 0.001f;
                     m_Line.endWidth = 0.001f;
                 }

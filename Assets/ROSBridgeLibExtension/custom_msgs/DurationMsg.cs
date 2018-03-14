@@ -4,13 +4,16 @@ namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
+        /// <summary>
+        /// Parses received message to an int value _duration. does not return error if parsing fails, instead value set to 0.
+        /// </summary>
         public class DurationMsg : ROSBridgeMsg
         {
             private int _duration;
 
             public DurationMsg(JSONNode msg)
             {
-                _duration = msg["duration"].AsInt;
+                _duration = msg["duration"].AsInt; // no error
             }
 
             public DurationMsg(int duration)

@@ -1,5 +1,6 @@
 ﻿using SimpleJSON;
 using System;
+using UnityEngine;
 
 namespace ROSBridgeLib
 {
@@ -7,6 +8,7 @@ namespace ROSBridgeLib
     {
         /// <summary>
         /// Message updating force of specified tendon
+        /// Accounts for parsing errors
         /// </summary>
         public class TendonUpdateMsg : ROSBridgeMsg
         {
@@ -32,9 +34,11 @@ namespace ROSBridgeLib
                 //tendonID
                 //These need to match names of externally defined msgs 
                 //-> https://github.com/Roboy/roboy_communication/tree/master/simulation/msgs
-                _tendonID = int.Parse(msg["tendonID"]);
-                //force
-                _force = float.Parse(msg["force"]);
+                if (!int.TryParse(msg["tendonID"], out _tendonID)  || float.TryParse(msg["force"], out _force))
+                {
+                    Debug.LogWarning("Received malformed TendonUpdateMsg: received wirepoint values could not be parsed to float");
+                    return;
+                }
             }
 
             /// <summary>

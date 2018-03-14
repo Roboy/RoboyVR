@@ -6,6 +6,9 @@ namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
+        /// <summary>
+        /// Parses received message to float array. does not return error if parsing fails, instead values are set to 0.
+        /// </summary>
         public class FloatArrayMsg : ROSBridgeMsg
         {
             private string _identifier;
@@ -16,7 +19,7 @@ namespace ROSBridgeLib
                 JSONArray values = msg[_identifier].AsArray;
                 for (int i = 0; i < values.Count; i++)
                 {
-                    _values.Add(values[i].AsFloat);
+                    _values.Add(values[i].AsFloat); // no error -> set to 0 otherwise
                 }
             }
 

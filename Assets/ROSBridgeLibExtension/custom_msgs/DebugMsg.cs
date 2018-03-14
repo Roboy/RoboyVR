@@ -1,5 +1,6 @@
 ﻿using SimpleJSON;
 using System;
+using UnityEngine;
 
 namespace ROSBridgeLib
 {
@@ -53,8 +54,13 @@ namespace ROSBridgeLib
                 _object = GazeboUtility.RemoveQuotationMarks(msg["object"].ToString()); //parse string and remove ""
                 _msg = GazeboUtility.RemoveQuotationMarks(msg["msg"].ToString());
                 _extra = GazeboUtility.RemoveQuotationMarks(msg["extra"].ToString());
-                _timeFrame = ((float)int.Parse(msg["validityDuration"])) / 1000;
-                //_timeFrame = 4f;
+                int milliseconds;
+                if(!int.TryParse(msg["validityDuration"], out milliseconds))
+                {
+                    Debug.LogWarning("Malformed message received: duration could not be parsed");
+                    return;
+                }
+                _timeFrame = ((float)milliseconds) / 1000;
             }
 
             /// <summary>

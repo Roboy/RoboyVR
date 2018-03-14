@@ -1,13 +1,14 @@
 ﻿using SimpleJSON;
 using UnityEngine;
 
-/// <summary>
-/// Message containing x,y,z coordinates of a roboy model: Not specified, which model (if desired)
-/// </summary>
 namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
+        /// <summary>
+        /// Message containing x,y,z coordinates of a roboy model: Not specified, which model (if desired)
+        /// Accounts for parsing errors. 
+        /// </summary>
         public class RoboyPositionMsg : ROSBridgeMsg
         {
             #region PUBLIC_MEMBER_VARIABLES
@@ -38,7 +39,11 @@ namespace ROSBridgeLib
             public RoboyPositionMsg(JSONNode msg)
             {
                 //TODO implement in the future
-                Vector3 gazeboPos = new Vector3(float.Parse(msg["x"]), float.Parse(msg["y"]), float.Parse(msg["z"]));
+                Vector3 gazeboPos = Vector3.zero;
+                if (!float.TryParse(msg["x"], out _position.x) || !float.TryParse(msg["y"], out _position.y) || !float.TryParse(msg["z"], out _position.z))
+                {
+                    Debug.LogWarning("Received malformed RoboyPositionMsg: received values could not be parsed to float");
+                }
                 Vector3 unityPos = GazeboUtility.GazeboPositionToUnity(gazeboPos);
                 inUnityCoordSPace = true;
             }
@@ -59,7 +64,7 @@ namespace ROSBridgeLib
 
             public override string ToString()
             {
-                return "roboy_communication_middleware/Position [name=";
+                throw new System.NotImplementedException();
             }
 
             public override string ToYAMLString()

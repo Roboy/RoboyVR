@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using ROSBridgeLib.geometry_msgs;
-using ROSBridgeLib.std_msgs;
+﻿using System.Collections.Generic;
 using SimpleJSON;
-using UnityEngine;
-
 
 namespace ROSBridgeLib
 {
     namespace custom_msgs
     {
+        /// <summary>
+        /// Msg consisting of a list of joint angles and its values, only outgoing side implemented. 
+        /// Not used as of now
+        /// </summary>
         public class ExternalJointMsg : ROSBridgeMsg
         {
-            public custom_msgs.StringArrayMsg JointNames
+            public StringArrayMsg JointNames
             {
                 get
                 {
@@ -20,7 +19,7 @@ namespace ROSBridgeLib
                 }
             }
 
-            public custom_msgs.FloatArrayMsg Angles
+            public FloatArrayMsg Angles
             {
                 get
                 {
@@ -28,12 +27,16 @@ namespace ROSBridgeLib
                 }
             }
 
-            private custom_msgs.StringArrayMsg _jointNames;
-            private custom_msgs.FloatArrayMsg _angles;
+            private StringArrayMsg _jointNames;
+            private FloatArrayMsg _angles;
 
+            /// <summary>
+            /// parses received messages to given format
+            /// </summary>
+            /// <param name="msg"></param>
             public ExternalJointMsg(JSONNode msg)
             {
-            //TODO implement in the future
+                throw new System.NotImplementedException();
             }
 
             public ExternalJointMsg(List<string> jointNames, List<float> angles)
@@ -49,7 +52,7 @@ namespace ROSBridgeLib
 
             public override string ToString()
             {
-                return "roboy_communication_middleware/JointCommand [name=";
+                throw new System.NotImplementedException();
             }
 
             public override string ToYAMLString()
