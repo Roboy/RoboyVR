@@ -72,7 +72,7 @@ public class UpdaterUtility : MonoBehaviour {
     /// </summary>
     /// <param name="sDir">The directory you want to search.</param>
     /// <returns>List of all fbx file paths.</returns>
-    public static List<string> getFilePathsFBX(string sDir)
+    public static List<string> GetFilePathsFBX(string sDir)
     {
         List<string> files = new List<string>();
         {
@@ -91,7 +91,7 @@ public class UpdaterUtility : MonoBehaviour {
     /// <param name="meshGO">The gameObject you want to attach the colliders on.</param>
     /// <param name="path">The path of the parent object in the Origin folder.</param>
     /// <param name="modelName">The actual name of the visual model.</param>
-    public static void attachCollider(GameObject meshGO, string path, string modelName)
+    public static void AttachCollider(GameObject meshGO, string path, string modelName)
     {
         // replace name from visual to collision
         modelName = modelName.Replace("VIS_", "COL_");
@@ -117,7 +117,7 @@ public class UpdaterUtility : MonoBehaviour {
     /// <summary>
     /// Shows warnings for each python script.
     /// </summary>
-    public static void showWarnings()
+    public static void ShowWarnings()
     {
         if (File.Exists(PathToDownloadScript))
         {

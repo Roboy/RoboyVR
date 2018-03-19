@@ -63,7 +63,7 @@ public class MeshUpdater : MonoBehaviour
         UpdaterUtility.PathToScanScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelScanner.py";
         UpdaterUtility.PathToSDFreader = UpdaterUtility.ProjectFolder + @"/ExternalTools/SDF_reader.py";
 
-        UpdaterUtility.showWarnings();
+        UpdaterUtility.ShowWarnings();
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class MeshUpdater : MonoBehaviour
         string pathToScanFile = UpdaterUtility.ProjectFolder + @"/tempModelURLs.txt";
         if (!File.Exists(pathToScanFile))
         {
-            Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+            Debug.LogWarning("[MeshUpdater] Scan file not found! Check whether it exists or if python script is working!");
             return;
         }
         // get file content of format title;url
@@ -94,13 +94,13 @@ public class MeshUpdater : MonoBehaviour
             // check if there is exactly one ";" meaning only two elements
             if (titleURL.Length != 2)
             {
-                Debug.Log("In line:\n" + line + "\nthe format does not match title;URL");
+                Debug.Log("[MeshUpdater] In line:\n" + line + "\nthe format does not match title;URL");
                 continue;
             }
             // ignore link if it is not in the github repo
             if (!titleURL[1].Contains(Github_Repository))
             {
-                Debug.Log("Link does not have the github repository!");
+                Debug.Log("[MeshUpdater] Link does not have the github repository!");
                 continue;
             }
 
@@ -126,14 +126,14 @@ public class MeshUpdater : MonoBehaviour
     {
         string pathToOriginModels = UpdaterUtility.ProjectFolder + @"/SimulationModels/";
         //var processInfo = new ProcessStartInfo("cmd.exe", "/C" + "start \"\" \"" + m_PathToBlender + "\" -P \"" + m_PathToDownloadScript + "\" \"" + pathToMeshes + "\" \"" + m_pathToProjectModels + "\" \"\"");
-        //UnityEngine.Debug.Log("Run not implemented yet!");
+        //UnityEngine.Debug.Log("[MeshUpdater] Run not implemented yet!");
         // get a list of all entries which the user wants to update
         List<KeyValuePair<string, bool>> tempURLList = ModelChoiceDictionary.Where(entry => entry.Value == true).ToList();
         foreach (var urlEntry in tempURLList)
         {
             string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, m_URLDictionary[urlEntry.Key] };
             CommandlineUtility.RunCommandLine(scanArguments);
-            //Debug.Log(m_URLDictionary[urlEntry.Key]);
+            //Debug.Log([MeshUpdater] m_URLDictionary[urlEntry.Key]);
 
             string pathToScanFile = UpdaterUtility.ProjectFolder + @"/tempModelURLs.txt";
             if (!File.Exists(pathToScanFile))
@@ -152,13 +152,13 @@ public class MeshUpdater : MonoBehaviour
                 // check if there is exactly one ";" meaning only two elements
                 if (titleURL.Length != 2)
                 {
-                    Debug.Log("In line:\n" + line + "\nthe format does not match title;URL");
+                    Debug.Log("[MeshUpdater] In line:\n" + line + "\nthe format does not match title;URL");
                     continue;
                 }
                 // ignore link if it is not in the github repo
                 if (!titleURL[1].Contains(Github_Repository))
                 {
-                    Debug.Log("Link does not have the github repository!");
+                    Debug.Log("[MeshUpdater] Link does not have the github repository!");
                     continue;
                 } 
 
@@ -189,14 +189,14 @@ public class MeshUpdater : MonoBehaviour
             }
             if (File.Exists(pathToOriginModels + urlEntry.Key + @"/OriginModels/model.sdf"))
             {
-                Debug.Log("model.sdf found!");
+                Debug.Log("[MeshUpdater] model.sdf found!");
                 // read .sdf file
                 string[] argumentsSDFreader = { "python \"" + UpdaterUtility.PathToSDFreader + "\"", pathToOriginModels + urlEntry.Key + @"/OriginModels/model.sdf" };
                 CommandlineUtility.RunCommandLine(argumentsSDFreader);
             }
             else
             {
-                Debug.LogWarning("model.sdf not found!");
+                Debug.LogWarning("[MeshUpdater] model.sdf not found!");
             }
 
             ModelsCurrentState = UpdaterUtility.State.Downloaded;
@@ -213,7 +213,7 @@ public class MeshUpdater : MonoBehaviour
             string pathToSDFFile = UpdaterUtility.ProjectFolder + @"/temp" + modelName + "SDFs.txt";
             if (!File.Exists(pathToSDFFile))
             {
-                Debug.LogWarning("Scan file not found! Check whether it exists or if python script is working!");
+                Debug.LogWarning("[MeshUpdater] Scan file not found! Check whether it exists or if python script is working!");
                 return;
             }
             // get file content of format title:url
@@ -249,14 +249,14 @@ public class MeshUpdater : MonoBehaviour
             List<string> visMeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                visMeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath + @"/visual");
+                visMeshList = UpdaterUtility.GetFilePathsFBX(absoluteModelPath + @"/visual");
             }
 
             //List for all downloaded colliders
             List<string> colMeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                colMeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath + @"/collision");
+                colMeshList = UpdaterUtility.GetFilePathsFBX(absoluteModelPath + @"/collision");
             }
 
             foreach (string name in visMeshList)
@@ -267,11 +267,11 @@ public class MeshUpdater : MonoBehaviour
                     for (int j = 0; j < line.Length; j++)
                     {
                         string name1 = name.Replace(".fbx", "");
-                        Debug.Log(name1 +" : " + name);
+                        Debug.Log("[MeshUpdater] "+ name1 +" : " + name);
                         if (line[j].Contains(name1))
                         {
                             currentLine = line;
-                            Debug.Log(currentLine.Length);
+                            Debug.Log("[MeshUpdater] "+currentLine.Length);
                         }
                                                  
                     }
@@ -299,12 +299,12 @@ public class MeshUpdater : MonoBehaviour
                 //StartCoroutine(importModelCoroutine(path, (result) => { meshPrefab = result; }));
                 if (meshPrefab == null)
                 {
-                    Debug.Log("Could not import model!");
+                    Debug.Log("[MeshUpdater] Could not import model!");
                     continue;
                 }
 
                 GameObject meshCopy = Instantiate(meshPrefab);
-                Debug.Log(pose.Length);
+                Debug.Log("[MeshUpdater] " + pose.Length);
                 meshCopy.tag = "RoboyPart";
 
                 meshCopy.transform.position = GazeboUtility.GazeboPositionToUnity(new Vector3(  float.Parse(pose[0], CultureInfo.InvariantCulture.NumberFormat),
@@ -319,7 +319,7 @@ public class MeshUpdater : MonoBehaviour
                                                                                                     100 * float.Parse(VIS_scale[2], CultureInfo.InvariantCulture.NumberFormat)));
                 }
 
-                UpdaterUtility.attachCollider(meshCopy, relativeModelPath, name);
+                UpdaterUtility.AttachCollider(meshCopy, relativeModelPath, name);
                 
                 
 

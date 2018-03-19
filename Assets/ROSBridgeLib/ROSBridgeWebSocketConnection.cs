@@ -497,7 +497,7 @@ namespace ROSBridgeLib
                     }
                     else
                     {
-                        Debug.LogWarning("[ROS Websocket Connection] Trying to publish on a topic that is not registered!");
+                        Debug.LogWarning("[ROS Websocket Connection] Trying to publish on a topic that is not registered!\n Topic: " + topic);
                     }
                 }
             }

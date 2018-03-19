@@ -11,7 +11,6 @@ namespace ROSBridgeLib
         /// Only accepts a certain amount of messages per second to prevent back-logs 
         /// Number should be close to Untiy-Frame rate
         /// </summary>
-        [SerializeField]
         private static int m_MaxMessagesPerSec = 80;
 
         /// <summary>

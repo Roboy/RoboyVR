@@ -195,6 +195,11 @@ public class RoboyManager : Singleton<RoboyManager>
                 part.transform.position = msg.positions[i];
                 part.transform.rotation = msg.rotations[i]; 
             }
+            else
+            {
+                Debug.Log("[RoboyManager] Could not find link named " + msg.linkNames[i] + 
+                    "\nMaybe this part could not be found due to a missing tag?");
+            }
         }
     }
 

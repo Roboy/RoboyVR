@@ -39,6 +39,7 @@ public class CommandlineUtility {
 
         Console.WriteLine("ExitCode: {0}", process.ExitCode);
         process.Close();
+        UnityEngine.Debug.Log("Finished running command: \n " + command);
     }
 
     /// <summary>

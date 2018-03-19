@@ -81,7 +81,7 @@ public class WorldUpdater : MonoBehaviour
         UpdaterUtility.PathToScanScript = UpdaterUtility.ProjectFolder + @"/ExternalTools/ModelScanner.py";
         UpdaterUtility.PathToWorldReader = UpdaterUtility.ProjectFolder + @"/ExternalTools/world_reader.py";
 
-        UpdaterUtility.showWarnings();
+        UpdaterUtility.ShowWarnings();
     }
 
     /// <summary>
@@ -346,7 +346,7 @@ public class WorldUpdater : MonoBehaviour
             List<string> MeshList = new List<string>();
             if (absoluteModelPath != "")
             {
-                MeshList = UpdaterUtility.getFilePathsFBX(absoluteModelPath);
+                MeshList = UpdaterUtility.GetFilePathsFBX(absoluteModelPath);
             }
 
             foreach (string name in MeshList)
