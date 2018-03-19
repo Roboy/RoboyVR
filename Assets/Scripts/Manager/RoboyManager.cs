@@ -129,7 +129,7 @@ public class RoboyManager : Singleton<RoboyManager>
     /// <param name="msg">JSON msg containing roboy pose.</param>
     public void ReceiveMessage(RoboyPoseMsg msg)
     {
-        //Debug.Log("Received message");
+        //DEBUG AID: for msg count per second: Debug.Log("[RoboyManager] " + (int)Time.realtimeSinceStartup + "adjusting pose ");
         AdjustPose(msg.Name, msg);
     }
 

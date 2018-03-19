@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEditor;
 
 public class UpdaterUtility : MonoBehaviour {
@@ -102,7 +100,7 @@ public class UpdaterUtility : MonoBehaviour {
 
         if (colliderPrefab == null)
         {
-            Debug.Log("Did not find a collider object for mesh: " + modelName);
+            Debug.Log("[UpdaterUtility] Did not find a collider object for mesh: " + modelName);
             return;
         }
         // go through each mesh filter and add all mesh references as mesh colliders to the gameObject
@@ -123,38 +121,38 @@ public class UpdaterUtility : MonoBehaviour {
     {
         if (File.Exists(PathToDownloadScript))
         {
-            Debug.Log("Download script found!");
+            Debug.Log("[UpdaterUtility] Download script found!");
         }
         else
         {
-            Debug.LogWarning("Download script not found!");
+            Debug.LogWarning("[UpdaterUtility] Download script not found!");
         }
 
         if (File.Exists(PathToScanScript))
         {
-            Debug.Log("Scan script found!");
+            Debug.Log("[UpdaterUtility] Scan script found!");
         }
         else
         {
-            Debug.LogWarning("Scan script not found!");
+            Debug.LogWarning("[UpdaterUtility] Scan script not found!");
         }
 
         if (File.Exists(PathToSDFreader))
         {
-            Debug.Log("SDF_Reader script found!");
+            Debug.Log("[UpdaterUtility] SDF_Reader script found!");
         }
         else
         {
-            Debug.LogWarning("SDF_Reader script not found!");
+            Debug.LogWarning("[UpdaterUtility] SDF_Reader script not found!");
         }
 
         if (File.Exists(PathToWorldReader))
         {
-            Debug.Log("World_Reader script found!");
+            Debug.Log("[UpdaterUtility] World_Reader script found!");
         }
         else
         {
-            Debug.LogWarning("World_Reader script not found!");
+            Debug.LogWarning("[UpdaterUtility] World_Reader script not found!");
         }
 
 

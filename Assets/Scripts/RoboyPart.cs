@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,7 +25,7 @@ public class RoboyPart : MonoBehaviour
 
     #region PRIVATE_MEMBER_VARIABLES
     /// <summary>
-    /// Prebab of a rawimage (with collider if desired) used as an icon prefab that displays notification sign next to Roboy
+    /// Prebab of a rawimage (with collider if desired) used as a placeholder / canvas that later displays notification sign next to Roboy once needed
     /// Issue: since the roboy model is already created, it is easier to manually create instances based on prefabs 
     /// (and look for this instance)
     /// </summary>
@@ -56,7 +55,7 @@ public class RoboyPart : MonoBehaviour
     /// <summary>
     /// instance of Icon for respective body part
     /// </summary>
-    private GameObject m_myInstance;
+    private GameObject m_Icon;
 
     /// <summary>
     /// Texture of my icon prefab. since getcomponent rather costly this reference is created. 
@@ -72,11 +71,20 @@ public class RoboyPart : MonoBehaviour
     void Awake()
     {
         //notifications related initialisations
-        m_myInstance = CreateIconInstance();
+        m_Icon = CreateIconInstance();
         //Important: first find right position, THEN set child/parent relationship
-        m_myInstance.transform.position = FindIconPosition();
-        m_myInstance.transform.SetParent(transform);
+        m_Icon.transform.position = FindIconPosition();
+        m_Icon.transform.SetParent(transform);
         UpdateNotificationsDisplay();
+    }
+
+    /// <summary>
+    /// stops rotation so that icons do not appear upside down / tilted 
+    /// TODO: maybe only restrict to x  and z axis ? 
+    /// </summary>
+    private void Update()
+    {
+        m_Icon.transform.rotation = Quaternion.identity;
     }
     #endregion  
 
@@ -113,13 +121,18 @@ public class RoboyPart : MonoBehaviour
             GameObject obj = Instantiate(Resources.Load("UI/Error")) as GameObject;
             obj.name = "Error";
             obj.transform.parent = transform;
-            Collider c = gameObject.GetComponent<Collider>();
-            if (!c)
+            //TODO: different collider types... does this find the right one?
+            Collider c = transform.GetComponent<Collider>();
+            if (!c) // place it in the middle of the object, no better place known (even though it might never be visible)
                 obj.transform.localPosition = Vector3.zero;
             else
             {
-                //Debug.Log("Using closest point on collider from center");
-                obj.transform.position = c.ClosestPoint(obj.transform.position);
+                //Using closest point on collider bounding box from center of this roboy part
+                //TODO: less errorprone but looks ugly 
+                obj.transform.position = (c.ClosestPointOnBounds(transform.position));
+                // using closest point on collider from center of roboy part - SOMEHOW NOT WORKING / NOT RETURNING POINTS ON COLLIDER???
+                // obj.transform.position = transform.TransformPoint(c.ClosestPoint(transform.position));
+                obj.transform.localScale = transform.localScale;
             }
         }
     }
@@ -179,23 +192,23 @@ public class RoboyPart : MonoBehaviour
     {
         if (m_myErrors.Count > 0)
         { //if error exist, display error sign
-            if (!m_myInstance.activeInHierarchy)
-                m_myInstance.SetActive(true);
+            if (!m_Icon.activeInHierarchy)
+                m_Icon.SetActive(true);
             Texture errortex = VRUILogic.Instance.GetIconTexture(DummyStates.MessageType.ERROR);
             if (GetIconImage().texture != errortex)
                 GetIconImage().texture = errortex;
         }
         else if (m_myWarnings.Count > 0)
         { //if no errors but warnings, display warning icon
-            if (!m_myInstance.activeInHierarchy)
-                m_myInstance.SetActive(true);
+            if (!m_Icon.activeInHierarchy)
+                m_Icon.SetActive(true);
             Texture warningtex = VRUILogic.Instance.GetIconTexture(DummyStates.MessageType.WARNING);
             if (GetIconImage().texture != warningtex)
                 GetIconImage().texture = warningtex;
         }
         else
         {//disable otherwise
-            m_myInstance.SetActive(false);
+            m_Icon.SetActive(false);
         }
     }
 
@@ -285,7 +298,7 @@ public class RoboyPart : MonoBehaviour
     private RawImage GetIconImage()
     {
         if (!m_IconImage)
-            m_IconImage = m_myInstance.GetComponentInChildren<RawImage>();
+            m_IconImage = m_Icon.GetComponentInChildren<RawImage>();
         return m_IconImage;
     }
 

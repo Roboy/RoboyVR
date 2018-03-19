@@ -110,7 +110,8 @@ public class ExampleFunctions : MonoBehaviour
         {
             m_AllPoints.Add(point);
         }
-   
+        // update initial position of tendon wirepoints, after that, they should be automatically adjusted due to child / parent relation
+        UpdatOffset();
 
     }
 
@@ -125,9 +126,10 @@ public class ExampleFunctions : MonoBehaviour
         VRUILogic.Instance.UpdateTendon(1, x);
         VRUILogic.Instance.UpdateTendon(2, 1 - x);
         VRUILogic.Instance.UpdateTendon(3, 1 - x);
-
-        UpdatOffset();
-        if (m_Arm)
+        
+        //Rotates arm for which the tendons are defined -> shows that they move along. 
+        //Does not work if a connection to ROS established and the pose is being published there -> overrides this 
+        if (m_Arm && !ROSBridge.Instance.IsConnected())
         {
             Vector3 temp = m_Arm.transform.position;
             Vector3 offset = new Vector3();
@@ -164,7 +166,7 @@ public class ExampleFunctions : MonoBehaviour
     private void UpdatOffset()
     {
         if (m_oldOffset.Equals(m_Offset)) return;
-        Debug.Log("NEW OFFSET");
+        Debug.Log("[ExampleFunctions] Apply Roboy's position to tendon positions");
         Vector3 deltaOffset = m_Offset - m_oldOffset;
         VRUILogic.Instance.ApplyTendonOffset(0, deltaOffset);
         VRUILogic.Instance.ApplyTendonOffset(1, deltaOffset);
@@ -181,19 +183,19 @@ public class ExampleFunctions : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "oberarm_right", 3);
-        //Debug.Log("Added Warning");
+        //Debug.Log("[ExampleFunctions] Added Warning");
 
         yield return new WaitForSeconds(4);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "hip", 5);
-        //Debug.Log("Added Error");
+        //Debug.Log("[ExampleFunctions] Added Error");
 
         yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.WARNING, DummyStates.State.MOTOR_DEAD, "foot_left", 5);
-        //Debug.Log("Added Debug");
+        //Debug.Log("[ExampleFunctions] Added Debug");
 
         yield return new WaitForSeconds(2);
         VRUILogic.Instance.AddNewNotification(DummyStates.MessageType.ERROR, DummyStates.State.MOTOR_DEAD, "head", 5f);
-        // Debug.Log("Added debug");
+        // Debug.Log("[ExampleFunctions] Added debug");
         m_Testing = false;
     }
     #endregion

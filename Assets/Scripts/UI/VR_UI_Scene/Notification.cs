@@ -97,9 +97,9 @@ public class Notification : MonoBehaviour
 
     }
     #endregion
-
+    
     #region PUBLIC_METHODS
-    #region providing methods
+    #region Getters
 
     /// <summary>
     /// returns State that was sent along with this notification

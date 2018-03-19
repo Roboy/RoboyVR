@@ -180,10 +180,18 @@ namespace ROSBridgeLib
                 //only announce if not announced yet, 
                 if (!m_SubscribedTopics.Contains(topic))
                 {
-                    Debug.Log("[ROS WEBSOCKET] Adding Subscriber. Subscribing to " + topic);
+                    //Debug.Log("[ROS WEBSOCKET] Adding Subscriber. Subscribing to " + topic);
                     _ws.Send(ROSBridgeMsg.Subscribe(GetMessageTopic(subscriber), GetMessageType(subscriber)));
                     m_SubscribedTopics.Add(topic);
                 }
+                else
+                {
+                    Debug.Log("[ROS WEBSOCKET] ALREADY subscribed to " + topic);
+                }
+            }
+            else
+            {
+                Debug.Log("[ROS WEBSOCKET] couldn't subscribe to " + topic + ". Websocket not running.");
             }
         }
 
@@ -220,13 +228,17 @@ namespace ROSBridgeLib
             if (_running)
             {
                 if (!m_AnnouncedTopics.Contains(topic))
-                {
-                    Debug.Log("[ROS WEBSOCKET] Adding publisher. Advertising " + topic);
+                { // only advertise if needed
+                    //Debug.Log("[ROS WEBSOCKET] Adding publisher. Advertising " + topic);
                     _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(publisher)));
                 }
+                //keep track of all publishers (no matter the topic or if the topic already exists )
+                m_AnnouncedTopics.Add(topic);
             }
-            //keep track of all new publishers (no matter the topic / if the topic already exists )
-            m_AnnouncedTopics.Add(topic);
+            else
+            {
+                Debug.Log("[ROS WEBSOCKET] Could not advertise publisher. Websocket not running.");
+            }
         }
 
         /**
@@ -296,7 +308,7 @@ namespace ROSBridgeLib
                 //if no more advertiser on this topic
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
-                    //Debug.Log("[ROS WEBSOCKET] not publishing on topic: " + topic);
+                    Debug.Log("[ROS WEBSOCKET] not publishing on topic: " + topic);
                     _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
                 }
             }
@@ -314,8 +326,8 @@ namespace ROSBridgeLib
             CheckConnection();
 
             _running = true;
+            Debug.Log("[ROSBRIDGE] running = true; Starting to advertise / subscribe");
             AnnouncePublishersAndSubscribers();
-            Debug.Log("Thread Run fct called");
         }
 
         /// <summary>

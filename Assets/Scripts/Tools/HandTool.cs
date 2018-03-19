@@ -261,12 +261,14 @@ public class HandTool : ControllerTool
             {
                 // delta world direction * forces 
                 Vector3 directionWorldSpace = (transform.position - m_RoboyPoint.transform.position) * m_PullForceFactor;
+                //force position in global space
+                Vector3 forcePositionWorldSpace = m_RoboyPoint.transform.position;
+                /* TODO: GAZEBO SIMULATION: AddRelativeForce(...) does not work well with local coordinates. FOr now: 
+                 * world coordinates are sent
                 //forces in local space of part that is affected
                 Vector3 directionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, directionWorldSpace);
                 // the position in local space
                 Vector3 forcePositionLocalSpace = GazeboUtility.WorldToLocalSpaceDirection(roboyPart.transform, m_RoboyPoint.transform.position);
-                //force position in global space
-                Vector3 forcePositionWorldSpace = m_RoboyPoint.transform.position;
                 // DEBUG PURPOSES: draws a line between the points
                 if (m_Line)
                 {
@@ -280,18 +282,18 @@ public class HandTool : ControllerTool
                 else
                 {
                     GameObject line = new GameObject();
-                    line.name = "Force-Line-Grabbing Tool";
+                    line.name = "[HandTool] Force-Line";
                     m_Line = line.AddComponent<LineRenderer>();
                     m_Line.SetPosition(0, forcePositionLocalSpace);
                     m_Line.SetPosition(1, forcePositionLocalSpace + directionLocalSpace.normalized);
                     m_Line.startWidth = 0.001f;
                     m_Line.endWidth = 0.001f;
                 }
-
+                */
                 int duration = (int)(Time.smoothDeltaTime * 1000);  // time period during which force should be valid,, in milliseconds
                 //send force message TODO: for now: WOlrd space even though supposed to be local space (link space) 
-                //RoboyManager.Instance.SendExternalForce(roboyPart,forcePositionWorldSpace, directionWorldSpace, duration);
-                RoboyManager.Instance.SendExternalForce(roboyPart, forcePositionLocalSpace, directionLocalSpace, duration);
+                RoboyManager.Instance.SendExternalForce(roboyPart,forcePositionWorldSpace, directionWorldSpace, duration);
+                //RoboyManager.Instance.SendExternalForce(roboyPart, forcePositionLocalSpace, directionLocalSpace, duration);
             }
         }
     }
