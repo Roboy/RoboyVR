@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -46,6 +44,7 @@ public class MeshUpdater : MonoBehaviour
     /// </summary>
     private List<string> m_ModelNames = new List<string>();
 
+    private bool m_Initialized = false;
 
     // Use this for initialization
     void Awake()
@@ -64,6 +63,7 @@ public class MeshUpdater : MonoBehaviour
         UpdaterUtility.PathToSDFreader = UpdaterUtility.ProjectFolder + @"/ExternalTools/SDF_reader.py";
 
         UpdaterUtility.ShowWarnings();
+        m_Initialized = true;
     }
 
     /// <summary>
@@ -71,6 +71,10 @@ public class MeshUpdater : MonoBehaviour
     /// </summary>
     public void Scan()
     {
+        if (!m_Initialized)
+        {
+            Initialize();
+        }
         string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, Github_Repository + @"tree/" + Branch };
         CommandlineUtility.RunCommandLine(scanArguments);
         // to do whether scan file exists and is right
@@ -78,7 +82,7 @@ public class MeshUpdater : MonoBehaviour
         string pathToScanFile = UpdaterUtility.ProjectFolder + @"/tempModelURLs.txt";
         if (!File.Exists(pathToScanFile))
         {
-            Debug.LogWarning("[MeshUpdater] Scan file not found! Check whether it exists or if python script is working!");
+            Debug.LogWarning("[MeshUpdater] Scan file not found! path: " + pathToScanFile + " . Check whether it exists or if python script is working!");
             return;
         }
         // get file content of format title;url
@@ -133,6 +137,7 @@ public class MeshUpdater : MonoBehaviour
         {
             string[] scanArguments = { "python", UpdaterUtility.PathToScanScript, m_URLDictionary[urlEntry.Key] };
             CommandlineUtility.RunCommandLine(scanArguments);
+
             //Debug.Log([MeshUpdater] m_URLDictionary[urlEntry.Key]);
 
             string pathToScanFile = UpdaterUtility.ProjectFolder + @"/tempModelURLs.txt";
@@ -348,31 +353,3 @@ public class MeshUpdater : MonoBehaviour
         m_ModelNames.Clear();
     }
 }
-
-
-    ///// <summary>
-    ///// Tries to import the model in the given path. Does not work like intended cause of reasons.
-    ///// </summary>
-    ///// <param name="path"></param>
-    ///// <param name="callback"></param>
-    ///// <returns></returns>
-    //private IEnumerator importModelCoroutine(string path, System.Action<GameObject> callback)
-    //{
-    //    // create a counter to limit the tries
-    //    int modelImportCounter = 0;
-    //    GameObject meshPrefab = null;
-    //    // try to import the model 100 times
-    //    while (modelImportCounter < 100)
-    //    {
-    //        meshPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(path, typeof(Object));
-    //        modelImportCounter++;
-    //        // if prefab is loaded then set the prefab to the given gameobject at the coroutine call
-    //        if (meshPrefab != null)
-    //        {
-    //            if (callback != null) callback(meshPrefab);
-    //            break;
-    //        }
-    //        yield return new WaitForSeconds(0.1f);
-    //    }
-    //}
-

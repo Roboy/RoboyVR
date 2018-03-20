@@ -192,7 +192,7 @@ public class HandTool : ControllerTool
                     //set point where Roboy was grabbed to reference for force calculation
                     m_RoboyPoint = new GameObject("GrabbedPoint");
                     m_RoboyPoint.transform.SetParent(hittedObject.transform);
-                    m_RoboyPoint.transform.position = hit.point;
+                    m_RoboyPoint.transform.position = transform.position; //Use current position of handtool, not hit point (otherwise roboy will move immediately)
                     GameObject obj = Instantiate(Resources.Load("UI/Warning")) as GameObject;
                     obj.name = "Point";
                     obj.transform.parent = m_RoboyPoint.transform;

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using UnityEngine;
 using Microsoft.Win32;
 
 /// <summary>
 /// This class provides the functionality to run commandline with given arguments on a Windows machine.
 /// </summary>
-public class CommandlineUtility {
+public class CommandlineUtility
+{
 
     private const string keyBase = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
 
@@ -17,7 +17,7 @@ public class CommandlineUtility {
 	public static void RunCommandLine(string[] arguments)
     {
         string command = argumentsToCommandlineString(arguments);
-        UnityEngine.Debug.Log("Running the following command: \n"  + command);
+        UnityEngine.Debug.Log("Running the following command: \n" + command);
 
         var processInfo = new ProcessStartInfo("cmd.exe", "/C" + command);
         processInfo.CreateNoWindow = true;
@@ -28,11 +28,19 @@ public class CommandlineUtility {
         var process = Process.Start(processInfo);
 
         process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+        {
             Console.WriteLine("output>>" + e.Data);
+            if (e.Data != "")
+                UnityEngine.Debug.Log("[Command line output]" + e.Data);
+        };
         process.BeginOutputReadLine();
 
         process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
+        {
             Console.WriteLine("error>>" + e.Data);
+            if (e.Data != "")
+                UnityEngine.Debug.LogError("[Command line error]" + e.Data);
+        };
         process.BeginErrorReadLine();
 
         process.WaitForExit();

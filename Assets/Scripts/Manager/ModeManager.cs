@@ -250,16 +250,21 @@ public class ModeManager : Singleton<ModeManager>
         tool.enabled = true;
         tool.gameObject.SetActive(true);
         m_CurrentlyActiveTool = tool;
-        //update tool mode in case this tool is active, ignore  otherwise
-        VRUILogic.Instance.SetToolMode(m_CurrentToolMode);
 
     }
 
+    /// <summary>
+    /// Changes the current mode, disables previous one and informs VRUILogic singleton
+    /// </summary>
+    /// <param name="tool"></param>
     public void ChangeGUIToolMode(ControllerTool tool)
     {
         changeGUIToolStatus(m_CurrentGUIMode, false);
         m_CurrentGUIMode = mapGUIToolToEnum(tool);
         changeGUIToolStatus(m_CurrentGUIMode, true);
+
+        //update tool mode in case this tool is active, ignore  otherwise
+        VRUILogic.Instance.SetGUIMode(m_CurrentGUIMode);
     }
 
     /// <summary>

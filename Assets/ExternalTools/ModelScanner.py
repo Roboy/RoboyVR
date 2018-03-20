@@ -17,6 +17,7 @@ directoryList = list()
 
 # Get all links to directories, it should work because directories do not have an "." extension (f.e ".md")
 # will crash if there is a file without an extension 
+#TODO SOMEHOW BUGGY HERE? NO LINKS THAT MATCH PATTERN FOUND
 for link in linkList:
 	if "." not in link:
 		directoryList.append(link)

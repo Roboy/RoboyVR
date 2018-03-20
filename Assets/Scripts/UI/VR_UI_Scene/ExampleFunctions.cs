@@ -49,28 +49,6 @@ public class ExampleFunctions : MonoBehaviour
     /// </summary>
     void Start()
     {
-        //TENDON EXAMPLE
-        /*
-        Vector3[] points1 = { new Vector3(0.242f, 0.355f, -0.034f), //upper arm left
-                              new Vector3(0.2358f, 0.4768f, -0.024f),}; //torso
-
-        Vector3[] points2 = { new Vector3(0.18f, 0.342f, -0.034f), //upper arm left
-                              new Vector3(0.1771f, 0.4585f, 0) }; //torso
-
-        Vector3[] points3 = { new Vector3(0.2337f, 0.258f, -0.0643f), //upper arm left
-                              new Vector3(0.2204f, 0.1817f, -0.0833f), //lower arm left
-                              new Vector3(0.2109f, 0.1362f, -0.1178f), //lower arm left
-                              new Vector3(0.2109f, 0.1193f, -0.134f)}; //lower arm left
-
-        Vector3[] points4 = { new Vector3(0.1814f, 0.274f, -0.047f), //upper arm left
-                              new Vector3(0.1814f, 0.164f, -0.072f), //lower arm left
-                              new Vector3(0.1814f, 0.1287f, -0.102f), //lower arm left
-                              new Vector3(0.1814f, 0.0947f, -0.157f)}; //lower arm left
-        
-        string[] names = { "upper_arm_left", "torso" };
-
-        string[] names3 = { "upper_arm_left", "lower_arm_left", "lower_arm_left", "lower_arm_left" };
-        */
         Vector3[] points1 = { new Vector3(0.2559f, 0.8919f, -0.0379f), //upper arm left
                               new Vector3(0.2716f, 1.0055f, -0.0545f),}; //torso
 
@@ -110,8 +88,6 @@ public class ExampleFunctions : MonoBehaviour
         {
             m_AllPoints.Add(point);
         }
-        // update initial position of tendon wirepoints, after that, they should be automatically adjusted due to child / parent relation
-        UpdatOffset();
 
     }
 
@@ -152,6 +128,8 @@ public class ExampleFunctions : MonoBehaviour
             StartCoroutine(test());
         }
 
+        // update position of tendon wirepoints
+        UpdatOffset();
     }
     #endregion
 

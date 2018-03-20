@@ -193,6 +193,8 @@ public class InputManager : Singleton<InputManager>
         if (m_GUIWheel != null)
         {
             m_GUIWheel.gameObject.SetActive(!m_GUIWheel.gameObject.activeSelf);
+            //inform VRUILogic that GUI mode is currently being selected / not being selected anymore
+            VRUILogic.Instance.SetGUIModeSelecting(m_GUIWheel.gameObject.activeSelf);
         }
         else if (m_ViewController != null && m_GUIController)
         {

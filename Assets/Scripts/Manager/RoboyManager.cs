@@ -193,7 +193,7 @@ public class RoboyManager : Singleton<RoboyManager>
             if (dic.TryGetValue(msg.linkNames[i], out part))
             {
                 part.transform.position = msg.positions[i];
-                part.transform.rotation = msg.rotations[i]; 
+                part.transform.rotation = msg.rotations[i];
             }
             else
             {

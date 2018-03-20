@@ -70,13 +70,17 @@ public class VRUILogic : Singleton<VRUILogic>
     /// <summary>
     /// Contains the mode of the currently selected tool the user works with
     /// </summary>
-    private ModeManager.ToolMode m_ToolMode;
+    private ModeManager.GUIMode m_GUIMode;
 
     /// <summary>
     /// Specifies whether user is currently changing his tool (hand, time tool, pointer ....) or not
     /// </summary>
     private bool m_UserIsSelectingTool;
 
+    /// <summary>
+    /// Specifies whether user is currently changing his mode (BeRoboy, Spawn mode, Gui mode....) or not
+    /// </summary>
+    private bool m_UserIsSelectingMode;
     /// <summary>
     /// Array containing information whether respective Touchpad on controller is currently being touched. 
     /// </summary>
@@ -235,10 +239,12 @@ public class VRUILogic : Singleton<VRUILogic>
     #endregion
 
     #region PUBLIC_METHODS
+
     #region Other
 
     /// <summary>
     /// Sets, whether the user currently changes his tool (time/selector/hand ...) or if he is not changing it
+    /// Hides UI in order to ease selection process
     /// </summary>
     /// <param name="state"></param>
     public void SetToolWheelState(bool state)
@@ -246,27 +252,45 @@ public class VRUILogic : Singleton<VRUILogic>
         m_UserIsSelectingTool = state;
         if (state) //if currently selecting, disable UI to have less obstacles and objects while selecting
             SetUserInterfaceComponentsState(false);
-        else if (m_ToolMode == ModeManager.ToolMode.SelectorTool)
+        else if (m_GUIMode == ModeManager.GUIMode.GUIViewer && !m_UserIsSelectingMode)
         {
             SetUserInterfaceComponentsState(true);
         }
     }
     /// <summary>
-    /// Sets the internal toolmode state according to given mode
+    /// Sets the internal GUIMode state according to given mode in order to decide whether to display UI or hide it.
+    /// Hides UI in case the mode is not GUIViewer
     /// </summary>
-    /// <param name="currentMode"></param>
-    public void SetToolMode(ModeManager.ToolMode currentMode)
+    /// <param name="currentMode">newly selected GUI mode</param>
+    public void SetGUIMode(ModeManager.GUIMode currentMode)
     {
-        Debug.Log("[VRUILogic] Setting tool mode " + currentMode.ToString());
-        m_ToolMode = currentMode;
-        if (m_ToolMode != ModeManager.ToolMode.SelectorTool)
+        Debug.Log("[VRUILogic] Setting GUI mode " + currentMode.ToString());
+        m_GUIMode = currentMode;
+        if (m_GUIMode != ModeManager.GUIMode.GUIViewer) // if not sele
             SetUserInterfaceComponentsState(false);
-        else if (!m_UserIsSelectingTool)
+        else if (!m_UserIsSelectingTool && !m_UserIsSelectingMode)
         {
             SetUserInterfaceComponentsState(true);
         }
 
     }
+
+    /// <summary>
+    /// sets whether GUI mode selection currently displayed (-> disable UI components to ease selection process)
+    /// </summary>
+    /// <param name="state"></param>
+    public void SetGUIModeSelecting(bool state)
+    {
+        m_UserIsSelectingMode = state;
+        if (state) //disable UI if selecting
+            SetUserInterfaceComponentsState(false);
+        //if not selecting anything and in GUIViewer mode
+        else if(!m_UserIsSelectingTool && m_GUIMode == ModeManager.GUIMode.GUIViewer)
+        {
+            SetUserInterfaceComponentsState(true);
+        }
+    }
+
     /// <summary>
     ///  Returns a list of selected objects from the selectorManager containing the info.
     /// </summary>
