@@ -1,6 +1,12 @@
 User's Manual
 =============
 
+***NOTICE: LEGACY CODE. NOT FULLY FUNCTIONING: DOES NOT FIND MODEL FOLDERS IN REPOSITORY***
+
+**Important**
+
+python needs to be installed in your path such that the command "python" is recognised and executed. This is the case for both the mesh and the world updater script. For further information, see `this link <https://edu.google.com/openonline/course-builder/docs/1.10/set-up-course-builder/check-for-python.html#add-to-path>`_ . 
+
 MeshUpdater
 -----------
 
@@ -9,13 +15,12 @@ MeshUpdater
    :align: center
    :alt: https://www.youtube.com/watch?v=nNV-3x-7Jho
          
-   Video showing the MeshUpdater in previous Version
+   Video showing the MeshUpdater in a custom Scene
 
 
 **Getting started**
 
-Open the Unity project RoboyVR. Open the ModelUpdaterScene, and select the Updater in the hierarchy tab.
-The Updater has a script called Mesh Updater. The following instructions all are entered here.
+Open the MainScene in the Unity project RoboyVR, and select the Updater object in the hierarchy tab. The Updater has a script called Mesh Updater. This slightly differs from the video shown (as it is not in a separate scene), though the script functions exactly the same.  The following instructions all are entered here.
 
 .. figure:: images/UpdaterModel.*
    :align: center
@@ -27,7 +32,7 @@ The Updater has a script called Mesh Updater. The following instructions all are
 **Github Repository**
 
 Enter the link of the Github Repository where the models are located, which you want to download.
-Make sure the link ends with a slash. Also you can set here, which branch you want to download the models from.
+Make sure the link ends with a slash! You chose the branch from which you want to download the models. 
 
 Default:
 
@@ -65,7 +70,7 @@ WorldUpdater
 
 **Getting started**
 
-Open the Unity project RoboyVR. Open the ModelUpdaterScene, and select the Updater in the hierarchy tab.
+Open the MainScene in the Unity project RoboyVR, and select the Updater object in the hierarchy tab.
 The Updater has a script called World Updater. The following instructions all are entered here.
 
 
@@ -108,7 +113,9 @@ You can now find the created world in Assets\/SimulationWorlds\/...
 Troubleshooting
 ---------------
 
-Please take a look at the current state chapter.
+As mentioned beforehand, make sure the "python" command is executable, adapt the system path variables if necessary. 
+
+Furthermore, please take a look at the current state chapter.
 
 
 **State not set correctly**

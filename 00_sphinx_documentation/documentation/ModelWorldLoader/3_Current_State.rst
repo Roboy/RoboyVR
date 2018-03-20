@@ -1,6 +1,8 @@
 Current State
 =============
 
+***NOTICE: LEGACY CODE. NOT FULLY FUNCTIONING: DOES NOT FIND MODEL FOLDERS IN REPOSITORY***
+
 Right now the Updater is converting .dae and .stl files into .fbx to use them in unity. 
 To set each model and link at the correct position, .sdf and .world files are read out and their poses are applied to the models/worlds.
 

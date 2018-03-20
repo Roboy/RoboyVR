@@ -1,27 +1,26 @@
 Installation
 =============
 
-Roboy and its behavior is simulated on the virtual machine via ROS. Important information  
-regarding roboy's movement are then sent through a ROSBridge(e.g. messages) towards Unity.  
-In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
+As described on the main page, RoboyVR is a project which spans over multiple platforms to simulate Roboy and visualize all data. Unity is used to display the virtual environment and Roboy to the user, run on a Windows OS. The virtual reality is simulated using SteamVR and a HTC Vive headset together with two hand controllers. These are tracked with a lighthouse system.
+
+ ROS is a server on which entities can publish and subscribe to certain topics and information, hosted on an Linux / Ubuntu platform. Roboy and its behavior is simulated in Gazebo which also runs on a Linux OS and publishes its values on ROS. Unity in turn subscribes to these topics to receive all updates. In Unity roboy is rendered and constantly updated concerning positions, rotations, etc.  
 With the help of a VR-Headset you can watch roboy move around in a virtual space.
 
 This tutorial will help you setup roboyVR with all necessities it comes with.
+
+Part 0: Setup of the Lighthouse Tracking System
+-----------------------------------------------
+
+A lighthouse tracking system is needed to track the user's movement in space for both controllers and the headset. 
+The two base station should be able to see each other clearly with no viewing obstructions in their sights. They should be put up diagonal spanning a virtual room of two by five meters. For additional information take a look at this guide `HTC Vive setup <https://www.vive.com/uk/setup/>`_.
+
+Install Steam/SteamVR in order to be able to use the Headset in the Untiy project. 
  
-Part 1: Setup Virtualbox with Ubuntu [OPTIONAL]
---------------------------------------
+Part 1: Setup an Ubuntu OS 
+--------------------------
 
-1. Download and install Virtualbox for your OS https://www.virtualbox.org/
+A machine hosting the ROS server and running the gazebo simulation is needed, conveniently, both can be combined and executed on one machine. Virtual machines were not used - it is possible, that the setup works, out of perfomance reasons and stability, a separate machine is advised. 
 
-2. Download Ubuntu 16.04 (64bit) https://www.ubuntu.com/download/desktop
-
-3. Mount the .iso and setup Virtualbox with the following settings (if available):
-  a. 4 cores (Settings->System->Processor)
-  b. 6 GB of RAM (Settings->System->Motherboard)
-  c. 128 MB of VRAM (Settings->Display->Screen)
-  d. 30 GB HDD space (Settings->Storage)
-
-4. Set network settings to Bridged-Adapter or Host-Only Adapter
 
 Part 2: Simulation Setup
 -------------------------------------------

@@ -1,6 +1,9 @@
 Use Cases
 =========
-The following use cases should demonstrate how BeRoboy™ deals with certain scenarios,
+
+**NOTICE: THIS CODE IS NOT BEING MAINTAINED AS OF NOW**
+
+The following use cases should demonstrate how the Unity side of BeRoboy deals with certain scenarios,
 it should show further which procedure calls are happening in the scene, that a developer
 needs to be aware of.
 
@@ -13,8 +16,3 @@ Switching between views
          
    The user first switches to the simulation view, but gets all exhausted and switches to
    the relaxing observer view mode.
-
-Use Case II
------------
-
-Sample goes here.

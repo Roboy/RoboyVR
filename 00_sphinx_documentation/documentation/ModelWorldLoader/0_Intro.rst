@@ -1,13 +1,14 @@
-Introduction
-============
+Introduction Automatic Update Pipeline
+======================================
+
+***NOTICE: LEGACY CODE. NOT FULLY FUNCTIONING: DOES NOT FIND MODEL FOLDERS IN REPOSITORY***
 
 What is it?
 -----------
 
 The Automatic Update Pipeline is a convinient Unity Editor extension, which consists of two core features. 
-The Model Updater is a tool, used to download new models or update existing ones which are used in RoboyVR. 
-The World Updater does a similar thing, just for worlds and environments created with gazebo.
-
+The Model Updater is a tool to download new models or update existing ones which are used in the RoboyVR project. 
+The World Updater downloads and updates worlds and environments created with gazebo.
 
 
 How does it work?
