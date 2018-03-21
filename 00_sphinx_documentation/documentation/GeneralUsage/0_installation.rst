@@ -8,14 +8,6 @@ With the help of a VR-Headset you can watch roboy move around in a virtual space
 
 This tutorial will help you setup roboyVR with all necessities it comes with.
 
-Part 0: Setup of the Lighthouse Tracking System
------------------------------------------------
-
-A lighthouse tracking system is needed to track the user's movement in space for both controllers and the headset. 
-The two base station should be able to see each other clearly with no viewing obstructions in their sights. They should be put up diagonal spanning a virtual room of two by five meters. For additional information take a look at this guide `HTC Vive setup <https://www.vive.com/uk/setup/>`_.
-
-Install Steam/SteamVR in order to be able to use the Headset in the Untiy project. 
- 
 Part 1: Setup an Ubuntu OS 
 --------------------------
 
@@ -43,7 +35,7 @@ follow the instructions on the `OpenPowerlink Homepage <http://openpowerlink.sou
 The OpenPowerlink folder lies in the *roboy_powerlink* folder.
   
 Part 3: Unity Setup
------------------------
+-------------------
 
 1. Download Unity
   - (latest working version with roboyVR is 2017.1.0: https://unity3d.com/de/get-unity/download/archive)
@@ -57,7 +49,15 @@ Part 3: Unity Setup
   - Clone this github repository (master branch) to your system: https://github.com/roboy/roboyVR.git
   - Command: git clone -b master https://github.com/roboy/roboyVR.git
 
-Part 4: Blender & Python
+Part 4: Setup of the Lighthouse Tracking System
+-----------------------------------------------
+
+A lighthouse tracking system is needed to track the user's movement in space for both controllers and the headset. 
+The two base station should be able to see each other clearly with no viewing obstructions in their sights. They should be put up diagonal spanning a virtual room of two by five meters. For additional information take a look at this guide `HTC Vive setup <https://www.vive.com/uk/setup/>`_.
+
+Install Steam/SteamVR in order to be able to use the Headset in the Untiy project. 
+ 
+Part 5: Blender & Python
 ------------------------
 
 - Install the latest version of `Blender <https://www.blender.org/download/>`_
@@ -68,7 +68,7 @@ Part 4: Blender & Python
 
 - After installation, add the Python executable directories to the environment variable PATH in order to run Python. (Windows 10: http://www.anthonydebarros.com/2015/08/16/setting-up-python-in-windows-10/)
 
-Part 5: ZED API and Unity Plugin
+Part 6: ZED API and Unity Plugin
 --------------------------------
 
 - Install the latest verstion of the `API <https://www.stereolabs.com/developers/>`_

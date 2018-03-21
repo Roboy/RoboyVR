@@ -66,40 +66,7 @@ public class ROSBridge : Singleton<ROSBridge>
             return;
 
         m_ROS.Render();
-
-        // add all cached ROSObjects and delete them from the "TODO" list
-        if (m_ROSObjectsToAdd.Count > 0)
-        {
-            foreach (var rosObject in m_ROSObjectsToAdd)
-            {
-                if (m_ROSObjects.Contains(rosObject))
-                    return;
-
-                var subscribers = rosObject.GetComponents<ROSBridgeSubscriber>();
-                var publishers = rosObject.GetComponents<ROSBridgePublisher>();
-                var services = rosObject.GetComponents<ROSBridgeService>();
-
-                foreach (var sub in subscribers)
-                {
-                    m_ROS.AddSubscriber(sub.GetType());
-                    //Debug.Log("[ROSBridge]: adding subscriber " + sub.name);
-                }
-
-                foreach (var pub in publishers)
-                {
-                    m_ROS.AddPublisher(pub.GetType());
-                    //Debug.Log("[ROSBridge]: adding publisher " + pub.name);
-                }
-                foreach (var serv in services)
-                {
-                    m_ROS.AddServiceResponse(serv.GetType());
-                    //Debug.Log("[ROSBridge]: adding service " + serv.name);
-                }
-                //add to list of established / known objects
-                m_ROSObjects.Add(rosObject);
-            }
-            m_ROSObjectsToAdd.Clear();
-        }
+        CheckToDoList();
     }
 
     /// <summary>
@@ -189,6 +156,50 @@ public class ROSBridge : Singleton<ROSBridge>
     public bool IsConnected()
     {
         return m_ROS != null && m_ROSInitialized;
+    }
+    #endregion
+
+    #region PRIVATE_METHODS
+
+    /// <summary>
+    /// Goes through the list of ROSObject to add (which are not yet added), and announces & advertises all 
+    /// Only goes through list when websocket is running, otherwise no announcements can be made
+    /// </summary>
+    private void CheckToDoList()
+    {
+        // add all cached ROSObjects and delete them from the "TODO" list
+        if (m_ROSInitialized && m_ROSObjectsToAdd.Count > 0)
+        {
+            foreach (var rosObject in m_ROSObjectsToAdd)
+            {
+                if (m_ROSObjects.Contains(rosObject))
+                    return;
+
+                var subscribers = rosObject.GetComponents<ROSBridgeSubscriber>();
+                var publishers = rosObject.GetComponents<ROSBridgePublisher>();
+                var services = rosObject.GetComponents<ROSBridgeService>();
+
+                foreach (var sub in subscribers)
+                {
+                    m_ROS.AddSubscriber(sub.GetType());
+                    //Debug.Log("[ROSBridge]: adding subscriber " + sub.name);
+                }
+
+                foreach (var pub in publishers)
+                {
+                    m_ROS.AddPublisher(pub.GetType());
+                    //Debug.Log("[ROSBridge]: adding publisher " + pub.name);
+                }
+                foreach (var serv in services)
+                {
+                    m_ROS.AddServiceResponse(serv.GetType());
+                    //Debug.Log("[ROSBridge]: adding service " + serv.name);
+                }
+                //add to list of established / known objects
+                m_ROSObjects.Add(rosObject);
+            }
+            m_ROSObjectsToAdd.Clear();
+        }
     }
     #endregion
 }

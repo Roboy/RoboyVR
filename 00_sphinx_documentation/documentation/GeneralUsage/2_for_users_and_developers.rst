@@ -1,13 +1,15 @@
 For Users and Developers
 ========================
 
-**For the user:**
+For the user
+------------
 
 The user can simply start exploring the virtual environment without further ado. One of RoboyVR design goals is to have a user friendly and intuitive interface with which one can easily interact. Therefore, the user in the virtual environment does not need to be familiar with explicit commands or structures, he or she can simply explore the scene, experiment with all controllers and possible options without fear of issues or runtime failures. Yet, it does no harm to have a basic understanding of how the HTC Vive and its tracking mechanism work.
 
 Putting on the head mounted display in a way that fits the user, he or she can adjust the distance from the lenses to the eyes as well as the distance between the lenses itself. These tweaks help immensely when it comes to maintaining a sharp field of view and having the full view frustrum. 
 
-**For the developer:**
+For the developer
+-----------------
 
 RoboyVR uses Unity3D to create an immersive and exciting virtual environment. Expierence with Unity is recommended. 
 Unity natively relies on C#, so knowledge in this field is highly advised. Otherwise see `Unity3D <https://unity3d.com/>`_.

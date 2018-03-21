@@ -193,11 +193,11 @@ public class HandTool : ControllerTool
                     m_RoboyPoint = new GameObject("GrabbedPoint");
                     m_RoboyPoint.transform.SetParent(hittedObject.transform);
                     m_RoboyPoint.transform.position = transform.position; //Use current position of handtool, not hit point (otherwise roboy will move immediately)
-                    GameObject obj = Instantiate(Resources.Load("UI/Warning")) as GameObject;
+                    /*GameObject obj = Instantiate(Resources.Load("UI/Warning")) as GameObject;
                     obj.name = "Point";
                     obj.transform.parent = m_RoboyPoint.transform;
                     obj.transform.localPosition = Vector3.zero;
-
+                    */
                     //initial spring length depending on hand and roboy part position (order of coords doesn'T matter)
                     m_InitialLength = (m_RoboyPoint.transform.position - transform.position).magnitude;
                 }

@@ -3,11 +3,11 @@ User's Manual
 
 **NOTICE: THIS CODE IS NOT BEING MAINTAINED AS OF NOW**
 
-This manual will descripe the steps required to start BeRoboy™ and begin your journey.
+This manual will descripe the steps required to start BeRoboy.
 
 Starting Gazebo
 ---------------
-Start your Ubuntu machine and open a terminal. See further information  about starting a simulation under the point **Getting Started** - this includes necessary exports before a launch file is executed. 
+Start the Ubuntu machine and open a terminal. See further information  about starting a simulation under the point **Getting Started** - this includes necessary exports before a launch file is executed. 
 
 Start the launch file which starts Gazebo with the Roboy and a Camera ROS node
 

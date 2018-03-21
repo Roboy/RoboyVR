@@ -172,8 +172,8 @@ namespace ROSBridgeLib
         {
             //Multiple subscribers for the same topic possible
             IsValidSubscriber(subscriber);
-            _subscribers.Add(subscriber);
             string topic = GetMessageTopic(subscriber);
+            _subscribers.Add(subscriber);
 
             if (_running)
             {
@@ -223,13 +223,14 @@ namespace ROSBridgeLib
         public void AddPublisher(Type publisher)
         {
             IsValidPublisher(publisher);
-            _publishers.Add(publisher);
             string topic = GetMessageTopic(publisher);
+            _publishers.Add(publisher);
+
             if (_running)
             {
                 if (!m_AnnouncedTopics.Contains(topic))
                 { // only advertise if needed
-                    //Debug.Log("[ROS WEBSOCKET] Adding publisher. Advertising " + topic);
+                    Debug.Log("[ROS WEBSOCKET] Adding publisher. Advertising " + topic);
                     _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(publisher)));
                 }
                 //keep track of all publishers (no matter the topic or if the topic already exists )
@@ -258,7 +259,7 @@ namespace ROSBridgeLib
                 //if we hvae no more publishers on this topic
                 if (!m_AnnouncedTopics.Contains(topic))
                 {
-                    //Debug.Log("[ROS WEBSOCKET] not announcing anymore on: " + topic);
+                    Debug.Log("[ROS WEBSOCKET] not announcing anymore on: " + topic);
                     _ws.Send(ROSBridgeMsg.UnAdvertise(topic));
                 }
             }
@@ -340,27 +341,29 @@ namespace ROSBridgeLib
                 foreach (Type p in _subscribers)
                 {
                     string topic = GetMessageTopic(p);
-                    m_SubscribedTopics.Add(topic);
                     //only announce if not already known that we subscribed
                     if (!m_SubscribedTopics.Contains(topic))
                     {
                         Debug.Log("[ROS WEBSOCKET] Subscribing to " + topic);
                         _ws.Send(ROSBridgeMsg.Subscribe(topic, GetMessageType(p)));
                     }
-                    //Debug.Log ("Sending " + ROSBridgeMsg.Subscribe (GetMessageTopic(p), GetMessageType (p)));
+                    m_SubscribedTopics.Add(topic);
                 }
                 foreach (Type p in _publishers)
                 {
                     string topic = GetMessageTopic(p);
-                    m_AnnouncedTopics.Add(topic);
                     //only announce new publisher if we didn't already announce one for this topic
                     if (!m_AnnouncedTopics.Contains(topic))
                     {
                         Debug.Log("[ROS WEBSOCKET] Advertising " + topic);
                         _ws.Send(ROSBridgeMsg.Advertise(topic, GetMessageType(p)));
                     }
-                    //Debug.Log ("Sending " + ROSBridgeMsg.Advertise (GetMessageTopic(p), GetMessageType(p)));
+                    m_AnnouncedTopics.Add(topic);
                 }
+            }
+            else
+            {
+                Debug.LogWarning("[ROS WEBSOCKET] COuld not advertise/ subscribe since websocket not running.");
             }
         }
 
@@ -480,7 +483,7 @@ namespace ROSBridgeLib
                 if (m_AnnouncedTopics.Contains(topic))
                 {
                     string s = ROSBridgeMsg.Publish(topic, msg.ToYAMLString());
-                    //Debug.Log ("Sending " + s);
+                    //Debug.Log ("Sending on " + topic);
                     _ws.Send(s);
                 }
                 else
@@ -492,7 +495,7 @@ namespace ROSBridgeLib
                     if (m_AnnouncedTopics.Contains(topic))
                     {
                         string s = ROSBridgeMsg.Publish(topic, msg.ToYAMLString());
-                        //Debug.Log ("Sending " + s);
+                        //Debug.Log ("Sending  on " + topic);
                         _ws.Send(s);
                     }
                     else
