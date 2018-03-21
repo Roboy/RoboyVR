@@ -4,7 +4,7 @@ Modes
 Different modes can be chosen which provide distinct functionalities such as controlling Roboy, examining him from afar, or being in charge of Roboy's body and seing the world through his eyes. 
 The following image shows the different mode options. 
 
-.. figure:: images/selectionwheel_mode*
+.. figure:: images/selectionwheel_mode.*
    :alt: Selectionwheel for Modes
    
    Selection wheel to change between different modes
@@ -14,7 +14,7 @@ ViewSelection
 
 This mode provides functionalities to change the current view from the initial user's point. 
 
-.. figure:: images/tool_viewselection.*
+.. figure:: images/mode_viewselection.*
    :alt: Switch to a view that suits you.
    
    Choose from different views including Observer and BeRoboy mode.

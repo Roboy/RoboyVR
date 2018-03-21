@@ -1,5 +1,5 @@
-Introduction Automatic Update Pipeline
-======================================
+Introduction 
+============
 
 ***NOTICE: LEGACY CODE. NOT FULLY FUNCTIONING: DOES NOT FIND MODEL FOLDERS IN REPOSITORY***
 

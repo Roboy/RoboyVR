@@ -1,11 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using VRTK.Examples.Utilities;
-
 /// <summary>
 /// Tool to switch between different views.
 /// </summary>

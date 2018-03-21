@@ -26,34 +26,6 @@ This should be the result:
          
 	PaBi model in Gazebo
 
-**Troubleshooting**
-
-These commands should be sufficient but it can happen that gazebo has problems loading the PaBi Model into the world or starting the gazebo server.
-
-1. Kill the gazebo server and restart it.
-
-.. code:: bash
-
-  killall gzserver
-  killall gzclient
-
-2. Export the gazebo paths to the model
-
-It is assumed you downloaded and installed the `roboy-ros-control <https://github.com/Roboy/roboy-ros-control>`_ repository as well as the `roboy-models <https://github.com/Roboy/roboy_models>`_ repository according to the provided manuals. You can provide gazebo with the needed models by either calling: 
-
-.. code:: bash
-
-  source /usr/share/gazebo-7/setup.sh
-  export GAZEBO_MODEL_PATH=/path/to/roboy-ros-control/src/roboy_models:$GAZEBO_MODEL_PATH
-  
-Alternatively, adapt the following path to the repository as well as the folder name of the required model and execute this command: 
-
-.. code:: bash
-  
-  ln -s /path/to/roboy-models/Required_Model/ ~/.gazebo/models/
-
-3. If nothing helps than write an email to roboyvr@gmail.com. We will glady help you to experience the RoboyVR-Experience.
-
 Setup Unity side
 ----------------
 
@@ -92,14 +64,4 @@ Afterwards you can watch PaBi showing his best dance moves and interact with him
 	Unity Scene of PaBi
 
 
-*Note: Shooting PaBi with the nerf gun does not have any consequences and serves as a alleviation of stress*
-
-**Troubleshooting**
-
-If the window of SteamVR shows any errors, then simply restart it.
-
-.. figure:: ../images/steamvr_error.*
-    :align: center
-    :alt: SteamVR Error
-         
-	SteamVR Error
+*Note: Shooting PaBi with the nerf gun does not have any consequences*

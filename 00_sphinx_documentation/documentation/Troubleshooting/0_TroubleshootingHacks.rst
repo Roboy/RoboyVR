@@ -36,13 +36,13 @@ Simulation
 	  killall gzserver
 	  killall gzclient
 	  
-	Kill Roscore
+	Another possible fix is to kill Roscore
 	
 	.. code:: bash
 	
 	  killall roscore
   
-2. In case Models could not be loaded - which is often the reason when simulations take forever to load: 
+2. In case Models could not be found - which is often the reason when simulations take forever to load: 
  
 	Export the gazebo paths to the model: General Usage/Getting started/
 
