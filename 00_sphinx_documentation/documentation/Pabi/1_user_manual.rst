@@ -1,18 +1,18 @@
 User's Manual
 =============
 
+**NOTICE: THIS CODE IS NOT BEING MAINTAINED AND MAY THEREFORE NOT WORK CORRECTLY ANYMORE OR THE INFORMATION MAY BE OUTDATED**
+
 Setup Ubuntu side
 -----------------
 
-As you already installed gazebo and the roboy project like described in the installation part you need only to start the *.launch* file.
+Assuming Gazebo is already installed as described in the *Installation* and *Getting Started* sections, the *.launch* file needs to be run.
 
-1. Source the setup.bash
+1. Source/ export all paths and files as initially described in the *Getting Started* section.
 
-.. code:: bash
+2. Run the launch file which starts ROS, Gazebo with the PaBi legs and a PaBiDanceSimulator ROS node
 
-  source /path-to-roboy-ros-control/devel/setup.bash
-
-2. Start the launch file which starts Gazebo with the PaBi legs and a PaBiDanceSimulator ROS node
+**NOTICE: THIS COMMAND IS NO LONGER WORKING AS HTHE FILES WHERE RENAMED. CHOOSE THE APPROPRIATE .LAUNCH FILE **
 
 .. code:: bash
 
@@ -29,33 +29,8 @@ This should be the result:
 Setup Unity side
 ----------------
 
-You should have the RoboyVR project already cloned on your local machine. Therefore you only need to start Unity and open the PaBiViveScene.
-There should be a ROSBridge object in the hierarchy. Select this object and enter the IP Adress of the machine on which the simulation is running.
-
-.. figure:: ../images/rosbridge.*
-	:align: center
-	:alt: ROSBridge
-         
-	ROSBridge in Unity
-
-
-As soon as you start the scene SteamVR should open if that is not already the case. Then you have to follow the instructions on the screen to setup your Vive controllers. 
-
-.. figure:: ../images/controller_selection_1.*
-    :align: center
-    :alt: Controller Selection GUI
-         
-	Instruction to choose the GUI Controller
-
-
-.. figure:: ../images/controller_selection_2.*
-    :align: center
-    :alt: Controller Selection Tools
-         
-	Instruction to choose the Tool Controller
-
-
-Afterwards you can watch PaBi showing his best dance moves and interact with him via a GUI and different tools.
+Unity should be set up according to the *Installation* and *Getting Started* instructions. Therefore, only start Unity and open the PaBiViveScene.
+There should be a ROSBridge object in the hierarchy. Select this object and enter the IP Adress of the machine on which the simulation is running. PaBi now shows the dance moves, interaction with the leg model is possible via a GUI and different tools.
 
 .. figure:: images/pabi_selection.*
     :align: center

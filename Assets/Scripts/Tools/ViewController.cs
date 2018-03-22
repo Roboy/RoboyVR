@@ -26,36 +26,5 @@ public class ViewController : ControllerTool
         ViewSelectionManager.Instance.GazeboImage.GetComponent<CameraPanel>().Sl = m_Slider;
         ViewSelectionManager.Instance.HtcImage.GetComponent<CameraPanel>().Sl = m_Slider;
         ViewSelectionManager.Instance.ZedImage.GetComponent<CameraPanel>().Sl = m_Slider;
-
     }
-
-    /// <summary>
-    /// Checks the touchpad input of the controller and acts accordingly:
-    /// -# Left: changes to previous panel if in panel mode
-    /// -# Right: changes to next panel if in panel mode
-    /// -# Top: changes between GUI modes
-    /// -# Bottom: changes the page of the current panel if in panel mode
-    /// </summary>
-    /// <param name="touchpadStatus"></param>
-    public void CheckTouchPad(InputManager.TouchpadStatus touchpadStatus)
-    {
-        //switch (touchpadStatus)
-        //{
-        //    case InputManager.TouchpadStatus.Left:
-        //        changeToPreviousMode();
-        //        break;
-        //    case InputManager.TouchpadStatus.Right:
-        //        changepanelsToNextMode();
-        //        break;
-        //    case InputManager.TouchpadStatus.Top:
-        //        StartCoroutine(changeGUIMode());
-        //        break;
-        //    case InputManager.TouchpadStatus.Bottom:
-        //        changePageOfPanel();
-        //        break;
-        //}
-    }
-
-
-
 }

@@ -1,7 +1,7 @@
 Use Cases
 =========
 
-**NOTICE: THIS CODE IS NOT BEING MAINTAINED AS OF NOW**
+**NOTICE: THIS CODE IS NOT BEING MAINTAINED AND MAY THEREFORE NOT WORK CORRECTLY ANYMORE OR THE INFORMATION MAY BE OUTDATED**
 
 The following use cases should demonstrate how the Unity side of BeRoboy deals with certain scenarios,
 it should show further which procedure calls are happening in the scene, that a developer

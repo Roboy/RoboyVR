@@ -1,6 +1,4 @@
-.. _runtime_view:
-
-Runtime View
+Use Cases
 ============
 
 Runtime Display Information regarding Roboyparts

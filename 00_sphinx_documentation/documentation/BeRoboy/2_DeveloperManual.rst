@@ -1,13 +1,13 @@
 Developer's Manual
 ==================
 
-*Note: We assume that you already have gone through the User's Manual and Getting Started to not repeat ourselves.*
+**NOTICE: THIS CODE IS NOT BEING MAINTAINED AND MAY THEREFORE NOT WORK CORRECTLY ANYMORE OR THE INFORMATION MAY BE OUTDATED**
 
 
 Gazebo Simulation
+
 -----------------
-For the gazebo part you need to create/ edit a launch/ world file(s). When the launch file is started it automa-
-tically loads the world (with all the surrounding objects) that has been specified and the version of roboy you have chosen.
+For the gazebo part a launch/ world file automatically loads the world (with all the surrounding objects) that has been specified and the version of Roboy which was chosen.
 
 
 **Example for a launch file:**

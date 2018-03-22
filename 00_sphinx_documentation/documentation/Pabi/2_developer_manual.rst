@@ -1,7 +1,7 @@
 Developer's Manual
 ==================
 
-*Note: We assume that you already have gone through the User's Manual to not repeat ourselves.*
+**NOTICE: THIS CODE IS NOT BEING MAINTAINED AND MAY THEREFORE NOT WORK CORRECTLY ANYMORE OR THE INFORMATION MAY BE OUTDATED**
 
 Gazebo Plugin
 -------------
@@ -12,13 +12,9 @@ Gazebo Plugin
 	
 	Sequence diagramm of the ForceJointPlugin
 
-The main part on the simulation site is the plugin *ForceJointPlugin*. The location is:
+The main functionalities are implemented in the plugin *ForceJointPlugin* (path:  path-to-roboy-ros-control/src/roboy_simulation/src/ForceJointPlugin.cpp)
 
-.. code:: bash
-
-  path-to-roboy-ros-control/src/roboy_simulation/src/ForceJointPlugin.cpp
-
-The plugin does the following:
+The plugin works as follows:
 
 1) It loads the model into Gazebo.
 2) It starts one topic for all revolute joints of the PaBi model. That means you have only one topic for all joints at once.

@@ -19,12 +19,12 @@ The Roboy simulations which run in Gazebo is written in C++, which normally load
 The following links can be seen as a guideline, of course you can do
 the research by yourself.
 
-- Unity provides a lot of tutorials for the editor and the API with code samples and videos: https://unity3d.com/de/learn/tutorials
-- The UnifyWiki has a lot of example scripts for all kind of extensions: http://wiki.unity3d.com/index.php/Main_Page
-- StackOverflow is a forum where you can search for answers regarding your coding problems: http://stackoverflow.com/
-- UnityAnswers, similar to StackOverflow but only for Unity specific questions. The community is not as active and most questions
-  are really basic, so bear that in mind: http://answers.unity3d.com/
-- As we use ROS and our own custom messages, it is important to understand how ROS works and how ROS messages are built: http://wiki.ros.org/
-- Gazebo simulations rely on gazebo libraries, which are documented here: http://osrf-distributions.s3.amazonaws.com/gazebo/api/dev/index.html
+- `Unity <https://unity3d.com/de/learn/tutorials>`_ provides a lot of tutorials for the editor and the API with code samples and videos.
+- `UnifyWiki <http://wiki.unity3d.com/index.php/Main_Page>`_ has a lot of example scripts for all kind of extensions.
+- `StackOverflow <http://stackoverflow.com/>`_ is a forum where you can search for answers regarding your coding problems.
+- `UnityAnswers <http://answers.unity3d.com/>`_, similar to StackOverflow but only for Unity specific questions. The community is not as active and most questions
+  are really basic, so bear that in mind.
+- As we use ROS and our own custom messages, it is important to understand `how ROS works <http://wiki.ros.org/>`_ and how ROS messages are built.
+- Gazebo simulations rely on gazebo libraries, which are documented `here <http://osrf-distributions.s3.amazonaws.com/gazebo/api/dev/index.html>`_
 
 If you have any further questions about the project, feel free to contact the Roboy team, which will connect you with the people in charge. 
