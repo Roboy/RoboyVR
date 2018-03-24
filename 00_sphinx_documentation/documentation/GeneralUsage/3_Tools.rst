@@ -26,7 +26,8 @@ Hand
    
    Hand Tool to move Roboy around.
    
-The hands are useful when interacting with the Roboy model, for example when pushing or pulling Roboy's arm. Roboy parts which are in front of the hand are highlighted and change color when being grabbed. Additional haptic feedback is given.  
+The hands are useful when interacting with the Roboy model, for example when pushing or pulling Roboy's arm. More information can be found under the point *Moving Roboy*. 
+
 
 Watch
 -----

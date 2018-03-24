@@ -55,6 +55,14 @@ Contents:
   
   StateVisualization/*
   
+.. _StateVisualization:
+.. toctree::
+  :maxdepth: 1
+  :glob:
+  :caption: Moving Roboy
+  
+  MovingRoboy/*
+  
 .. _ModelWorldLoader:
 .. toctree::
   :maxdepth: 1
