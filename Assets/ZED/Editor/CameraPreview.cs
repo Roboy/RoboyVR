@@ -159,7 +159,7 @@ class CameraPreview : EditorWindow
         Event e = Event.current;
         switch (e.type)
         {
-            case EventType.keyDown:
+            case EventType.KeyDown:
                 {
                     if (Event.current.keyCode == (KeyCode.Escape))
                     {

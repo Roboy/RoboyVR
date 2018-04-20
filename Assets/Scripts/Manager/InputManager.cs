@@ -74,6 +74,20 @@ public class InputManager : Singleton<InputManager>
     {
         get { return m_HandTool; }
     }
+
+    [Header("Controller Description")]
+
+
+    /// <summary>
+    /// Reference to prefab which writes "mode" on one side of the controller
+    /// </summary>
+    public GameObject m_ModeWritingPrefab;
+
+
+    /// <summary>
+    /// Reference to prefab which writes "tool" on one side of the controller
+    /// </summary>
+    public GameObject m_ToolWritingPrefab;
     #endregion
 
     #region PRIVATE_VARIABLES
@@ -193,6 +207,9 @@ public class InputManager : Singleton<InputManager>
         if (m_GUIWheel != null)
         {
             m_GUIWheel.gameObject.SetActive(!m_GUIWheel.gameObject.activeSelf);
+            //TODO dirty / fast hack for now 
+            //GameObject controller = m_GUIController.GetComponentInParent<SteamVR_TrackedController>().gameObject;
+            //controller.SetActive(!m_GUIController.gameObject.activeSelf);
             //inform VRUILogic that GUI mode is currently being selected / not being selected anymore
             VRUILogic.Instance.SetGUIModeSelecting(m_GUIWheel.gameObject.activeSelf);
         }
@@ -225,6 +242,10 @@ public class InputManager : Singleton<InputManager>
         { //activate or deactivate tool wheel depending on previous state
             bool previousState = m_ToolWheel.gameObject.activeSelf;
             m_ToolWheel.gameObject.SetActive(!previousState);
+            //TODO dirty / fast hack for now 
+
+            //GameObject controller = m_ShootingTool.GetComponentInParent<SteamVR_TrackedController>().gameObject;
+            //controller.SetActive(!m_GUIController.gameObject.activeSelf);
             VRUILogic.Instance.SetToolWheelState(!previousState);
         }
     }
@@ -261,6 +282,7 @@ public class InputManager : Singleton<InputManager>
 
         if (e.controllerIndex.Equals(m_GUIController.Controller.index))
         {
+            Debug.Log("[INPUTMANAGER] Check touchpad GUI controller");
             m_GUIController.CheckTouchPad(result);
         }
 
@@ -328,12 +350,23 @@ public class InputManager : Singleton<InputManager>
             m_ToolWheel.BindController(m_SelectorTool.ControllerObject);
             m_ToolWheel.Initialize(toolWheelParts, 0);
             m_ToolWheel.gameObject.SetActive(false);
+
+            //add UI writing
+            GameObject writing = Instantiate(m_ToolWritingPrefab, m_SelectorTool.ControllerObject.gameObject.transform);
+            writing.transform.localPosition = m_ToolWritingPrefab.transform.position;
+            //Debug.Log("[InputManager] Set Parent" + m_SelectorTool.name + " for 'tool'-writing");
+            //TODO: for now set inactive, since different models make it harder to see
+            writing.SetActive(false);
         }
         if (m_GUIWheel)
         {
             m_GUIWheel.BindController(m_GUIController.ControllerObject);
             m_GUIWheel.Initialize(guiWheelParts, 0);
             m_GUIWheel.gameObject.SetActive(false);
+            //add UI writing
+            GameObject writing = Instantiate(m_ModeWritingPrefab, m_GUIController.ControllerObject.gameObject.transform);
+            //writing.transform.localPosition = m_ModeWritingPrefab.transform.position;
+            Debug.Log("[InputManager] Set Parent " + m_GUIController.name + "for 'mode'-writing");
         }
 
     }

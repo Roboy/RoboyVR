@@ -48,15 +48,22 @@ public class OverviewManager : MonoBehaviour
         GameObject obj = new GameObject();
         obj.name = "heartbeat";
         obj.transform.parent = m_HearbeatTab.transform.Find("Panel"); //linked to screen
-        /*Working well for gameobject to fit parent*/
+        obj.transform.SetAsFirstSibling(); //so that any text appears in front of it
+        obj.transform.rotation = Quaternion.identity;
+          /*Working well for gameobject to fit parent*/
         AspectRatioFitter test = obj.AddComponent<AspectRatioFitter>();
         test.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
         test.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
         test.transform.localPosition = Vector3.zero;
+        test.transform.rotation = Quaternion.identity;
 
         //add graph
         obj.AddComponent<GraphObject>();
         m_Heart = obj.GetComponent<GraphObject>();
+        m_Heart.transform.rotation = Quaternion.identity;
+
+        m_Heart.transform.localRotation = Quaternion.identity;
+
         m_Heart.Initialize(null, 3);
         m_Heart.SetDefaultValue(2);
         m_Heart.SetNumberOfPoints(200);
@@ -100,6 +107,7 @@ public class OverviewManager : MonoBehaviour
             StartCoroutine(test());
             Debug.Log("new test"); 
         }*/
+        
         m_Heart.AddValue(GetBeat());
         //this comment counts frames per sec.... some issues here. this update is only called 10 times per sec 
         // (might be hardware related...)
