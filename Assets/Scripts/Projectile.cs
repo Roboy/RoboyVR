@@ -9,7 +9,11 @@ public class Projectile : MonoBehaviour
     /// The speed of the projectile.
     /// </summary>
     public float projectileSpeed;
-	
+
+    /// <summary>
+    /// general force factor which is multiplied with the calculated values
+    /// </summary>
+    public float m_ForceFactor;
     /// <summary>
     /// Move forward and destroy yourself if you are not in the roboy cave.
     /// </summary>
@@ -27,6 +31,7 @@ public class Projectile : MonoBehaviour
     /// <param name="collision"></param>
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("[Projectile] Collision detected");
         RoboyPart roboyPart;
         // If the hitted object is roboy
         if ((roboyPart = collision.gameObject.GetComponent<RoboyPart>()) != null)
@@ -34,7 +39,7 @@ public class Projectile : MonoBehaviour
             // Transform the position to roboy space
             Vector3 forcePosition = collision.transform.InverseTransformPoint(transform.position);
             // transform the direction to roboy space
-            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * 1500);
+            Vector3 forceDirection = collision.transform.InverseTransformDirection(transform.forward * -1f * m_ForceFactor);
             int duration = 200;
             // trigger the message in RoboyManager
             RoboyManager.Instance.SendExternalForce(roboyPart, forcePosition, forceDirection, duration);

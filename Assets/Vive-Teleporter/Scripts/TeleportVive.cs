@@ -264,9 +264,10 @@ public class TeleportVive : MonoBehaviour {
                     continue;
 
                 var device = SteamVR_Controller.Input(index);
+                //TODO: use complete touchpad for now!!!!
                 // Instead of teleporting on any touchpad input we only teleport when the user presses the lower part of the touchpad
-                bool touchpadBottom = (Mathf.Abs(device.GetAxis().x) < Mathf.Abs(device.GetAxis().y) && device.GetAxis().y < 0) ? true : false;
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && touchpadBottom)
+               // bool touchpadBottom = (Mathf.Abs(device.GetAxis().x) < Mathf.Abs(device.GetAxis().y) && device.GetAxis().y < 0) ? true : false;
+                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))// && touchpadBottom)
                 {
                     // Set active controller to this controller, and enable the parabolic pointer and visual indicators
                     // that the user can use to determine where they are able to teleport.
