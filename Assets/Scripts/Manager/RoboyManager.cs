@@ -146,6 +146,9 @@ public class RoboyManager : Singleton<RoboyManager>
         ExternalForceMsg msg;
         if (roboyPart != null)
         {
+            //make sure to not send faulty values 
+            if (float.IsInfinity(force.x) || float.IsInfinity(force.y) || float.IsInfinity(force.z))
+                return;
             msg = new ExternalForceMsg(roboyPart.gameObject.name, position, force, duration, true);
             ROSBridge.Instance.Publish(RoboyForcePublisher.GetMessageTopic(), msg);
         }
@@ -197,7 +200,7 @@ public class RoboyManager : Singleton<RoboyManager>
             }
             else
             {
-                Debug.Log("[RoboyManager] Could not find link named " + msg.linkNames[i] + 
+                Debug.Log("[RoboyManager] Could not find link named " + msg.linkNames[i] +
                     "\nMaybe this part could not be found due to a missing tag?");
             }
         }

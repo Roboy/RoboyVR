@@ -1,5 +1,6 @@
 ﻿using SimpleJSON;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -69,6 +70,7 @@ namespace ROSBridgeLib
         private List<RenderTask> _taskQ = new List<RenderTask>();
         // Adjustment to be able to add ros objects at runtime while connected
         private bool _running = false;
+
         private bool _sendErrorMessage = false;
 
         private object _queueLock = new object();
@@ -389,7 +391,28 @@ namespace ROSBridgeLib
                 Debug.Log(e.Message);
                 _sendErrorMessage = true;
             }
+            if (_ws.IsAlive)
+                return;
+            while (true)
+            {
+                try
+                {
+                    List<Type> preservedSubscribers = new List<Type>(_subscribers);
+                    List<Type> preservedPublishers = new List<Type>(_publishers);
 
+                    Disconnect();
+                    Connect();
+                    _subscribers = preservedSubscribers;
+                    _publishers = preservedPublishers;
+                    AnnouncePublishersAndSubscribers();
+                    // restore subscribers and publishers 
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("[ROSBridgeWebsocketConnection] Error while reconnecting: " + ex.ToString());
+                }
+            }
         }
 
         private void OnMessage(string s)
