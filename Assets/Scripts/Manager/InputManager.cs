@@ -207,6 +207,7 @@ public class InputManager : Singleton<InputManager>
         if (m_GUIWheel != null)
         {
             m_GUIWheel.gameObject.SetActive(!m_GUIWheel.gameObject.activeSelf);
+            m_ToolWheel.gameObject.SetActive(false);
             //TODO dirty / fast hack for now 
             //GameObject controller = m_GUIController.GetComponentInParent<SteamVR_TrackedController>().gameObject;
             //controller.SetActive(!m_GUIController.gameObject.activeSelf);
@@ -242,8 +243,8 @@ public class InputManager : Singleton<InputManager>
         { //activate or deactivate tool wheel depending on previous state
             bool previousState = m_ToolWheel.gameObject.activeSelf;
             m_ToolWheel.gameObject.SetActive(!previousState);
+            m_GUIWheel.gameObject.SetActive(false);
             //TODO dirty / fast hack for now 
-
             //GameObject controller = m_ShootingTool.GetComponentInParent<SteamVR_TrackedController>().gameObject;
             //controller.SetActive(!m_GUIController.gameObject.activeSelf);
             VRUILogic.Instance.SetToolWheelState(!previousState);

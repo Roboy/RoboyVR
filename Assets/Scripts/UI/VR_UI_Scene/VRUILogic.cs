@@ -229,12 +229,14 @@ public class VRUILogic : Singleton<VRUILogic>
         if (m_Modes != null && m_Modes.Length > ((int)UIMode.Middleware))
         {
             Debug.Log("[VRUILogic] Tendoncontainer set as child obj");
-            m_TendonContainer.transform.SetParent(m_Modes[(int)UIMode.Middleware].transform);
+            //TODO: for now: always have tendons visible
+            //m_TendonContainer.transform.SetParent(m_Modes[(int)UIMode.Middleware].transform);
         }
         //Wirepoints of tendons
         m_WirepointContainer = new GameObject("WirepointDefaultContainer");
-        if (m_UIComponents)
-            m_WirepointContainer.transform.SetParent(m_UIComponents.transform);
+        //TODO: for now: always have tendons visible
+        //if (m_UIComponents)
+        //m_WirepointContainer.transform.SetParent(m_UIComponents.transform);
     }
     #endregion
 
